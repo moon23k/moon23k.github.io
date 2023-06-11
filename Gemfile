@@ -1,9 +1,5 @@
-# frozen_string_literal: true
-
 source "https://rubygems.org"
 
-# gem "rails"
-
-group :jekyll_plugins do
-  gem "jekyll-paginate", "~> 1.1.0"  # 추가
-end
+gem "jekyll"
+gem "jekyll-gist"
+#gem "minima", "~> 2.5"

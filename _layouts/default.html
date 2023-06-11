@@ -3,29 +3,21 @@
 
   {% include head.html %}
 
-  <body>
+  <body id="wrap" style="margin-left: 150px; margin-right: 150px; background-color: #FFFFFF">
+    <div>
+      <!-- s : header -->
+      <header>
+        <h1><a href="{{ '/index' | relative_url }}">Portfolio</a></h1>
+      </header>
+      <!-- e : header -->
 
-    {% include sidebar.html %}
-
-    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
-         content to avoid any CSS collisions with our real content. -->
-    <div class="wrap">
-      <div class="masthead">
-        <div class="container">
-          <h3 class="masthead-title">
-            <a href="{{ site.baseurl }}/" title="Home">{{ site.title }}</a>
-            <small>{{ site.tagline }}</small>
-          </h3>
-        </div>
-      </div>
-
-      <div class="container content">
         {{ content }}
-      </div>
+
+      <!-- s : footer -->
+      <footer>
+          &copy; All rights reserved.
+      </footer>    
+      <!-- e : footer -->
     </div>
-
-    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
-
-    <script src='{{ site.baseurl }}/public/js/script.js'></script>
   </body>
 </html>

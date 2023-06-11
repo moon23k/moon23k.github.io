@@ -1,37 +1,161 @@
 ---
 layout: default
-title: Home
 ---
+<main>
+  <!-- s : Introduction Text -->
+  <div class="contents">
 
-<div class="posts">
-  {% for post in paginator.posts %}
-  <div class="post">
-    <h1 class="post-title">
-      <a href="{{ post.url | absolute_url }}">
-        {{ post.title }}
-      </a>
-    </h1>
+    <h2>Introdiction</h2>
+    Lorem ipsum dolor sit amet, id docendi delectus eum. Tacimates petentium ad nec, nam an integre dissentias. Ex omnesque comprehensam cum, ut cum viderer alienum antiopam. Duo cu inimicus adipiscing.
 
-    <span class="post-date">{{ post.date | date_to_string }}</span>
+    Sed in timeam accusata, quando causae elaboraret cu ius. Usu te quis noster ponderum. Nam quot honestatis ea, mei mutat appetere no. Quis quaeque ex quo, ei mel fabellas recteque. Mel ne recteque euripidis, ex nihil molestie eleifend quo.
 
-    {{ post.content }}
+    Nulla alienum recteque cu usu. Ad vocent lobortis vix, his mollis honestatis no. Hinc discere adversarium sit at. Ne sonet platonem vix, eam ea aeque complectitur, ut admodum aliquando cotidieque sit. Iriure aperiri democritum et sit.
+
   </div>
-  {% endfor %}
-</div>
 
-<div class="pagination">
-  {% if paginator.next_page %}
-    <a class="pagination-item older" href="{{ paginator.next_page_path | absolute_url }}">Prev</a>
-  {% else %}
-    <span class="pagination-item older">Older</span>
-  {% endif %}
-  {% if paginator.previous_page %}
-    {% if paginator.page == 2 %}
-      <a class="pagination-item newer" href="{{ '/' | absolute_url }}">Next</a>
-    {% else %}
-      <a class="pagination-item newer" href="{{ paginator.previous_page_path | absolute_url }}">Next</a>
-    {% endif %}
-  {% else %}
-    <span class="pagination-item newer">Next</span>
-  {% endif %}
-</div>
+  <!-- e : Introduction Text -->
+
+
+  <!-- s : contents -->
+  <div class="contents">
+    <!-- s : 키워드 리스트 -->
+    <div class="project-list">
+
+      <dl>
+        <dt>자연어 생성 과제를 위한 세 가지 트랜스포머 모델의 성능 결과 비교</dt>
+        <dd class="key-words">
+          <ul>
+            
+            <li>Tasks
+              <ul>
+                <li>Neural Machine Translation</li> 
+                <li>Dialogue Generation</li> 
+                <li>Text Summarization</li>
+              </ul>
+            </li>
+
+            <li>Datasets
+              <ul>
+                <li>WMT, </li> 
+                <li>Daily Dialogue</li> 
+                <li>Daily Mail</li>
+              </ul>
+            </li>
+
+            <li>Model Architectures
+              <ul>
+                <li>Transformer</li> 
+                <li>Recurrent Transformer</li> 
+                <li>Evolved Transformer</li>
+              </ul>
+            </li>
+
+            <li>Metrics
+              <ul>
+                <li>BLEU</li> 
+                <li>BERT SIMILARITY</li> 
+                <li>ROUGE</li>
+              </ul>
+            </li>
+
+            <li>References
+              <ul>
+                <li>Attention is all you need</li> 
+                <li>Universal Transformers</li> 
+                <li>The Evolved Transformer</li>
+              </ul>
+            </li>
+
+          </ul>
+        </dd>
+        <dd class="view-details">
+          <a href="{{ '/project_01' | relative_url }}">see details</a>
+        </dd>
+      </dl>
+      
+      <dl>
+        <dt>문서 요약을 위한 BERT의 활용 방법론 별 성능 결과 비교</dt>
+        <dd class="key-words">
+          <p>
+            자연어 처리를 위한 대표적 사전학습 모델인 BERT는 다양한 자연어 처리 과제에서 사용되고 있습니다. 
+            하지만 Transformer Encoder Layer만으로 구성된 모델 구조와, 사전 학습 시 최대 수용 시퀀스 길이 제한 등의 이유로 
+            긴 시퀀스 입력값을 처리해야하는 문서 요약과제에서 직관적 사용이 어렵다는 한계가 있습니다. 
+            이를 해결하기 위해 본 프로젝트에서는 시퀀스 길이 제한 극복을 위한 BERT Sum의 방법론과, 요약 시퀀스 생성을 위한 Deocder와의 연결을 위한 세 가지 방법론을 직접 구현하고 성능을 비교합니다.
+          </p>    
+        </dd>
+        <dd class="view-details">
+          <a href="{{ '/project_02' | relative_url }}">see details</a>
+        </dd>
+      </dl>
+
+      <dl>
+        <dt>대화 생성 모델의 개성 부여를 위한 SeqGAN의 활용</dt>
+        <dd class="key-words">
+          <ul>
+            <li>Key Word 01</li>
+            <li>Key Word 02</li>
+            <li>Key Word 03</li>
+            <li>Key Word 04</li>
+            <li>Key Word 05</li>
+          </ul>
+        </dd>
+        <dd class="view-details">
+          <a href="{{ '/project_03' | relative_url }}">see details</a>
+        </dd>
+      </dl>
+
+      <dl>
+        <dt>의미적으로 다양한 대화 생성을 위한 학습 방법론 구현</dt>
+        <dd class="key-words">
+          <ul>
+            <li>Key Word 01</li>
+            <li>Key Word 02</li>
+            <li>Key Word 03</li>
+            <li>Key Word 04</li>
+            <li>Key Word 05</li>
+          </ul>
+        </dd>
+        <dd class="view-details">
+          <a href="{{ '/project_04' | relative_url }}">see details</a>
+        </dd>
+      </dl>
+
+      <dl>
+        <dt>연산 자원의 효율적 사용을 위한 학습 방법론 별 성능 비교</dt>
+        <dd class="key-words">
+          <ul>
+            <li>Key Word 01</li>
+            <li>Key Word 02</li>
+            <li>Key Word 03</li>
+            <li>Key Word 04</li>
+            <li>Key Word 05</li>
+          </ul>
+        </dd>
+        <dd class="view-details">
+          <a href="{{ '/project_05' | relative_url }}">see details</a>
+        </dd>
+      </dl>
+
+      <dl>
+        <dt>데이터 부족 해결을 위한 Back Translation 조건 별 성능 비교</dt>
+        <dd class="key-words">
+          <ul>
+            <li>Key Word 01</li>
+            <li>Key Word 02</li>
+            <li>Key Word 03</li>
+            <li>Key Word 04</li>
+            <li>Key Word 05</li>
+          </ul>
+        </dd>
+        <dd class="view-details">
+          <a href="{{ '/project_06' | relative_url }}">see details</a>
+        </dd>
+      </dl>
+
+
+    </div>
+    <!-- e : 질문 리스트 -->
+  </div>
+  <!-- e : content -->
+</main>  
