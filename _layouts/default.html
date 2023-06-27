@@ -1,23 +1,30 @@
 <!DOCTYPE html>
 <html lang="ko">
-
+  
   {% include head.html %}
 
-  <body id="wrap" style="margin-left: 150px; margin-right: 150px; background-color: #FFFFFF">
-    <div>
+  <body>
+    <div id="container">
       <!-- s : header -->
       <header>
         <h1><a href="{{ '/index' | relative_url }}">Portfolio</a></h1>
       </header>
       <!-- e : header -->
 
-        {{ content }}
+      <div class="contents">
+        <div class="content">
 
+          {{ content }}
+        
+        </div>
       <!-- s : footer -->
-      <footer>
-          &copy; All rights reserved.
-      </footer>    
-      <!-- e : footer -->
+        <footer>
+          <a href="#" class="btn-copyright">© 2023 MoonGhi Song</a>
+          <a href="#" class="btn-top"></a>
+        </footer>
+        <!-- e : footer -->
+      
     </div>
   </body>
+  
 </html>

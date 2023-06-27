@@ -1,161 +1,191 @@
 ---
 layout: default
 ---
-<main>
-  <!-- s : Introduction Text -->
-  <div class="contents">
 
-    <h2>Introdiction</h2>
-    Lorem ipsum dolor sit amet, id docendi delectus eum. Tacimates petentium ad nec, nam an integre dissentias. Ex omnesque comprehensam cum, ut cum viderer alienum antiopam. Duo cu inimicus adipiscing.
 
-    Sed in timeam accusata, quando causae elaboraret cu ius. Usu te quis noster ponderum. Nam quot honestatis ea, mei mutat appetere no. Quis quaeque ex quo, ei mel fabellas recteque. Mel ne recteque euripidis, ex nihil molestie eleifend quo.
-
-    Nulla alienum recteque cu usu. Ad vocent lobortis vix, his mollis honestatis no. Hinc discere adversarium sit at. Ne sonet platonem vix, eam ea aeque complectitur, ut admodum aliquando cotidieque sit. Iriure aperiri democritum et sit.
-
+<div class="info">
+  <h2 style="color: #303030;">Hi there!</h2>
+  <p>
+    &nbsp; 인공지능을 활용해 다양한 현실의 문제를 해결하는 것에 집중하고 있습니다. 인공지능에는 다양한 활용분야가 있지만, 그 중에서도 자연어 처리에 특히 집중하고 있습니다. 자연어 처리 머신러닝 엔지니어로써, 사람들과 자연스럽게 의사소통 할 수 있는 모델을 개발하는 것을 목표로 삼고 있습니다. 의사소통이라는 궁극적인 목표를 위해 자연어 처리 중에서도 자연어 생성 과제를 집중적으로 공부 및 구현했습니다. 아래의 프로젝트들은 이런 공부와 실험의 결과를 정리한 것입니다. 
+  </p>
+  <div class="btn-block">
+    <a href="{{ '/resume' | relative_url }}" class="btn-twitter btn-type-1">Resume</a>
+    <a href="#" class="btn-github btn-type-1">Github</a>
+    <a href="#" class="btn-medium btn-type-1">Notion</a>
   </div>
+</div>
 
-  <!-- e : Introduction Text -->
 
 
-  <!-- s : contents -->
-  <div class="contents">
-    <!-- s : 키워드 리스트 -->
-    <div class="project-list">
+<div class="project-list">
+  <dl  class="type-right">
+    <dt><h3>자연어 생성을 위한 세 가지 트랜스포머 모델 비교 분석</h3></dt>
+    <dd>
+      <ul>
+        <li>
+          <div class="inner">
+            <div class="tags">
+              <span>Transformer</span>
+              <span>Machine Translation</span>
+              <span>Dialogue Generation</span>
+              <span>Text Summarization</span>
+            </div>
+            <div class="btn-list">
+              <a href="{{ '/project_01' | relative_url }}" class="btn-type-1">See Detail</a>
+              <a href="#" class="btn-type-1">Code Implemenatation</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          Transformer에 기반한 다양한 연구들이 진행됨에도 불구하고, Transformer 구조 자체제 집중한 자연어 생성 과제에서의 성능 비교 실험은 부재합니다. 이를 해결하기 위해 세가지 Transformer 모델을 직접 구현하고, 세가지 자연어 생성 과제에서의 성능을 비교해봅니다. 레이어의 재귀적 연결로 Inductive BIas를 향상시킬 수 있다는 것과, 섬세한 레이어 연결의 변화를 통해 더 높은 성장가능성을 직접 확인할 수 있었습니다. 
+        </li>
+      </ul>
+    </dd>
+  </dl>
 
-      <dl>
-        <dt>자연어 생성 과제를 위한 세 가지 트랜스포머 모델의 성능 결과 비교</dt>
-        <dd class="key-words">
-          <ul>
-            
-            <li>Tasks
-              <ul>
-                <li>Neural Machine Translation</li> 
-                <li>Dialogue Generation</li> 
-                <li>Text Summarization</li>
-              </ul>
-            </li>
 
-            <li>Datasets
-              <ul>
-                <li>WMT, </li> 
-                <li>Daily Dialogue</li> 
-                <li>Daily Mail</li>
-              </ul>
-            </li>
-
-            <li>Model Architectures
-              <ul>
-                <li>Transformer</li> 
-                <li>Recurrent Transformer</li> 
-                <li>Evolved Transformer</li>
-              </ul>
-            </li>
-
-            <li>Metrics
-              <ul>
-                <li>BLEU</li> 
-                <li>BERT SIMILARITY</li> 
-                <li>ROUGE</li>
-              </ul>
-            </li>
-
-            <li>References
-              <ul>
-                <li>Attention is all you need</li> 
-                <li>Universal Transformers</li> 
-                <li>The Evolved Transformer</li>
-              </ul>
-            </li>
-
-          </ul>
-        </dd>
-        <dd class="view-details">
-          <a href="{{ '/project_01' | relative_url }}">see details</a>
-        </dd>
-      </dl>
-      
-      <dl>
-        <dt>문서 요약을 위한 BERT의 활용 방법론 별 성능 결과 비교</dt>
-        <dd class="key-words">
+  <dl class="type-right">
+    <dt><h3>문서요약을 위한 BERT 활용 방법론 별 성능 결과 비교</h3></dt>
+    <dd>
+      <ul>
+        <li>
+          <div class="inner">
+            <div class="tags">
+              <span>BERT</span>
+              <span>BERT SUM</span>
+              <span>Text Summarization</span>
+              <span>Encoder-Decoder Connection</span>
+            </div>
+            <div class="btn-list">
+              <a href="{{ '/project_02' | relative_url }}" class="btn-type-1">See Detail</a>
+              <a href="#" class="btn-type-1">Code Implemenatation</a>
+            </div>
+          </div>
+        </li>
+        <li>
           <p>
-            자연어 처리를 위한 대표적 사전학습 모델인 BERT는 다양한 자연어 처리 과제에서 사용되고 있습니다. 
-            하지만 Transformer Encoder Layer만으로 구성된 모델 구조와, 사전 학습 시 최대 수용 시퀀스 길이 제한 등의 이유로 
-            긴 시퀀스 입력값을 처리해야하는 문서 요약과제에서 직관적 사용이 어렵다는 한계가 있습니다. 
-            이를 해결하기 위해 본 프로젝트에서는 시퀀스 길이 제한 극복을 위한 BERT Sum의 방법론과, 요약 시퀀스 생성을 위한 Deocder와의 연결을 위한 세 가지 방법론을 직접 구현하고 성능을 비교합니다.
-          </p>    
-        </dd>
-        <dd class="view-details">
-          <a href="{{ '/project_02' | relative_url }}">see details</a>
-        </dd>
-      </dl>
+            BERT는 다양한 자연어 이해 과제에서 우수한 성능을 보이는 대표적 사전학습 모델입니다. 하지만 BERT를 자연어 생성 과제에 효과적으로 적용하는 방법에 대한 탐구는 상대적으로 부족합니다. 특히나 입력 시퀀스의 길이가 BERT 사전학습 시 마주했던 시퀀스 길이보다 긴 문서 요약 과제에 있어서는 더욱 그러합니다.
 
-      <dl>
-        <dt>대화 생성 모델의 개성 부여를 위한 SeqGAN의 활용</dt>
-        <dd class="key-words">
-          <ul>
-            <li>Key Word 01</li>
-            <li>Key Word 02</li>
-            <li>Key Word 03</li>
-            <li>Key Word 04</li>
-            <li>Key Word 05</li>
-          </ul>
-        </dd>
-        <dd class="view-details">
-          <a href="{{ '/project_03' | relative_url }}">see details</a>
-        </dd>
-      </dl>
-
-      <dl>
-        <dt>의미적으로 다양한 대화 생성을 위한 학습 방법론 구현</dt>
-        <dd class="key-words">
-          <ul>
-            <li>Key Word 01</li>
-            <li>Key Word 02</li>
-            <li>Key Word 03</li>
-            <li>Key Word 04</li>
-            <li>Key Word 05</li>
-          </ul>
-        </dd>
-        <dd class="view-details">
-          <a href="{{ '/project_04' | relative_url }}">see details</a>
-        </dd>
-      </dl>
-
-      <dl>
-        <dt>연산 자원의 효율적 사용을 위한 학습 방법론 별 성능 비교</dt>
-        <dd class="key-words">
-          <ul>
-            <li>Key Word 01</li>
-            <li>Key Word 02</li>
-            <li>Key Word 03</li>
-            <li>Key Word 04</li>
-            <li>Key Word 05</li>
-          </ul>
-        </dd>
-        <dd class="view-details">
-          <a href="{{ '/project_05' | relative_url }}">see details</a>
-        </dd>
-      </dl>
-
-      <dl>
-        <dt>데이터 부족 해결을 위한 Back Translation 조건 별 성능 비교</dt>
-        <dd class="key-words">
-          <ul>
-            <li>Key Word 01</li>
-            <li>Key Word 02</li>
-            <li>Key Word 03</li>
-            <li>Key Word 04</li>
-            <li>Key Word 05</li>
-          </ul>
-        </dd>
-        <dd class="view-details">
-          <a href="{{ '/project_06' | relative_url }}">see details</a>
-        </dd>
-      </dl>
+            물론 이런 한계점을 극복하기 위한 각각의 방법론 연구들이 있어왔지만, 다양한 방법론을 통합적으로 사용하는 방식에 대한 연구는 부족한 실정입니다. 때문에 본 프로젝트에서는 BERT를 문서요약 과제에서 효과적으로 사용하기 위한 네 가지 방법론을 조합해, 총 세가지 모델을 직접 구현하고 각 모델의 성능을 비교 분석합니다.
+          </p>
+        </li>
+      </ul>
+    </dd>
+  </dl>
 
 
-    </div>
-    <!-- e : 질문 리스트 -->
-  </div>
-  <!-- e : content -->
-</main>  
+  <dl class="type-right">
+    <dt><h3>대화 생성 모델의 개성 부여를 위한 SeqGAN의 활용</h3></dt>
+    <dd>
+      <ul>
+        <li>
+          <div class="inner">
+            <div class="tags">
+              <span>Transformer</span>
+              <span>Machine Translation</span>
+              <span>Dialogue Generation</span>
+              <span>Text Summarization</span>
+            </div>
+            <div class="btn-list">
+              <a href="{{ '/project_01' | relative_url }}" class="btn-type-1">See Detail</a>
+              <a href="#" class="btn-type-1">Code Implemenatation</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <p>
+            Transformer에 기반한 다양한 연구들이 진행됨에도 불구하고, Transformer 구조 자체제 집중한 자연어 생성 과제에서의 성능 비교 실험은 부재합니다. 이를 해결하기 위해 세가지 Transformer 모델을 직접 구현하고, 세가지 자연어 생성 과제에서의 성능을 비교해봅니다. 레이어의 재귀적 연결로 Inductive BIas를 향상시킬 수 있다는 것과, 섬세한 레이어 연결의 변화를 통해 더 높은 성장가능성을 직접 확인할 수 있었습니다. 
+          </p>
+        </li>
+      </ul>
+    </dd>
+  </dl>
+
+
+  <dl class="type-right">
+    <dt><h3>의미적으로 다양한 대화 생성을 위한 학습 방법론 구현</h3></dt>
+    <dd>
+      <ul>
+        <li>
+          <div class="inner">
+            <div class="tags">
+              <span>Transformer</span>
+              <span>Machine Translation</span>
+              <span>Dialogue Generation</span>
+              <span>Text Summarization</span>
+            </div>
+            <div class="btn-list">
+              <a href="{{ '/project_01' | relative_url }}" class="btn-type-1">See Detail</a>
+              <a href="#" class="btn-type-1">Code Implemenatation</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <p>
+            Transformer에 기반한 다양한 연구들이 진행됨에도 불구하고, Transformer 구조 자체제 집중한 자연어 생성 과제에서의 성능 비교 실험은 부재합니다. 이를 해결하기 위해 세가지 Transformer 모델을 직접 구현하고, 세가지 자연어 생성 과제에서의 성능을 비교해봅니다. 레이어의 재귀적 연결로 Inductive BIas를 향상시킬 수 있다는 것과, 섬세한 레이어 연결의 변화를 통해 더 높은 성장가능성을 직접 확인할 수 있었습니다. 
+          </p>
+        </li>
+      </ul>
+    </dd>
+  </dl>
+
+
+  <dl class="type-right">
+    <dt><h3>컴퓨팅 자원의 효율적 사용을 위한 학습 방법론 별 성능 비교</h3></dt>
+    <dd>
+      <ul>
+        <li>
+          <div class="inner">
+            <div class="tags">
+              <span>Efficient Training</span>
+              <span>Gradient Accumulating</span>
+              <span>Gradient Checkpointing</span>
+              <span>Mixed Precision Training</span>
+              <span>Adafactor Optimizer</span>
+            </div>
+            <div class="btn-list">
+              <a href="{{ '/project_01' | relative_url }}" class="btn-type-1">See Detail</a>
+              <a href="#" class="btn-type-1">Code Implemenatation</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <p>
+            Transformer에 기반한 다양한 연구들이 진행됨에도 불구하고, Transformer 구조 자체제 집중한 자연어 생성 과제에서의 성능 비교 실험은 부재합니다. 이를 해결하기 위해 세가지 Transformer 모델을 직접 구현하고, 세가지 자연어 생성 과제에서의 성능을 비교해봅니다. 레이어의 재귀적 연결로 Inductive BIas를 향상시킬 수 있다는 것과, 섬세한 레이어 연결의 변화를 통해 더 높은 성장가능성을 직접 확인할 수 있었습니다. 
+          </p>
+        </li>
+      </ul>
+    </dd>
+  </dl>
+
+
+  <dl class="type-right" style="margin-bottom: 8em;">
+    <dt><h3>데이터 부족 해결을 위한 Back Translation 조건 별 성능 비교</h3></dt>
+    <dd>
+      <ul>
+        <li>
+          <div class="inner">
+            <div class="tags">
+              <span>Data Augmentation</span>
+              <span>Back Translation</span>
+              <span>Machine Translation</span>
+            </div>
+            <div class="btn-list">
+              <a href="{{ '/project_01' | relative_url }}" class="btn-type-1">See Detail</a>
+              <a href="#" class="btn-type-1">Code Implemenatation</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <p>
+            Transformer에 기반한 다양한 연구들이 진행됨에도 불구하고, Transformer 구조 자체제 집중한 자연어 생성 과제에서의 성능 비교 실험은 부재합니다. 이를 해결하기 위해 세가지 Transformer 모델을 직접 구현하고, 세가지 자연어 생성 과제에서의 성능을 비교해봅니다. 레이어의 재귀적 연결로 Inductive BIas를 향상시킬 수 있다는 것과, 섬세한 레이어 연결의 변화를 통해 더 높은 성장가능성을 직접 확인할 수 있었습니다. 
+          </p>
+        </li>
+      </ul>
+    </dd>
+  </dl>
+
+
+
+</div>
+<script src="./assets/js/script.js"></script>
