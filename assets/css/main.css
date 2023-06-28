@@ -41,6 +41,8 @@
   border-radius: 4px;
   margin: 0 0.5em;
 }
+
+/* project-list */
 .contents .project-list {
   padding: 0 5em;
 }
@@ -51,6 +53,7 @@
   position: relative;
   font-size: 21px;
   color: #4c4c4c;
+  margin-bottom: 1.5em;
 }
 .contents .project-list dl h3::after {
   content: '';
@@ -70,24 +73,17 @@
   flex: 1 1 50%;
   padding: 0 15px;
   box-sizing: border-box;
+  color: #4c4c4c;
+  line-height: 1.8;
 }
-/*
-.contents .project-list ul li p {
-  margin-top: 1.5em;
-  color: #666666;
-  font-size: 1.05em;
-  line-height: 1.9;
-}
-*/
 .contents .project-list ul li span.txt {
   display: block;
-  margin-top: 1.5em;
+  margin-bottom: 1.5em;
 }
 .contents .project-list ul li .btn-list {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  margin-top: calc(1em + 10px);
 }
 .contents .project-list ul li .btn-list a {
   flex: 1 1 50%;
@@ -112,8 +108,8 @@
   justify-content: flex-start;
 }
 .contents .project-list ul li .tags {
-  margin-top: 2em;
   flex-wrap: wrap;
+  margin-bottom: calc(1em + 10px);
 }
 .contents .project-list ul li .tags span {
   color: #9eb1bd;
