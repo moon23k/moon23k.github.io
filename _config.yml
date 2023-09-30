@@ -7,8 +7,14 @@ url: "" # the base hostname & protocol for your site, e.g. http://example.com
 #plugins:
 #  - jekyll-feed
 
-include:
-  - _pages
+include: 
+  - _pages 
+  - _pages/research_01
+  - _pages/research_02
+  - _pages/research_03 
+  - _pages/research_04
+  - _pages/research_05
+  - _pages/research_06
 
 # exclude:
 #   - .sass-cache/

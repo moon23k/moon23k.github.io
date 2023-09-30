@@ -13,9 +13,9 @@
 
   <!-- style -->
   <link rel="stylesheet" href="/assets/css/base.css" />
-  <link rel="stylesheet" href="/assets/css/main.css" />
+  <link rel="stylesheet" href="/assets/css/index.css" />
   <link rel="stylesheet" href="/assets/css/header.css" />
-  <link rel="stylesheet" href="/assets/css/contents.css" />
+  <link rel="stylesheet" href="/assets/css/report.css" />
   <link rel="stylesheet" href="/assets/css/detail.css" />    
   <link rel="stylesheet" href="/assets/css/footer.css" />    
   <link rel="stylesheet" href="/assets/css/mediaQuery.css" />
@@ -33,7 +33,8 @@
       <div class="contents">
         <div class="content">
 
-          <div class="info">
+          <!-- Information -->
+<div class="info">
   <h2 style="color: #303030;">Hi there!</h2>
   <p>
     &nbsp; 안녕하세요 :) &nbsp;   
@@ -52,165 +53,496 @@
 </div>
 
 
+<!-- First Research -->
+<div class="container">
+  
+  <div class="full-width">
+    <h3>Model Structure</h3>
+    <p>
+      &nbsp; Machine Learning Engineering에서 모델의 구조적 디자인은 성능을 결정짓는 핵심 요소입니다. 특히 자연어 생성과 같이 Encoder와 Decoder가 모두 필요한 경우, 모델 디자인의 중요성은 더욱 커집니다. 학습 방법 및 데이터처리 등 다른 변인을 고정한 채, 모델 구조에만 초점을 맞춘 다양한 실험을 통해 각 모델 구조별 특성을 파악하고, 인사이트를 공유합니다.
+    </p>
+  </div>
 
-<div class="project-list">
-  <dl  class="type-right">
-    <dt><h3>자연어 생성을 위한 세 가지 트랜스포머 모델 비교 분석</h3></dt>
-    <dd>
+  <div class="parallel">
+    <div class='parallel-item'>
+      <h3>RNN Sequence to Sequence</h3>
       <ul>
         <li>
-          <div class="inner">
-            <div class="tags">
-              <span>Transformer</span>
-              <span>Machine Translation</span>
-              <span>Dialogue Generation</span>
-              <span>Text Summarization</span>
-            </div>
-            <div class="btn-list">
-              <a href="/project_01" class="btn-type-1">Detail</a>
-              <a href="https://github.com/moon23k" class="btn-type-1">Code</a>
-            </div>
+          <p>
+            RNN, LSTM, GRU 세가지 네트워크를 활용해 Sequence to Sequence 모델 구조를 구현하고, 세 가지 NLG Task에서의 실효성 검증
+          </p>
+          <div class="btn-list">
+            <a href="/rnn_seq2seq" class="btn-type-1">Detail</a>
+            <a href="#" class="btn-type-1">Code</a>
           </div>
-        </li>
-        <li>
-          &nbsp; Transformer 모델 구조에 기반한 다양한 연구들이 존재하지만, Transformer 구조 자체에 집중한 자연어 생성 과제에서의 성능 비교 실험은 부재합니다. 이를 해결하기 위해 세 가지 Transformer 모델을 직접 구현하고, 세 가지 자연어 생성 과제에서 성능을 비교해봅니다. 이 실험을 통해 레이어의 재귀적 연결로 Inductive BIas를 향상시킬 수 있다는 것과, 섬세한 레이어 연결의 변화를 통해 더 높은 성장가능성을 직접 확인할 수 있습니다. 
+
         </li>
       </ul>
-    </dd>
-  </dl>
+    </div>
 
-
-  <dl class="type-right">
-    <dt><h3>문서요약을 위한 BERT 활용 방법론 별 성능 결과 비교</h3></dt>
-    <dd>
+    <div class='parallel-item'>
+      <h3>RNN Sequence to Sequence with Attention</h3>
       <ul>
         <li>
-          <div class="inner">
-            <div class="tags">
-              <span>BERT</span>
-              <span>BERT SUM</span>
-              <span>Text Summarization</span>
-              <span>Encoder-Decoder Connection</span>
-            </div>
-            <div class="btn-list">
-              <a href="/project_02" class="btn-type-1">Detail</a>
-              <a href="#" class="btn-type-1">Code</a>
-            </div>
+          <p>
+            GRU Sequence to Sequence 모델 구조에서 세가지 Attention Mechanism을 구현하고, 세 가지 NLG Task에서의 실효성 검증
+          </p>
+          <div class="btn-list">
+            <a href="/rnn_seq2seq_attn" class="btn-type-1">Detail</a>
+            <a href="#" class="btn-type-1">Code</a>
           </div>
-        </li>
-        <li>
-          &nbsp; BERT는 다양한 자연어 이해 과제에서 우수한 성능을 보이는 대표적 사전학습 모델입니다. 하지만 BERT를 자연어 생성 과제에 효과적으로 적용하는 방법에 대한 탐구는 상대적으로 부족합니다. 특히나 입력 시퀀스의 길이가 BERT 사전학습 시 마주했던 시퀀스 길이보다 긴 문서 요약 과제에 있어서는 더욱 그러합니다.
-          물론 이런 한계점을 극복하기 위한 각각의 방법론 연구들이 있어왔지만, 다양한 방법론들을 통합적으로 사용하는 연구는 부족합니다. 때문에 본 프로젝트에서는 BERT를 문서요약 과제에서 효과적으로 사용하기 위한 네 가지 방법론을 조합해, 총 세가지 모델을 직접 구현하고 각 모델의 성능을 비교 분석합니다.
+
         </li>
       </ul>
-    </dd>
-  </dl>
+    </div>
 
+  </div>
 
-  <dl class="type-right">
-    <dt><h3>대화 생성 모델의 개성 부여를 위한 SeqGAN의 활용</h3></dt>
-    <dd>
+  <div class="parallel">
+    <div class='parallel-item'>
+      <h3>Transformer</h3>
       <ul>
         <li>
-          <div class="inner">
-            <div class="tags">
-              <span>SeqGAN</span>
-              <span>Dialogue Generation</span>
-              <span>Characteristic Dialogue</span>
-              <span>Data Web Crawling</span>
-            </div>
-            <div class="btn-list">
-              <a href="/project_03" class="btn-type-1">Detail</a>
-              <a href="https://github.com/moon23k" class="btn-type-1">Code</a>
-            </div>
+          <p>
+            Attention Mechanism만으로 효율성과 성능을 획기적으로 상승시킨 Transformer를 구현하고, 세 가지 NLG Task에서의 실효성 검증
+          </p>
+          <div class="btn-list">
+            <a href="/transformer" class="btn-type-1">Detail</a>
+            <a href="#" class="btn-type-1">Code</a>
           </div>
-        </li>
-        <li>
-          &nbsp; 대화 생성 모델의 학습 과정에서, 모델은 학습 데이터의 확률분포 잘 모방할 수 있는 방향으로 파라미터를 갱신합니다. 이는 자연어 생성 과정을 위한 가장 일반적인 학습 방법이지만, 대화 생성 과제에서는 지나치게 일반적이고 재미없는 답변만을 반복하기 쉽도록 모델을 편향시킨다는 단점이 있습니다. 물론 대량의 다양한 데이터로 학습하며 이런 문제를 해결할 수도 있지만, 현실적으로 그런 양질의 대량 데이터를 확보하는 것은 어렵습니다. 때문에 이런 문제점을 학습 방식의 고도화를 통해 해결하고, 개성있는 대화를 생성하기 위해 SeqGAN을 활용한 방법론을 직접 구현하고 실험 결과를 공유합니다.
+
         </li>
       </ul>
-    </dd>
-  </dl>
+    </div>
 
-
-  <dl class="type-right">
-    <dt><h3>의미적으로 다양한 대화 생성을 위한 학습 방법론 구현</h3></dt>
-    <dd>
+    <div class='parallel-item'>
+      <h3>Transformer Variants</h3>
       <ul>
         <li>
-          <div class="inner">
-            <div class="tags">
-              <span>Semantic Clustering</span>
-              <span>Dialogue Generation</span>
-              <span>Dialogue Diversity</span>
-            </div>
-            <div class="btn-list">
-              <a href="/project_04" class="btn-type-1">Detail</a>
-              <a href="https://github.com/moon23k" class="btn-type-1">Code</a>
-            </div>
+          <p>
+            Standard Transformer, Recurrent Transformer, Evolved Transformer 모델을 구현하고 , 세 가지 NLG Task에서의 실효성 검증
+          </p>
+          <div class="btn-list">
+            <a href="/transformer_variants" class="btn-type-1">Detail</a>
+            <a href="#" class="btn-type-1">Code</a>
           </div>
-        </li>
-        <li>
-          &nbsp; 대화 생성 모델의 학습 과정에서, 모델은 학습 데이터의 확률분포 잘 모방할 수 있는 방향으로 파라미터를 갱신합니다. 이는 자연어 생성 과정을 위한 가장 일반적인 학습 방식이지만, 대화 생성 과제에서는 지나치게 일반적이고 재미없는 답변만을 반복하기 쉽도록 모델을 편향시키기 쉽다는 단점이 있습니다. 물론 대량의 다양한 데이터로 학습하며 이런 문제를 해결할 수도 있지만, 현실적으로 그런 양질의 대량 데이터를 확보하는 것은 쉽지 않습니다. 때문에 이런 문제점을 학습방식의 고도화를 통해 해결하고 개성있는 대화를 생성하기 위해 SemEnt에서 제시한 Semantic Clustering을 활용한 방법론을 직접 구현하고 실험 결과를 공유합니다.
+
         </li>
       </ul>
-    </dd>
-  </dl>
+    </div>
 
+  </div>
 
-  <dl class="type-right">
-    <dt><h3>컴퓨팅 자원의 효율적 사용을 위한 딥러닝 모델 학습 방법론 별 성능 비교</h3></dt>
-    <dd>
+  <div class="parallel">
+    <div class='parallel-item'>
+      <h3>Encoder & Decoder</h3>
       <ul>
         <li>
-          <div class="inner">
-            <div class="tags">
-              <span>Efficient Training</span>
-              <span>Gradient Accumulating</span>
-              <span>Gradient Checkpointing</span>
-              <span>Mixed Precision Training</span>
-              <span>Adafactor Optimizer</span>
-            </div>
-            <div class="btn-list">
-              <a href="/project_05" class="btn-type-1">Detail</a>
-              <a href="https://github.com/moon23k" class="btn-type-1">Code</a>
-            </div>
+          <p>
+            Sequence to Sequence의 기본 골조인 Encoder와 Decoder의 디자인 방식에 따른 차이를 알아보고, 세 가지 NLG Task에서의 실효성 검증
+          </p>
+          <div class="btn-list">
+            <a href="/encoder_decoder" class="btn-type-1">Detail</a>
+            <a href="#" class="btn-type-1">Code</a>
           </div>
-        </li>
-        <li>
-          &nbsp; 좋은 딥러닝 모델의 학습을 위해서는, 많은 데이터 가능한 큰 모델 규모, 그리고 다량의 반복학습 등 컴퓨팅 자원을 많이 필요로 합니다. 하지만 일반적인 사용자의 입장에서 이를 만족시킬만한 환경을 구축하는 것은 매우 어렵습니다. 때문에 한정된 자원에서 좋은 모델을 만들기 위해 학습 과정에서의 효율성을 제고시키는 것이 매우 중요합니다. 이를 위한 네 가지 방안을 직접 구현 및 적용한 실험 결과를 공유합니다. 
+
         </li>
       </ul>
-    </dd>
-  </dl>
+    </div>
 
-
-  <dl class="type-right" style="margin-bottom: 8em;">
-    <dt><h3>데이터 부족 해결을 위한 Back Translation 조건 별 성능 비교</h3></dt>
-    <dd>
+    <div class='parallel-item'>
+      <h3>PLM Fusion</h3>
       <ul>
         <li>
-          <div class="inner">
-            <div class="tags">
-              <span>Data Augmentation</span>
-              <span>Back Translation</span>
-              <span>Machine Translation</span>
-            </div>
-            <div class="btn-list">
-              <a href="/project_06" class="btn-type-1">Detail</a>
-              <a href="https://github.com/moon23k" class="btn-type-1">Code</a>
-            </div>
+          <p>
+            PLM Encoder를 Sequence to Sequence 구조에서 효과적으로 사용할 수 있는 방법론을 구현하고, 세 가지 NLG Task에서의 실효성 검증
+          </p>
+          <div class="btn-list">
+            <a href="/plm_fusion" class="btn-type-1">Detail</a>
+            <a href="#" class="btn-type-1">Code</a>
           </div>
-        </li>
-        <li>
-          &nbsp; 딥러닝 모델을 성공적으로 학습시키기 위해서는 양질의 대량 데이터가 필수적입니다. 하지만 대량 데이터 확보를 위해서는 큰 비용과 많은 시간이 소요됩니다. 이런 데이터 부족의 문제점을 딥러닝 모델 활용을 통해 해결할수 있는 대표적인 방법으로 Back Translation이 있습니다. Back Translation에 관한 포괄적인 연구논문이 있긴하지만, 영어라는 언어에 국한되어있습니다. 때문에 이 프로젝트에서는 영어 데이터보다 수적으로 부족한 한국어 데이터의 증강을 위한 Back Translation의 활용을 위한 일련의 실험을 직접 수행하고 결과를 공유합니다.   
+
         </li>
       </ul>
-    </dd>
-  </dl>
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<!-- Second Research -->
+<div class="container">
+  
+  <div class="full-width">
+    <h3>Efficiency</h3>
+    <p>
+      &nbsp; 다량의 파라미터로 이루어진 대규모 딥러닝 모델일수록 좋은 성능을 보여주는 경향성이 짙습니다. 
+      하지만 대규모 모델의 경우, 일반적인 컴퓨팅 환경에서 활용하기 어렵다는 한계점이 있습니다. 
+      한정적인 컴퓨팅 자원에서도 좋은 모델을 사용하기 위해 효율성에 초점을 맞춘 프로젝트를 진행하고, 인사이트를 공유합니다.
+    </p>
+  </div>
+
+  <div class="parallel">
+    <div class='parallel-item'>
+      <h3>Efficient Training</h3>
+      <ul>
+        <li>
+          <p>
+            RNN, LSTM, GRU 세가지 네트워크를 활용해 Sequence to Sequence 모델 구조를 구현하고, 세 가지 NLG Task에서의 실효성 검증
+          </p>
+          <div class="btn-list">
+            <a href="/eff_train" class="btn-type-1">Detail</a>
+            <a href="#" class="btn-type-1">Code</a>
+          </div>
+
+        </li>
+      </ul>
+    </div>
+
+    <div class='parallel-item'>
+      <h3>Efficient PreTrained Language Models</h3>
+      <ul>
+        <li>
+          <p>
+            RNN, LSTM, GRU 세가지 네트워크를 활용해 Sequence to Sequence 모델 구조를 구현하고, 세 가지 NLG Task에서의 실효성 검증
+          </p>
+          <div class="btn-list">
+            <a href="/eff_model" class="btn-type-1">Detail</a>
+            <a href="#" class="btn-type-1">Code</a>
+          </div>
+
+        </li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="parallel">
+    <div class='parallel-item' style="width: 47%">
+      <h3>Parameter Efficient Fine-Tuning</h3>
+      <ul>
+        <li>
+          <p>
+            RNN, LSTM, GRU 세가지 네트워크를 활용해 Sequence to Sequence 모델 구조를 구현하고, 세 가지 NLG Task에서의 실효성 검증
+          </p>
+          <div class="btn-list">
+            <a href="/peft" class="btn-type-1">Detail</a>
+            <a href="#" class="btn-type-1">Code</a>
+          </div>
+
+        </li>
+      </ul>
+    </div>
+
+  </div>
 
 
 </div>
+
+
+<!-- Third Research -->
+<div class="container">
+  
+  <div class="full-width">
+    <h3>Training Strategy</h3>
+    <p>
+      &nbsp; 딥러닝 엔지니어링의 주요 Process중 하나인 학습과정에 초점을 맞추어, 다양한 학습방식을 통한 모델 개선 여부를 직접 실험해봅니다.
+    </p>
+  </div>
+
+  <div class="parallel">
+    <div class='parallel-item'>
+      <h3>Auxiliary Training</h3>
+      <ul>
+        <li>
+          <p>
+            RNN, LSTM, GRU 세가지 네트워크를 활용해 Sequence to Sequence 모델 구조를 구현하고, 세 가지 NLG Task에서의 실효성 검증
+          </p>
+          <div class="btn-list">
+            <a href="/aux_train" class="btn-type-1">Detail</a>
+            <a href="#" class="btn-type-1">Code</a>
+          </div>
+
+        </li>
+      </ul>
+    </div>
+
+    <div class='parallel-item'>
+      <h3>Scheduled Sampling</h3>
+      <ul>
+        <li>
+          <p>
+            RNN, LSTM, GRU 세가지 네트워크를 활용해 Sequence to Sequence 모델 구조를 구현하고, 세 가지 NLG Task에서의 실효성 검증
+          </p>
+          <div class="btn-list">
+            <a href="/scheduled_sampling" class="btn-type-1">Detail</a>
+            <a href="#" class="btn-type-1">Code</a>
+          </div>
+
+        </li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="parallel">
+    <div class='parallel-item'>
+      <h3>Generative Training</h3>
+      <ul>
+        <li>
+          <p>
+            RNN, LSTM, GRU 세가지 네트워크를 활용해 Sequence to Sequence 모델 구조를 구현하고, 세 가지 NLG Task에서의 실효성 검증
+          </p>
+          <div class="btn-list">
+            <a href="/gen_train" class="btn-type-1">Detail</a>
+            <a href="#" class="btn-type-1">Code</a>
+          </div>
+
+        </li>
+      </ul>
+    </div>
+
+    <div class='parallel-item'>
+      <h3>SeqGAN Training</h3>
+      <ul>
+        <li>
+          <p>
+            RNN, LSTM, GRU 세가지 네트워크를 활용해 Sequence to Sequence 모델 구조를 구현하고, 세 가지 NLG Task에서의 실효성 검증
+          </p>
+          <div class="btn-list">
+            <a href="/gan_train" class="btn-type-1">Detail</a>
+            <a href="#" class="btn-type-1">Code</a>
+          </div>
+
+        </li>
+      </ul>
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<!-- Fourth Research -->
+<div class="container">
+  
+  <div class="full-width">
+    <h3>Neural Machine Translation</h3>
+    <p>
+      &nbsp; Machine Learning Engineering에서 모델의 구조적 디자인은 성능을 결정짓는 핵심 요소입니다. 특히 자연어 생성과 같이 Encoder와 Decoder가 모두 필요한 경우, 모델 디자인의 중요성은 더욱 커집니다. 학습 방법 및 데이터처리 등 다른 변인을 고정한 채, 모델 구조에만 초점을 맞춘 다양한 실험을 통해 각 모델 구조별 특성을 파악하고, 인사이트를 공유합니다.
+    </p>
+  </div>
+
+  <div class="parallel">
+    <div class='parallel-item'>
+      <h3>Back Translation</h3>
+      <ul>
+        <li>
+          <p>
+            데이터의 부족함을 극복하기 위한 기법 중 하나인 Back Translation 방식을 구현하고, NMT Task에서의 실효성 검증
+          </p>
+          <div class="btn-list">
+            <a href="/back_translation" class="btn-type-1">Detail</a>
+            <a href="#" class="btn-type-1">Code</a>
+          </div>
+
+        </li>
+      </ul>
+    </div>
+
+    <div class='parallel-item'>
+      <h3>Multi-Lingual Translation</h3>
+      <ul>
+        <li>
+          <p>
+            여러가지 언어를 동시에 다룰수 있는 Multi Lingual Translation Model을 학습시키고, 각 언어 쌍으로만 학습한 모델과의 차이점을 확인해봅니다
+          </p>
+          <div class="btn-list">
+            <a href="/multilinual" class="btn-type-1">Detail</a>
+            <a href="#" class="btn-type-1">Code</a>
+          </div>
+
+        </li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="parallel">
+    <div class='parallel-item' style="width: 47%">
+      <h3>NMT Blend</h3>
+      <ul>
+        <li>
+          <p>
+            효과적인 NMT Modeling을 위해 앞선 연구의 결과들을 적절히 Blending해보며, 성능을 비교합니다
+          </p>
+          <div class="btn-list">
+            <a href="/nmt_blend" class="btn-type-1">Detail</a>
+            <a href="#" class="btn-type-1">Code</a>
+          </div>
+
+        </li>
+      </ul>
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- Fifth Research -->
+<div class="container">
+  
+  <div class="full-width">
+    <h3>Dialogue Generation</h3>
+    <p>
+      &nbsp; Machine Learning Engineering에서 모델의 구조적 디자인은 성능을 결정짓는 핵심 요소입니다. 특히 자연어 생성과 같이 Encoder와 Decoder가 모두 필요한 경우, 모델 디자인의 중요성은 더욱 커집니다. 학습 방법 및 데이터처리 등 다른 변인을 고정한 채, 모델 구조에만 초점을 맞춘 다양한 실험을 통해 각 모델 구조별 특성을 파악하고, 인사이트를 공유합니다.
+    </p>
+  </div>
+
+  <div class="parallel">
+    <div class='parallel-item'>
+      <h3>Characteristic Dialogue Generation</h3>
+      <ul>
+        <li>
+          <p>
+            SeqGAN의 기법을 활용해, PreTrained GPT 모델에게 특정 개성을 부여해봅니다
+          </p>
+          <div class="btn-list">
+            <a href="/character" class="btn-type-1">Detail</a>
+            <a href="#" class="btn-type-1">Code</a>
+          </div>
+
+        </li>
+      </ul>
+    </div>
+
+    <div class='parallel-item'>
+      <h3>SimEnt Utilization</h3>
+      <ul>
+        <li>
+          <p>
+            대화 다양성을 증진시키기 위한 SimEnt 기법을 직접 구현하고, 실제 대화의 다양성 개선 여부를 확인해봅니다
+          </p>
+          <div class="btn-list">
+            <a href="/siment" class="btn-type-1">Detail</a>
+            <a href="#" class="btn-type-1">Code</a>
+          </div>
+
+        </li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="parallel">
+    <div class='parallel-item'>
+      <h3>Multi-Turn Dialogue Generation</h3>
+      <ul>
+        <li>
+          <p>
+            Encoder구조를 개선시켜 Multi-Turn Dialogue Generation Model 구현하고, 실제 성능을 평가해봅니다 
+          </p>
+          <div class="btn-list">
+            <a href="/multiturn" class="btn-type-1">Detail</a>
+            <a href="#" class="btn-type-1">Code</a>
+          </div>
+
+        </li>
+      </ul>
+    </div>
+
+    <div class='parallel-item'>
+      <h3>Dialogue Generation Blend</h3>
+      <ul>
+        <li>
+          <p>
+            앞선 연구결과를 바탕으로 최적의 Dialogue Generation모델을 구현하고, 성능을 확인해봅니다.
+          </p>
+          <div class="btn-list">
+            <a href="/dialog_blend" class="btn-type-1">Detail</a>
+            <a href="#" class="btn-type-1">Code</a>
+          </div>
+
+        </li>
+      </ul>
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- Sixth Research -->
+<div class="container">
+  
+  <div class="full-width">
+    <h3>Abstractive Text Summarization</h3>
+    <p>
+      &nbsp; Machine Learning Engineering에서 모델의 구조적 디자인은 성능을 결정짓는 핵심 요소입니다. 특히 자연어 생성과 같이 Encoder와 Decoder가 모두 필요한 경우, 모델 디자인의 중요성은 더욱 커집니다. 학습 방법 및 데이터처리 등 다른 변인을 고정한 채, 모델 구조에만 초점을 맞춘 다양한 실험을 통해 각 모델 구조별 특성을 파악하고, 인사이트를 공유합니다.
+    </p>
+  </div>
+
+  <div class="parallel">
+    <div class='parallel-item'>
+      <h3>Hierarchical Encoder</h3>
+      <ul>
+        <li>
+          <p>
+            긴 입력시퀀스를 잘 이해할 수 있도록 Hierarchical Encoder를 구현하고, 성능을 평가합니다
+          </p>
+          <div class="btn-list">
+            <a href="/hierarchical" class="btn-type-1">Detail</a>
+            <a href="#" class="btn-type-1">Code</a>
+          </div>
+
+        </li>
+      </ul>
+    </div>
+
+    <div class='parallel-item'>
+      <h3>Sparse Attention</h3>
+      <ul>
+        <li>
+          <p>
+            Full Attention 연산의 복잡도를 개선시킨 Sparse Attention Based Model을 구현하고, 성능을 비교해봅니다 
+          </p>
+          <div class="btn-list">
+            <a href="/sparse_attention" class="btn-type-1">Detail</a>
+            <a href="#" class="btn-type-1">Code</a>
+          </div>
+
+        </li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="parallel">
+    <div class='parallel-item' style="width: 47%">
+      <h3>Summarization Blend</h3>
+      <ul>
+        <li>
+          <p>
+            앞선 연구들의 결과를 활용해 개선된 Summarization Model을 구현하고, 성능을 확인합니다
+          </p>
+          <div class="btn-list">
+            <a href="/sum_blend" class="btn-type-1">Detail</a>
+            <a href="#" class="btn-type-1">Code</a>
+          </div>
+
+        </li>
+      </ul>
+    </div>
+
+  </div>
+
+</div>
+
+
 <script src="./assets/js/script.js"></script>
         
         </div>

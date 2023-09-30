@@ -1,0 +1,271 @@
+---
+layout: default
+permalink: /dialog_blend
+---
+
+
+<div id="detail">
+  <h3 class="title">의미적으로 다양한 대화 생성을 위한 학습 방법론 구현</h3>
+
+  <div class="tblContents">
+    <ul>
+      <li>
+        <a href="#1">1. Introduction</a>
+      </li>
+
+      <li>
+        <a href="#2">2. Background</a>
+        <ul>
+          <li>
+            <a href="#2.1">2.1 Transformer</a>
+          </li>
+          <li>
+            <a href="#2.2">2.2 Inductive Bias</a>
+          </li>
+          <li>
+            <a href="#2.3">2.3 Natural Architecture Search</a>
+          </li>
+        </ul>
+      </li>
+      
+      <li>
+        <a href="#3">3. Architecure</a>
+        <ul>
+          <li>
+            <a href="#3.1">3.1 Common Encoder</a>
+          </li>
+          <li>
+            <a href="#3.2">3.2 Simple Model</a>
+          </li>
+          <li>
+            <a href="#3.2">3.3 Fused Model</a>
+          </li>
+          <li>
+            <a href="#3.3">3.4 Lever Model</a>
+          </li>
+        </ul>
+      </li>
+
+      <li>
+        <a href="#4">4. Experimental Setup</a>
+        <ul>
+          <li>
+            <a href="#4.1">4.1 Data Setups</a>
+          </li>
+          <li>
+            <a href="#4.2">4.2 Model Setups</a>
+          </li>
+          <li>
+            <a href="#4.3">4.3 Training Setups</a>
+          </li>
+          <li>
+            <a href="#4.4">4.4 Model desc</a>
+          </li>
+        </ul>
+      </li>
+
+      <li>
+        <a href="#5">5. Results</a>
+      </li>
+
+      <li>
+        <a href="#6">6. Conclusion</a>
+      </li>
+
+      <li>
+        <a href="#7">7. Reference</a>
+      </li>
+
+    </ul>
+  </div>
+
+
+  
+  <div class="post">
+    <h2 id="1">1. Introduction</h2>
+      <p>
+        &nbsp; 최근 몇 년 동안 딥러닝은 자연어 처리(NLP)를 비롯한 다양한 분야에서 상당한 발전을 이루었습니다. 이 중에서도 큰 주목을 받은 혁신적인 모델 중 하나가 Transformer입니다. Transformer는 Attention Mechanism을 통한 시퀀스 처리라는 새로운 접근법을 도입함으로써, 기존의 순차적 데이터 처리 방식을 혁신적으로 변화시켰습니다. 이런 성공과 더불어 Transformer를 근간으로하는 많은 연구들이 진행되고 있습니다. 하지만 대부분 연구들이 Transformer를 그대로 활용하며 추가적 발전 방안에 집중하기에, Transformer 모델 자체적인 구조 변화에 따른 자연어 처리에서의 성능 비교라는 연구는 상대적으로 부족합니다.
+      </p>
+      <p>
+        따라서 본 프로젝트에서는 Transformer 모델의 구조에 집중하며, <strong>Standard Transformer</strong>, <strong>Recurrent Transformer</strong>, <strong>Evolved Transformer</strong>라는 세 가지 Transformer 모델을 직접 구현하여 각 모델을 <strong>Neural Machine Translation</strong>, <strong>Dialogue Generation</strong>, <strong>Text Summarization</strong>이라는 세 가지 자연어 생성 과제에서 성능을 평가합니다. 이를 통해 Transformer 모델의 구조 변화가 자연어 처리 과제에 미치는 영향을 평가할 수 있습니다.
+      </p>
+
+    <h2 id="2">2. Background</h2>
+
+      <h3 id="2.1">2.1 Transformer</h3>
+        <p>
+          &nbsp; Transformer의 도래 이전, 시퀀스 데이터의 처리에는 RNN 기반의 모델들이 지배적 위치를 점하고 있었습니다. RNN은 순서 정보의 의존성을 잘 포착할 수 있다는 장점이 있지만, 순차적인 연산과정에서 발생하는 병렬화의 어려움과 장거리 데이터간의 의존성 처리의 어려움이라는 단점이 존재했습니다. Transformer는 이러한 한계를 극복하기 위해 self-attention 메커니즘을 통해 모든 입력 토큰 간의 관계를 동시에 계산하는 방법을 선택했으며, 덕분에 병렬 처리가 가능해져 RNN보다 훨씬 빠른 학습과 추론 속도를 제공했습다. 뿐만 아니라 Transformer는 self-attention 메커니즘을 통해 임의 위치 간 의존성을 효과적으로 포착하며 장기 의존성을 보다 잘 처리했습니다. 결과적으로 Transformer는 문장 전체의 의미를 파악하거나, 긴 문맥을 이해하는 등 어려운 환경에서도 우수한 성능을 보이며, 성공적으로 RNN 구조를 대체하게 되었습니다.
+        </p>
+
+      <h3 id="2.2" class="h3-mt">2.2 Inductive Bias</h3>
+        <p>
+          &nbsp; Inductive Bias는 기계 학습 모델이 주어진 학습 데이터로부터 일반화하는 데에 어떤 가정이나 제한사항을 가지고 있는 것을 말합니다. 이러한 가정이나 제한사항은 모델이 어떤 가설 공간을 탐색하고 어떤 가설을 선호하는지에 영향을 미칩니다.nductive Bias는 모델이 일반화 능력과 학습 데이터에 대한 의존성을 조절하는 역할을 합니다. 적절한 nductive Bias는 모델이 주어진 문제에 적합하고 일반화하기 쉽도록 도와줍니다.
+        </p>
+        <p>
+          하지만 Transformer의 경우, 복잡한 모델 구조 때문에 Inductive Bias가 부족하기 쉽습니다. 때문에 간단한 과제 해결과정에서 RNN보다 못한 성능을 보이는 경우도 종종 발생합니다. Universal Transformer 논문에서는 Transformer 레이어 연결과정에서 RNN의 핵심개념이었던 재귀적인 연결 방식을 차용함으로써 Inductive Bias의 향상을 도모할 수 있다고 주장합니다.
+        </p>
+
+      <h3 id="2.3" class="h3-mt">2.3 Natural Architecture Search</h3>
+        <p>
+          &nbsp; Neural Architecture Search (NAS)는 인공 신경망 구조를 자동으로 탐색하는 알고리즘으로, 기계 학습과 딥러닝 모델의 설계 프로세스를 자동화하여 최적의 신경망 구조를 찾는 데 사용됩니다. 기존의 딥러닝 모델링은 엔지니어가 손수 설계하고 최적화하는 일련의 과정을 도맡아 했습니다. 하지만 이러한 과정은 많은 시간과 노력을 필요로 하며, 최적의 구조를 찾는 것이 어려운 경우도 있습니다. NAS는 이러한 문제를 해결하기 위해 컴퓨터가 신경망 구조를 자동으로 발견하고 최적화할 수 있도록 돕습니다.
+        </p>
+        <p>
+          NAS는 주어진 문제에 대한 최적의 신경망 구조를 찾기 위해 다양한 탐색 공간에서 구조를 생성하고 평가합니다. 이를 위해 NAS는 다양한 기법을 사용합니다. 예를 들어, 구조적인 변형이나 파라미터 조정을 통해 새로운 구조를 생성하고, 각 구조를 평가하기 위해 검증 세트나 교차 검증을 사용합니다. 이러한 과정을 반복하여 가장 성능이 우수한 신경망 구조를 찾습니다. 이런 NAS를 활용해 보다 고도화된 Transformer 모델을 구축한 결과물이 바로 Evolved Transformer입니다.
+        </p>
+
+    <h2 id="3">3. Architecture</h2>
+      <h3>3.1 Common Components</h3>
+        <div class="img-container">
+          <ul>
+            <li>Encoder Decoder Architecture
+              <ul>
+                <li>Encoder</li>
+                <li>Decoder</li>
+              </ul>
+            </li>
+
+            <li>Embeddings
+              <ul>
+                <li>Token Embedding</li>
+                <li>Position Embedding</li>
+              </ul>
+            </li>
+
+            <li>Multi-Head Attention
+              <ul>
+                <li>다수의 어텐션 헤드를 통해 입력 시퀀스의 의미를 다각도로 포착</li>
+                <li>어텐션은 주어진 쿼리, 키, 밸류 쌍 간의 관련성을 계산해 가중 평균을 산출</li>
+              </ul>
+            </li>
+          
+          </ul>
+        </div>
+
+      <h3 class="h3-mt">3.2 Standard Transfomrer</h3>
+        <div class="img-container">
+          <img src="{{ 'assets/img/project_01/standard_transformer.png' | relative_url }}">
+          <ul>
+            <li>Standard Transformer
+              <ul>
+                <li>Encoder</li>
+                <li>Decoder</li>
+              </ul>
+            </li>
+
+            <li>Encoder Layer
+              <ul>
+                <li>Sub-Layer 1</li>
+                <li>Sub-Layer 2</li>
+              </ul>
+            </li>
+
+            <li>Decoder Layer
+              <ul>
+                <li>Sub-Layer 1</li>
+                <li>Sub-Layer 2</li>
+                <li>Sub-Layer 3</li>
+              </ul>
+            </li>
+
+          </ul>
+        </div>
+
+      <h3 id="2" class="h3-mt">3.3 Recurrent Transformer</h3>
+        <div class="img-container">
+          <img src="{{ 'assets/img/project_01/recurrent_transformer.png' | relative_url }}">
+          <ul>
+            <li>Recurrent Transformer
+              <ul>
+                <li>Encoder</li>
+                <li>Decoder</li>
+              </ul>
+            </li>
+
+            <li>Encoder Layer
+              <ul>
+                <li>Sub-Layer 1</li>
+                <li>Sub-Layer 2</li>
+                <li>Sub-Layer 3</li>
+              </ul>
+            </li>
+
+            <li>Decoder Layer
+              <ul>
+                <li>Sub-Layer 1</li>
+                <li>Sub-Layer 2</li>
+                <li>Sub-Layer 3</li>
+                <li>Sub-Layer 4</li>
+              </ul>
+            </li>
+
+          </ul>
+        </div>
+
+      <h3 id="3" class="h3-mt">3.4 Evolved Transformer</h3>
+        <div class="img-container">
+          <img src="{{ 'assets/img/project_01/evolved_transformer.png' | relative_url }}">
+          <ul>
+            <li>Evolved Transformer
+              <ul>
+                <li>Encoder</li>
+                <li>Decoder</li>
+              </ul>
+            </li>
+
+            <li>Cell
+              <ul>
+                <li>Sub-Layer 1</li>
+                <li>Standard Transformer에서 2개 레이어에 걸친 연산 과정을 고도화 시킨 SubLayer를 Evolved Transformer에서는 Cell이라고 표현</li>
+              </ul>
+            </li>
+
+            <li>Encoder Cell
+              <ul>
+                <li>Block 1</li>
+                <li>Block 2</li>
+                <li>Block 3</li>
+                <li>Block 4</li>
+                <li>Block 5 & 6</li>
+              </ul>
+            </li>
+
+            <li>Decoder Cell
+              <ul>
+                <li>Block 1</li>
+                <li>Block 2</li>
+                <li>Block 3</li>
+                <li>Block 4</li>
+                <li>Block 5</li>
+                <li>Block 6 & 7</li>
+              </ul>
+            </li>
+
+          </ul>
+        </div>
+
+    <h2 id="4" class="h3-mt">4. Experimental Setup</h2>
+      <h3 id="4.1">4.1 Data Setups</h3>
+
+      <h3 id="4.2" class="h3-mt">4.2 Model Setups</h3>
+      
+      <h3 id="4.3" class="h3-mt">4.3 Training Setups</h3>
+      
+      <h3 id="4.4" class="h3-mt">4.4 Model desc</h3>
+
+
+    <h2 id="5" class="h3-mt">5. Result</h2>
+
+
+    <h2 id="6" class="h3-mt">6. Conclusion</h2>
+
+
+    <h2 id="7" class="h3-mt">7. Reference</h2>
+
+
+  </div>
+</div>
+
+<div class="pagination">
+  <a href="{{ '/project_03' | relative_url }}" class="btn-prev"></a>
+  <a href="{{ '/project_05' | relative_url }}" class="btn-next"></a>
+</div>
