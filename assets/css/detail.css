@@ -9,7 +9,7 @@
 #detail h1,
 #detail h2,
 #detail h3 {
-  font-family: "Open Sans", sans-serif;
+  font-family: "Arial", serif;
   font-weight: 550;
 }
 #detail h2 {
@@ -20,18 +20,24 @@
 #detail h2::after {
   content: "";
   position: absolute;
-  top: 1.5em;
-  left: 2em;
-  transform: translateX(-50%);
-  width: 4em;
+  top: 1.6em;
+  left: 0;
+  width: 100%;
   height: 4px;
   background-color: #eceff1;
 }
+
 #detail .title {
-  font-size: 32px;
   margin: 10px 0;
   font-weight: 550;
+  font-size: 26px;
 }
+#detail .title-line {
+  width: 100%;
+  height: 4px;
+  background-color: #eceff1;
+}
+
 #detail .post {
   font-size: 15.5px;
   margin-top: 10px;
@@ -51,7 +57,7 @@
 /* Table of Contents */
 .tblContents {
   width: 100%;
-  margin: 4.5em 0 0 0;
+  margin: 4em 0 0 0;
 }
 .tblContents ul {
   padding-left: 1em;
@@ -167,7 +173,7 @@
 .img-container img {
   flex: 0 0 auto;
   margin-right: 2.8em;
-  width: 300px;
+  width: 270px;
 }
 .img-container ul {
   display: block;
