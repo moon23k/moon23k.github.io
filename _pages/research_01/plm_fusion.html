@@ -5,7 +5,7 @@ permalink: /plm_fusion
 
 
 <div id="detail">
-  <h3 class="title">한국어 데이터 부족 해결을 위한 Back Translation 조건 별 성능 비교</h3>
+  <h3 class="title">사전학습 된 인코더의 결합 방식에 따른 자연어 생성 능력 성능 비교</h3>
 
   <div class="tblContents">
     <ul>
@@ -84,27 +84,21 @@ permalink: /plm_fusion
   <div class="post">
     <h2 id="1">1. Introduction</h2>
       <p>
-        &nbsp; 성공적인 딥러닝 모델의 학습을 위해서는 양질의 대량 데이터가 필수적입니다. 하지만 원하는 도메인의 데이터를 필요한 만큼 확보하기란 매우 어렵습니다. 특히 기계 번역과 같이 Source-Target Language Pair 형식의 데이터가 필요한 경우에는 더욱 그러합니다. 쌍으로 된 데이터에 비해 단일 언어로만 구성된 데이터는 상대적으로 구하기 용이합니다. 이런 단일 언어 데이터를 활용해 학습 데이터를 증강시키는 방식이 Back Translation이라고 합니다. Back Translation을 통한 데이터 증강이 모델 학습에서 긍정적인 효과를 줄 수 있음은 다양한 연구를 통해 증명되었습니다. 특히나 ~~라는 논문에서는 디테일한 연구로 Back Translation의 효용가치를 증명했습니다. 하지만, 이러한 연구는 영어라는 사용자가 많은 언어에 기반하고 있으며, 상대적으로 사용자 및 데이터가 적은 한국어에서 Back Translation에 관한 연구는 체계적으로 이루어지지 않았습니다. ~~논문에서 처럼 대규모 데이터에 관한 연구는 안되겠지만, 가능한 선에서 한국어 번역 데이터의 부족을 해결하기 위한 일련의 실험은 진행합니다.   
+        &nbsp; 사전 학습 언어 모델은 다양한 자연어 처리에서 좋은 성능을 보이고 있습니다. 특히 BERT를 필두로 한 NLU Task에 강점을 보이는 사전학습 Encoder 모델들이 뛰어난 모습을 보이고 있습니다.
+        이 글에서는 Sequence to Sequence 모델을 구성함에 있어 필수적인 Encoder와 Decoder의 결합 방식에서, 사전학습된 인코더를 활용하는 두가지 결합 방법론에 대해 살펴보고, 직접 구현후 세가지 자연어 생성과제에서의 성능을 비교 분석해봅니다. 
       </p>
-      <p>
-        실험에서는 Translation 모델과, Back Translation모델을 별개로 두고, 최종 목적은 Translation 모델의 성공적인 학습으로 설정하고, 이를 돕기 위한 다양한 방법론을 사용해봅니다.
-        교착어라는 한국어의 언어적인 특성에 맞추어 일련의 실험 세부설정에 변화를 추가합니다.
 
-        Back Translation의 주요 변인은 다음과 같습니다.
-
-        1. 생성 데이터와 실제 데이터의 비율에서의 비교
-        2. 데이터를 생성하는 과정에서의 디테일 비교
-        3. 데이터에 의도적인 노이즈를 추가하는 방식에 따른 비교
-      </p>
 
     <h2 id="2">2. Background</h2>
 
-      <h3 id="2.1">2.1 Neural Machine Translation</h3>
+      <h3 id="2.1">2.1 Pre Trained Encoder Model</h3>
         <p>
-          &nbsp; Neural Machine Translation, 딥러닝 모델을 통한 기계번역은 자연어 처리의 대표적인 과제 중 하나입니다. 기계번역은 원천언어 시퀀스를 입력값으로 받아, 동일한 의미를 갖는 목표언어 시퀀스로의 변환을 목표로 합니다. 모델의 학습을 위해서는   
+          &nbsp; BERT와 같이 Transformer의 Encoder만으로 구성되어, 사전학습되고, 일반적으로는 NLU Task에서 활용되는 모델들을 Pre Trained Encoder라고 할 수 있습니다.
+          이러한 사전학습 인코더 모델들을 
+
         </p>
 
-      <h3 id="2.2" class="h3-mt">2.2 Back Translation</h3>
+      <h3 id="2.2" class="h3-mt">2.2 Transf</h3>
         <p>
           &nbsp; Inductive Bias는 기계 학습 모델이 주어진 학습 데이터로부터 일반화하는 데에 어떤 가정이나 제한사항을 가지고 있는 것을 말합니다. 이러한 가정이나 제한사항은 모델이 어떤 가설 공간을 탐색하고 어떤 가설을 선호하는지에 영향을 미칩니다.nductive Bias는 모델이 일반화 능력과 학습 데이터에 대한 의존성을 조절하는 역할을 합니다. 적절한 nductive Bias는 모델이 주어진 문제에 적합하고 일반화하기 쉽도록 도와줍니다.
         </p>
