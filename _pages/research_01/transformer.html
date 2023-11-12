@@ -14,27 +14,7 @@ permalink: /transformer
       </li>
       
       <li>
-        <a href="#2">2. Architecure</a>
-        <ul>
-          <li>
-            <a href="#2.1">2.1 Encodings</a>
-          </li>
-          <li>
-            <a href="#2.2">2.2 Attention</a>
-          </li>
-          <li>
-            <a href="#2.3">2.3 Position wise Feed Forward</a>
-          </li>
-          <li>
-            <a href="#2.4">2.4 Encoder</a>
-          </li>
-          <li>
-            <a href="#2.5">2.5 Decoder</a>
-          </li>
-          <li>
-            <a href="#2.6">2.6 Transformer</a>
-          </li>                    
-        </ul>
+        <a href="#2">2. Transformer Architecure</a>
       </li>
 
       <li>
@@ -89,14 +69,15 @@ permalink: /transformer
 
     <h2 id="1">1. Introduction</h2>
       <p>
-        &nbsp; Transformer는 어텐션 메커니즘 만으로 문맥 전체적인 내용을 포착하는 뛰어난 성능과 더불어 병렬처리로 인한 학습의 효율성까지 제고시킨 뛰어난 모델 구조입니다.
+        &nbsp; 앞선 프로젝트에서는 RNN을 기반으로한 Sequence to Sequence 모델 구조의 효용성에 대해 면밀히 살펴봤습니다. 
+        하지만 RNN 네트워크는 장기기억력이라는 관점에서 고질적인 문제점을 태생적으로 지니고 있으며, 이를 해결하기 위한 Attention 메커니즘의 활용 역시 기대만큼 좋은 성능을 보이지는 못했습니다.
+        Transformer는 어텐션 메커니즘 만으로 문맥 전체적인 내용을 포착하는 뛰어난 성능과 더불어 병렬처리로 인한 학습의 효율성까지 제고시킨 뛰어난 모델 구조입니다.
         이 글에서는 Transformer의 구조에 대한 설명과 더불어, 두가지 방식에서의 Code Implementation 방식을 알아봅니다. 또한 이렇게 구현한 Transformer 모델이 세가지 자연어 생성 과제에서 어떤 성능을 보이는지 비교해봅니다.
       </p>
 
 
 
     <h2 id="2">2. Architecture</h2>
-      <h3>2.1 Embeddings</h3>
         <div class="img-container">
           <ul>
             <li>Encoder Decoder Architecture
@@ -119,135 +100,81 @@ permalink: /transformer
                 <li>어텐션은 주어진 쿼리, 키, 밸류 쌍 간의 관련성을 계산해 가중 평균을 산출</li>
               </ul>
             </li>
+
+            <li>Position Wise Feed Forward
+              <ul>
+                <li>다수의 어텐션 헤드를 통해 입력 시퀀스의 의미를 다각도로 포착</li>
+                <li>어텐션은 주어진 쿼리, 키, 밸류 쌍 간의 관련성을 계산해 가중 평균을 산출</li>
+              </ul>
+            </li>
+
+            <li>Encoder Layer
+              <ul>
+                <li>다수의 어텐션 헤드를 통해 입력 시퀀스의 의미를 다각도로 포착</li>
+                <li>어텐션은 주어진 쿼리, 키, 밸류 쌍 간의 관련성을 계산해 가중 평균을 산출</li>
+              </ul>
+            </li>
+
+            <li>Decoder Layer
+              <ul>
+                <li>다수의 어텐션 헤드를 통해 입력 시퀀스의 의미를 다각도로 포착</li>
+                <li>어텐션은 주어진 쿼리, 키, 밸류 쌍 간의 관련성을 계산해 가중 평균을 산출</li>
+              </ul>
+            </li>            
+
+            <li>Encoder
+              <ul>
+                <li>다수의 어텐션 헤드를 통해 입력 시퀀스의 의미를 다각도로 포착</li>
+                <li>어텐션은 주어진 쿼리, 키, 밸류 쌍 간의 관련성을 계산해 가중 평균을 산출</li>
+              </ul>
+            </li>
+
+            <li>Decoder
+              <ul>
+                <li>다수의 어텐션 헤드를 통해 입력 시퀀스의 의미를 다각도로 포착</li>
+                <li>어텐션은 주어진 쿼리, 키, 밸류 쌍 간의 관련성을 계산해 가중 평균을 산출</li>
+              </ul>
+            </li>
           
           </ul>
         </div>
 
-      <h3 class="h3-mt">3.2 Standard Transfomrer</h3>
-        <div class="img-container">
-          <img src="{{ 'assets/img/project_01/standard_transformer.png' | relative_url }}">
-          <ul>
-            <li>Standard Transformer
-              <ul>
-                <li>Encoder</li>
-                <li>Decoder</li>
-              </ul>
-            </li>
 
-            <li>Encoder Layer
-              <ul>
-                <li>Sub-Layer 1</li>
-                <li>Sub-Layer 2</li>
-              </ul>
-            </li>
+    <h2 id="3">3. Code Implementation</h2>
+      <h3 id="3.1">3.1 From Scratch</h3>
 
-            <li>Decoder Layer
-              <ul>
-                <li>Sub-Layer 1</li>
-                <li>Sub-Layer 2</li>
-                <li>Sub-Layer 3</li>
-              </ul>
-            </li>
+        <pre><code class="python">def fib(n):
+        a, b = 0, 1
+          while a < n:
+            print(a, end=' ')
+            a, b = b, a+b
+            print()
+        fib(1000)</code></pre>
 
-          </ul>
-        </div>
 
-      <h3 id="2" class="h3-mt">3.3 Recurrent Transformer</h3>
-        <div class="img-container">
-          <img src="{{ 'assets/img/project_01/recurrent_transformer.png' | relative_url }}">
-          <ul>
-            <li>Recurrent Transformer
-              <ul>
-                <li>Encoder</li>
-                <li>Decoder</li>
-              </ul>
-            </li>
-
-            <li>Encoder Layer
-              <ul>
-                <li>Sub-Layer 1</li>
-                <li>Sub-Layer 2</li>
-                <li>Sub-Layer 3</li>
-              </ul>
-            </li>
-
-            <li>Decoder Layer
-              <ul>
-                <li>Sub-Layer 1</li>
-                <li>Sub-Layer 2</li>
-                <li>Sub-Layer 3</li>
-                <li>Sub-Layer 4</li>
-              </ul>
-            </li>
-
-          </ul>
-        </div>
-
-      <h3 id="3" class="h3-mt">3.4 Evolved Transformer</h3>
-        <div class="img-container">
-          <img src="{{ 'assets/img/project_01/evolved_transformer.png' | relative_url }}">
-          <ul>
-            <li>Evolved Transformer
-              <ul>
-                <li>Encoder</li>
-                <li>Decoder</li>
-              </ul>
-            </li>
-
-            <li>Cell
-              <ul>
-                <li>Sub-Layer 1</li>
-                <li>Standard Transformer에서 2개 레이어에 걸친 연산 과정을 고도화 시킨 SubLayer를 Evolved Transformer에서는 Cell이라고 표현</li>
-              </ul>
-            </li>
-
-            <li>Encoder Cell
-              <ul>
-                <li>Block 1</li>
-                <li>Block 2</li>
-                <li>Block 3</li>
-                <li>Block 4</li>
-                <li>Block 5 & 6</li>
-              </ul>
-            </li>
-
-            <li>Decoder Cell
-              <ul>
-                <li>Block 1</li>
-                <li>Block 2</li>
-                <li>Block 3</li>
-                <li>Block 4</li>
-                <li>Block 5</li>
-                <li>Block 6 & 7</li>
-              </ul>
-            </li>
-
-          </ul>
-        </div>
+      <h3 id="3.2">3.2 Pytorch</h3>
+      
 
 
 
 
-
-
-
-    <h2 id="4" class="h3-mt">4. Experimental Setup</h2>
+    <h2 id="4">4. Experimental Setup</h2>
       <h3 id="4.1">4.1 Data Setups</h3>
 
-      <h3 id="4.2" class="h3-mt">4.2 Model Setups</h3>
+      <h3 id="4.2">4.2 Model Setups</h3>
       
-      <h3 id="4.3" class="h3-mt">4.3 Training Setups</h3>
+      <h3 id="4.3">4.3 Training Setups</h3>
       
-      <h3 id="4.4" class="h3-mt">4.4 Model desc</h3>
+      <h3 id="4.4">4.4 Model desc</h3>
 
 
-    <h2 id="5" class="h3-mt">5. Result</h2>
+    <h2 id="5">5. Result</h2>
       기존 RNN 네트워크의 Sequence to Sequence 모델에서 Attention을 활용하는 방식의 성능을 포함시켜서 성능 비교 ㄱㄱ
 
-    <h2 id="6" class="h3-mt">6. Conclusion</h2>
+    <h2 id="6">6. Conclusion</h2>
 
 
-    <h2 id="7" class="h3-mt">7. Reference</h2>
+    <h2 id="7">7. Reference</h2>
 
 
 

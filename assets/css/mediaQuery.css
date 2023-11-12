@@ -10,10 +10,13 @@
 }
 @media only screen and (max-width: 1200px) {
   header {
-    padding: 0 calc((100% - 970px) / 2);
+    padding: 0 calc((100% - 980px) / 2);
   }
   .contents {
-    width: 970px;
+    width: 980px;
+  }
+  #detail {
+    padding: 0 120px 150px 120px;
   }
 }
 @media only screen and (max-width: 992px) {
@@ -22,6 +25,12 @@
   }
   .contents {
     width: 750px;
+  }
+  .contents .info{
+    padding: 8em 0 5em;
+  }
+  .contents .container{
+    padding: 5em 0;
   }
   .contents .project-list ul,
   .contents .project-list dl.type-right ul {
@@ -68,7 +77,10 @@
     font-size: 13px;
     margin-top: 40px;
   }
+
+  
 }
+
 @media only screen and (max-width: 768px) {
   header {
     padding: 0;

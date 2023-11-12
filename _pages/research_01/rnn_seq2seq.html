@@ -5,127 +5,145 @@ permalink: /rnn_seq2seq
 
 
 <div id="detail">
-  <h3 class="title">RNN 레이어 별 Sequence to Sequence Model의 자연어 생성능력 비교 분석</h3>
-
-  <div class="tblContents">
-    <ul>
-      <li>
-        <a href="#1">1. Introduction</a>
-      </li>
-
-      <li>
-        <a href="#2">2. Background</a>
-        <ul>
-          <li>
-            <a href="#2.1">2.1 RNN</a>
-          </li>
-          <li>
-            <a href="#2.2">2.2 LSTM</a>
-          </li>
-          <li>
-            <a href="#2.3">2.3 GRU</a>
-          </li>
-        </ul>
-      </li>
-      
-      <li>
-        <a href="#3">3. Architecure</a>
-      </li>
-
-      <li>
-        <a href="#4">4. Experimental Setup</a>
-        <ul>
-          <li>
-            <a href="#4.1">4.1 Data Setups</a>
-          </li>
-          <li>
-            <a href="#4.2">4.2 Model Setups</a>
-          </li>
-          <li>
-            <a href="#4.3">4.3 Training Setups</a>
-          </li>
-          <li>
-            <a href="#4.4">4.4 Model desc</a>
-          </li>
-        </ul>
-      </li>
-
-      <li>
-        <a href="#5">5. Results</a>
-      </li>
-
-      <li>
-        <a href="#6">6. Conclusion</a>
-      </li>
-
-      <li>
-        <a href="#7">7. Reference</a>
-      </li>
-
-    </ul>
-  </div>
-
-
-  
+  <h1 class="title">Sequence to Sequence Modeling with RNN Cells</h1>  
   <div class="post">
-    <h2 id="1" class="h3-mt">1. &hairsp; Introduction</h2>
+    <h2 id="1">1. &hairsp; Project Desc</h2>
 
-      <div style="text-align: center; margin: 1em 0;">
-        <img src="{{ 'assets/img/research_01/fnn_rnn.png' | relative_url }}" style="width: 500px; height: 220px; display: block; margin: 0 auto;">
+      <div class="small-spacer"></div>
+
+      <h3>RNN Network</h3>
+      <div style="text-align: center; margin: 0.5em 0;">
+        <img src="{{ 'assets/img/research_01/fnn_rnn.png' | relative_url }}" style="width: 480px; height: 200px; display: block; margin: 0 auto;">
       </div>
 
       <p>
-        &nbsp; Recurrent Neural Network, RNN은 현 시점의 모델 예측값을 생성하기 위해 이전 시점의 정보를 회귀적으로 가져오는 네트워크 구조를 의미합니다.
-        일반적인 RNN 네트워크의 활용에서는 매 시점마다, 현 시점의 결과값을 생성하지만, 가변적인 길이의 입력값과 출력값을 다루는 Task에서는 제대로 대응하기 힘들다는 단점이 있습니다. 이를 해결하기 위해 <b>Sequence to Sequence Learning</b> 논문에서는 Encoder와 Decoder를 활용하는 방식을 제안합니다.
-        이번 프로젝트에서는 대표적인 RNN 계열의 세 가지 네트워크인 <b>RNN, LSTM, GRU</b>를 이용한 Sequence to Sequence 모델을 구현하고, 기계 번역, 대화 생성, 문서 요약이라는 세 가지 자연어 생성 과제에서의 성능을 비교해봅니다.
+        &nbsp; 딥러닝 모델의 가장 기초적인 레이어인 FFNN(Feedforward Neural Network)은 데이터의 입력부터 모델의 최종 출력값의 산출 까지 모든 과정에서의 결과값이 단일 방향으로만 전달됩니다. 하지만 FFNN은 언어와 같은 시퀀셜 데이터의 순서 정보를 반영하기 어렵다는 한계점을 지니고 있습니다. 이를 해결하기 위해 고안된 신경망 네트워크 구조가 바로 RNN (Recurrent Neural Network)입니다. RNN은 이전 Time Step에서의 결과과 자기 회귀적으로 다시금 레이어의 입력값으로 주어지기 때문에, 순차적인 정보를 처리 할 수 있는 구조를 지닙니다. 대표적인 RNN 레이어를 구성하는 Cell들로는 RNN, LSTM, GRU가 있으며, 각 Cell에 대한 상세는 아래와 같습니다.  
+      </p>
+
+      <div class="spacer"></div>
+
+      <h3>RNN Cells</h3>
+        
+        <div class="img-container">
+          <ul>
+            <li>RNN
+              <ul>
+                <li>다음은 LaTeX 수식의 예제입니다: \( \int_{a}^{b} x^2 \,dx \)</li>
+                <li>여러 문장간 의미를 파악할 수 있도록 Token Type Id에 변형을 가함</li>
+                <li>층이 깊어짐에 따라 기울기 소실의 문제점 발생</li>
+              </ul>
+            </li>
+          </ul>
+          <img src="{{ 'assets/img/research_01/rnn_cell.png' | relative_url }}">
+        </div>
+
+        <div class="img-container">
+          <ul>
+            <li>LSTM
+              <ul>
+                <li>다음은 LaTeX 수식의 예제입니다: \( \int_{a}^{b} x^2 \,dx \)</li>
+                <li>RNN의 Gradient Vanishing문제를 일부 해소</li>
+                <li>Gate 활용</li>
+              </ul>
+            </li>
+          </ul>
+          <img src="{{ 'assets/img/research_01/lstm_cell.png' | relative_url }}">
+        </div>
+
+        <div class="img-container">
+          <ul>
+            <li>GRU
+              <ul>
+                <li>다음은 LaTeX 수식의 예제입니다: \( \int_{a}^{b} x^2 \,dx \)</li>
+                <li>LSTM의 복잡함을 단순화 시키면서도, 성능을 비슷하게 유지하기 위해 개량된 Cell구조</li>
+                <li>최대 수용가능한 문장길이 512 → 2048로 확장</li>
+              </ul>
+            </li>
+          </ul>
+          <img src="{{ 'assets/img/research_01/gru_cell.png' | relative_url }}">
+        </div>
+
+      <div class="spacer"></div>
+      <h3>Sequence to Sequnce</h3>
+        <div style="text-align: center; margin: 0.5em 0;">
+          <img src="{{ 'assets/img/research_01/seq2seq.png' | relative_url }}" style="width: 450px; height: 180px; display: block; margin: 0 auto;">
+        </div>      
+      <p>
       </p>
 
 
-    <h2 id="2">2. &hairsp; Background</h2>
-      <h3 id="2.1" class="h3-mt">2.1 &hairsp; RNN</h3>
-        <p>
-          &nbsp; RNN은 시퀀스 데이터처리에 강점을 지닌 신경망입니다. 시퀀스 데이터는 특정 순서를 가진 데이터로, 시계열, 혹은 자연어 분야의 데이터가 시퀀스 데이터에 해당합니다.
-          RNN과 대비되는 이전 네트워크 개념으로는 
-        </p>
+    <h2 id="2">2. Experimental Setup</h2>
 
-      <h3 id="2.2" class="h3-mt">2.2 &hairsp; LSTM</h3>
-        <p>
-          &nbsp; LSTM은 기존 RNN의 장기기억력에서의 단점을 개선시키기 위해 제시된 순환 네트워크 레이어입니다.
-        </p>
+      <div class="small-spacer"></div>
+      <h3>Data Setup</h3>
+        <div class="img-container">
+          <ul>
+            <li>Machine Translation</li>
+            <p>기계 번역을 위해서는 WMT14의 En-De 데이터셋을 사용
+              최소길이 100, 최대길이 300자 사이의 데이터들로만 선별
+            </p>
+            
+            <div class="half-spacer"></div>
+            <li>Dialogue Generation</li>
+            <p>Daily Dialogue와 Persona Chat의 일부분을 발췌해서 데이터셋 구성.
+              Daily Dialogue와 Persona Chat 모두 멀티턴 발화 데이터이기에, Daily Dialogue Dataset은 전체 대화를 하나의 싱글턴으로 분할해서 데이터에 포함시키고, Persona Chat은 첫번째 발화만을 선별해서 포함시킴.
+              데이터 길이는 300자 이하의 대화 데이터만을 포함
+            </p>              
+            
+            <div class="half-spacer"></div>
+            <li>Text Summarization</li>
+            <p>
+            </p>
 
-      <h3 id="2.3" class="h3-mt">2.3 &hairsp; GRU</h3>
-        <p>
-          &nbsp; GRU는 LSTM의 복잡성을 개선시킨 순환 네트워크 레이어입니다.
-        </p>
-
-    <h2 id="3">3. Architecture</h2>
-
-      <div style="text-align: center; margin: 1em 0;">
-        <img src="{{ 'assets/img/research_01/encoder_decoder.png' | relative_url }}" style="width: 500px; height: 220px; display: block; margin: 0 auto;">
-      </div>
-
-      <p>Sequence to Sequence 모델은 Encoder와 Decoder로 이루어진 모델 아키텍처를 의미합니다.
-      </p>
-
-
-
-    <h2 id="4" class="h3-mt">4. Experimental Setup</h2>
-      <h3 id="4.1">4.1 Data Setups</h3>
-
-      <h3 id="4.2" class="h3-mt">4.2 Model Setups</h3>
-      
-      <h3 id="4.3" class="h3-mt">4.3 Training Setups</h3>
-      
-      <h3 id="4.4" class="h3-mt">4.4 Model desc</h3>
+            <div class="half-spacer"></div>
+            <li>Tokenizer
+              <p>BPE Tokenizer를 활용. Vocab Size는 15,000개로, 각 Task마다 별도로 Tokenizer를 학습시켜 사용
+              </p>              
+            </li>                        
+          </ul>
+        </div>
 
 
-    <h2 id="5" class="h3-mt">5. Result</h2>
+      <div class="spacer"></div>
+      <h3>Model Setup</h3>
+        <div class="img-container">
+          <ul>
+            <li>RNN Network Setup
+            </li>
+            <li>Dimension Setup
+              <p>
+              </p>
+            </li>
+            <li>Text Summarization
+            </li>       
+          </ul>
+        </div>
 
 
-    <h2 id="6" class="h3-mt">6. Conclusion</h2>
+      <div class="spacer"></div>
+      <h3>Training Setup</h3>
+        <div class="img-container">
+          <ul>
+            <li>Machine Translation
+            </li>
+            <li>Dialogue Generation
+            </li>
+            <li>Text Summarization
+            </li>
+            <li>Tokenizer
+            </li>                        
+          </ul>
+        </div>        
 
 
-    <h2 id="7" class="h3-mt">7. Reference</h2>
+
+    <h2 id="5" class="h3-mt">3. Result</h2>
+
+
+    <h2 id="6" class="h3-mt">4. Conclusion</h2>
+
+
+    <h2 id="7" class="h3-mt">5. Reference</h2>
 
 
   </div>

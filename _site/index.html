@@ -20,6 +20,16 @@
   <link rel="stylesheet" href="/assets/css/footer.css" />    
   <link rel="stylesheet" href="/assets/css/mediaQuery.css" />
 
+
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/styles/default.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+
+  <script type="text/javascript" async
+      src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+  </script>
+
 </head>
 
   <body>
@@ -65,11 +75,11 @@
 
   <div class="parallel">
     <div class='parallel-item'>
-      <h3>RNN Sequence to Sequence</h3>
+      <h3>RNN Seq2Seq Modeling</h3>
       <ul>
         <li>
           <p> &nbsp;
-            RNN, LSTM, GRU 세가지 네트워크를 활용한 Sequence to Sequence 모델 구조를 구현하고, 자연어 생성 과제에서 실효성 검증
+            RNN, LSTM, GRU 네트워크를 활용한 Sequence to Sequence 모델 구조를 구현하고, 자연어 생성 과제에서의 실효성 비교 검증
           </p>
           <div class="btn-list">
             <a href="/rnn_seq2seq" class="btn-type-1">Detail</a>
@@ -81,11 +91,11 @@
     </div>
 
     <div class='parallel-item'>
-      <h3>RNN Sequence to Sequence with Attention</h3>
+      <h3>RNN Seq2Seq with Attention</h3>
       <ul>
         <li>
           <p> &nbsp;
-            GRU Sequence to Sequence 모델 구조에서 세 가지 어텐션 메커니즘 연결 구조를 구현하고, 자연어 생성 과제에서 실효성 검증
+            GRU Sequence to Sequence 모델 구조에서 세 가지 어텐션 메커니즘 연결 구조를 구현하고, 자연어 생성 과제에서의 실효성 비교 검증
           </p>
           <div class="btn-list">
             <a href="/rnn_seq2seq_attn" class="btn-type-1">Detail</a>
@@ -104,7 +114,7 @@
       <ul>
         <li>
           <p> &nbsp;
-            Transformer를 직접 구현한 모델과 Pytorch 라이브러리에서 제공하는 Transformer 모델과의 성능을 자연어 생성 과제에서 비교
+            Transformer를 직접 구현한 모델과 Pytorch 라이브러리에서 제공하는 Transformer 모델과의 성능을 자연어 생성 과제에서 비교 검증
           </p>
           <div class="btn-list">
             <a href="/transformer" class="btn-type-1">Detail</a>
@@ -120,7 +130,7 @@
       <ul>
         <li>
           <p> &nbsp;
-            Standard, Recurrent, Evolved Transformer 모델을 구현하고 , 자연어 생성 과제에서 모델 별 성능 비교 검증
+            Standard, Recurrent, Evolved Transformer 모델을 구현하고, 자연어 생성 과제에서 모델 별 성능 비교 검증
           </p>
           <div class="btn-list">
             <a href="/transformer_variants" class="btn-type-1">Detail</a>
@@ -139,7 +149,7 @@
       <ul>
         <li>
           <p> &nbsp;
-            Transformer 모델의 Encoder와 Decoder를 Depth와 Width 적인 측면에서 다르게 디자인하고, 각 디자인 별 성능을 자연어 생성 과제에서 검증
+            Transformer 모델의 Encoder와 Decoder를 Depth와 Width적인 측면에서 다르게 디자인하고, 각 디자인 별 성능을 자연어 생성 과제에서 검증
           </p>
           <div class="btn-list">
             <a href="/balance" class="btn-type-1">Detail</a>
@@ -202,11 +212,11 @@
     </div>
 
     <div class='parallel-item'>
-      <h3>Efficient PreTrained Language Models</h3>
+      <h3>Efficient PreTrained Models</h3>
       <ul>
         <li>
           <p> &nbsp; 
-            경량화를 목적으로 진행된 네 가지 사전학습 모델들 마다의 성능 및 효율성을 검증
+            효율성 증진이라는 목적으로 개발된 사전학습 모델들의 실제 효용성 비교 검증
           </p>
           <div class="btn-list">
             <a href="/eff_model" class="btn-type-1">Detail</a>
@@ -225,7 +235,7 @@
       <ul>
         <li>
           <p> &nbsp; 
-            사전학습 모델을 한정된 컴퓨팅 자원에서 효과적으로 미세조정하기 위한 PEFT 방식의 실효성 검증
+            대규모 사전학습 모델을 한정된 자원에서 효과적으로 파인튜닝하기 위한 PEFT 방식 마다의 실효성 비교 검증
           </p>
           <div class="btn-list">
             <a href="/peft" class="btn-type-1">Detail</a>
@@ -319,8 +329,27 @@
         </li>
       </ul>
     </div>
-
   </div>
+
+
+  <div class="parallel">
+    <div class='parallel-item' style="width: 47%">
+      <h3>Custom PreTraining</h3>
+      <ul>
+        <li>
+          <p> &nbsp; 
+            Down Streaming Task에만 초점을 맞춘 커스텀 사전학습을 통해 모델 성능의 제고 방식 연구
+          </p>
+          <div class="btn-list">
+            <a href="/sum_blend" class="btn-type-1">Detail</a>
+            <a href="#" class="btn-type-1">Code</a>
+          </div>
+
+        </li>
+      </ul>
+    </div>
+  </div>
+
 
 </div>
 
@@ -422,7 +451,7 @@
 
   <div class="parallel">
     <div class='parallel-item'>
-      <h3>Characteristic Dialogue Generation</h3>
+      <h3>Characteristic Generation</h3>
       <ul>
         <li>
           <p> &nbsp; 
@@ -554,7 +583,6 @@
         </li>
       </ul>
     </div>
-
   </div>
 
 </div>

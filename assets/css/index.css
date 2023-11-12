@@ -97,10 +97,10 @@
   color: #4c4c4c;
   font-size: 18px;
   line-height: 1.8;
-  padding-left: 0.5em;
   margin-bottom: 0.5em;
   font-family: "Arial", serif;
   background-color: #ECEFF1;
+  text-align: center;
 }
 
 .contents .container .parallel h3::after {
