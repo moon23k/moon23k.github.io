@@ -44,3 +44,7 @@ h1, h2, h3, h4, h5 {
   box-shadow: 0 1px 0 #b0c5d2
 }
 
+pre {
+  overflow-x: auto; /* 좌우 스크롤을 적용할 수 있도록 설정 */
+  max-width: 100%; /* 코드 스니펫이 부모 컨테이너를 넘어가지 않도록 설정 */
+}
