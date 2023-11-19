@@ -213,7 +213,8 @@
   padding: 5px;
   border-radius: 1px;
   font-family: "Courier New", Courier, monospace;
-  font-size: 14px;
+  font-size: 13px;
+  line-height: 1.6;
 }
 
 /* MathJax 스타일 조정 */

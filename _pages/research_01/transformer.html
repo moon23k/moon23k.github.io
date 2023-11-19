@@ -5,69 +5,11 @@ permalink: /transformer
 
 
 <div id="detail">
-  <h3 class="title">Transformer 모델 구현과 자연어 생성 과제에서의 성능 측정</h3>
-
-  <div class="tblContents">
-    <ul>
-      <li>
-        <a href="#1">1. Introduction</a>
-      </li>
-      
-      <li>
-        <a href="#2">2. Transformer Architecure</a>
-      </li>
-
-      <li>
-        <a href="#3">3. Code Implementation</a>
-        <ul>
-          <li>
-            <a href="#3.1">3.1 From Scratch</a>
-          </li>
-          <li>
-            <a href="#3.2">3.2 Pytorch</a>
-          </li>
-        </ul>
-      </li>
-
-
-      <li>
-        <a href="#4">4. Experimental Setup</a>
-        <ul>
-          <li>
-            <a href="#4.1">4.1 Data Setups</a>
-          </li>
-          <li>
-            <a href="#4.2">4.2 Model Setups</a>
-          </li>
-          <li>
-            <a href="#4.3">4.3 Training Setups</a>
-          </li>
-          <li>
-            <a href="#4.4">4.4 Model desc</a>
-          </li>
-        </ul>
-      </li>
-
-      <li>
-        <a href="#5">5. Results</a>
-      </li>
-
-      <li>
-        <a href="#6">6. Conclusion</a>
-      </li>
-
-      <li>
-        <a href="#7">7. Reference</a>
-      </li>
-
-    </ul>
-  </div>
-
-
-  
+  <h1 class="title">Transformer Implementation and Comparative Analytics</h1>  
   <div class="post">
+    <h2>1. &hairsp; Project Desc</h2>
 
-    <h2 id="1">1. Introduction</h2>
+      <div class="small-spacer"></div>
       <p>
         &nbsp; 앞선 프로젝트에서는 RNN을 기반으로한 Sequence to Sequence 모델 구조의 효용성에 대해 면밀히 살펴봤습니다. 
         하지만 RNN 네트워크는 장기기억력이라는 관점에서 고질적인 문제점을 태생적으로 지니고 있으며, 이를 해결하기 위한 Attention 메커니즘의 활용 역시 기대만큼 좋은 성능을 보이지는 못했습니다.
@@ -75,113 +17,393 @@ permalink: /transformer
         이 글에서는 Transformer의 구조에 대한 설명과 더불어, 두가지 방식에서의 Code Implementation 방식을 알아봅니다. 또한 이렇게 구현한 Transformer 모델이 세가지 자연어 생성 과제에서 어떤 성능을 보이는지 비교해봅니다.
       </p>
 
+    <h2>2. &hairsp; Implementation</h2>
+
+    <div class="half-spacer"></div>
+    <h3>Transformer</h3>
+    <div class="small-spacer"></div>
+    <p>Transformer Model은 임베딩과, 인코더, 디코더 그리고 Generator로 구성됩니다. x데이터는 임베딩과 인코더를 거쳐 Memory Vector로 변환되고, 디코더는 y데이터와 메모리 벡터를 사용해 최종 Hidden Vector를 생성합니다.
+      그리고 마지막 선형 변환 레이어를 통해 Vocab Size만큼의 Token으로 시퀀스를 변환해서 최종 결과값을 반환합니다.
+    </p>
+    <div class="half-spacer"></div>
+
+    <div class="code-container">
+      <div class="code-snippet">
+        <pre><code class="python">
+class ScratchModel(nn.Module):
+
+    def __init__(self, config):
+        super(ScratchModel, self).__init__()
+
+        self.pad_id = config.pad_id
+        self.device = config.device
+
+        self.encoder = Encoder(config)
+        self.decoder = Decoder(config)
+        self.generator = nn.Linear(config.hidden_dim, config.vocab_size)
 
 
-    <h2 id="2">2. Architecture</h2>
-        <div class="img-container">
-          <ul>
-            <li>Encoder Decoder Architecture
-              <ul>
-                <li>Encoder</li>
-                <li>Decoder</li>
-              </ul>
-            </li>
-
-            <li>Embeddings
-              <ul>
-                <li>Token Embedding</li>
-                <li>Position Embedding</li>
-              </ul>
-            </li>
-
-            <li>Multi-Head Attention
-              <ul>
-                <li>다수의 어텐션 헤드를 통해 입력 시퀀스의 의미를 다각도로 포착</li>
-                <li>어텐션은 주어진 쿼리, 키, 밸류 쌍 간의 관련성을 계산해 가중 평균을 산출</li>
-              </ul>
-            </li>
-
-            <li>Position Wise Feed Forward
-              <ul>
-                <li>다수의 어텐션 헤드를 통해 입력 시퀀스의 의미를 다각도로 포착</li>
-                <li>어텐션은 주어진 쿼리, 키, 밸류 쌍 간의 관련성을 계산해 가중 평균을 산출</li>
-              </ul>
-            </li>
-
-            <li>Encoder Layer
-              <ul>
-                <li>다수의 어텐션 헤드를 통해 입력 시퀀스의 의미를 다각도로 포착</li>
-                <li>어텐션은 주어진 쿼리, 키, 밸류 쌍 간의 관련성을 계산해 가중 평균을 산출</li>
-              </ul>
-            </li>
-
-            <li>Decoder Layer
-              <ul>
-                <li>다수의 어텐션 헤드를 통해 입력 시퀀스의 의미를 다각도로 포착</li>
-                <li>어텐션은 주어진 쿼리, 키, 밸류 쌍 간의 관련성을 계산해 가중 평균을 산출</li>
-              </ul>
-            </li>            
-
-            <li>Encoder
-              <ul>
-                <li>다수의 어텐션 헤드를 통해 입력 시퀀스의 의미를 다각도로 포착</li>
-                <li>어텐션은 주어진 쿼리, 키, 밸류 쌍 간의 관련성을 계산해 가중 평균을 산출</li>
-              </ul>
-            </li>
-
-            <li>Decoder
-              <ul>
-                <li>다수의 어텐션 헤드를 통해 입력 시퀀스의 의미를 다각도로 포착</li>
-                <li>어텐션은 주어진 쿼리, 키, 밸류 쌍 간의 관련성을 계산해 가중 평균을 산출</li>
-              </ul>
-            </li>
-          
-          </ul>
-        </div>
+    def pad_mask(self, x):
+        return (x != self.pad_id).unsqueeze(1).unsqueeze(2)
 
 
-    <h2 id="3">3. Code Implementation</h2>
-      <h3 id="3.1">3.1 From Scratch</h3>
-
-        <pre><code class="python">def fib(n):
-        a, b = 0, 1
-          while a < n:
-            print(a, end=' ')
-            a, b = b, a+b
-            print()
-        fib(1000)</code></pre>
+    def dec_mask(self, x):
+        sz = x.size(1)
+        pad_mask = self.pad_mask(x)
+        sub_mask = torch.tril(torch.ones((sz, sz), device=self.device)).bool()
+        return pad_mask & sub_mask
 
 
-      <h3 id="3.2">3.2 Pytorch</h3>
-      
+    def forward(self, x, y):
+        e_mask = self.pad_mask(x) 
+        d_mask = self.dec_mask(y)
+
+        memory = self.encoder(x, e_mask)
+        dec_out = self.decoder(y, memory, e_mask, d_mask)
+        logit = self.generator(dec_out)
+
+        return logit
+        </code></pre>
+      </div>
+    </div>
+
+
+    <div class="spacer"></div>
+    <h3>Encoder</h3>
+    <div class="small-spacer"></div>
+    <p>Transformer Model은 임베딩과, 인코더, 디코더 그리고 Generator로 구성됩니다. x데이터는 임베딩과 인코더를 거쳐 Memory Vector로 변환되고, 디코더는 y데이터와 메모리 벡터를 사용해 최종 Hidden Vector를 생성합니다.
+      그리고 마지막 선형 변환 레이어를 통해 Vocab Size만큼의 Token으로 시퀀스를 변환해서 최종 결과값을 반환합니다.
+    </p>
+    <div class="half-spacer"></div>
+
+    <div class="code-container">
+      <div class="code-snippet">
+        <pre><code class="python">
+class EncoderLayer(nn.Module):
+
+    def __init__(self, config):
+        super().__init__()
+
+        self.self_attn = MultiHeadAttention(config)
+        self.pff = PositionwiseFeedForward(config)
+
+        hidden_dim = config.hidden_dim
+        self.self_attn_norm = nn.LayerNorm(hidden_dim)
+        self.pff_norm = nn.LayerNorm(hidden_dim)
+        
+        self.dropout = nn.Dropout(config.dropout_ratio)
+
+
+    def forward(self, x, e_mask):
+        _x = self.self_attn(x, x, x, e_mask)
+        x = self.self_attn_norm(x + self.dropout(_x))
+        _x = self.pff(x)
+        x = self.pff_norm(x + self.dropout(_x))
+
+        return x
 
 
 
+class Encoder(nn.Module):
 
-    <h2 id="4">4. Experimental Setup</h2>
-      <h3 id="4.1">4.1 Data Setups</h3>
+    def __init__(self, config):
+        super().__init__()
 
-      <h3 id="4.2">4.2 Model Setups</h3>
-      
-      <h3 id="4.3">4.3 Training Setups</h3>
-      
-      <h3 id="4.4">4.4 Model desc</h3>
+        self.device = config.device
+        self.emb = Embeddings(config)
+        self.dropout = nn.Dropout(config.dropout_ratio)
 
-
-    <h2 id="5">5. Result</h2>
-      기존 RNN 네트워크의 Sequence to Sequence 모델에서 Attention을 활용하는 방식의 성능을 포함시켜서 성능 비교 ㄱㄱ
-
-    <h2 id="6">6. Conclusion</h2>
+        self.layers = nn.ModuleList(
+            [EncoderLayer(config) for _ in range(config.n_layers)]
+        )
 
 
-    <h2 id="7">7. Reference</h2>
+    def forward(self, x, e_mask):
+        x = self.emb(x)
+        for layer in self.layers:
+            x = layer(x, e_mask)
+        return x
 
+        </code></pre>
+      </div>
+    </div>
+
+
+    <div class="spacer"></div>
+    <h3>Decoder</h3>
+    <div class="small-spacer"></div>
+    <p>디코더는 디코더 레이어를 중첩시킨 구조로 이루어져 있습니다. 각각의 디코더 레이어에서는 
+    </p>
+    <div class="half-spacer"></div>
+
+    <div class="code-container">
+      <div class="code-snippet">
+        <pre><code class="python">
+class DecoderLayer(nn.Module):
+
+    def __init__(self, config):
+        super().__init__()
+
+        self.self_attn = MultiHeadAttention(config)
+        self.enc_attn = MultiHeadAttention(config)
+        self.pff = PositionwiseFeedForward(config)
+
+        hidden_dim = config.hidden_dim
+        self.self_attn_norm = nn.LayerNorm(hidden_dim)
+        self.enc_attn_norm = nn.LayerNorm(hidden_dim)
+        self.pff_norm = nn.LayerNorm(hidden_dim)
+
+        self.dropout = nn.Dropout(config.dropout_ratio)
+
+
+    def forward(self, x, m, e_mask, d_mask):
+
+        _x = self.self_attn(x, x, x, d_mask)
+        x = self.self_attn_norm(x + self.dropout(_x))
+
+        _x = self.enc_attn(x, m, m, e_mask)
+        x = self.enc_attn_norm(x + self.dropout(_x))
+
+        _x = self.pff(x)
+        x = self.pff_norm(x + self.dropout(_x))
+
+        return x
+
+
+
+class Decoder(nn.Module):
+    def __init__(self, config):
+        super().__init__()
+
+        self.device = config.device
+        self.emb = Embeddings(config)
+        self.dropout = nn.Dropout(config.dropout_ratio)
+
+        self.layers = nn.ModuleList(
+            [DecoderLayer(config) for _ in range(config.n_layers)]
+        )
+
+
+    def forward(self, x, memory, e_mask, d_mask):
+        x = self.emb(x)
+        for layer in self.layers:
+            x = layer(x, memory, e_mask, d_mask)
+        return x
+
+        </code></pre>
+      </div>
+    </div>
+
+
+
+    <div class="spacer"></div>
+    <h3>Embedding</h3>
+    <div class="small-spacer"></div>
+    <p>디코더는 디코더 레이어를 중첩시킨 구조로 이루어져 있습니다. 각각의 디코더 레이어에서는 
+    </p>
+    <div class="half-spacer"></div>
+
+    <div class="code-container">
+      <div class="code-snippet">
+        <pre><code class="python">
+class PositionalEncoding(nn.Module):
+    def __init__(self, config):
+        super(PositionalEncoding, self).__init__()
+        
+        max_len = config.max_len if config.task != 'summarization' else config.max_len * 4
+        pe = torch.zeros(max_len, config.emb_dim)
+        
+        position = torch.arange(0, max_len).unsqueeze(1)
+        div_term = torch.exp(
+            torch.arange(0, config.emb_dim, 2) * -(math.log(10000.0) / config.emb_dim)
+        )
+        
+        pe[:, 0::2] = torch.sin(position * div_term)
+        pe[:, 1::2] = torch.cos(position * div_term)
+        pe = pe.unsqueeze(0)
+
+        self.register_buffer('pe', pe)
+        
+
+    def forward(self, x):
+        return x + self.pe[:, :x.size(1)]
+
+
+
+class Embeddings(nn.Module):
+    def __init__(self, config):
+        super(Embeddings, self).__init__()
+
+        self.tok_emb = nn.Embedding(config.vocab_size, config.emb_dim)
+        self.scale = math.sqrt(config.emb_dim)
+
+        self.pos_emb = PositionalEncoding(config)
+        self.pos_dropout = nn.Dropout(config.dropout_ratio)
+
+        self.use_fc_layer = (config.emb_dim != config.hidden_dim)
+        if self.use_fc_layer:
+            self.fc = nn.Linear(config.emb_dim, config.hidden_dim)
+            self.fc_dropout = nn.Dropout(config.dropout_ratio)
+
+
+    def forward(self, x):
+        out = self.tok_emb(x) * self.scale
+        out = self.pos_dropout(self.pos_emb(out))
+
+        if not self.use_fc_layer:
+            return out
+        return self.fc_dropout(self.fc(out))
+
+        </code></pre>
+      </div>
+    </div>
+
+
+    <div class="spacer"></div>
+    <h3>Multi Head Attention</h3>
+    <div class="small-spacer"></div>
+    <p>디코더는 디코더 레이어를 중첩시킨 구조로 이루어져 있습니다. 각각의 디코더 레이어에서는 
+    </p>
+    <div class="half-spacer"></div>
+
+    <div class="code-container">
+      <div class="code-snippet">
+        <pre><code class="python">
+class MultiHeadAttention(nn.Module):
+    def __init__(self, config):
+        super().__init__()
+
+        hidden_dim = config.hidden_dim
+        self.n_heads = config.n_heads
+
+        assert hidden_dim // self.n_heads
+        self.head_dim = hidden_dim // self.n_heads
+        
+        self.dropout = nn.Dropout(config.dropout_ratio)
+        self.linears = clones(nn.Linear(hidden_dim, hidden_dim), 4)
+        self.scale = torch.sqrt(torch.FloatTensor([self.head_dim])).to(config.device)
+
+
+    def forward(self, query, key, value, mask = None):
+
+        orig_shape = list(query.shape)
+        split_shape = [query.size(0), -1, self.n_heads, self.head_dim]
+
+        Q, K, V = [lin(x).view(split_shape).transpose(1, 2) \
+                   for lin, x in zip(self.linears, (query, key, value))]   
+
+        score = torch.matmul(Q, K.permute(0, 1, 3, 2)) / self.scale
+
+        if mask is not None:
+            score = score.masked_fill(mask==0, -1e10)
+
+        attention = torch.softmax(score, dim=-1)
+
+        x = torch.matmul(self.dropout(attention), V)
+        
+        x = x.permute(0, 2, 1, 3).contiguous()
+        x = x.view(orig_shape)
+
+        del Q, K, V
+
+        return self.linears[-1](x)
+
+        </code></pre>
+      </div>
+    </div>
+
+
+
+    <div class="spacer"></div>
+    <h3>Position-wise Feed Forward</h3>
+    <div class="small-spacer"></div>
+    <p>디코더는 디코더 레이어를 중첩시킨 구조로 이루어져 있습니다. 각각의 디코더 레이어에서는 
+    </p>
+    <div class="half-spacer"></div>
+
+    <div class="code-container">
+      <div class="code-snippet">
+        <pre><code class="python">
+class PositionwiseFeedForward(nn.Module):
+    def __init__(self, config):
+        super().__init__()
+
+        self.fc_1 = nn.Linear(config.hidden_dim, config.pff_dim)
+        self.fc_2 = nn.Linear(config.pff_dim, config.hidden_dim)
+        self.dropout = nn.Dropout(config.dropout_ratio)
+
+
+    def forward(self, x):
+        x = self.dropout(F.gelu(self.fc_1(x)))
+        return self.fc_2(x)        
+
+        </code></pre>
+      </div>
+    </div>
+
+
+
+    <h2>2. &hairsp; Experimental Setup</h2>
+
+      <div class="small-spacer"></div>
+      <h3>Data Setup</h3>
+      <div class="small-spacer"></div>
+      <p>Sequence Classification을 위한 대표적 데이터 셋 중하나인 AG_News를 사용.
+        데이터의 크기는 Train/ Valid/ Test 1000/ 100/ 100으로 설정
+        총 네가지 데이터 Label을 모든 데이터에서 고르게 분배해서 한쪽으로 치우치지 않도록 가공
+      </p>
+
+      <div class="spacer"></div>
+      <h3>Model Setup</h3>
+      <div class="small-spacer"></div>
+      <p>대표적인 PreTrained Model인 BERT를 사용.
+      </p>
+
+
+
+
+    <h2>3. &hairsp; Result</h2>
+    <div class="small-spacer"></div>
+    <table class="result-table">
+      <thead>
+        <tr>
+          <th>Model Type</th>
+          <th>Machine Translation</th>
+          <th>Dialogue Generation</th>
+          <th>Text Summarization</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Scratch Model</td>
+          <td>174</td>
+          <td>7.00</td>
+          <td>79</td>
+        </tr>
+        <tr>
+          <td>PyTorch Model</td>
+          <td>69</td>
+          <td>5.47</td>
+          <td>78</td>
+        </tr>
+
+      </tbody>
+    </table>
+
+
+    <h2>4. &hairsp; Conclusion</h2>
+    <div class="small-spacer"></div>
+    <p> &nbsp; 이전의 RNN 계열의 모델들 보다 속도 측면, 그리고 성능 측면에서 굉장히 진일보 했음을 실험을 통해 직접적으로 확인할 수 있었음. 구현과정에서 복잡성이 증가 했다는 단점역시, Pytorch 라이브러리의 Transformer 모델을 통해 간편하게 사용할 수 있는 편의성이 있음.
+
+    </p>  
+
+    <h2 id="7" class="h3-mt">5. &hairsp; Reference</h2>
 
 
   </div>
 </div>
 
 <div class="pagination">
-  <a href="{{ '/project_02' | relative_url }}" class="btn-prev"></a>
-  <a href="{{ '/project_04' | relative_url }}" class="btn-next"></a>
+  <a href="{{ '/rnn_seq2seq_attn' | relative_url }}" class="btn-prev"></a>
+  <a href="{{ '/transformer_variants' | relative_url }}" class="btn-next"></a>
 </div>
