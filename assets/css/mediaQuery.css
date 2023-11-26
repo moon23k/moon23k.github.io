@@ -21,10 +21,10 @@
 }
 @media only screen and (max-width: 992px) {
   header {
-    padding: 0 calc((100% - 750px) / 2);
+    padding: 0 calc((100% - 900px) / 2);
   }
   .contents {
-    width: 750px;
+    width: 900px;
   }
   .contents .info{
     padding: 8em 0 5em;
@@ -70,7 +70,7 @@
     font-size: 15px;
   }
   #detail .title {
-    font-size: 27px;
+    font-size: 22px;
     margin-top: 40px;
   }
   #detail .post {
@@ -122,10 +122,6 @@
   }
   #detail .date-author {
     font-size: 14px;
-  }
-  #detail .title {
-    font-size: 26px;
-    margin-top: 20px;
   }
   #detail .post {
     font-size: 12px;

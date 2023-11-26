@@ -33,7 +33,7 @@
 
 #detail .title {
   margin: 5em 0 2em 0;
-  font-size: 26px;
+  font-size: 27px;
   font-style: italic;
 }
 #detail .title-line {
@@ -47,6 +47,11 @@
   position: relative;
   color: #4c4c4c;
   line-height: 1.8;
+}
+
+#detail .post hr{
+  border: 0.1px solid #e8e8e8;
+  margin-top: 2em;
 }
 
 /* Table of Contents */
@@ -176,8 +181,7 @@
 }
 
 .img-container ul li {
-  margin: 0.5em 0;
-  margin-left: 0.7em;
+  margin: 0 0 0.3em 0.7em;
   font-weight: bold;
   list-style-type: disc;
   font-size: 15px;
@@ -188,6 +192,7 @@
   list-style-type: circle;
   font-size: 14px;
 }
+
 
 .small-spacer {
   height: 0.7em;
@@ -205,7 +210,10 @@
 
 .code-container {
   max-width: 800px; 
+  max-height: 450px; 
   overflow-x: auto; 
+  overflow-y: auto; 
+  margin: 0 0.5em 0 0.5em;
 }
 
 .code-snippet {
@@ -220,25 +228,55 @@
 /* MathJax 스타일 조정 */
 .MathJax_Display, .MathJax_SVG_Display {
   max-width: 100%;
-  overflow-x: auto; 
+  overflow-x: auto;
+  overflow-y: auto; 
 }
 
 
 .result-table {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 20px;
+  margin: 0 1em;
 }
 
 .result-table th {
   background-color: #f2f2f2;
   padding: 10px;
-  text-align: left;
+  text-align: center;
   border: 1px solid #ddd;
 }
 
 .result-table td {
   padding: 10px;
-  text-align: left;
+  text-align: center;
   border: 1px solid #ddd;
+}
+
+
+.reference {
+  display: inline-block; /* 인라인 요소를 블록 요소로 변경하여 넓이와 높이를 지정할 수 있습니다. */
+  position: relative; /* 상대 위치 지정 */
+  padding-left: 10px; /* dot과 링크 사이 간격 조절 */
+  text-decoration: none; /* 밑줄 제거 */
+  font-size: 16px;
+  font-family: "Arial", serif;
+  font-style: italic;
+  color: #4c4c4c;    
+  letter-spacing: 1px;
+  line-height: 1.9; 
+  margin-left: 8px;
+}
+
+/* dot 스타일 */
+.reference::before {
+  content: '\2022'; /* dot 문자 사용 */
+  font-size: 16px; /* dot 크기 조절 */
+  color: #4c4c4c; /* dot 색상 */
+  position: absolute; /* 절대 위치 지정 */
+  left: 0; /* 왼쪽 정렬 */
+}
+
+/* hover 시 스타일 변경 */
+.reference:hover {
+  color: #0077cc; /* hover 시 링크 색상 변경 */
 }

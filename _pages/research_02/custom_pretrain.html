@@ -1,0 +1,131 @@
+---
+layout: default
+permalink: /aux_train
+---
+
+
+<div id="detail">
+  <h1 class="title">Auxiliary Training Experiment to Overcome Exposure Bias Issue</h1>  
+  <div class="post">
+    <h2>1. &hairsp; Project Desc</h2>
+
+      <div class="half-spacer"></div>
+      <h3>Exposure Bias</h3>
+      <div class="small-spacer"></div>
+
+      <p>
+        &nbsp; Transformer 계열의 모델들은, 자연어 생성을 위한 학습 과정에서 Teacher Forcing기법을 활용해, 분포를 학습합니다.
+        하지만 학습이 아닌, 추론 시에는 Teacher Forcing없이, 오롯이 모델 스스로의 출력결과에만 의존하면서, 시퀀스를 생성합니다.
+        때문에 앞부분의 잘못된 추론으로 인해, 전체적인 시퀀스 출력이 잘못되는 경우도 자주 발생합니다. 
+        이렇게 처음 잘못끼운 단추로 인해, 전체 결과가 좋지 못한 방향으로 흘러가게 되는 것을 Exposure Bias문제라고 하며, 
+        Transformer 기반의 자연어 생성과제 모델에서 자주 발생합니다.
+
+        이를 해결하기 위한 방법에는 더 많은 데이터로, 더 많이 학습하며, 일반화 성능을 제고시키는 방법과 추론과 학습과정의 일치로 생성적 학습을 진행하는 방법이 있습니다.
+        하지만 전자의 경우, 데이터 확보 및 학습 과정에서 많은 자원이 필요할 수 있으며, 후자의 경우에는 Transformer의 장점이 병렬학습이 불가능하기에, 학습의 효율성이 매우 떨어진다는 단점이 있습니다.
+
+        그래서 이번 프로젝트에서는 Exposure Bias를 방지하기 위해 Auxiliary Training Objective를 활용하는 방식에 대해 깊게 탐구해봅니다. 
+      </p>
+
+
+      <div class="spacer"></div>
+      <h3>Main Training Objective: Maximum Likelihood Estimation</h3>
+      <div class="small-spacer"></div>
+      <p> &nbsp; 기울기 누적 방법은 전체 배치를 한 번에 계산하는 대신 작은 증분으로 기울기를 계산하는 방법을 지향합니다. 
+        이 방법은 모델을 통해 순전파와 역전파를 수행하면서 작은 배치에서 반복적으로 기울기를 계산하고 이 과정 동안 기울기를 누적하는 방식으로 이루어집니다. 
+        충분한 수의 기울기가 누적되면 모델의 최적화 단계가 실행됩니다. 
+        기울기 누적을 사용하면 GPU 메모리 용량의 제한을 초과하여 효과적인 배치 크기를 증가시킬 수 있습니다. 
+        그러나 기울기 누적에 의해 도입된 추가적인 순전파와 역전파는 훈련 과정을 느리게 만들 수 있다는 점을 주의해야 합니다.
+      </p>  
+
+      <div class="spacer"></div>
+      <h3>Auxiliary Training Objective: First Token Prediction</h3>
+      <div class="small-spacer"></div>
+      <p> &nbsp; 기울기 누적 방법은 전체 배치를 한 번에 계산하는 대신 작은 증분으로 기울기를 계산하는 방법을 지향합니다. 
+        이 방법은 모델을 통해 순전파와 역전파를 수행하면서 작은 배치에서 반복적으로 기울기를 계산하고 이 과정 동안 기울기를 누적하는 방식으로 이루어집니다. 
+        충분한 수의 기울기가 누적되면 모델의 최적화 단계가 실행됩니다. 
+        기울기 누적을 사용하면 GPU 메모리 용량의 제한을 초과하여 효과적인 배치 크기를 증가시킬 수 있습니다. 
+        그러나 기울기 누적에 의해 도입된 추가적인 순전파와 역전파는 훈련 과정을 느리게 만들 수 있다는 점을 주의해야 합니다.
+      </p>  
+
+
+
+
+    <h2>2. &hairsp; Experimental Setup</h2>
+
+      <div class="small-spacer"></div>
+      <h3>Data Setup</h3>
+      <div class="small-spacer"></div>
+      <p>Sequence Classification을 위한 대표적 데이터 셋 중하나인 AG_News를 사용.
+        데이터의 크기는 Train/ Valid/ Test 1000/ 100/ 100으로 설정
+        총 네가지 데이터 Label을 모든 데이터에서 고르게 분배해서 한쪽으로 치우치지 않도록 가공
+      </p>
+
+      <div class="spacer"></div>
+      <h3>Model Setup</h3>
+      <div class="small-spacer"></div>
+      <p>대표적인 PreTrained Model인 BERT를 사용.
+      </p>
+
+
+      <div class="spacer"></div>
+      <h3>Training Setup</h3>
+      <div class="small-spacer"></div>
+      <p>대표적인 PreTrained Model인 BERT를 사용.
+      </p>
+
+
+    <h2>3. &hairsp; Result</h2>
+    <div class="small-spacer"></div>
+    <table class="result-table">
+      <thead>
+        <tr>
+          <th>Training Strategy</th>
+          <th>Machine Translation</th>
+          <th>Dialogue Generation</th>
+          <th>Text Summarizaiton</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Vanilla Training</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+        </tr>
+        <tr>
+          <td>Auxiliary 0.1</td>
+          <td>결과2-1</td>
+          <td>결과2-2</td>
+          <td>결과2-3</td>
+        </tr>
+        <tr>
+          <td>Auxiliary 0.3</td>
+          <td>결과2-1</td>
+          <td>결과2-2</td>
+          <td>결과2-3</td>
+        </tr>
+
+        <tr>
+          <td>Auxiliary 0.5</td>
+          <td>결과2-1</td>
+          <td>결과2-2</td>
+          <td>결과2-3</td>
+        </tr>
+
+      </tbody>
+    </table>
+
+
+    <h2>4. &hairsp; Conclusion</h2>
+    <div class="small-spacer"></div>
+    <p>결과 분석.
+    </p>
+
+
+  </div>
+</div>
+
+<div class="pagination">
+  <a href="{{ '/peft' | relative_url }}" class="btn-prev"></a>
+  <a href="{{ '/gen_train' | relative_url }}" class="btn-next"></a>
+</div>
