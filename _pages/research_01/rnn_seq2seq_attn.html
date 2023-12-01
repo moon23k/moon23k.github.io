@@ -13,49 +13,157 @@ permalink: /rnn_seq2seq_attn
     <h2>1. &hairsp; Project Desc</h2>
 
       <div class="half-spacer"></div>
-
-      <h3>RNN Sequence to Sequence</h3>
+      <h3>Why Attention?</h3>
       <div class="small-spacer"></div>
-
       <p>
-        &nbsp; 현재 다양한 딥러닝 모델들이 다양한 분야에서 좋은 성능을 보여주고 있습니다. 
-        성능이 뛰어난, 모델을 사용하기 위해서는 사용자의 의도에 맞는 Down Stream Task Dataset에 맞춰 파인튜닝이 이뤄져야 합니다.
-        대규모 모델의 경우, 파인튜닝을 위한 자원도 많이 필요합니다.
-        모델의 성능을 포기하는 방법대신, 효율적인 학습방식으로 이 한계를 극복할수 있습니다.
-        이 프로젝트에서는 네가지 대표적인 효율적 모델 학습 방법론을 살펴보고, 실제 Sequence Classification Task에서의 효용성을 통해
-        각 방법론 별 효용성을 비교 분석해봅니다.
+        &nbsp; 앞선 <a href=""><strong>RNN Sequence to Sequence</strong></a> 프로젝트에서는 세 가지 RNN Cell을 활용한 Sequence to Sequence 모델 구조에 대해 다뤘습니다. RNN Seq2Seq 모델 구조는 인코더가 입력 시퀀스에 대한 고정된 크기의 컨텍스트 벡터를 생성하고, 생성된 컨텍스트 벡터를 활용해 디코더에서 출력 시퀀스를 생성합니다. 
+
+        하지만 입력 시퀀스의 모든 정보를 단일 고정 벡터로만으로 표현함에 있어 정보 손실이 발생하기 쉬우며, 이는 결과적으로 모델의 성능 저하로 이어집니다. 이러한 문제를 해결하기 위한 방안으로 어텐션(Attention) 기법을 활용할 수 있습니다.
+      </p>
+      <div class="small-spacer"></div>
+      <p>
+        어텐션의 기본 아이디어는 디코더에서 출력 단어를 예측하는 매 시점 (time step) 마다, 인코더에서의 전체 입력 문장을 다시 한 번 참고한다는 것입니다. 단, 전체 입력 문장을 전부 다 동일한 비율로 참고하는 것이 아닌, 해당 시점에서 예측하고자 하는 토큰과 연관이 있는 입력 시퀀스의 부분을 좀 더 집중(attention)적으로 참고합니다.
+
+        어텐션을 통해 컨텍스트 벡터에 대한 의존성을 줄이고, 입출력 값 사이의 관계성도 정밀하게 처리할 수 있습니다.  
+
+        이번 프로젝트에서는 이전 프로젝트에서 좋은 성능과 효율성을 보여줬던 GRU Cell을 활용한 Sequence to Sequnce 구조에 세 가지 Attention 기법을 적용하고, 다양한 자연어 생성 과제에서 성능 변화를 직접 확인해보며, 그 효용성을 검증합니다.
+
+        <br>
+
+        Attention은 주어진 쿼리에 대해, 키에 대한 값을 이용해, 쿼리의 답을 얻기 위해 어떤 키를 살펴봐야 하는지 계싼해주는 함수입니다. 보다 자세히 말하자면, 쿼리는 어텐션의 주체를 의미하고, 키는 쿼리에 대한 어켄션의 기여도를 계산할 대상, Value는 어텐션의 크기를 계산하기 위한 값을 의미합니다. 최종적으로는 Q, K로 얻어진 Weight을 사용해, Value의 가중합으로 Attention Value(Context Value)를 산출합니다.
+
+        <br>
+
+        어텐션 산출 과정에 대해 좀더 자세히 보자면,
+        우선 Attention Score는 쿼리와 키값을 입력으로 받아 둘 사이의 상호작용을 추출하는 과정입니다. 
+        이때 Attention Score는 중요도를 나타내는 벡터라고 볼 수 있습니다. 
+
       </p>
 
 
+
       <div class="spacer"></div>
-      <h3>Attention Methodology</h3>
+      <h3>Attention Mechanism</h3>
+
       <div class="img-container">
         <ul>
-          <li>Additive Attention</li>        
-            <p> &nbsp; 기울기 누적 방법은 전체 배치를 한 번에 계산하는 대신 작은 증분으로 기울기를 계산하는 방법을 지향합니다. 
-              이 방법은 모델을 통해 순전파와 역전파를 수행하면서 작은 배치에서 반복적으로 기울기를 계산하고 이 과정 동안 기울기를 누적하는 방식으로 이루어집니다. 
-              충분한 수의 기울기가 누적되면 모델의 최적화 단계가 실행됩니다. 
-              기울기 누적을 사용하면 GPU 메모리 용량의 제한을 초과하여 효과적인 배치 크기를 증가시킬 수 있습니다. 
-              그러나 기울기 누적에 의해 도입된 추가적인 순전파와 역전파는 훈련 과정을 느리게 만들 수 있다는 점을 주의해야 합니다.
-            </p>  
+          <div class="small-spacer"></div>
+          <li>Additive Attention</li>
 
-          <div class="half-spacer"></div>
+            <div class="latex-container">
+
+                <div class="equation-item">
+                    <p class="latex-equation">\( \mathbf{Attention \space Score} = W^T_a \tanh(W_b s_{t-1} + W_c H) \)</p>
+                </div>
+
+                <div class="equation-item">
+                    <p class="latex-equation">\( \mathbf{Attention \space Distribution} = softmax(Attention \space Score) \)</p>
+                </div>
+
+
+                <div class="equation-item">
+                    <p class="latex-equation">\( \mathbf{Attention \space Value} = H \cdot Attention \space Distribution \)</p>
+                </div>
+
+
+                <div class="equation-item">
+                    <p class="latex-equation">\( s_t = \text{Decoder}(y_{t-1}, s_{t-1}, c_t) \)</p>
+                </div>
+
+
+            </div>
+            
+            <p> Bahdanau Attention이라고도 알려져있는 Additive Attention은 글자 그대로 더하는 방식의 Attention을 의미합니다. 
+            어텐션 함수는 주어진 Query에 대해 모든 Key와의 유사도를 각각 구합니다.
+            그리고 구해낸 유사도를 키와 매핑ㄱ되어있는 각각의 Value에 바영해줍니다, 그리고 유사도가 반영된 Value를 모두 더해서 리턴합니다.
+
+            <br>
+            기존의 방법론이 디코더의 모든 Hidden State를 생성하기 위해 동일한 Context Vector를 사용했던 반면, 이 방식에서는 HIdden State를 계산할때만다, 새롭게 만들어진 Context Vector를 사용합니다.. 
+
+            </p><br>
+              
+              <div class="small-spacer"></div>
+              <p><strong>1) Attention Score 연산</strong> <br></p>
+              <p style="margin-left: 20px">
+              인코더의 Hidden State와, 디코더의 현재 time step, t시점에서의 디코더 은닉상태를 st라고 하면.
+              쿼리로는 디코더의 t-1 시점의 은닉상태 s(t-1)을 사용ㅎ합니다.
+              즉 바다나우 어텐션의 어텐션 스코어는 s(t-1)와 인코더의 의 i번째 은닉상태의 어텐션 스코어를 계산하는 것이라고 보면 됩니다. </p><br>
+
+              <div class="small-spacer"></div>
+              <p><strong>2) 소프트맥스 함수를 통해 어텐션 분포 도출</strong><br></p>
+              <p style="margin-left: 20px">
+              앞서 획득한 어텐션 스코어 벡터에 softmax함수만 적용해서, 확률분포로 변환 </p><br>
+
+              <div class="small-spacer"></div>
+              <p><strong>3) 각 인코더의 어텐션 가중치와 은닉상태를 가중합해서, 최종 어텐션 값 도출</strong></p>
+              <p style="margin-left: 20px">
+              지금까지 준비해온 정보들을 하나로 합치는 단계입니다. 어텐션은 최종 결과를 얻기 위해 각 인코더의 은닉상태와 어텐션 가중치들을 가중합합니다.
+              이 벡터는 인코더의 문맥을 포함하고 있다고 해서 컨텍스트 벡터라고 부릅니다.
+              </p><br>
+
+              <div class="small-spacer"></div>
+              <p><strong>4) 컨텍스트 벡터로부 st를 구합니다 </strong></p>
+              <p style="margin-left: 20px">
+              t-1시점의 디코더 임베딩 값과 컨텍스트 벡터를 concat해서 디코더의 입력값으로 활용</p>  
+
+          <div class="spacer"></div>
           <li>Dot Product Attention</li>        
-            <p> &nbsp; 기울기 누적 방법은 전체 배치를 한 번에 계산하는 대신 작은 증분으로 기울기를 계산하는 방법을 지향합니다. 
-              이 방법은 모델을 통해 순전파와 역전파를 수행하면서 작은 배치에서 반복적으로 기울기를 계산하고 이 과정 동안 기울기를 누적하는 방식으로 이루어집니다. 
-              충분한 수의 기울기가 누적되면 모델의 최적화 단계가 실행됩니다. 
-              기울기 누적을 사용하면 GPU 메모리 용량의 제한을 초과하여 효과적인 배치 크기를 증가시킬 수 있습니다. 
-              그러나 기울기 누적에 의해 도입된 추가적인 순전파와 역전파는 훈련 과정을 느리게 만들 수 있다는 점을 주의해야 합니다.
+
+            <div class="latex-container">
+
+                <div class="equation-item">
+                    <p class="latex-equation">\( Attention(Q, K, V) = softmax(\frac{QK^T}{\sqrt{d_k}})V \)</p>
+                </div>
+
+                <div class="equation-item">
+                    <p class="latex-equation">\( Attention \space Value = W^T_a \tanh(W_b s_{t-1} + W_c h_i) \)</p>
+                </div>
+
+            </div>
+
+
+            <p> &nbsp; Dot Product Attention
+              이방식은 추가적인 레이어가 필요없어서 효율적입니다.
+
+              소프트맥스 함수를 통해 나온 결과값은 입력 시퀀스의 각 토큰별 인코딩 된 값들이 디코더의 출력 단어를 예측하는데 있어 도움이 되는 정도를 수치화해서 표현되는 값입니다. 이 정보를 담아 디코더로 전달됩니다.
+
+              1) Attention Score의 계산
+              어텐션 스코어는 현재 디코더의 시점 t에서 단어를 예측하기 위해, 인코더의 모든 은닉상태 각각이 디코더의 현시점의 은닉상st와 얼마나 유사한지 판단하는 스코어 값입니다.
+
+              2)
+
+
             </p>  
 
           <div class="half-spacer"></div>
-          <li>Scaled Dot Product Attention</li>        
-            <p> &nbsp; 기울기 누적 방법은 전체 배치를 한 번에 계산하는 대신 작은 증분으로 기울기를 계산하는 방법을 지향합니다. 
-              이 방법은 모델을 통해 순전파와 역전파를 수행하면서 작은 배치에서 반복적으로 기울기를 계산하고 이 과정 동안 기울기를 누적하는 방식으로 이루어집니다. 
-              충분한 수의 기울기가 누적되면 모델의 최적화 단계가 실행됩니다. 
-              기울기 누적을 사용하면 GPU 메모리 용량의 제한을 초과하여 효과적인 배치 크기를 증가시킬 수 있습니다. 
-              그러나 기울기 누적에 의해 도입된 추가적인 순전파와 역전파는 훈련 과정을 느리게 만들 수 있다는 점을 주의해야 합니다.
+          <li>Scaled Dot Product Attention</li>     
+
+            <div class="latex-container">
+
+                <div class="equation-item">
+                    <p class="latex-equation">\( Attention(Q, K, V) = softmax(\frac{QK^T}{\sqrt{d_k}})V \)</p>
+                </div>
+
+                <div class="equation-item">
+                    <p class="latex-equation">\( Attention \space Value = W^T_a \tanh(W_b s_{t-1} + W_c h_i) \)</p>
+                </div>
+
+            </div>
+
+
+            <p> &nbsp; Scaled Dot Product Attention은 Dot Product Attention에 정규화를 함으로써 값의 안정화를 도모한 어텐션 기법입니다. 대표적으로 Transformer모델에서 사용되는 가장 대중적인 Attention 기법이라고 할 수 있습니다.
+
+            Dot Product Attention에 Scaling된 형태를 사용합니다,
+            Scaling을 하는 이유는 다음과 같습니다.
+            1. d_k가 커지면 QK^T의 값 역시 커진다.
+            2. QK^T 값이 커지면, softmax함수에서 gradient vanishing이 발생합니다.
+
+
             </p>  
+            <div class="small-spacer"></div>
+            <p>
+            </p>    
+
 
         </ul>
       </div>

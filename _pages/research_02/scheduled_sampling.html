@@ -17,12 +17,13 @@ permalink: /scheduled_sampling
       <div class="small-spacer"></div>
 
       <p>
-        &nbsp; 현재 다양한 딥러닝 모델들이 다양한 분야에서 좋은 성능을 보여주고 있습니다. 
-        성능이 뛰어난, 모델을 사용하기 위해서는 사용자의 의도에 맞는 Down Stream Task Dataset에 맞춰 파인튜닝이 이뤄져야 합니다.
-        대규모 모델의 경우, 파인튜닝을 위한 자원도 많이 필요합니다.
-        모델의 성능을 포기하는 방법대신, 효율적인 학습방식으로 이 한계를 극복할수 있습니다.
-        이 프로젝트에서는 네가지 대표적인 효율적 모델 학습 방법론을 살펴보고, 실제 Sequence Classification Task에서의 효용성을 통해
-        각 방법론 별 효용성을 비교 분석해봅니다.
+        &nbsp; RNN에서는 Exposure Bias를 완화하기 위한 방법으로 Scheduled Sampling이라는 기법을 사용합니다.
+        이는 Teacher Forcing에 지나치게 의존하면서, Exposure Bias 문제가 커지는 것을 방지하기 위한 하나의 방식입니다.
+
+        RNN에서 Scheduled Sampling의 효과는 입증되었습니다. RNN에서는 순차적으로 데이터를 처리하기에, Scheduled Sampling을 적용하는 것이 직관적인 반면.
+        하지만 Transformer에서는 병렬적으로 데이터를 처리하기 때문에 Scheduled Sampling의 적용이 직관적이지 않습니다.
+
+        이번 프로젝트에서는 "Scheduled Sampling for Transformers" 논문에서 소개된 방식을 적용해보며, Scheduled Sampling 방식의 효용성에 대해 검증해봅니다.
       </p>
 
       <div class="spacer"></div>
@@ -107,7 +108,7 @@ TrainingArguments(
       
       <thead>
         <tr>
-          <th>Attention Strategy</th>
+          <th>Sampling Ratio</th>
           <th>Machine Translation</th>
           <th>Dialogue Generation</th>
           <th>Text Summarization</th>
@@ -116,21 +117,28 @@ TrainingArguments(
 
       <tbody>
         <tr>
-          <td>Vanilla Transformer</td>
+          <td>Sampling 0</td>
           <td>-</td>
           <td>-</td>
           <td>-</td>
         </tr>
       
         <tr>
-          <td>Simple Model</td>
+          <td>Sampling 0.1</td>
           <td>결과2-1</td>
           <td>결과2-2</td>
           <td>결과2-3</td>
         </tr>
       
         <tr>
-          <td>Fused Model</td>
+          <td>Sampling 0.3</td>
+          <td>결과2-1</td>
+          <td>결과2-2</td>
+          <td>결과2-3</td>
+        </tr>
+
+        <tr>
+          <td>Sampling 0.5</td>
           <td>결과2-1</td>
           <td>결과2-2</td>
           <td>결과2-3</td>

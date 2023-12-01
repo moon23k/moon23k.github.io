@@ -36,7 +36,7 @@ permalink: /peft
       <h3>Prompt Tuning</h3>
 
       <div style="text-align: center;">
-        <img src="{{ 'assets/img/research_02/prompt_tuning.png' | relative_url }}" style="width:530px; display: block; margin: 0 auto;">
+        <img src="{{ 'assets/img/research_03/prompt_tuning.png' | relative_url }}" style="width:530px; display: block; margin: 0 auto;">
       </div>
       <div class="small-spacer"></div>
       <p>
@@ -51,7 +51,7 @@ permalink: /peft
       <div class="spacer"></div>
       <h3>Prefix Tuning</h3>
       <div style="text-align: center;">
-        <img src="{{ 'assets/img/research_02/prefix_tuning.png' | relative_url }}" style="width:430px; height: 70%; display: block; margin: 0 auto;">
+        <img src="{{ 'assets/img/research_03/prefix_tuning.png' | relative_url }}" style="width:430px; height: 70%; display: block; margin: 0 auto;">
       </div>
 
       <div class="small-spacer"></div>
@@ -63,7 +63,7 @@ permalink: /peft
       <div class="spacer"></div>
       <h3>P Tuning</h3>
       <div style="text-align: center;">
-        <img src="{{ 'assets/img/research_02/p_tuning.png' | relative_url }}" style="width:80%; height:180px; display: block; margin: 0 auto;">
+        <img src="{{ 'assets/img/research_03/p_tuning.png' | relative_url }}" style="width:80%; height:180px; display: block; margin: 0 auto;">
       </div>
 
       <div class="small-spacer"></div>
@@ -145,44 +145,67 @@ TrainingArguments(
         <tr>
           <th>PEFT Strategy</th>
           <th>Train Time</th>
-          <th>GPU Occupation</th>
           <th>Accuracy</th>
+          <th>Trainable Param Ratio</th>
+          <th>Avg GPU Memory</th>
+          <th>Max GPU Memory</th>
+          
         </tr>
       </thead>
 
       <tbody>
         <tr>
-          <td>Baseline</td>
-          <td>174</td>
-          <td>7.00</td>
-          <td>79</td>
+          <td>Vanilla Fine Tuning</td>
+          <td>36 sec</td>
+          <td>0.81</td>
+          <td>100 %</td>
+          <td>0.43 GB</td>
+          <td>1.18 GB</td>
         </tr>
 
         <tr>
           <td>Prompt Tuning</td>
-          <td>69</td>
-          <td>5.47</td>
-          <td>78</td>
+          <td>23.7 sec</td>
+          <td>0.25</td>
+          <td>0.0098 %</td>
+          <td>0.43 GB</td>
+          <td>0.68 GB</td>
         </tr>
+
         <tr>
           <td>Prefix Tuning</td>
-          <td>182</td>
-          <td>6.29</td>
-          <td>83</td>
+          <td>70 sec</td>
+          <td>0.20</td>
+          <td>0.17 %</td>
+          <td>0.43 GB</td>
+          <td>0.67 GB</td>
         </tr>
 
         <tr>
           <td>P Tuning</td>
-          <td>239</td>
-          <td>3.54</td>
-          <td>79</td>
+          <td>68.1 sec</td>
+          <td>0.25</td>
+          <td>0.20 %</td>
+          <td>0.43 GB</td>
+          <td>0.69 GB</td>
+        </tr>
+
+        <tr>
+          <td>LoRA</td>
+          <td>57.3 sec</td>
+          <td>0.24</td>
+          <td>0.54 %</td>
+          <td>0.43 GB</td>
+          <td>0.50 GB</td>
         </tr>
 
         <tr>
           <td>IA3</td>
-          <td>179</td>
-          <td>6.72</td>
-          <td>79</td>
+          <td>61.2 sec</td>
+          <td>0.24</td>
+          <td>0.0035 %</td>
+          <td>0.42 GB</td>
+          <td>0.50 GB</td>
         </tr>
 
       </tbody>
@@ -200,5 +223,5 @@ TrainingArguments(
 
 <div class="pagination">
   <a href="{{ '/eff_model' | relative_url }}" class="btn-prev"></a>
-  <a href="{{ '/aux_train' | relative_url }}" class="btn-next"></a>
+  <a href="{{ '/back_translation' | relative_url }}" class="btn-next"></a>
 </div>

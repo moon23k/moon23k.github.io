@@ -5,7 +5,7 @@ permalink: /eff_train
 
 
 <div id="detail">
-  <h1 class="title">딥러닝 모델의 효율적 학습 방법론 비교 분석</h1>  
+  <h1 class="title">Effective Training Methodology Analytics</h1>  
   <div class="post">
     <h2>1. &hairsp; Project Desc</h2>
 
@@ -116,9 +116,11 @@ TrainingArguments(
       <thead>
         <tr>
           <th>Training Strategy</th>
-          <th>Training Time (sec)</th>
-          <th>GPU Occupation (MB)</th>
-          <th>Accuracy (%)</th>
+          <th>Training Time</th>
+          <th>Accuracy</th>
+          <th>Avg GPU Memory</th>
+          <th>Max GPU Memory</th>
+          
         </tr>
       </thead>
       <tbody>
@@ -129,7 +131,7 @@ TrainingArguments(
           <td>79</td>
         </tr>
         <tr>
-          <td>FP 16</td>
+          <td>Mixed Precision (FP 16)</td>
           <td>69</td>
           <td>5.47</td>
           <td>78</td>

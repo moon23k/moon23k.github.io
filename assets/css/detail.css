@@ -280,3 +280,20 @@
 .reference:hover {
   color: #0077cc; /* hover 시 링크 색상 변경 */
 }
+
+
+
+.latex-container {
+  background-color: #f4f4f4;
+  margin: 10px; 
+  color: #4c4c4c;
+  text-align: center;
+}
+.latex-equation {
+    font-size: 15px; 
+    margin: 10px 0;
+    display: inline-block;
+}
+.equation-item {
+    margin: 15px 0;
+}
