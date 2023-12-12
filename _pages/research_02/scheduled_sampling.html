@@ -9,6 +9,56 @@ permalink: /scheduled_sampling
   <div class="post">
 
 
+    <div class="callout">
+      <p class="highlighted-text"><span>Project Objective</span></p>
+      <div class="small-spacer"></div>
+      <p>&nbsp; RNN은 이전 스텝의 결과값을 다음 스텝의 처리과정에 재귀적으로 반영시키며, 시퀀셜 데이터를 처리하기 용이한 네트워크 구조입니다. 대표적인 RNN Cell 구조로는 RNN, LSTM, GRU
+      이 프로젝트에서는 세가지 셀 구조별 Seq2Seq 모델 구조에서 성능이 얼마나 나오는지를 비교 분석해봅니다.</p>
+    </div>
+
+    <div class="tblContents">
+      <ul>
+
+        <li>
+          <a href="#1">1. RNN Cells</a>
+          <ul>
+            <li>
+              <a href="#1.1">1.1 RNN</a>
+            </li>
+            <li>
+              <a href="#1.2">1.2 LSTM</a>
+            </li>
+            <li>
+              <a href="#1.3">1.3 GRU</a>
+            </li>          
+          </ul>
+        </li>
+        
+        <li>
+          <a href="#2">2. Architecure</a>
+        </li>
+
+        <li>
+          <a href="#3">3. Experimental Setup</a>
+        </li>
+
+        <li>
+          <a href="#4">4. Results</a>
+        </li>
+
+        <li>
+          <a href="#5">5. Conclusion</a>
+        </li>
+
+        <li>
+          <a href="#6">6. Reference</a>
+        </li>
+
+      </ul>
+    </div>
+    <hr>
+
+
 <!-- Project Desc -->    
     <h2>1. &hairsp; Project Desc</h2>
 
@@ -40,18 +90,14 @@ permalink: /scheduled_sampling
       </p>
 
       <div class="spacer"></div>
-      <h3>Scheduled Sampling</h3>
+      <h3>Scheduled Sampling for Transformers</h3>
       <div class="small-spacer"></div>
 
-      <p>
-        &nbsp; 현재 다양한 딥러닝 모델들이 다양한 분야에서 좋은 성능을 보여주고 있습니다. 
-        성능이 뛰어난, 모델을 사용하기 위해서는 사용자의 의도에 맞는 Down Stream Task Dataset에 맞춰 파인튜닝이 이뤄져야 합니다.
-        대규모 모델의 경우, 파인튜닝을 위한 자원도 많이 필요합니다.
-        모델의 성능을 포기하는 방법대신, 효율적인 학습방식으로 이 한계를 극복할수 있습니다.
-        이 프로젝트에서는 네가지 대표적인 효율적 모델 학습 방법론을 살펴보고, 실제 Sequence Classification Task에서의 효용성을 통해
-        각 방법론 별 효용성을 비교 분석해봅니다.
-      </p>
-
+      <div class="img-container">
+        <img src="{{ 'assets/img/research_02/scheduled_sampling.png' | relative_url }}" style="width: 350px; height: 320px; display: block; margin: 0 1em 0 0;">
+        <p>&nbsp; RNN에서 활용하던 Scheduled Sampling방식과 달리, Transformer를 위한 Scheduled Sampling에서는 모델의 병렬처리 된 logit값을 토큰으로 변환해, 사용자가 설정한 sampling ratio만큼 모델의 출력값과 golden label을 섞어 새로운 디코더의 입력값을 세팅합니다. 이후 
+        </p>        
+      </div>
 
 
 <!-- Experimental Setup -->    
@@ -73,32 +119,9 @@ permalink: /scheduled_sampling
       <div class="spacer"></div>
       <h3>Training Setup</h3>
       <div class="small-spacer"></div>
+      <p>&nbsp; 
+      </p>
 
-      <div class="code-container">
-        <div class="code-snippet">
-          <pre><code class="python">
-TrainingArguments(
-        output_dir= f'ckpt/{strategy}',
-        num_train_epochs= 5,
-        learning_rate= 1e-5,
-        per_device_train_batch_size= 32,
-        per_device_eval_batch_size= 32,
-        lr_scheduler_type='reduce_lr_on_plateau',
-        load_best_model_at_end= True,
-
-        save_strategy= 'epoch',
-        logging_strategy= 'epoch',
-        evaluation_strategy= 'epoch',
-
-        fp16= True if config.strategy in ['fp16', 'all'] else False,
-        fp16_opt_level= '02' if config.strategy in ['fp16', 'all'] else '01',
-        gradient_accumulation_steps = True if config.strategy in ['grad_accumulation', 'all'] else 4,
-        gradient_checkpointing= True if config.strategy in ['grad_checkpointing', 'all'] else False,
-        optim = 'adafactor' if config.strategy in ['optim', 'all'] else 'adamw_torch'
-)
-          </code></pre>
-        </div>
-      </div>
 
 
 <!-- Result -->    
@@ -117,28 +140,35 @@ TrainingArguments(
 
       <tbody>
         <tr>
-          <td>Sampling 0</td>
+          <td>0.0</td>
           <td>-</td>
           <td>-</td>
           <td>-</td>
         </tr>
       
         <tr>
-          <td>Sampling 0.1</td>
+          <td>0.1</td>
           <td>결과2-1</td>
           <td>결과2-2</td>
           <td>결과2-3</td>
         </tr>
       
         <tr>
-          <td>Sampling 0.3</td>
+          <td>0.3</td>
           <td>결과2-1</td>
           <td>결과2-2</td>
           <td>결과2-3</td>
         </tr>
 
         <tr>
-          <td>Sampling 0.5</td>
+          <td>0.5</td>
+          <td>결과2-1</td>
+          <td>결과2-2</td>
+          <td>결과2-3</td>
+        </tr>
+
+        <tr>
+          <td>Crescendo</td>
           <td>결과2-1</td>
           <td>결과2-2</td>
           <td>결과2-3</td>

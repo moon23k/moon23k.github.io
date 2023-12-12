@@ -34,11 +34,11 @@ layout: default
 
   <div class="parallel">
     <div class='parallel-item'>
-      <h3>RNN Seq2Seq Modeling</h3>
+      <h3>RNN Cells for Seq2Seq</h3>
       <ul>
         <li>
           <p> &nbsp;
-            세 가지 RNN Cell(RNN, LSTM, GRU)을 활용한 Sequence to Sequence 모델 구조를 구현하고, 자연어 생성 과제에서의 실효성 비교 검증
+            세 가지 순환 신경망(RNN, LSTM, GRU)을 활용한 Seq2Seq 모델 구조를 구현하고, 자연어 생성 과제에서의 성능 비교 검증
           </p>
           <div class="btn-list">
             <a href="{{ '/rnn_seq2seq' | relative_url }}" class="btn-type-1">Detail</a>
@@ -54,7 +54,7 @@ layout: default
       <ul>
         <li>
           <p> &nbsp;
-            GRU Sequence to Sequence 모델 구조에서 세 가지 어텐션 메커니즘 연결을 구현하고, 자연어 생성 과제에서의 실효성 비교 검증
+            GRU Seq2Seq 모델 구조에서 세 가지 어텐션 메커니즘 연결을 구현하고, 자연어 생성 과제에서의 실효성 비교 검증
           </p>
           <div class="btn-list">
             <a href="{{ '/rnn_seq2seq_attn' | relative_url }}" class="btn-type-1">Detail</a>
@@ -147,7 +147,7 @@ layout: default
   <div class="full-width">
     <h3>Training Strategy</h3>
     <p>
-      &nbsp; 앞선 프로젝트에서는 모델 구조 디자인에 집중한 연구들을 진행했습니다. 하지만 동일한 딥러닝 모델을 사용할지라도, 학습 방식에 따라 모델의 잠재력을 제대로 이끌어 낼수도, 그렇지 못할 수도 있습니다. 이번 장에서는 다양한 딥러닝 모델의 학습 방법론을 직접 구현해보고, 각 방법론 마다의 실효성을 비교 검증 해봅니다. 
+      &nbsp; 앞선 프로젝트들은 모델 디자인을 집중적으로 탐구했습니다. 하지만 동일한 디자인의 딥러닝 모델을 사용할지라도, 학습 방식에 따라 모델의 성능을 제대로 이끌어 낼수도, 그렇지 못할 수도 있습니다. 이번 장에서는 다양한 딥러닝 모델의 학습 방법론을 직접 구현해보고, 각 방법론 마다의 실효성을 비교 검증합니다.
     </p>
   </div>
 
@@ -222,12 +222,11 @@ layout: default
 
 
   <div class="parallel">
-    <div class='parallel-item'>
+    <div class='parallel-item' style="width: 47%">
       <h3>Customized Pretraining</h3>
       <ul>
         <li>
-          <p> &nbsp; 
-            목표로하는 Down Stream Task에만 초점을 맞춘 커스텀 사전학습을 통해 모델 성능의 향상성 검증
+          <p> &nbsp; 목표로하는 Down Stream Task에만 초점을 맞춘 커스텀 사전학습을 통해 모델 성능의 향상성 검증
           </p>
           <div class="btn-list">
             <a href="{{ '/custom_pretrain' | relative_url }}" class="btn-type-1">Detail</a>
@@ -238,24 +237,9 @@ layout: default
       </ul>
     </div>
 
-    <div class='parallel-item'>
-      <h3>Sheduled Sampling SeqGAN</h3>
-      <ul>
-        <li>
-          <p> &nbsp; 
-            생성적 학습에서 기인하는 SeqGAN의 효율성 저하를 Scheduled Sampling 방식으로 보완하는 방법론을 구현하고, 그 실효성을 검증
-          </p>
-          <div class="btn-list">
-            <a href="{{ '/gan_train' | relative_url }}" class="btn-type-1">Detail</a>
-            <a href="https://github.com/moon23k/Scheduled_SeqGAN" class="btn-type-1">Code</a>
-          </div>
 
-        </li>
-      </ul>
-    </div>
+
   </div>
-
-
 </div>
 
 
@@ -320,8 +304,6 @@ layout: default
     </div>
 
   </div>
-
-
 </div>
 
 

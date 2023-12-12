@@ -28,11 +28,23 @@
 }
 
 #detail h3 {
-  font-size: 17px;
+  font-size: 19px;
+  position: relative;
+  margin: 1em 0;
+  display: inline-block;
+}
+#detail h3::after {
+  content: "";
+  position: absolute;
+  top: 1.4em;
+  left: 0;
+  width: 120%;
+  height: 4px;
+  background-color: #eceff1;
 }
 
 #detail .title {
-  margin: 5em 0 2em 0;
+  margin: 5em 0 3em 0;
   font-size: 27px;
   font-style: italic;
 }
@@ -46,18 +58,17 @@
   margin: 0 0.5em 0 0.5em;
   position: relative;
   color: #4c4c4c;
-  line-height: 1.8;
+  line-height: 2;
 }
 
 #detail .post hr{
   border: 0.1px solid #e8e8e8;
-  margin-top: 2em;
+  margin: 1.5em 0;
 }
 
 /* Table of Contents */
 .tblContents {
   width: 100%;
-  margin: 4em 0 0 0;
 }
 .tblContents ul {
   padding-left: 1em;
@@ -74,6 +85,7 @@
   font-size: 14px;
   color: #808080;
   text-indent: 10px;
+  font-weight: bold; 
 }
 .tblContents ul li a::after {
   content: "";
@@ -160,54 +172,76 @@
   background-color: #ff5b33;
 }
 
-/*img-container*/
-.img-container {
-  display: grid;
-  grid-template-columns: auto 1fr; /* 첫 번째 열은 자동 크기, 두 번째 열은 남은 공간을 모두 차지 */
-  align-items: center;
+.pagination a.btn-prev span,
+.pagination a.btn-next span {
+  display: inline; 
+  position: absolute;
+  top: 50%;
+  width: 300px;
+  text-decoration: none; 
+  font-size: 16px;
+  font-family: "Arial", serif;
+  font-weight: bold;
+  color: #4c4c4c;      
+}
+.pagination a.btn-prev span {
+  transform: translateY(-50%) translateX(-50%);
+  text-align: right;
+  margin-right: 3em;
+}
+.pagination a.btn-next span {
+  transform: translateY(-50%) translateX(50%);
+  text-align: left;
+  margin-left: 3em;
+}
+.pagination a.btn-prev span:hover,
+.pagination a.btn-next span:hover {
+  color: #0077cc; /* color on hover */
+}
+
+
+
+
+/*list-container*/
+.list-container {
   margin: 1em;
   color: #4c4c4c;
-  line-height: 1.6;
+  line-height: 2;
 }
-
-.img-container img {
+.list-container img {
   margin: 0 1em;
 }
-
-.img-container ul {
+.list-container ul {
   display: flex;
   flex-direction: column;
-  width: 100%;
 }
-
-.img-container ul li {
+.list-container ul li {
   margin: 0 0 0.3em 0.7em;
   font-weight: bold;
   list-style-type: disc;
+  font-size: 16px;
+}
+.list-container ul li ul li {
+  font-weight: normal;
+  list-style-type: circle;
   font-size: 15px;
 }
 
-.img-container ul li ul li {
-  font-weight: normal;
-  list-style-type: circle;
-  font-size: 14px;
-}
 
 
+/* spaecr */
 .small-spacer {
-  height: 0.7em;
+  height: 1em;
 }
-
 .half-spacer {
-  height: 2em;
+  height: 2.5em;
 }
-
 .spacer {
-  height: 5em;
+  height: 3em;
 }
 
 
-
+/* code snippets */
 .code-container {
   max-width: 800px; 
   max-height: 450px; 
@@ -233,6 +267,7 @@
 }
 
 
+/* result-table */
 .result-table {
   width: 100%;
   border-collapse: collapse;
@@ -253,11 +288,39 @@
 }
 
 
+/* setup table */
+.setup-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 1em;
+  table-layout: fixed;
+}
+
+.setup-table th {
+  background-color: #f2f2f2;
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+
+.setup-table td {
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+
+.setup-table td .split-column{
+  text-align: left;
+  border-right: 1px solid #ddd;
+}
+
+
+/* reference */
 .reference {
-  display: inline-block; /* 인라인 요소를 블록 요소로 변경하여 넓이와 높이를 지정할 수 있습니다. */
-  position: relative; /* 상대 위치 지정 */
-  padding-left: 10px; /* dot과 링크 사이 간격 조절 */
-  text-decoration: none; /* 밑줄 제거 */
+  display: inline-block; 
+  position: relative; 
+  padding-left: 10px; 
+  text-decoration: none; 
   font-size: 16px;
   font-family: "Arial", serif;
   font-style: italic;
@@ -266,23 +329,19 @@
   line-height: 1.9; 
   margin-left: 8px;
 }
-
-/* dot 스타일 */
 .reference::before {
-  content: '\2022'; /* dot 문자 사용 */
-  font-size: 16px; /* dot 크기 조절 */
-  color: #4c4c4c; /* dot 색상 */
-  position: absolute; /* 절대 위치 지정 */
-  left: 0; /* 왼쪽 정렬 */
+  content: '\2022'; /* dot unicode */
+  font-size: 16px; /* dot size */
+  color: #4c4c4c; /* dot color */
+  position: absolute; 
+  left: 0; /* align left */
 }
-
-/* hover 시 스타일 변경 */
 .reference:hover {
-  color: #0077cc; /* hover 시 링크 색상 변경 */
+  color: #0077cc; /* color on hover */
 }
 
 
-
+/* latex */
 .latex-container {
   background-color: #f4f4f4;
   margin: 10px; 
@@ -293,7 +352,52 @@
     font-size: 15px; 
     margin: 10px 0;
     display: inline-block;
+    white-space: nowrap;
 }
 .equation-item {
     margin: 15px 0;
 }
+
+
+/* callout */
+.callout {
+    background-color: #f4f4f4; /* 주황색 배경 */
+    padding: 20px 30px; /* 내용과 테두리 간격 */
+    margin: 1em;
+    border-radius: 5px; /* 둥근 테두리 */
+}
+.callout p {
+  font-size: 15px;
+  font-weight: bold;
+}
+.callout .highlighted-text {
+    position: relative;
+    display: inline-block;
+}
+
+.callout .highlighted-text::before {
+    content: '\F0EB'; 
+    font-family: 'Font Awesome 6 Free';
+    font-size: 18px;
+    color: orange; /* 아이콘 색상 */
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.callout .highlighted-text::after {
+  content: "";
+  position: absolute;
+  top: 2.4em;
+  left: 0;
+  width: 110%;
+  height: 1.5px;
+  background-color: orange;
+}
+
+.callout .highlighted-text span {
+    padding-left: 25px; /* 아이콘과 텍스트 사이의 간격 조절 */
+    font-weight: bold;
+    font-size: 18px;
+    color: orange; /* 텍스트 색상 */
+}
+

@@ -5,143 +5,314 @@ permalink: /rnn_seq2seq
 
 
 <div id="detail">
-  <h1 class="title">Sequence to Sequence Modeling with RNN Cells</h1>  
+  <h1 class="title">RNN Cells for Seq2Seq</h1>  
   <div class="post">
-    <h2>1. &hairsp; Project Desc</h2>
 
+    <div class="callout">
+      <p class="highlighted-text"><span>Project Objective</span></p>
       <div class="small-spacer"></div>
+      <p>&nbsp; RNN은 이전 스텝의 결과값을 다음 스텝의 처리과정에 재귀적으로 반영시키며, 시퀀셜 데이터를 처리하기 용이한 네트워크 구조입니다. 대표적인 RNN Cell 구조로는 RNN, LSTM, GRU
+      이 프로젝트에서는 세가지 셀 구조별 Seq2Seq 모델 구조에서 성능이 얼마나 나오는지를 비교 분석해봅니다.</p>
+    </div>
 
-      <h3>RNN Network</h3>
-      <div style="text-align: center; margin: 0.5em 0;">
-        <img src="{{ 'assets/img/research_01/fnn_rnn.png' | relative_url }}" style="width: 480px; height: 200px; display: block; margin: 0 auto;">
+    <div class="tblContents">
+      <ul>
+
+        <li>
+          <a href="#1">1. RNN Cells</a>
+          <ul>
+            <li>
+              <a href="#1.1">1.1 RNN</a>
+            </li>
+            <li>
+              <a href="#1.2">1.2 LSTM</a>
+            </li>
+            <li>
+              <a href="#1.3">1.3 GRU</a>
+            </li>          
+          </ul>
+        </li>
+        
+        <li>
+          <a href="#2">2. Architecure</a>
+        </li>
+
+        <li>
+          <a href="#3">3. Experimental Setup</a>
+        </li>
+
+        <li>
+          <a href="#4">4. Results</a>
+        </li>
+
+        <li>
+          <a href="#5">5. Conclusion</a>
+        </li>
+
+        <li>
+          <a href="#6">6. Reference</a>
+        </li>
+
+      </ul>
+    </div>
+    <hr>
+
+
+<!-- 1. RNN Cells -->    
+    <h2 id="1">1. &hairsp; RNN Cells</h2>
+    <img src="{{ 'assets/img/research_01/cells.png' | relative_url }}" style="width: 470px; height: 135px; display: block; margin: 0 auto;">
+    
+    <h3 id="1.1">1.1 &hairsp; RNN</h3>
+    <p>
+      딥러닝 모델을 구성하는 가장 기초적인 레이어인 Fully-Connected Layer의 경우, 단지 입력값에 가중치를 곱하고, 편향을 더한 값을 다음 레이어로 전달합니다.
+      레이어 간에 공유되는 정보가 없습니다.
+      하지만 이전 시점의 정보가 다음 시점의 정보와 관련 깊은 시퀀셜 데이터를 다루기 위해서는, 이전 시점의 정보를 기억하는 것이 필수적입니다.
+      순환 신경망, Recurrent Neural Network는 이전 시점의 정보를 기억하면서, 다음 데이터들을 처리합니다.
+
+      State는 시퀀스의 Element를 순회하면서, 지금까지 처리한 정보를 저장하는 벡터입니다.
+
+      순환 신경망의 구조는 현재의 state가 그 다음 state에 영향을 미치는 재귀 함수적 형태를 띕니다.
+      은닉층의 노드에서 활성화 함수를 통해 도출한 결과값을 출력층 방향에 보냄과 동시에, 다시 은닉층 노드의 다음 계산의 입력에서 활용한다는 것이, 모든 순환 신경망 계열 레이어 구조의 공통적인 특징입니다.
+    </p>
+
+    <div class="latex-container">
+
+      <div class="equation-item">
+        <p class="latex-equation">
+          \( h_t = f(h_{t-1}, x_t)\)
+        </p>
+        <br>
+        <p class="latex-equation">
+          \( h_t = \text{Hidden State at time } t\)
+        </p>
+        <br>        
+        <p class="latex-equation">
+          \( f = \text{Activation Function} t\)
+        </p>                    
+      </div>
+    </div>
+
+    <div class="latex-container">
+      <div class="equation-item">
+        <p class="latex-equation">
+          \( y_1 = \sigma (x_1 \cdot w_1 + h_0 \cdot u_1 + b_1)\)
+        </p>
       </div>
 
-      <p>
-        &nbsp; 딥러닝 모델의 가장 기초적인 레이어인 FFNN(Feedforward Neural Network)은 데이터의 입력부터 모델의 최종 출력값의 산출 까지 모든 과정에서의 결과값이 단일 방향으로만 전달됩니다. 하지만 FFNN은 언어와 같은 시퀀셜 데이터의 순서 정보를 반영하기 어렵다는 한계점을 지니고 있습니다. 이를 해결하기 위해 고안된 신경망 네트워크 구조가 바로 RNN (Recurrent Neural Network)입니다. RNN은 이전 Time Step에서의 결과과 자기 회귀적으로 다시금 레이어의 입력값으로 주어지기 때문에, 순차적인 정보를 처리 할 수 있는 구조를 지닙니다. 대표적인 RNN 레이어를 구성하는 Cell들로는 RNN, LSTM, GRU가 있으며, 각 Cell에 대한 상세는 아래와 같습니다.  
-      </p>
+      <div class="equation-item">
+        <p class="latex-equation">
+          \( y_2 = \sigma (x_1 \cdot w_1 + h_0 \cdot u_1 + b_1)\)
+        </p>
+        <br>
+        <p class="latex-equation">
+          \( \hspace{5mm} = \sigma (x_1 \cdot w_1 + h_0 \cdot u_1 + b_1)\)
+        </p>        
+      </div>
+    </div>   
+    
 
-      <div class="spacer"></div>
-
-      <h3>RNN Cells</h3>
-        
-        <div class="img-container">
-          <ul>
-            <li>RNN
-              <ul>
-                <li>다음은 LaTeX 수식의 예제입니다: \( \int_{a}^{b} x^2 \,dx \)</li>
-                <li>여러 문장간 의미를 파악할 수 있도록 Token Type Id에 변형을 가함</li>
-                <li>층이 깊어짐에 따라 기울기 소실의 문제점 발생</li>
-              </ul>
-            </li>
-          </ul>
-          <img src="{{ 'assets/img/research_01/rnn_cell.png' | relative_url }}">
-        </div>
-
-        <div class="img-container">
-          <ul>
-            <li>LSTM
-              <ul>
-                <li>다음은 LaTeX 수식의 예제입니다: \( \int_{a}^{b} x^2 \,dx \)</li>
-                <li>RNN의 Gradient Vanishing문제를 일부 해소</li>
-                <li>Gate 활용</li>
-              </ul>
-            </li>
-          </ul>
-          <img src="{{ 'assets/img/research_01/lstm_cell.png' | relative_url }}">
-        </div>
-
-        <div class="img-container">
-          <ul>
-            <li>GRU
-              <ul>
-                <li>다음은 LaTeX 수식의 예제입니다: \( \int_{a}^{b} x^2 \,dx \)</li>
-                <li>LSTM의 복잡함을 단순화 시키면서도, 성능을 비슷하게 유지하기 위해 개량된 Cell구조</li>
-                <li>최대 수용가능한 문장길이 512 → 2048로 확장</li>
-              </ul>
-            </li>
-          </ul>
-          <img src="{{ 'assets/img/research_01/gru_cell.png' | relative_url }}">
-        </div>
-
-      <div class="spacer"></div>
-      <h3>Sequence to Sequnce</h3>
-        <div style="text-align: center; margin: 0.5em 0;">
-          <img src="{{ 'assets/img/research_01/seq2seq.png' | relative_url }}" style="width: 450px; height: 180px; display: block; margin: 0 auto;">
-        </div>      
-      <p>
-      </p>
+    <h3 id="1.2">1.2 &hairsp; LSTM</h3>
+    <p>Daily Dialogue와 Persona Chat의 일부분을 발췌해서 데이터셋 구성.
+      Daily Dialogue와 Persona Chat 모두 멀티턴 발화 데이터이기에, Daily Dialogue Dataset은 전체 대화를 하나의 싱글턴으로 분할해서 데이터에 포함시키고, Persona Chat은 첫번째 발화만을 선별해서 포함시킴.
+      데이터 길이는 300자 이하의 대화 데이터만을 포함
+    </p>              
 
 
+    <div class="half-spacer"></div>
+    <h3 id="1.2">1.3 &hairsp; GRU</h3>
+    <p>Daily Dialogue와 Persona Chat의 일부분을 발췌해서 데이터셋 구성.
+      Daily Dialogue와 Persona Chat 모두 멀티턴 발화 데이터이기에, Daily Dialogue Dataset은 전체 대화를 하나의 싱글턴으로 분할해서 데이터에 포함시키고, Persona Chat은 첫번째 발화만을 선별해서 포함시킴.
+      데이터 길이는 300자 이하의 대화 데이터만을 포함
+    </p>
+    <hr>
+
+
+<!-- 2. Architecture -->
+    <div class="spacer"></div>
+    <h2 id="2">2. Architecture</h3>
+    <img src="{{ 'assets/img/research_01/seq2seq.png' | relative_url }}" style="width: 400px; height: 130px; display: block; margin: 0 auto;">
+    <p>&nbsp; 기존의 RNN만을 사용한 구조에서는 셀을 통과하면서 x의 플로우가 흘러가면서, 점차적으로 이전의 기억을 잊어버리는 경우가 허다했습니다.
+      이를 해결하기 위해 Encoder, Decoder 구조를 활용하는 모델링 방식을 Seq2seq라고 합니다.
+      글자 그대로 Seq가 입력으로 들어와서 Seq가 출력으로 나오는 모델 구조라고 생각하면 됩니다.
+    </p>
+
+
+<!-- 3. Experimental Setup -->    
+    <div class="spacer"></div>
+    <h2 id="2">3. Experimental Setup</h2>
+
+
+    <div class="spacer"></div>
     <h2>2. Experimental Setup</h2>
 
-      <div class="small-spacer"></div>
-      <h3>Data Setup</h3>
-        <div class="img-container">
-          <ul>
-            <li>Machine Translation</li>
-            <p>기계 번역을 위해서는 WMT14의 En-De 데이터셋을 사용
-              최소길이 100, 최대길이 300자 사이의 데이터들로만 선별
-            </p>
-            
-            <div class="half-spacer"></div>
-            <li>Dialogue Generation</li>
-            <p>Daily Dialogue와 Persona Chat의 일부분을 발췌해서 데이터셋 구성.
-              Daily Dialogue와 Persona Chat 모두 멀티턴 발화 데이터이기에, Daily Dialogue Dataset은 전체 대화를 하나의 싱글턴으로 분할해서 데이터에 포함시키고, Persona Chat은 첫번째 발화만을 선별해서 포함시킴.
-              데이터 길이는 300자 이하의 대화 데이터만을 포함
-            </p>              
-            
-            <div class="half-spacer"></div>
-            <li>Text Summarization</li>
-            <p>
-            </p>
+    <div class="small-spacer"></div>
+    <h3>Data Setup</h3>
+    <div class="list-container">
+      <ul>
+        <li>Machine Translation</li>
+        <p>기계 번역을 위해서는 WMT14의 En-De 데이터셋을 사용
+          최소길이 100, 최대길이 300자 사이의 데이터들로만 선별
+        </p>
+        
+        <div class="half-spacer"></div>
+        <li>Dialogue Generation</li>
+        <p>Daily Dialogue와 Persona Chat의 일부분을 발췌해서 데이터셋 구성.
+          Daily Dialogue와 Persona Chat 모두 멀티턴 발화 데이터이기에, Daily Dialogue Dataset은 전체 대화를 하나의 싱글턴으로 분할해서 데이터에 포함시키고, Persona Chat은 첫번째 발화만을 선별해서 포함시킴.
+          데이터 길이는 300자 이하의 대화 데이터만을 포함
+        </p>              
+        
+        <div class="half-spacer"></div>
+        <li>Text Summarization</li>
+        <p>
+        </p>
 
-            <div class="half-spacer"></div>
-            <li>Tokenizer
-              <p>BPE Tokenizer를 활용. Vocab Size는 15,000개로, 각 Task마다 별도로 Tokenizer를 학습시켜 사용
-              </p>              
-            </li>                        
-          </ul>
-        </div>
-
-
-      <div class="spacer"></div>
-      <h3>Model Setup</h3>
-        <div class="img-container">
-          <ul>
-            <li>RNN Network Setup
-            </li>
-            <li>Dimension Setup
-              <p>
-              </p>
-            </li>
-            <li>Text Summarization
-            </li>       
-          </ul>
-        </div>
-
-
-      <div class="spacer"></div>
-      <h3>Training Setup</h3>
-        <div class="img-container">
-          <ul>
-            <li>Machine Translation
-            </li>
-            <li>Dialogue Generation
-            </li>
-            <li>Text Summarization
-            </li>
-            <li>Tokenizer
-            </li>                        
-          </ul>
-        </div>        
+        <div class="half-spacer"></div>
+        <li>Tokenizer
+          <p>BPE Tokenizer를 활용. Vocab Size는 15,000개로, 각 Task마다 별도로 Tokenizer를 학습시켜 사용
+          </p>              
+        </li>                        
+      </ul>
+    </div>
 
 
 
-    <h2>3. Result</h2>
+    <h2>3. &hairsp; Result</h2>
+    <div class="small-spacer"></div>
+    <h3>Machine Translation</h3>
+    <div class="small-spacer"></div>
+    <table class="result-table">
+      <thead>
+        <tr>
+          <th>Model Type</th>
+          <th>Evaluation Score</th>
+          <th>Avg Training Time / Epoch</th>
+          <th>Avg GPU Memory</th>
+          <th>Max GPU Memory</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>RNN Cell Model</td>
+          <td>2.12</td>
+          <td>3m 58s</td>
+          <td>0.22GB</td>
+          <td>0.82GB</td>
+        </tr>
+        <tr>
+          <td>LSTM Cell Model</td>
+          <td>8.35</td>
+          <td>4m 16s</td>
+          <td>0.27GB</td>
+          <td>1.30GB</td>
+        </tr>
+        <tr>
+          <td>GRU Cell Model</td>
+          <td>9.75</td>
+          <td>4m 6s</td>
+          <td>0.26GB</td>
+          <td>1.16GB</td>
+        </tr>
+
+      </tbody>
+    </table>
+
+
+    <div class="spacer"></div>
+    <h3>Dialogue Generation</h3>
+    <div class="small-spacer"></div>
+    <table class="result-table">
+      <thead>
+        <tr>
+          <th>Model Type</th>
+          <th>Evaluation Score</th>
+          <th>Avg Train Time</th>
+          <th>Avg GPU Memory Usage</th>
+          <th>Max GPU Memory Usage</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>RNN Cell Model</td>
+          <td>0.10</td>
+          <td>3m 40s</td>
+          <td>0.22GB</td>
+          <td>0.79GB</td>
+        </tr>
+        <tr>
+          <td>LSTM Cell Model</td>
+          <td>0.37</td>
+          <td>4m 5s</td>
+          <td>0.27GB</td>
+          <td>1.23GB</td>
+        </tr>
+        <tr>
+          <td>GRU Cell Model</td>
+          <td>2.16</td>
+          <td>3m 58s</td>
+          <td>0.26GB</td>
+          <td>1.11GB</td>
+        </tr>
+
+      </tbody>
+    </table>
+
+
+    <div class="spacer"></div>
+    <h3>Text Summarization</h3>
+    <div class="small-spacer"></div>
+    <table class="result-table">
+      <thead>
+        <tr>
+          <th>Model Type</th>
+          <th>Evaluation Score</th>
+          <th>Avg Train Time</th>
+          <th>Avg GPU Memory Usage</th>
+          <th>Max GPU Memory Usage</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>RNN Cell Model</td>
+          <td>0.00</td>
+          <td>8m 6s</td>
+          <td>0.23GB</td>
+          <td>1.20GB</td>
+        </tr>
+        <tr>
+          <td>LSTM Cell Model</td>
+          <td>2.23</td>
+          <td>9m 7s</td>
+          <td>0.29GB</td>
+          <td>2.00GB</td>
+        </tr>
+        <tr>
+          <td>GRU Cell Model</td>
+          <td>2.19</td>
+          <td>8m 42s</td>
+          <td>0.27GB</td>
+          <td>1.82GB</td>
+        </tr>
+
+      </tbody>
+    </table>
 
 
     <h2>4. Conclusion</h2>
+    <p>
+      이 프로젝트를 통해 우리는 세 가지 주요 RNN 셀인 RNN, LSTM, GRU를 활용한 Seq2seq 모델의 성능을 비교하고자 했습니다. 각 모델은 고유한 특성을 가지고 있으며, 세 가지 다양한 자연어 생성 과제에서의 성능을 평가해 보았습니다.
 
+      1. RNN의 직관적 특성과 한계:
+      RNN은 그 직관적인 구조 덕분에 간단하게 구현할 수 있으며, 시퀀셜 데이터에 대한 처리를 수행하는 데 효과적입니다. 그러나 RNN은 장기 의존성에 대한 어려움을 겪고, 학습 동안 그래디언트 소실 또는 폭주 문제가 발생할 수 있습니다. 이로 인해 더 복잡한 자연어 생성 작업에서는 성능이 제한될 수 있습니다.
+
+      2. LSTM의 장기 의존성 처리 능력:
+      LSTM은 게이트 메커니즘을 통해 장기 의존성 문제를 해결하는 데 강점을 보입니다. 복잡한 문맥을 학습하고 기억하는 데 탁월하며, 긴 시퀀스 데이터에서 뛰어난 성능을 발휘할 수 있습니다. 하지만 LSTM은 더 많은 파라미터를 가지고 있어서 더 많은 데이터와 계산 리소스가 필요할 수 있습니다.
+
+      3. GRU의 경제적 모델 구조:
+      GRU는 LSTM에 비해 더 간단한 구조를 가지고 있어서 학습이 빠르게 이루어집니다. 또한 더 적은 파라미터를 사용하므로 계산 리소스를 절약할 수 있습니다. 그러나 장기 의존성을 처리하는 능력에서는 LSTM에 비해 조금 떨어질 수 있습니다.
+
+      최적의 선택은 과제 및 데이터에 달렸다:
+      프로젝트 결과를 종합해 볼 때, 어떤 RNN 셀이 최적인지는 해결하고자 하는 과제와 사용되는 데이터의 특성에 크게 의존합니다. 간단한 시퀀셜 데이터에는 RNN이 효과적일 수 있으며, 복잡한 문맥을 다루어야 하는 경우 LSTM이나 GRU를 선택하는 것이 더 적절할 수 있습니다. 따라서 모델 선택에 앞서 목표와 데이터의 특성을 깊이 고려하는 것이 중요하며, 실험을 통해 최적의 결과를 도출하는 것이 필요합니다.
+    </p>
 
     <h2>5. Reference</h2>
     <a class="reference" href="https://arxiv.org/abs/1409.3215">&nbsp; Sequence to Sequence Learning with Neural Networks</a> <br> 
@@ -152,7 +323,8 @@ permalink: /rnn_seq2seq
   </div>
 </div>
 
+
 <div class="pagination">
-  <a href="{{ '/transformer_variants' | relative_url }}" class="btn-prev"></a>
-  <a href="{{ '/rnn_seq2seq_attn' | relative_url }}" class="btn-next"></a>
+  <a href="{{ '/sum_blend' | relative_url }}" class="btn-prev"><span>Summarization Blend</span></a>
+  <a href="{{ '/rnn_seq2seq_attn' | relative_url }}" class="btn-next"><span>RNN Seq2sSeq with Attention</span></a>
 </div>
