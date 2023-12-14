@@ -20,38 +20,34 @@ permalink: /rnn_seq2seq_attn
         <ul>
 
           <li>
-            <a href="#1">1. RNN Cells</a>
+            <a href="#1">1. &hairsp; Attention</a>
             <ul>
               <li>
-                <a href="#1.1">1.1 RNN</a>
+                <a href="#1.1">1.1 &hairsp; Additive</a>
               </li>
               <li>
-                <a href="#1.2">1.2 LSTM</a>
+                <a href="#1.2">1.2 &hairsp; Dot Product</a>
               </li>
               <li>
-                <a href="#1.3">1.3 GRU</a>
+                <a href="#1.3">1.3 &hairsp; Scaled Dot Product</a>
               </li>          
             </ul>
           </li>
-          
+
           <li>
-            <a href="#2">2. Architecure</a>
+            <a href="#3">3. &hairsp; Experimental Setup</a>
           </li>
 
           <li>
-            <a href="#3">3. Experimental Setup</a>
+            <a href="#4">4. &hairsp; Results</a>
           </li>
 
           <li>
-            <a href="#4">4. Results</a>
+            <a href="#5">5. &hairsp; Conclusion</a>
           </li>
 
           <li>
-            <a href="#5">5. Conclusion</a>
-          </li>
-
-          <li>
-            <a href="#6">6. Reference</a>
+            <a href="#6">6. &hairsp; Reference</a>
           </li>
 
         </ul>
@@ -61,242 +57,185 @@ permalink: /rnn_seq2seq_attn
 
 
 <!-- Project Desc -->    
-    <h2>1. &hairsp; Project Desc</h2>
+    <h2>1. &hairsp; Attention</h2>
 
-      <div class="small-spacer"></div>
-      <h3>What's Attention?</h3>
-      <div class="small-spacer"></div>
-      <p>
-        &nbsp; 앞선 <a href=""><strong>RNN Sequence to Sequence</strong></a> 프로젝트에서는 세 가지 RNN Cell을 활용한 Sequence to Sequence 모델 구조에 대해 다뤘습니다. RNN Seq2Seq 모델 구조는 인코더가 입력 시퀀스에 대한 고정된 크기의 컨텍스트 벡터를 생성하고, 생성된 컨텍스트 벡터를 활용해 디코더에서 출력 시퀀스를 생성합니다. 
+    <p>어텐션의 기본 아이디어는 디코더에서 출력 단어를 예측하는 매 시점 (time step) 마다, 인코더에서의 전체 입력 문장을 다시 한 번 참고한다는 것입니다. 단, 전체 입력 문장을 전부 다 동일한 비율로 참고하는 것이 아닌, 해당 시점에서 예측하고자 하는 토큰과 연관이 있는 입력 시퀀스의 부분을 좀 더 집중(attention)적으로 참고합니다. 어텐션을 통해 컨텍스트 벡터에 대한 의존성을 줄이고, 입출력 값 사이의 관계성도 정밀하게 처리할 수 있습니다. 이번 프로젝트에서는 이전 프로젝트에서 좋은 성능과 효율성을 보여줬던 GRU Cell을 활용한 Sequence to Sequnce 구조에 세 가지 Attention 기법을 적용하고, 다양한 자연어 생성 과제에서 성능 변화를 직접 확인해보며, 그 효용성을 검증합니다.
+    Attention은 주어진 쿼리에 대해, 키에 대한 값을 이용해, 쿼리의 답을 얻기 위해 어떤 키를 살펴봐야 하는지 계싼해주는 함수입니다. 보다 자세히 말하자면, 쿼리는 어텐션의 주체를 의미하고, 키는 쿼리에 대한 어켄션의 기여도를 계산할 대상, Value는 어텐션의 크기를 계산하기 위한 값을 의미합니다. 최종적으로는 Q, K로 얻어진 Weight을 사용해, Value의 가중합으로 Attention Value(Context Value)를 산출합니다.
+    어텐션 산출 과정에 대해 좀더 자세히 보자면, 우선 Attention Score는 쿼리와 키값을 입력으로 받아 둘 사이의 상호작용을 추출하는 과정입니다. 이때 Attention Score는 중요도를 나타내는 벡터라고 볼 수 있습니다.
+    </p>
 
-        하지만 입력 시퀀스의 모든 정보를 단일 고정 벡터로만으로 표현함에 있어 정보 손실이 발생하기 쉬우며, 이는 결과적으로 모델의 성능 저하로 이어집니다. 이러한 문제를 해결하기 위한 방안으로 어텐션(Attention) 기법을 활용할 수 있습니다.
-      </p>
-      <div class="small-spacer"></div>
-      <p>
-        어텐션의 기본 아이디어는 디코더에서 출력 단어를 예측하는 매 시점 (time step) 마다, 인코더에서의 전체 입력 문장을 다시 한 번 참고한다는 것입니다. 단, 전체 입력 문장을 전부 다 동일한 비율로 참고하는 것이 아닌, 해당 시점에서 예측하고자 하는 토큰과 연관이 있는 입력 시퀀스의 부분을 좀 더 집중(attention)적으로 참고합니다.
+    <div class="small-spacer"></div>
+    <h3>1.1 Additive Attention</h3>
 
-        어텐션을 통해 컨텍스트 벡터에 대한 의존성을 줄이고, 입출력 값 사이의 관계성도 정밀하게 처리할 수 있습니다.  
+    <div class="latex-container">
 
-        이번 프로젝트에서는 이전 프로젝트에서 좋은 성능과 효율성을 보여줬던 GRU Cell을 활용한 Sequence to Sequnce 구조에 세 가지 Attention 기법을 적용하고, 다양한 자연어 생성 과제에서 성능 변화를 직접 확인해보며, 그 효용성을 검증합니다.
+        <div class="equation-item">
+            <p class="latex-equation">\( \mathbf{Attention \space Score} = W^T_a \tanh(W_b s_{t-1} + W_c H) \)</p>
+        </div>
 
-        <br>
-
-        Attention은 주어진 쿼리에 대해, 키에 대한 값을 이용해, 쿼리의 답을 얻기 위해 어떤 키를 살펴봐야 하는지 계싼해주는 함수입니다. 보다 자세히 말하자면, 쿼리는 어텐션의 주체를 의미하고, 키는 쿼리에 대한 어켄션의 기여도를 계산할 대상, Value는 어텐션의 크기를 계산하기 위한 값을 의미합니다. 최종적으로는 Q, K로 얻어진 Weight을 사용해, Value의 가중합으로 Attention Value(Context Value)를 산출합니다.
-
-        <br>
-
-        어텐션 산출 과정에 대해 좀더 자세히 보자면,
-        우선 Attention Score는 쿼리와 키값을 입력으로 받아 둘 사이의 상호작용을 추출하는 과정입니다. 
-        이때 Attention Score는 중요도를 나타내는 벡터라고 볼 수 있습니다. 
-
-      </p>
-      <hr>
+        <div class="equation-item">
+            <p class="latex-equation">\( \mathbf{Attention \space Distribution} = softmax(Attention \space Score) \)</p>
+        </div>
 
 
-      <div class="half-spacer"></div>
-      <h3>Attention Mechanism</h3>
-
-      <div class="list-container">
-        <ul>
-          <div class="small-spacer"></div>
-          <li>Additive Attention</li>
-
-            <div class="latex-container">
-
-                <div class="equation-item">
-                    <p class="latex-equation">\( \mathbf{Attention \space Score} = W^T_a \tanh(W_b s_{t-1} + W_c H) \)</p>
-                </div>
-
-                <div class="equation-item">
-                    <p class="latex-equation">\( \mathbf{Attention \space Distribution} = softmax(Attention \space Score) \)</p>
-                </div>
+        <div class="equation-item">
+            <p class="latex-equation">\( \mathbf{Attention \space Value} = H \cdot Attention \space Distribution \)</p>
+        </div>
 
 
-                <div class="equation-item">
-                    <p class="latex-equation">\( \mathbf{Attention \space Value} = H \cdot Attention \space Distribution \)</p>
-                </div>
+        <div class="equation-item">
+            <p class="latex-equation">\( {\Large s_t} = \text{Decoder}(y_{t-1}, s_{t-1}, c_t) \)</p>
+        </div>
 
-
-                <div class="equation-item">
-                    <p class="latex-equation">\( {\Large s_t} = \text{Decoder}(y_{t-1}, s_{t-1}, c_t) \)</p>
-                </div>
-
-            </div>
+    </div>
             
-            <p> Bahdanau Attention이라고도 알려져있는 Additive Attention은 글자 그대로 더하는 방식의 Attention을 의미합니다. 
-            어텐션 함수는 주어진 Query에 대해 모든 Key와의 유사도를 각각 구합니다.
-            그리고 구해낸 유사도를 키와 매핑ㄱ되어있는 각각의 Value에 바영해줍니다, 그리고 유사도가 반영된 Value를 모두 더해서 리턴합니다.
+    <p> Bahdanau Attention이라고도 알려져있는 Additive Attention은 글자 그대로 더하는 방식의 Attention을 의미합니다. 
+    어텐션 함수는 주어진 Query에 대해 모든 Key와의 유사도를 각각 구합니다.
+    그리고 구해낸 유사도를 키와 매핑ㄱ되어있는 각각의 Value에 바영해줍니다, 그리고 유사도가 반영된 Value를 모두 더해서 리턴합니다.
 
-            <br>
-            기존의 방법론이 디코더의 모든 Hidden State를 생성하기 위해 동일한 Context Vector를 사용했던 반면, 이 방식에서는 HIdden State를 계산할때만다, 새롭게 만들어진 Context Vector를 사용합니다.. 
+    <br>
+    기존의 방법론이 디코더의 모든 Hidden State를 생성하기 위해 동일한 Context Vector를 사용했던 반면, 이 방식에서는 HIdden State를 계산할때만다, 새롭게 만들어진 Context Vector를 사용합니다.. 
 
-            </p><br>
+    </p><br>
               
-              <div class="small-spacer"></div>
-              <p><strong>1) Attention Score 연산</strong> <br></p>
-              <p style="margin-left: 20px">
-              인코더의 Hidden State와, 디코더의 현재 time step, t시점에서의 디코더 은닉상태를 st라고 하면.
-              쿼리로는 디코더의 t-1 시점의 은닉상태 s(t-1)을 사용ㅎ합니다.
-              즉 바다나우 어텐션의 어텐션 스코어는 s(t-1)와 인코더의 의 i번째 은닉상태의 어텐션 스코어를 계산하는 것이라고 보면 됩니다. </p><br>
+    <div class="small-spacer"></div>
+    <p><strong>1) Attention Score 연산</strong> <br></p>
+    <p style="margin-left: 20px">
+    인코더의 Hidden State와, 디코더의 현재 time step, t시점에서의 디코더 은닉상태를 st라고 하면.
+    쿼리로는 디코더의 t-1 시점의 은닉상태 s(t-1)을 사용ㅎ합니다.
+    즉 바다나우 어텐션의 어텐션 스코어는 s(t-1)와 인코더의 의 i번째 은닉상태의 어텐션 스코어를 계산하는 것이라고 보면 됩니다. </p><br>
 
-              <div class="small-spacer"></div>
-              <p><strong>2) 소프트맥스 함수를 통해 어텐션 분포 도출</strong><br></p>
-              <p style="margin-left: 20px">
-              앞서 획득한 어텐션 스코어 벡터에 softmax함수만 적용해서, 확률분포로 변환 </p><br>
+    <div class="small-spacer"></div>
+    <p><strong>2) 소프트맥스 함수를 통해 어텐션 분포 도출</strong><br></p>
+    <p style="margin-left: 20px">
+    앞서 획득한 어텐션 스코어 벡터에 softmax함수만 적용해서, 확률분포로 변환 </p><br>
 
-              <div class="small-spacer"></div>
-              <p><strong>3) 각 인코더의 어텐션 가중치와 은닉상태를 가중합해서, 최종 어텐션 값 도출</strong></p>
-              <p style="margin-left: 20px">
-              지금까지 준비해온 정보들을 하나로 합치는 단계입니다. 어텐션은 최종 결과를 얻기 위해 각 인코더의 은닉상태와 어텐션 가중치들을 가중합합니다.
-              이 벡터는 인코더의 문맥을 포함하고 있다고 해서 컨텍스트 벡터라고 부릅니다.
-              </p><br>
+    <div class="small-spacer"></div>
+    <p><strong>3) 각 인코더의 어텐션 가중치와 은닉상태를 가중합해서, 최종 어텐션 값 도출</strong></p>
+    <p style="margin-left: 20px">
+    지금까지 준비해온 정보들을 하나로 합치는 단계입니다. 어텐션은 최종 결과를 얻기 위해 각 인코더의 은닉상태와 어텐션 가중치들을 가중합합니다.
+    이 벡터는 인코더의 문맥을 포함하고 있다고 해서 컨텍스트 벡터라고 부릅니다.
+    </p><br>
 
-              <div class="small-spacer"></div>
-              <p><strong>4) 컨텍스트 벡터로부 st를 구합니다 </strong></p>
-              <p style="margin-left: 20px">
-              t-1시점의 디코더 임베딩 값과 컨텍스트 벡터를 concat해서 디코더의 입력값으로 활용</p>  
-
-          <div class="spacer"></div>
-          <li>Dot Product Attention</li>        
-
-            <div class="latex-container">
-
-                <div class="equation-item">
-                    <p class="latex-equation">\( Attention(Q, K, V) = softmax(\frac{QK^T}{\sqrt{d_k}})V \)</p>
-                </div>
-
-                <div class="equation-item">
-                    <p class="latex-equation">\( Attention \space Value = W^T_a \tanh(W_b s_{t-1} + W_c h_i) \)</p>
-                </div>
-
-            </div>
+    <div class="small-spacer"></div>
+    <p><strong>4) 컨텍스트 벡터로부 st를 구합니다 </strong></p>
+    <p style="margin-left: 20px">
+    t-1시점의 디코더 임베딩 값과 컨텍스트 벡터를 concat해서 디코더의 입력값으로 활용</p>  
 
 
-            <p> &nbsp; Dot Product Attention
-              두 벡터간의 유사도를 측정하는 가장 간단한 방식은 내적(Dot Product)을 사용하는 것입니다. Query와 Key가 같으면 내적값은 최대가 되고, 반대 방향일 경우 최소 값이 됩니다. 이렇게 내적 함수를 사용하는 어텐션을 Dot Product Attention 혹은 제안자의 이름을 따 Luong Attention이라고도 합니다.
+    <div class="spacer"></div>
+    <h3>Dot Product Attention</h3>        
 
-              이방식은 추가적인 레이어가 필요없어서 효율적입니다.
+    <div class="latex-container">
 
-              소프트맥스 함수를 통해 나온 결과값은 입력 시퀀스의 각 토큰별 인코딩 된 값들이 디코더의 출력 단어를 예측하는데 있어 도움이 되는 정도를 수치화해서 표현되는 값입니다. 이 정보를 담아 디코더로 전달됩니다.
+        <div class="equation-item">
+            <p class="latex-equation">\( Attention(Q, K, V) = softmax(\frac{QK^T}{\sqrt{d_k}})V \)</p>
+        </div>
 
-              1) Attention Score의 계산
-              어텐션 스코어는 현재 디코더의 시점 t에서 단어를 예측하기 위해, 인코더의 모든 은닉상태 각각이 디코더의 현시점의 은닉상st와 얼마나 유사한지 판단하는 스코어 값입니다.
+        <div class="equation-item">
+            <p class="latex-equation">\( Attention \space Value = W^T_a \tanh(W_b s_{t-1} + W_c h_i) \)</p>
+        </div>
 
-              2)
-
-
-            </p>  
-
-          <div class="half-spacer"></div>
-          <li>Scaled Dot Product Attention</li>     
-
-            <div class="latex-container">
-
-                <div class="equation-item">
-                    <p class="latex-equation">\( Attention(Q, K, V) = softmax(\frac{QK^T}{\sqrt{d_k}})V \)</p>
-                </div>
-
-                <div class="equation-item">
-                    <p class="latex-equation">\( Attention \space Value = W^T_a \tanh(W_b s_{t-1} + W_c h_i) \)</p>
-                </div>
-
-            </div>
+    </div>
 
 
-            <p> &nbsp; Scaled Dot Product Attention은 Dot Product Attention에 정규화를 함으로써 값의 안정화를 도모한 어텐션 기법입니다. 대표적으로 Transformer모델에서 사용되는 가장 대중적인 Attention 기법이라고 할 수 있습니다.
+    <p> &nbsp; Dot Product Attention
+      두 벡터간의 유사도를 측정하는 가장 간단한 방식은 내적(Dot Product)을 사용하는 것입니다. Query와 Key가 같으면 내적값은 최대가 되고, 반대 방향일 경우 최소 값이 됩니다. 이렇게 내적 함수를 사용하는 어텐션을 Dot Product Attention 혹은 제안자의 이름을 따 Luong Attention이라고도 합니다.
 
-            Dot Product Attention에 Scaling된 형태를 사용합니다,
-            Scaling을 하는 이유는 다음과 같습니다.
-            1. d_k가 커지면 QK^T의 값 역시 커진다.
-            2. QK^T 값이 커지면, softmax함수에서 gradient vanishing이 발생합니다.
+      이방식은 추가적인 레이어가 필요없어서 효율적입니다.
+
+      소프트맥스 함수를 통해 나온 결과값은 입력 시퀀스의 각 토큰별 인코딩 된 값들이 디코더의 출력 단어를 예측하는데 있어 도움이 되는 정도를 수치화해서 표현되는 값입니다. 이 정보를 담아 디코더로 전달됩니다.
+
+      1) Attention Score의 계산
+      어텐션 스코어는 현재 디코더의 시점 t에서 단어를 예측하기 위해, 인코더의 모든 은닉상태 각각이 디코더의 현시점의 은닉상st와 얼마나 유사한지 판단하는 스코어 값입니다.
+
+      2)
 
 
-            </p>  
-            <div class="small-spacer"></div>
-            <p>
-            </p>    
+    </p>  
+
+    <div class="half-spacer"></div>
+    <h3>Scaled Dot Product Attention</h3>     
+
+    <div class="latex-container">
+
+        <div class="equation-item">
+            <p class="latex-equation">\( Attention(Q, K, V) = softmax(\frac{QK^T}{\sqrt{d_k}})V \)</p>
+        </div>
+
+        <div class="equation-item">
+            <p class="latex-equation">\( Attention \space Value = W^T_a \tanh(W_b s_{t-1} + W_c h_i) \)</p>
+        </div>
+
+    </div>
 
 
-        </ul>
-      </div>
+    <p> &nbsp; Scaled Dot Product Attention은 Dot Product Attention에 정규화를 함으로써 값의 안정화를 도모한 어텐션 기법입니다. 대표적으로 Transformer모델에서 사용되는 가장 대중적인 Attention 기법이라고 할 수 있습니다.
+
+    Dot Product Attention에 Scaling된 형태를 사용합니다,
+    Scaling을 하는 이유는 다음과 같습니다.
+    1. d_k가 커지면 QK^T의 값 역시 커진다.
+    2. QK^T 값이 커지면, softmax함수에서 gradient vanishing이 발생합니다.
+
+
+    </p><hr>
 
 
 
 <!-- Experimental Setup -->    
     <h2>2. Experimental Setup</h2>
+    <div class="small-spacer"></div>
+    <table class="result-table">
+      <thead>
+        <tr>
+          <th>Data Setup</th>
+          <th>Model Setup</th>
+          <th>Training Setup</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
 
+          <td>
+            <ul>
+              <li><b>Translation Task</b>: &nbsp; WMT'14 En-De</li>
+              <li><b>Dialogue Task</b>: &nbsp; Daily Dialogue</li>
+              <li><b>Summarization Task</b>: &nbsp; CNN Daily</li>
+              <li><b>Train Data Volumn</b>: &nbsp; 50,000</li>
+              <li><b>Valid Data Volumn</b>: &nbsp; 5,000</li>
+              <li><b>Test Data Volumn</b>: &nbsp; 100</li>
+              <li><b>Tokenizer</b>: &nbsp; Word-Level Tokenizer</li>
+              <li><b>Vocab Size</b>: &nbsp; 10,000</li>
+            </ul>
+          </td>
 
-    <table class="setup-table" style="table-layout: fixed;">
-        <thead>
-            <tr>
-                <th>
-                  <div>
-                  Data Setup
-                  </div>
-                </th>
-                <th>Model Setup</th>
-                <th>Training Setup</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Translation Dataset</td>
-                <td>Architecture</td>
-                <td>Num Epochs</td>
-            </tr>
-            <tr>
-                <td>Dialogue Generation Dataset</td>
-                <td>Hidden Dimension</td>
-                <td>Learning Rate</td>
-            </tr>
-            <tr>
-                <td>Text Summarization Dataset</td>
-                <td>Embedding Dimension</td>
-                <td>Batch Size</td>
-            </tr>
-            <tr>
-                <td>Data Volume</td>
-                <td>Bi Directional</td>
-                <td>somethinf</td>
-            </tr>
-        </tbody>
+          <td>
+            <ul>
+              <li><b>Input Dim</b>: &nbsp; 10,000</li>
+              <li><b>Output Dim</b>: &nbsp; 10,000</li>
+              <li><b>Embedding Dim</b>: &nbsp; 512</li>
+              <li><b>Hidden Dim</b>: &nbsp; 512</li>
+              <li><b>Model Params</b>: &nbsp; 000</li>
+              <li><b>Model Size</b>: &nbsp; 000</li>
+            </ul>
+          </td>
+
+          <td>
+            <ul>
+              <li><b>Num Epochs</b>: &nbsp; 10</li>
+              <li><b>Batch Size</b>: &nbsp; 32</li>
+              <li><b>Learning Rate</b>: &nbsp; 5e-4</li>
+              <li><b>LR Scheduler</b>: &nbsp; pleature</li>
+              <li><b>Optimizer</b>: &nbsp; AdamW</li>
+              <li><b>Gradient Accumulation Steps</b>: &nbsp; 4</li>
+            </ul>
+          </td>          
+        </tr>
+
+      </tbody>
     </table>
-
-
-    <table class="setup-table" style="table-layout: fixed;">
-        <thead>
-            <tr>
-                <th>Data Setup</th>
-                <th>Model Setup</th>
-                <th>Training Setup</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Translation Dataset</td>
-                <td>Architecture</td>
-                <td>Num Epochs</td>
-            </tr>
-            <tr>
-                <td>Dialogue Generation Dataset</td>
-                <td>Hidden Dimension</td>
-                <td>Learning Rate</td>
-            </tr>
-            <tr>
-                <td>Text Summarization Dataset</td>
-                <td>Embedding Dimension</td>
-                <td>Batch Size</td>
-            </tr>
-            <tr>
-                <td>Data Volume</td>
-                <td>Bi Directional</td>
-                <td>somethinf</td>
-            </tr>
-        </tbody>
-    </table>
-
-
-
+    <div class="half-spacer"></div>
+    <hr>
 
 
 <!-- Result -->    
@@ -344,11 +283,13 @@ permalink: /rnn_seq2seq_attn
 
       </tbody>
     </table>
-
+    <hr>
 
 <!-- Conclusion -->    
     <h2>4. Conclusion</h2>
-
+    <p>
+    </p>
+    <hr>
 
 
 <!-- Reference -->    
@@ -357,6 +298,8 @@ permalink: /rnn_seq2seq_attn
     <a class="reference" href="https://arxiv.org/abs/1409.3215">&nbsp; Sequence to Sequence Learning with Neural Networks</a> <br> 
     <a class="reference" href="https://arxiv.org/abs/1409.0473">&nbsp; Neural Machine Translation by Jointly Learning to Align and Translate</a> <br> 
     <a class="reference" href="https://arxiv.org/abs/1412.3555">&nbsp; Empirical Evaluation of Gated Recurrent Neural Networks on Sequence Modeling</a>
+
+    <hr>
 
   </div>
 </div>

@@ -5,36 +5,54 @@ permalink: /balance
 
 
 <div id="detail">
-  <h1 class="title">Transformer Encoder & Decoder Balance Analystics</h1>  
+  <h1 class="title">Transformer Balance Research on NLG Tasks</h1>  
   <div class="post">
 
     <div class="callout">
       <p class="highlighted-text"><span>Project Objective</span></p>
       <div class="small-spacer"></div>
-      <p>&nbsp; RNN은 이전 스텝의 결과값을 다음 스텝의 처리과정에 재귀적으로 반영시키며, 시퀀셜 데이터를 처리하기 용이한 네트워크 구조입니다. 대표적인 RNN Cell 구조로는 RNN, LSTM, GRU
-      이 프로젝트에서는 세가지 셀 구조별 Seq2Seq 모델 구조에서 성능이 얼마나 나오는지를 비교 분석해봅니다.</p>
+      <p>&nbsp; Transformer Seq2Seq 모델은 Encoder와 Decoder로 구성됩니다. 일반적으로는 Encoder의 설정과 Decoder의 설정을 거의 균일하게 맞춥니다. 하지만 특정 태스크의 경우에는 Encoder의 중요성이 더욱 클수도 있고, 다른 경우에는 Deocder의 역할이 더욱 중요할 수 도 있습니다.
+
+      중요한 역할을 강조시키기 위해, 모델의 크기를 키우는것이 도움이 되는데,
+      Transformer의 경우에는 Hidden Dimension의 크기를 키우는 것 뿐만아니라, Layer의 개수를 늘리는 방법도 존재합니다.
+
+      전자의 경우에는 은닉층에 보유할 수 있는 정보의 양이 많아지면서, 더 많은 정보를 다룰수 있습니다.
+      그리고 후자의 경우에는, 더 많이 레이어를 반복시키면서 더 깊은 이해를 도모할 수 있습니다.
+
+      이 프로젝트에서는 
+
+      </p>
     </div>
 
     <div class="tblContents">
       <ul>
 
         <li>
-          <a href="#1">1. RNN Cells</a>
+          <a href="#1">1. Balance</a>
           <ul>
             <li>
-              <a href="#1.1">1.1 RNN</a>
+              <a href="#1.1">1.1 Task Balance</a>
             </li>
             <li>
-              <a href="#1.2">1.2 LSTM</a>
+              <a href="#1.2">1.2 Transformer Balance</a>
             </li>
-            <li>
-              <a href="#1.3">1.3 GRU</a>
-            </li>          
-          </ul>
+          </ul>        
         </li>
         
         <li>
           <a href="#2">2. Architecure</a>
+          <ul>
+            <li>
+              <a href="#2.1">2.1 Base Model</a>
+            </li>
+            <li>
+              <a href="#2.2">2.2 Wide Model</a>
+            </li>
+            <li>
+              <a href="#2.3">2.3 Deep Model</a>
+            </li>            
+          </ul>        
+
         </li>
 
         <li>
@@ -58,54 +76,127 @@ permalink: /balance
     <hr>
 
 
+<!-- 2. Architecture -->
+    <h2 id="1">1. &hairsp; Balance</h2>
 
-    <h2>1. &hairsp; Project Desc</h2>
+    <h3 id="1.1">1.1 &hairsp; Task Balance</h3>
+    <p>
+      &nbsp; 해결하고자 하는 자연어 생성 과제 별로 인코딩 및 디코딩의 중요성이 상이합니다. 대표적인 자연어 생성과제 세가지를 예시로 살펴보면 다음과 같습니다.
 
-      <div class="half-spacer"></div>
-      <h3>Transformer Encoder & Decoder</h3>
-      <div class="small-spacer"></div>
-      <p>
-        &nbsp; 현재 다양한 사전학습 딥러닝 모델들이 다양한 분야에서 좋은 성능을 보여주고 있습니다. 
-        대부분의 사전학습 모델들은 성능을 극대화 하기 위해, 더 큰 모델 파라미터를 보유하는 경향을 지니고 개발되어 왔습니다.
-        모델의 크기가 커지면서 성능이 좋아지는 경향성이 있기는 하지만, 그만큼 
-      </p>
+      1. Machine Translation
+      Machine Translation은 특정 언어의 시퀀스를 동일한 의미의 다른 언어 시퀀스로 변환해서 반환하는 과제를 의미합니다.
+      상대적으로 인코딩과 디코딩의 중요성 비중이 반반정도라고 볼 수 있습니다.
+
+      2. Dialogue Generation
+      Dialogue Generation은 다양한 입력 시퀀스에 따라, 적절한 대답을 반환하는 과제입니다. 
+      GPT와 같은 모델들이 대화 생성과제에서 좋은 성능을 내는 것들 역시 디코딩과정의 중요성을 시사합니다.
+
+      3. Text Summarization
+      Text Summarization은 긴 시퀀스를 입력값으로 받아, 입력값에서 중요한 내용들을 포함하는 짧은 요약 시퀀스를 출력값으로 반환하는 과제입니다.
+      이때 입력값이 출력값에 비해 길기 때문에, 입력값을 제대로 다루는 것이 중요합니다. 이를 위해서는 필연적으로 인코딩의 중요성이 상대적으로 강조됩니다.
+    </p>
+
+    <div class="spacer"></div>
+    <h3 id="1.2">1.2 &hairsp; Transformer Balance</h3>
+    <p>
+      &nbsp; 일반적으로 Transformer Seq2Seq 모델을 구성할때 Encoder와 Decoder의 너비나 깊이를 동일하게 구성합니다.
+      균형을 깨뜨리는 경우 정보가 왜곡되거나, 전달 과정이 어려워지는 등의 부작용이 발생할 가능성이 크기 때문입니다.
+
+      하지만 특정 요소에 더 집중하고 싶은 경우, 이러한 균형을 깨뜨리는 것도 가능합니다. 대표적인 방법으로는 
+
+      1. Hidden Dimension의 크기를 키운다
+        다룰수 있는 정보의 양이 증가하므로, 더 많은 정보를 함유 할 수 있게 됩니다.
+
+      2. Layer의 개수를 증가 시킨다.
+        연산이 반복되는 레이어의 개수를 증가시킴으로써, 증가된 레이어 개수만큼 더 깊은 이해가 가능하도록 유도할 수 있습니다.
+
+    </p>
 
 
-      <div class="spacer"></div>
-      <h3>Balancing Strategy</h3>
+    <div class="spacer"></div>
+    <h2 id="2">2. &hairsp; Architecture</h3>
 
-      <div class="img-container">
-        <ul>
-          <li>Base Model</li>        
-            <p> &nbsp; 기울기 누적 방법은 전체 배치를 한 번에 계산하는 대신 작은 증분으로 기울기를 계산하는 방법을 지향합니다. 
-              이 방법은 모델을 통해 순전파와 역전파를 수행하면서 작은 배치에서 반복적으로 기울기를 계산하고 이 과정 동안 기울기를 누적하는 방식으로 이루어집니다. 
-              충분한 수의 기울기가 누적되면 모델의 최적화 단계가 실행됩니다. 
-              기울기 누적을 사용하면 GPU 메모리 용량의 제한을 초과하여 효과적인 배치 크기를 증가시킬 수 있습니다. 
-              그러나 기울기 누적에 의해 도입된 추가적인 순전파와 역전파는 훈련 과정을 느리게 만들 수 있다는 점을 주의해야 합니다.
-            </p>  
+    <h3 id="2.1">2.1 &hairsp; Base Model</h3>
+    <div class="code-container">
+      <div class="code-snippet">
+        <pre><code class="python">
+TrainingArguments(
+      output_dir= f'ckpt/{strategy}',
+      num_train_epochs= 5,
+      learning_rate= 1e-5,
+      per_device_train_batch_size= 32,
+      per_device_eval_batch_size= 32,
+      lr_scheduler_type='reduce_lr_on_plateau',
+      load_best_model_at_end= True,
 
-          <div class="half-spacer"></div>
-          <li>Deep Model</li>        
-            <p> &nbsp; 기울기 누적 방법은 전체 배치를 한 번에 계산하는 대신 작은 증분으로 기울기를 계산하는 방법을 지향합니다. 
-              이 방법은 모델을 통해 순전파와 역전파를 수행하면서 작은 배치에서 반복적으로 기울기를 계산하고 이 과정 동안 기울기를 누적하는 방식으로 이루어집니다. 
-              충분한 수의 기울기가 누적되면 모델의 최적화 단계가 실행됩니다. 
-              기울기 누적을 사용하면 GPU 메모리 용량의 제한을 초과하여 효과적인 배치 크기를 증가시킬 수 있습니다. 
-              그러나 기울기 누적에 의해 도입된 추가적인 순전파와 역전파는 훈련 과정을 느리게 만들 수 있다는 점을 주의해야 합니다.
-            </p>  
+      save_strategy= 'epoch',
+      logging_strategy= 'epoch',
+      evaluation_strategy= 'epoch',
 
-          <div class="half-spacer"></div>
-          <li>Wide Model</li>        
-            <p> &nbsp; 기울기 누적 방법은 전체 배치를 한 번에 계산하는 대신 작은 증분으로 기울기를 계산하는 방법을 지향합니다. 
-              이 방법은 모델을 통해 순전파와 역전파를 수행하면서 작은 배치에서 반복적으로 기울기를 계산하고 이 과정 동안 기울기를 누적하는 방식으로 이루어집니다. 
-              충분한 수의 기울기가 누적되면 모델의 최적화 단계가 실행됩니다. 
-              기울기 누적을 사용하면 GPU 메모리 용량의 제한을 초과하여 효과적인 배치 크기를 증가시킬 수 있습니다. 
-              그러나 기울기 누적에 의해 도입된 추가적인 순전파와 역전파는 훈련 과정을 느리게 만들 수 있다는 점을 주의해야 합니다.
-            </p>  
-
-        </ul>
+      fp16= True if config.strategy in ['fp16', 'all'] else False,
+      fp16_opt_level= '02' if config.strategy in ['fp16', 'all'] else '01',
+      gradient_accumulation_steps = True if config.strategy in ['grad_accumulation', 'all'] else 4,
+      gradient_checkpointing= True if config.strategy in ['grad_checkpointing', 'all'] else False,
+      optim = 'adafactor' if config.strategy in ['optim', 'all'] else 'adamw_torch'
+)
+        </code></pre>
       </div>
+    </div>
 
 
+    <h3 id="2.2">2.2 &hairsp; Wide Model</h3>
+    <div class="code-container">
+      <div class="code-snippet">
+        <pre><code class="python">
+TrainingArguments(
+      output_dir= f'ckpt/{strategy}',
+      num_train_epochs= 5,
+      learning_rate= 1e-5,
+      per_device_train_batch_size= 32,
+      per_device_eval_batch_size= 32,
+      lr_scheduler_type='reduce_lr_on_plateau',
+      load_best_model_at_end= True,
+
+      save_strategy= 'epoch',
+      logging_strategy= 'epoch',
+      evaluation_strategy= 'epoch',
+
+      fp16= True if config.strategy in ['fp16', 'all'] else False,
+      fp16_opt_level= '02' if config.strategy in ['fp16', 'all'] else '01',
+      gradient_accumulation_steps = True if config.strategy in ['grad_accumulation', 'all'] else 4,
+      gradient_checkpointing= True if config.strategy in ['grad_checkpointing', 'all'] else False,
+      optim = 'adafactor' if config.strategy in ['optim', 'all'] else 'adamw_torch'
+)
+        </code></pre>
+      </div>
+    </div>
+
+    <h3 id="2.3">2.3 &hairsp; Deep Model</h3>
+    <div class="code-container">
+      <div class="code-snippet">
+        <pre><code class="python">
+TrainingArguments(
+      output_dir= f'ckpt/{strategy}',
+      num_train_epochs= 5,
+      learning_rate= 1e-5,
+      per_device_train_batch_size= 32,
+      per_device_eval_batch_size= 32,
+      lr_scheduler_type='reduce_lr_on_plateau',
+      load_best_model_at_end= True,
+
+      save_strategy= 'epoch',
+      logging_strategy= 'epoch',
+      evaluation_strategy= 'epoch',
+
+      fp16= True if config.strategy in ['fp16', 'all'] else False,
+      fp16_opt_level= '02' if config.strategy in ['fp16', 'all'] else '01',
+      gradient_accumulation_steps = True if config.strategy in ['grad_accumulation', 'all'] else 4,
+      gradient_checkpointing= True if config.strategy in ['grad_checkpointing', 'all'] else False,
+      optim = 'adafactor' if config.strategy in ['optim', 'all'] else 'adamw_torch'
+)
+        </code></pre>
+      </div>
+    </div>
 
 
 

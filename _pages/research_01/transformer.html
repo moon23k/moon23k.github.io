@@ -5,52 +5,60 @@ permalink: /transformer
 
 
 <div id="detail">
-  <h1 class="title">Transformer Implementation and Comparative Analytics</h1>  
+  <h1 class="title">Transformer Implementation and Validation</h1>  
   <div class="post">
 
     <div class="callout">
       <p class="highlighted-text"><span>Project Objective</span></p>
       <div class="small-spacer"></div>
-      <p>&nbsp; RNN은 이전 스텝의 결과값을 다음 스텝의 처리과정에 재귀적으로 반영시키며, 시퀀셜 데이터를 처리하기 용이한 네트워크 구조입니다. 대표적인 RNN Cell 구조로는 RNN, LSTM, GRU
-      이 프로젝트에서는 세가지 셀 구조별 Seq2Seq 모델 구조에서 성능이 얼마나 나오는지를 비교 분석해봅니다.</p>
+      <p>&nbsp; 앞선 프로젝트에서는 RNN을 기반으로한 Sequence to Sequence 모델 구조의 효용성에 대해 면밀히 살펴봤습니다. 
+        하지만 RNN 네트워크는 장기기억력이라는 관점에서 고질적인 문제점을 태생적으로 지니고 있으며, 이를 해결하기 위한 Attention 메커니즘의 활용 역시 기대만큼 좋은 성능을 보이지는 못했습니다.
+        Transformer는 어텐션 메커니즘 만으로 문맥 전체적인 내용을 포착하는 뛰어난 성능과 더불어 병렬처리로 인한 학습의 효율성까지 제고시킨 뛰어난 모델 구조입니다.
+        이 글에서는 Transformer의 구조에 대한 설명과 더불어, 두가지 방식에서의 Code Implementation 방식을 알아봅니다. 또한 이렇게 구현한 Transformer 모델이 세가지 자연어 생성 과제에서 어떤 성능을 보이는지 비교해봅니다.
+      </p>
     </div>
 
     <div class="tblContents">
       <ul>
 
         <li>
-          <a href="#1">1. RNN Cells</a>
+          <a href="#1">1. Transformer</a>
           <ul>
             <li>
-              <a href="#1.1">1.1 RNN</a>
+              <a href="#1.1">1.1 Transformer Implementation</a>
             </li>
             <li>
-              <a href="#1.2">1.2 LSTM</a>
+              <a href="#1.2">1.2 Encoder</a>
             </li>
             <li>
-              <a href="#1.3">1.3 GRU</a>
+              <a href="#1.3">1.3 Decoder</a>
             </li>          
+            <li>
+              <a href="#1.4">1.4 Embeddings</a>
+            </li>
+            <li>
+              <a href="#1.5">1.5 Multi Head Attention</a>
+            </li>
+            <li>
+              <a href="#1.6">1.6 Position wise Feed Forward</a>
+            </li>                                    
           </ul>
         </li>
-        
+
         <li>
-          <a href="#2">2. Architecure</a>
+          <a href="#2">2. Experimental Setup</a>
         </li>
 
         <li>
-          <a href="#3">3. Experimental Setup</a>
+          <a href="#3">3. Results</a>
         </li>
 
         <li>
-          <a href="#4">4. Results</a>
+          <a href="#4">4. Conclusion</a>
         </li>
 
         <li>
-          <a href="#5">5. Conclusion</a>
-        </li>
-
-        <li>
-          <a href="#6">6. Reference</a>
+          <a href="#5">5. Reference</a>
         </li>
 
       </ul>
@@ -58,33 +66,18 @@ permalink: /transformer
     <hr>
 
 
-    <h2>1. &hairsp; Project Desc</h2>
-
-      <div class="small-spacer"></div>
-      <p>
-        &nbsp; 앞선 프로젝트에서는 RNN을 기반으로한 Sequence to Sequence 모델 구조의 효용성에 대해 면밀히 살펴봤습니다. 
-        하지만 RNN 네트워크는 장기기억력이라는 관점에서 고질적인 문제점을 태생적으로 지니고 있으며, 이를 해결하기 위한 Attention 메커니즘의 활용 역시 기대만큼 좋은 성능을 보이지는 못했습니다.
-        Transformer는 어텐션 메커니즘 만으로 문맥 전체적인 내용을 포착하는 뛰어난 성능과 더불어 병렬처리로 인한 학습의 효율성까지 제고시킨 뛰어난 모델 구조입니다.
-        이 글에서는 Transformer의 구조에 대한 설명과 더불어, 두가지 방식에서의 Code Implementation 방식을 알아봅니다. 또한 이렇게 구현한 Transformer 모델이 세가지 자연어 생성 과제에서 어떤 성능을 보이는지 비교해봅니다.
-      </p>
-
-    <h2>2. &hairsp; Implementation</h2>
-
-    <div class="half-spacer"></div>
-    <h3>Transformer</h3>
-    <div class="small-spacer"></div>
-    <p>Transformer Model은 임베딩과, 인코더, 디코더 그리고 Generator로 구성됩니다. x데이터는 임베딩과 인코더를 거쳐 Memory Vector로 변환되고, 디코더는 y데이터와 메모리 벡터를 사용해 최종 Hidden Vector를 생성합니다.
+<!-- Transformer Implementation -->    
+    <h2 id="1">1. &hairsp; Transformer Implementation</h2>
+    <h3 id="1.1">1.1 &hairsp; Transformer</h3>
+    <p>&nbsp; Transformer Model은 임베딩과, 인코더, 디코더 그리고 Generator로 구성됩니다. x데이터는 임베딩과 인코더를 거쳐 Memory Vector로 변환되고, 디코더는 y데이터와 메모리 벡터를 사용해 최종 Hidden Vector를 생성합니다.
       그리고 마지막 선형 변환 레이어를 통해 Vocab Size만큼의 Token으로 시퀀스를 변환해서 최종 결과값을 반환합니다.
-    </p>
-    <div class="small-spacer"></div>
+    </p>      
 
     <div class="code-container">
       <div class="code-snippet">
-        <pre><code class="python">
-class ScratchModel(nn.Module):
-
+        <pre><code class="python">class Transformer(nn.Module):
     def __init__(self, config):
-        super(ScratchModel, self).__init__()
+        super(Transformer, self).__init__()
 
         self.pad_id = config.pad_id
         self.device = config.device
@@ -93,9 +86,6 @@ class ScratchModel(nn.Module):
         self.encoder = Encoder(config)
         self.decoder = Decoder(config)
         self.generator = nn.Linear(config.hidden_dim, self.vocab_size)
-
-        self.criterion = nn.CrossEntropyLoss()
-        self.out = namedtuple('Out', 'logit loss')
 
 
     def pad_mask(self, x):
@@ -122,34 +112,19 @@ class ScratchModel(nn.Module):
 
         memory = self.encoder(x, e_mask)
         dec_out = self.decoder(y, memory, e_mask, d_mask)
-        logit = self.generator(dec_out)
-
-        #Getting Outputs
-        self.out.logit = logit
-        self.out.loss = self.criterion(
-            logit.contiguous().view(-1, self.vocab_size), 
-            label.contiguous().view(-1)
-        )
         
-        return self.out
-        </code></pre>
+        return self.generator(dec_out)</code></pre>
       </div>
     </div>
     <hr>
 
-    <div class="spacer"></div>
-    <h3>Encoder</h3>
-    <div class="small-spacer"></div>
+    <h3 id="1.2">1.2 &hairsp; Encoder</h3>
     <p>Transformer Model은 임베딩과, 인코더, 디코더 그리고 Generator로 구성됩니다. x데이터는 임베딩과 인코더를 거쳐 Memory Vector로 변환되고, 디코더는 y데이터와 메모리 벡터를 사용해 최종 Hidden Vector를 생성합니다.
       그리고 마지막 선형 변환 레이어를 통해 Vocab Size만큼의 Token으로 시퀀스를 변환해서 최종 결과값을 반환합니다.
     </p>
-    <div class="small-spacer"></div>
-
     <div class="code-container">
       <div class="code-snippet">
-        <pre><code class="python">
-class EncoderLayer(nn.Module):
-
+        <pre><code class="python">class EncoderLayer(nn.Module):
     def __init__(self, config):
         super().__init__()
 
@@ -174,7 +149,6 @@ class EncoderLayer(nn.Module):
 
 
 class Encoder(nn.Module):
-
     def __init__(self, config):
         super().__init__()
 
@@ -191,26 +165,18 @@ class Encoder(nn.Module):
         x = self.emb(x)
         for layer in self.layers:
             x = layer(x, e_mask)
-        return x
-
-        </code></pre>
+        return x</code></pre>
       </div>
     </div>
     <hr>
 
 
-    <div class="spacer"></div>
-    <h3>Decoder</h3>
-    <div class="small-spacer"></div>
+    <h3 id="1.3">1.3 &hairsp; Decoder</h3>
     <p>디코더는 디코더 레이어를 중첩시킨 구조로 이루어져 있습니다. 각각의 디코더 레이어에서는 
     </p>
-    <div class="half-spacer"></div>
-
     <div class="code-container">
       <div class="code-snippet">
-        <pre><code class="python">
-class DecoderLayer(nn.Module):
-
+        <pre><code class="python">class DecoderLayer(nn.Module):
     def __init__(self, config):
         super().__init__()
 
@@ -258,25 +224,18 @@ class Decoder(nn.Module):
         x = self.emb(x)
         for layer in self.layers:
             x = layer(x, memory, e_mask, d_mask)
-        return x
-
-        </code></pre>
+        return x</code></pre>
       </div>
     </div>
     <hr>
 
 
-    <div class="spacer"></div>
-    <h3>Embedding</h3>
-    <div class="small-spacer"></div>
+    <h3 id="1.4">1.4 &hairsp; Embedding</h3>
     <p>디코더는 디코더 레이어를 중첩시킨 구조로 이루어져 있습니다. 각각의 디코더 레이어에서는 
     </p>
-    <div class="half-spacer"></div>
-
     <div class="code-container">
       <div class="code-snippet">
-        <pre><code class="python">
-class PositionalEncoding(nn.Module):
+        <pre><code class="python">class PositionalEncoding(nn.Module):
     def __init__(self, config):
         super(PositionalEncoding, self).__init__()
         
@@ -322,25 +281,18 @@ class Embeddings(nn.Module):
 
         if not self.use_fc_layer:
             return out
-        return self.fc_dropout(self.fc(out))
-
-        </code></pre>
+        return self.fc_dropout(self.fc(out))</code></pre>
       </div>
     </div>
     <hr>
 
 
-    <div class="spacer"></div>
-    <h3>Multi Head Attention</h3>
-    <div class="small-spacer"></div>
+    <h3 id="1.5">1.5 &hairsp; Multi Head Attention</h3>
     <p>디코더는 디코더 레이어를 중첩시킨 구조로 이루어져 있습니다. 각각의 디코더 레이어에서는 
     </p>
-    <div class="half-spacer"></div>
-
     <div class="code-container">
       <div class="code-snippet">
-        <pre><code class="python">
-class MultiHeadAttention(nn.Module):
+        <pre><code class="python">class MultiHeadAttention(nn.Module):
     def __init__(self, config):
         super().__init__()
 
@@ -356,7 +308,6 @@ class MultiHeadAttention(nn.Module):
 
 
     def forward(self, query, key, value, mask = None):
-
         orig_shape = list(query.shape)
         split_shape = [query.size(0), -1, self.n_heads, self.head_dim]
 
@@ -377,26 +328,19 @@ class MultiHeadAttention(nn.Module):
 
         del Q, K, V
 
-        return self.linears[-1](x)
-
-        </code></pre>
+        return self.linears[-1](x)</code></pre>
       </div>
     </div>
     <hr>
 
 
-
-    <div class="spacer"></div>
-    <h3>Position-wise Feed Forward</h3>
-    <div class="small-spacer"></div>
+    <h3 id="1.6">1.6 &hairsp; Position-wise Feed Forward</h3>
     <p>디코더는 디코더 레이어를 중첩시킨 구조로 이루어져 있습니다. 각각의 디코더 레이어에서는 
     </p>
-    <div class="half-spacer"></div>
 
     <div class="code-container">
       <div class="code-snippet">
-        <pre><code class="python">
-class PositionwiseFeedForward(nn.Module):
+        <pre><code class="python">class PositionwiseFeedForward(nn.Module):
     def __init__(self, config):
         super().__init__()
 
@@ -407,114 +351,93 @@ class PositionwiseFeedForward(nn.Module):
 
     def forward(self, x):
         x = self.dropout(F.gelu(self.fc_1(x)))
-        return self.fc_2(x)        
-
-        </code></pre>
+        return self.fc_2(x)</code></pre>
       </div>
     </div>
+    <div class="half-spacer"></div>
+    <hr>
 
 
-
-    <h2>2. &hairsp; Experimental Setup</h2>
-
-      <div class="half-spacer"></div>
-      <h3>Data Setup</h3>
-
-      <div class="img-container">
-        <ul>
-          <li>Machine Translaton
-          </li>
-          <p>WMT14의 En-De 데이터셋을 사용.
-            데이터는 Source Text와 Target Text로 구성,
-            모든 텍스트의 길이는 300자 이하로만 선별.
-            source text와 target text의 길이 차이도 50자 이내의 것들만 선별
-            최종적으로 Train/Valid/Test 50000, 1000, 100개로 구성
-          </p>
-          <div class="small-spacer"></div>
-          <li>Dialogue Generation
-          </li>
-          <li>Text Summarization
-          </li>          
-        </ul>
-      </div> 
-
-
-      <div class="spacer"></div>
-      <h3>Model Setup</h3>
-      <div class="img-container">
-        <ul>
-          <li>Scratch Model
-
-            <ul>
-              <li>Model Parameters: 15,488,664</li>
-              <li>Model Size: 60.085 MB</li>
-              <li>여러 문장간 의미를 파악할 수 있도록 Token Type Id에 변형을 가함</li>
-              <li>층이 깊어짐에 따라 기울기 소실의 문제점 발생</li>
-          </ul>
-
-          </li>
-
-          <li>Torch Model
-            
-            <ul>
-              <li>Model Parameters: 15,488,664</li>
-              <li>Model Size: 60.085 MB</li>
-              <li>여러 문장간 의미를 파악할 수 있도록 Token Type Id에 변형을 가함</li>
-              <li>층이 깊어짐에 따라 기울기 소실의 문제점 발생</li>
-            </ul>
-
-          </li>
-        </ul>
-      </div>              
-
-
-      <div class="spacer"></div>
-      <h3>Training Setup</h3>
-      <div class="img-container">
-        <ul>
-          <li>Scratch Model
-
-            <ul>
-              <li>Model Parameters: 10000</li>
-              <li>여러 문장간 의미를 파악할 수 있도록 Token Type Id에 변형을 가함</li>
-              <li>층이 깊어짐에 따라 기울기 소실의 문제점 발생</li>
-          </ul>
-
-          </li>
-
-          <li>Torch Model
-          </li>
-        </ul>
-      </div>              
-
-
-
-    <h2>3. &hairsp; Result</h2>
-    <div class="small-spacer"></div>
-    <h3>Machine Translation</h3>
+<!-- Experimental Setup --> 
+    <h2 id="2">2. &hairsp; Experimental Setup</h2>           
     <div class="small-spacer"></div>
     <table class="result-table">
       <thead>
         <tr>
+          <th>Data Setup</th>
+          <th>Model Setup</th>
+          <th>Training Setup</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+
+          <td>
+            <ul>
+              <li><b>Translation Task</b>: &nbsp; WMT'14 En-De</li>
+              <li><b>Dialogue Task</b>: &nbsp; Daily Dialogue</li>
+              <li><b>Summarization Task</b>: &nbsp; CNN Daily</li>
+              <li><b>Train Data Volumn</b>: &nbsp; 50,000</li>
+              <li><b>Valid Data Volumn</b>: &nbsp; 5,000</li>
+              <li><b>Test Data Volumn</b>: &nbsp; 100</li>
+              <li><b>Tokenizer</b>: &nbsp; Word-Level Tokenizer</li>
+              <li><b>Vocab Size</b>: &nbsp; 10,000</li>
+            </ul>
+          </td>
+
+          <td>
+            <ul>
+              <li><b>Input Dim</b>: &nbsp; 10,000</li>
+              <li><b>Output Dim</b>: &nbsp; 10,000</li>
+              <li><b>Embedding Dim</b>: &nbsp; 512</li>
+              <li><b>Hidden Dim</b>: &nbsp; 512</li>
+              <li><b>Model Params</b>: &nbsp; 000</li>
+              <li><b>Model Size</b>: &nbsp; 000</li>
+            </ul>
+          </td>
+
+          <td>
+            <ul>
+              <li><b>Num Epochs</b>: &nbsp; 10</li>
+              <li><b>Batch Size</b>: &nbsp; 32</li>
+              <li><b>Learning Rate</b>: &nbsp; 5e-4</li>
+              <li><b>LR Scheduler</b>: &nbsp; pleature</li>
+              <li><b>Optimizer</b>: &nbsp; AdamW</li>
+              <li><b>Gradient Accumulation Steps</b>: &nbsp; 4</li>
+            </ul>
+          </td>          
+        </tr>
+
+      </tbody>
+    </table>
+    <div class="half-spacer"></div>
+    <hr>
+
+<!-- Result --> 
+    <h2>3. &hairsp; Result</h2>
+    <h3>Machine Translation</h3>
+    <table class="result-table">
+      <thead>
+        <tr>
           <th>Model Type</th>
-          <th>Evaluation Score</th>
-          <th>Avg Train Time</th>
-          <th>Avg GPU Memory Usage</th>
-          <th>Max GPU Memory Usage</th>
+          <th>Eval Score</th>
+          <th>Epoch Time</th>
+          <th>Avg GPU</th>
+          <th>Max GPU</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td>Scratch Model</td>
           <td>12.16</td>
-          <td>53 sec</td>
+          <td>53s</td>
           <td>0.20 GB</td>
           <td>1.05 GB</td>
         </tr>
         <tr>
           <td>PyTorch Model</td>
           <td>13.28</td>
-          <td>45 sec</td>
+          <td>45s</td>
           <td>0.20GB</td>
           <td>0.95GB</td>
         </tr>
@@ -525,29 +448,28 @@ class PositionwiseFeedForward(nn.Module):
 
     <div class="half-spacer"></div>
     <h3>Dialogue Generation</h3>
-    <div class="small-spacer"></div>
     <table class="result-table">
       <thead>
         <tr>
           <th>Model Type</th>
-          <th>Evaluation Score</th>
-          <th>Avg Train Time</th>
-          <th>Avg GPU Memory Usage</th>
-          <th>Max GPU Memory Usage</th>
+          <th>Eval Score</th>
+          <th>Epoch Time</th>
+          <th>Avg GPU</th>
+          <th>Max GPU</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td>Scratch Model</td>
           <td>1.29</td>
-          <td>52 sec</td>
+          <td>52s</td>
           <td>0.20 GB</td>
           <td>0.91 GB</td>
         </tr>
         <tr>
           <td>PyTorch Model</td>
           <td>2.47</td>
-          <td>45 sec</td>
+          <td>45s</td>
           <td>0.20GB</td>
           <td>0.83GB</td>
         </tr>
@@ -558,45 +480,41 @@ class PositionwiseFeedForward(nn.Module):
 
     <div class="half-spacer"></div>
     <h3>Text Summarization</h3>
-    <div class="small-spacer"></div>
     <table class="result-table">
       <thead>
         <tr>
           <th>Model Type</th>
-          <th>Evaluation Score</th>
-          <th>Avg Train Time</th>
-          <th>Avg GPU Memory Usage</th>
-          <th>Max GPU Memory Usage</th>
+          <th>Eval Score</th>
+          <th>Epoch Time</th>
+          <th>Avg GPU</th>
+          <th>Max GPU</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td>Scratch Model</td>
           <td>5.84</td>
-          <td>387 sec</td>
+          <td> 6m 27s</td>
           <td>0.22 GB</td>
           <td>5.63 GB</td>
         </tr>
         <tr>
           <td>PyTorch Model</td>
           <td>7.94</td>
-          <td>170 sec</td>
+          <td> 2m 50s</td>
           <td>0.21GB</td>
           <td>2.90GB</td>
         </tr>
 
       </tbody>
     </table>
-
     <div class="half-spacer"></div>
-    <h3>Result Analytics</h3>
-    <div class="small-spacer"></div>
-    <p>위의 결과를 보면, 성능, 시간, 메모리 사용 모든 측면에서 Pytorch에서 제공하는 모델이 우수함을 알 수 있습니다. 이는 Attention클래스에서 더욱 다양하고, 정밀한 코드 구현으로 인한 차이가 가장 큽니다. 그래도 대체 불가능할 정도로 차이가 많이 나는것은 아니라는 점이 고무적이긴 합니다.
-    </p>
+    <hr>
 
     <h2>4. &hairsp; Conclusion</h2>
-    <div class="small-spacer"></div>
     <p> &nbsp; 이전의 RNN 계열의 모델들 보다 속도 측면, 그리고 성능 측면에서 굉장히 진일보 했음을 실험을 통해 직접적으로 확인할 수 있었음. 구현과정에서 복잡성이 증가 했다는 단점역시, Pytorch 라이브러리의 Transformer 모델을 통해 간편하게 사용할 수 있는 편의성이 있음.
+
+    위의 결과를 보면, 성능, 시간, 메모리 사용 모든 측면에서 Pytorch에서 제공하는 모델이 우수함을 알 수 있습니다. 이는 Attention클래스에서 더욱 다양하고, 정밀한 코드 구현으로 인한 차이가 가장 큽니다. 그래도 대체 불가능할 정도로 차이가 많이 나는것은 아니라는 점이 고무적이긴 합니다.
 
     </p>  
 
@@ -609,7 +527,8 @@ class PositionwiseFeedForward(nn.Module):
   </div>
 </div>
 
+
 <div class="pagination">
-  <a href="{{ '/rnn_seq2seq_attn' | relative_url }}" class="btn-prev"></a> 
-  <a href="{{ '/transformer_variants' | relative_url }}" class="btn-next"></a>
+  <a href="{{ '/rnn_seq2seq_attn' | relative_url }}" class="btn-prev"><span>RNN Seq2sSeq with Attention</span></a>
+  <a href="{{ '/transformer_variants' | relative_url }}" class="btn-next"><span>Transformer Variants</span></a>
 </div>

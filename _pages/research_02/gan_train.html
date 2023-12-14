@@ -11,30 +11,37 @@ permalink: /gan_train
     <div class="callout">
       <p class="highlighted-text"><span>Project Objective</span></p>
       <div class="small-spacer"></div>
-      <p>&nbsp; RNN은 이전 스텝의 결과값을 다음 스텝의 처리과정에 재귀적으로 반영시키며, 시퀀셜 데이터를 처리하기 용이한 네트워크 구조입니다. 대표적인 RNN Cell 구조로는 RNN, LSTM, GRU
-      이 프로젝트에서는 세가지 셀 구조별 Seq2Seq 모델 구조에서 성능이 얼마나 나오는지를 비교 분석해봅니다.</p>
+      <p>&nbsp; 딥러닝 모델의 학습은 Training Objective를 바탕으로 모델의 파라미터를 최적화 시키는 방향으로 진행됩니다. 일반적으로 NLG Task는 MLE를 Training Objective로 해서 학습됩니다. 좋은 성능을 보이고는 있지만, 그래도 결과값을 생성해보면 그래도 인간이 생성하는 결과값과는 미묘한 차이가 있습니다. 이런 미묘한 차이를 없애고, 더욱 자연스러운 생성을 위해서 SeqGAN을 활용할 수 있습니다. SeqGAN은 GAN의 개념을 시퀀셜 데이터에 적용시키기 위한 기법입니다. 다만 이 기법은 Generative Training을 기반으로 하기에 Transformer에 적용하기는 힘듭니다. 이 프로젝트에서는 Transformer에 적용할수 있도록 SeqGAN의 개념을 차용한 방법론을 제시하고, 실제 실험 후 두 가지 NLG Task의 더욱 자연스럽고 좋은 결과 반환을 위한 추가학습 방법으로써 SeqGAN을 사용해보고, 그 실효성을 검증해봅니다.</p>
     </div>
 
     <div class="tblContents">
       <ul>
 
         <li>
-          <a href="#1">1. RNN Cells</a>
+          <a href="#1">1. Training Strategy</a>
           <ul>
             <li>
-              <a href="#1.1">1.1 RNN</a>
+              <a href="#1.1">1.1 &hairsp; GAN</a>
             </li>
             <li>
-              <a href="#1.2">1.2 LSTM</a>
+              <a href="#1.2">1.2 &hairsp; Sequence GAN</a>
             </li>
             <li>
-              <a href="#1.3">1.3 GRU</a>
-            </li>          
+              <a href="#1.3">1.3 &hairsp; SeqGAN for Transformer</a>
+            </li>                      
           </ul>
         </li>
         
         <li>
-          <a href="#2">2. Architecure</a>
+          <a href="#2">2. Model</a>
+          <ul>
+            <li>
+              <a href="#2.1">2.1 &hairsp; Generator</a>
+            </li>
+            <li>
+              <a href="#2.2">2.2 &hairsp; Discriminator</a>
+            </li>          
+          </ul>
         </li>
 
         <li>
@@ -58,21 +65,10 @@ permalink: /gan_train
     <hr>
 
 
-<!-- Project Desc -->    
-    <h2>1. &hairsp; Project Desc</h2>
+<!-- Training Strategy -->    
+    <h2 id="1">1. &hairsp; Training Strategy</h2>
 
-      <p>
-        &nbsp; 현재 다양한 딥러닝 모델들이 다양한 분야에서 좋은 성능을 보여주고 있습니다. 
-        성능이 뛰어난, 모델을 사용하기 위해서는 사용자의 의도에 맞는 Down Stream Task Dataset에 맞춰 파인튜닝이 이뤄져야 합니다.
-        대규모 모델의 경우, 파인튜닝을 위한 자원도 많이 필요합니다.
-        모델의 성능을 포기하는 방법대신, 효율적인 학습방식으로 이 한계를 극복할수 있습니다.
-        이 프로젝트에서는 네가지 대표적인 효율적 모델 학습 방법론을 살펴보고, 실제 Sequence Classification Task에서의 효용성을 통해
-        각 방법론 별 효용성을 비교 분석해봅니다.
-      </p>
-
-      <div class="spacer"></div>
-      <h3>Generative Adversarial Network</h3>
-      <div class="small-spacer"></div>
+      <h3 id="1.1">1.1 &hairsp; GAN</h3>
 
       <p>&nbsp; GAN은 Generator와 Discriminator가 적대적으로 학습
         Generator: 실제와 유사한 결과값을 창출하려고, Discriminatofrom r를 속일정도록
@@ -84,26 +80,10 @@ permalink: /gan_train
         덕분에 단순한 Loss Function만으로는 다듬기 힘든 부분까지 모델이 학습할 수 있게 유도합니다.
 
         여러 방면에서 학습이 매우 효과적임을 입증함.
-      </p>
+      </p><hr>
 
-      <div class="spacer"></div>
-      <h3>SeqGAN</h3>
-      <div class="small-spacer"></div>
-
-      <p>&nbsp; GAN은 매우 효과적인 학습 방법론입니다.
-        하지만 Sequential 한 데이터에는 사용하기 어렵습니다.
-        병렬적으로 
-
-        Generative Training 속에 Discriminator를 활용하는 방법도 있기는 하지만, Transformer를 통한 Generative Training은 효율성도 그렇고, 실효성도 그닥이라서.
-
-        차라리 Transformer의 병렬 학습을 최대한 활용하면서, 그 안에서 GAN의 개념을 삽입시키는 방향으로 학습법을 수정.
-
-
-      </p>
-
-      <div class="spacer"></div>
-      <h3>SeqGAN Penalty Training</h3>
-      <div class="small-spacer"></div>
+      <div class="half-spacer"></div>
+      <h3 id="1.2">1.2 &hairsp; Sequence GAN</h3>
 
       <p>&nbsp; GAN은 매우 효과적인 학습 방법론입니다.
         하지만 Sequential 한 데이터에는 사용하기 어렵습니다.
@@ -112,48 +92,56 @@ permalink: /gan_train
         Generative Training 속에 Discriminator를 활용하는 방법도 있기는 하지만, Transformer를 통한 Generative Training은 효율성도 그렇고, 실효성도 그닥이라서.
 
         차라리 Transformer의 병렬 학습을 최대한 활용하면서, 그 안에서 GAN의 개념을 삽입시키는 방향으로 학습법을 수정.
+      </p><hr>
 
+      <div class="half-spacer"></div>
+      <h3 id="1.3">1.3 &hairsp; SeqGAN for Transformer</h3>
 
-      </p>      
+      <p>&nbsp; SeqGAN을 Transformer에 적용하기 위한 다음과 같은 방법론을 제시합니다.
 
-    <h2>2. Training Details</h2>
+        1. 
+      </p><hr>
 
-    <div class="small-spacer"></div>
-    <h3>Pre Training</h3>
+    <h2 id="2">2. &hairsp; Model</h2>
+
+    <h3 id="2.1">2.1 &hairsp; Generator</h3>
     <p>처음부터 SeqGAN을 사용하는 것이 아니라, 처음에는 Generator와 Discriminator 각각이 어느 정도의 생성 및 판별 능력을 배양할 수 있도록 사전학습을 시킵니다.
 
     우선은 Generator를 일반 Transformer의 그것과 동일한 방식으로 학습시킵니다.
     그리고 사전학습된 Generator가 입력값에 반응해서 도출한 결과값과 실제 레이블 시퀀스를 입력값으로 받아, 참거짓을 분류하는 이진 분류 모델로써 Discriminator를 학습시킵니다.
 
     </p>
+    <div class="code-container">
+      <div class="code-snippet">
+        <pre><code class="python">class Generator(nn.Module):
+    def __init__(self, config):
+        super().__init__()
+
+        return x</code></pre>
+      </div>
+    </div>
+    <hr>
+
 
     <div class="spacer"></div>
-    <h3>Model Setup</h3>
+    <h3 id="2.2">2.2 &hairsp; Discriminator</h3>
     <p>대표적인 PreTrained Model인 BERT를 사용.
     </p>
+    <div class="code-container">
+      <div class="code-snippet">
+        <pre><code class="python">class Discriminator(nn.Module):
+    def __init__(self, config):
+        super().__init__()
+
+        return x</code></pre>
+      </div>
+    </div>
+    <hr>    
 
 
 <!-- Experimental Setup -->    
-    <h2>3. Experimental Setup</h2>
+    <h2 id="3">3. Experimental Setup</h2>
 
-      <div class="small-spacer"></div>
-      <h3>Data Setup</h3>
-      <p>Sequence Classification을 위한 대표적 데이터 셋 중하나인 AG_News를 사용.
-        데이터의 크기는 Train/ Valid/ Test 1000/ 100/ 100으로 설정
-        총 네가지 데이터 Label을 모든 데이터에서 고르게 분배해서 한쪽으로 치우치지 않도록 가공
-      </p>
-
-      <div class="spacer"></div>
-      <h3>Model Setup</h3>
-      <p>대표적인 PreTrained Model인 BERT를 사용.
-      </p>
-
-
-      <div class="spacer"></div>
-      <h3>Training Setup</h3>
-      <div class="small-spacer"></div>
-      <p>대표적인 PreTrained Model인 BERT를 사용.
-      </p>
 
 
 <!-- Result -->    
@@ -203,15 +191,14 @@ permalink: /gan_train
 
 <!-- Reference -->    
     <h2>5. Reference</h2>
-
-
-
+    <a class="reference" href="https://arxiv.org/abs/1406.2661">&nbsp; Generative Adversarial Networks</a> <br> 
+    <a class="reference" href="https://arxiv.org/abs/1609.05473">&nbsp; SeqGAN: Sequence Generative Adversarial Nets with Policy Gradient</a> <br>
 
   </div>
 </div>
 
 
 <div class="pagination">
-  <a href="{{ '/transformer_variants' | relative_url }}" class="btn-prev"></a>
-  <a href="{{ '/eff_train' | relative_url }}" class="btn-next"></a>
+  <a href="{{ '/rnn_seq2seq_attn' | relative_url }}" class="btn-prev"><span>RNN Seq2sSeq with Attention</span></a>
+  <a href="{{ '/transformer_variants' | relative_url }}" class="btn-next"><span>Transformer Variants</span></a>
 </div>

@@ -5,9 +5,10 @@ permalink: /plm_fusion
 
 
 <div id="detail">
-  <h1 class="title">How to Fuse Pre-Trained Encoder on Seq2Seq Model Architecture</h1>  
+  <h1 class="title">How to Fuse Pretrained Encoder on Seq2Seq Model</h1>  
   <div class="post">
 
+    <hr>
     <div class="callout">
       <p class="highlighted-text"><span>Project Objective</span></p>
       <div class="small-spacer"></div>
@@ -19,38 +20,31 @@ permalink: /plm_fusion
       <ul>
 
         <li>
-          <a href="#1">1. RNN Cells</a>
+          <a href="#1">1. &hairsp; Encoder & Decoder Connection</a>
           <ul>
             <li>
-              <a href="#1.1">1.1 RNN</a>
+              <a href="#1.1">1.1 &hairsp; Simple Connection</a>
             </li>
             <li>
-              <a href="#1.2">1.2 LSTM</a>
+              <a href="#1.2">1.2 &hairsp; Fused Connection</a>
             </li>
-            <li>
-              <a href="#1.3">1.3 GRU</a>
-            </li>          
           </ul>
         </li>
-        
+
         <li>
-          <a href="#2">2. Architecure</a>
+          <a href="#2">2. &hairsp; Experimental Setup</a>
         </li>
 
         <li>
-          <a href="#3">3. Experimental Setup</a>
+          <a href="#3">3. &hairsp; Results</a>
         </li>
 
         <li>
-          <a href="#4">4. Results</a>
+          <a href="#4">4. &hairsp; Conclusion</a>
         </li>
 
         <li>
-          <a href="#5">5. Conclusion</a>
-        </li>
-
-        <li>
-          <a href="#6">6. Reference</a>
+          <a href="#5">5. &hairsp; Reference</a>
         </li>
 
       </ul>
@@ -58,47 +52,32 @@ permalink: /plm_fusion
     <hr>
 
 
-<!-- Project Desc -->    
-    <h2>1. &hairsp; Project Desc</h2>
+<!-- Encoder & Decoder Connection -->    
+    <h2 id="1">1. &hairsp; Encoder & Decoder Connection</h2>
 
-      <div class="half-spacer"></div>
-      <h3>Pre Trained Model</h3>
-      <div class="small-spacer"></div>
+    <h3 id="1.1">1.1 &hairsp; Simple Connection</h3>
+    <p>
+      &nbsp; 현재 다양한 딥러닝 모델들이 다양한 분야에서 좋은 성능을 보여주고 있습니다. 
+      성능이 뛰어난, 모델을 사용하기 위해서는 사용자의 의도에 맞는 Down Stream Task Dataset에 맞춰 파인튜닝이 이뤄져야 합니다.
+      대규모 모델의 경우, 파인튜닝을 위한 자원도 많이 필요합니다.
+      모델의 성능을 포기하는 방법대신, 효율적인 학습방식으로 이 한계를 극복할수 있습니다.
+      이 프로젝트에서는 네가지 대표적인 효율적 모델 학습 방법론을 살펴보고, 실제 Sequence Classification Task에서의 효용성을 통해
+      각 방법론 별 효용성을 비교 분석해봅니다.
+    </p>
+    <hr>
 
-      <p>
-        &nbsp; 현재 다양한 딥러닝 모델들이 다양한 분야에서 좋은 성능을 보여주고 있습니다. 
-        성능이 뛰어난, 모델을 사용하기 위해서는 사용자의 의도에 맞는 Down Stream Task Dataset에 맞춰 파인튜닝이 이뤄져야 합니다.
-        대규모 모델의 경우, 파인튜닝을 위한 자원도 많이 필요합니다.
-        모델의 성능을 포기하는 방법대신, 효율적인 학습방식으로 이 한계를 극복할수 있습니다.
-        이 프로젝트에서는 네가지 대표적인 효율적 모델 학습 방법론을 살펴보고, 실제 Sequence Classification Task에서의 효용성을 통해
-        각 방법론 별 효용성을 비교 분석해봅니다.
-      </p>
+    <div class="half-spacer"></div>
+    <h3 id="1.2">1.2 &hairsp; Fused Connection</h3>
 
-      <div class="spacer"></div>
-      <h3>Standard Transformer Style</h3>
-      <div class="small-spacer"></div>
-
-      <p>
-        &nbsp; 현재 다양한 딥러닝 모델들이 다양한 분야에서 좋은 성능을 보여주고 있습니다. 
-        성능이 뛰어난, 모델을 사용하기 위해서는 사용자의 의도에 맞는 Down Stream Task Dataset에 맞춰 파인튜닝이 이뤄져야 합니다.
-        대규모 모델의 경우, 파인튜닝을 위한 자원도 많이 필요합니다.
-        모델의 성능을 포기하는 방법대신, 효율적인 학습방식으로 이 한계를 극복할수 있습니다.
-        이 프로젝트에서는 네가지 대표적인 효율적 모델 학습 방법론을 살펴보고, 실제 Sequence Classification Task에서의 효용성을 통해
-        각 방법론 별 효용성을 비교 분석해봅니다.
-      </p>
-
-      <div class="spacer"></div>
-      <h3>Fusion Method</h3>
-      <div class="small-spacer"></div>
-
-      <p>
-        &nbsp; 현재 다양한 딥러닝 모델들이 다양한 분야에서 좋은 성능을 보여주고 있습니다. 
-        성능이 뛰어난, 모델을 사용하기 위해서는 사용자의 의도에 맞는 Down Stream Task Dataset에 맞춰 파인튜닝이 이뤄져야 합니다.
-        대규모 모델의 경우, 파인튜닝을 위한 자원도 많이 필요합니다.
-        모델의 성능을 포기하는 방법대신, 효율적인 학습방식으로 이 한계를 극복할수 있습니다.
-        이 프로젝트에서는 네가지 대표적인 효율적 모델 학습 방법론을 살펴보고, 실제 Sequence Classification Task에서의 효용성을 통해
-        각 방법론 별 효용성을 비교 분석해봅니다.
-      </p>
+    <p>
+      &nbsp; 현재 다양한 딥러닝 모델들이 다양한 분야에서 좋은 성능을 보여주고 있습니다. 
+      성능이 뛰어난, 모델을 사용하기 위해서는 사용자의 의도에 맞는 Down Stream Task Dataset에 맞춰 파인튜닝이 이뤄져야 합니다.
+      대규모 모델의 경우, 파인튜닝을 위한 자원도 많이 필요합니다.
+      모델의 성능을 포기하는 방법대신, 효율적인 학습방식으로 이 한계를 극복할수 있습니다.
+      이 프로젝트에서는 네가지 대표적인 효율적 모델 학습 방법론을 살펴보고, 실제 Sequence Classification Task에서의 효용성을 통해
+      각 방법론 별 효용성을 비교 분석해봅니다.
+    </p>
+    <hr>
 
 
 

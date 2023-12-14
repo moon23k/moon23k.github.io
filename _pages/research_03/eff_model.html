@@ -5,34 +5,61 @@ permalink: /eff_model
 
 
 <div id="detail">
-  <h1 class="title">효율적 사전 학습 모델 비교 분석</h1>  
+  <h1 class="title">Efficient PLM Comparision</h1>  
   <div class="post">
 
 
-<!-- Project Desc -->    
-    <h2>1. &hairsp; Project Desc</h2>
-
-      <div class="half-spacer"></div>
-
-      <h3>Pre Trained Language Model</h3>
+    <div class="callout">
+      <p class="highlighted-text"><span>Project Objective</span></p>
       <div class="small-spacer"></div>
+      <p>&nbsp; 사전학습된 모델이 좋은 성능을 보인다는 것은 다양한 방면에 걸쳐 입증되어 왔습니다. 일반적으로 더 큰 모델일수록 더 좋은 성능을 보이고는 있지만, 그 만큼 많은 컴퓨팅자원을 필요로합니다. 때문에 모델의 성능을 최대한 유지하면서도 모델의 크기를 줄이거나, 연산을 단순화 하는 등의 효율성을 제고시키기 위한 모델들이 제시되었습니다. 하지만 이러한 효율적 모델들을 동일한 조건에서 비교 검증해보는 연구는 부재합니다. 이런 문제를 해결하고, 효율성의 측면에서 다양한 사전학습 모델들을 검증해봅니다.</p>
+    </div>
 
-      <p>
-        &nbsp; 현재 다양한 딥러닝 모델들이 다양한 분야에서 좋은 성능을 보여주고 있습니다. 
-        성능이 뛰어난, 모델을 사용하기 위해서는 사용자의 의도에 맞는 Down Stream Task Dataset에 맞춰 파인튜닝이 이뤄져야 합니다.
-        대규모 모델의 경우, 파인튜닝을 위한 자원도 많이 필요합니다.
-        모델의 성능을 포기하는 방법대신, 효율적인 학습방식으로 이 한계를 극복할수 있습니다.
-        이 프로젝트에서는 네가지 대표적인 효율적 모델 학습 방법론을 살펴보고, 실제 Sequence Classification Task에서의 효용성을 통해
-        각 방법론 별 효용성을 비교 분석해봅니다.
-      </p>
+    <div class="tblContents">
+      <ul>
+
+        <li>
+          <a href="#1">1. &hairsp; Efficient Pretrained Models</a>
+          <ul>
+            <li>
+              <a href="#1.1">1.1 &hairsp; Parameter wise Efficient Models</a>
+            </li>
+            <li>
+              <a href="#1.2">1.2 &hairsp; Attention wise Efficient Models</a>
+            </li>
+          </ul>
+        </li>
+
+        <li>
+          <a href="#2">2. &hairsp; Experimental Setup</a>
+        </li>
+
+        <li>
+          <a href="#3">3. &hairsp; Results</a>
+        </li>
+
+        <li>
+          <a href="#4">4. &hairsp; Conclusion</a>
+        </li>
+
+        <li>
+          <a href="#5">5. &hairsp; Reference</a>
+        </li>
+
+      </ul>
+    </div>
+    <hr>
 
 
-      <div class="spacer"></div>
-      <h3>Parameter wise Efficient Models</h3>
-      <div class="img-container">
+<!-- Project Desc -->    
+    <h2 id="1">1. &hairsp; Efficient Pretrained Models</h2>
+
+      <h3 id="1.1">1.1 &hairsp; Attention wise Efficient Models</h3>
+
+      <div class="list-container">
         <ul>
           <li>AlBERT</li>        
-            <p> &nbsp; 기울기 누적 방법은 전체 배치를 한 번에 계산하는 대신 작은 증분으로 기울기를 계산하는 방법을 지향합니다. 
+            <p> 기울기 누적 방법은 전체 배치를 한 번에 계산하는 대신 작은 증분으로 기울기를 계산하는 방법을 지향합니다. 
               이 방법은 모델을 통해 순전파와 역전파를 수행하면서 작은 배치에서 반복적으로 기울기를 계산하고 이 과정 동안 기울기를 누적하는 방식으로 이루어집니다. 
               충분한 수의 기울기가 누적되면 모델의 최적화 단계가 실행됩니다. 
               기울기 누적을 사용하면 GPU 메모리 용량의 제한을 초과하여 효과적인 배치 크기를 증가시킬 수 있습니다. 
@@ -41,20 +68,13 @@ permalink: /eff_model
 
           <div class="half-spacer"></div>
           <li>Distill BERT</li>        
-            <p> &nbsp; 기울기 누적 방법은 전체 배치를 한 번에 계산하는 대신 작은 증분으로 기울기를 계산하는 방법을 지향합니다. 
-              이 방법은 모델을 통해 순전파와 역전파를 수행하면서 작은 배치에서 반복적으로 기울기를 계산하고 이 과정 동안 기울기를 누적하는 방식으로 이루어집니다. 
-              충분한 수의 기울기가 누적되면 모델의 최적화 단계가 실행됩니다. 
-              기울기 누적을 사용하면 GPU 메모리 용량의 제한을 초과하여 효과적인 배치 크기를 증가시킬 수 있습니다. 
-              그러나 기울기 누적에 의해 도입된 추가적인 순전파와 역전파는 훈련 과정을 느리게 만들 수 있다는 점을 주의해야 합니다.
+            <p> &nbsp; Knowledge Distillation을 활용해 BERT와 거의 비슷하면서도, 매우 적은 파라미터를 보유한 모델.
             </p>  
 
           <div class="half-spacer"></div>
           <li>Mobile BERT</li>        
-            <p> &nbsp; 기울기 누적 방법은 전체 배치를 한 번에 계산하는 대신 작은 증분으로 기울기를 계산하는 방법을 지향합니다. 
-              이 방법은 모델을 통해 순전파와 역전파를 수행하면서 작은 배치에서 반복적으로 기울기를 계산하고 이 과정 동안 기울기를 누적하는 방식으로 이루어집니다. 
-              충분한 수의 기울기가 누적되면 모델의 최적화 단계가 실행됩니다. 
-              기울기 누적을 사용하면 GPU 메모리 용량의 제한을 초과하여 효과적인 배치 크기를 증가시킬 수 있습니다. 
-              그러나 기울기 누적에 의해 도입된 추가적인 순전파와 역전파는 훈련 과정을 느리게 만들 수 있다는 점을 주의해야 합니다.
+            <p> &nbsp; 생활 필수품인 모바일 디바이스에서도 사용할 수 있을 정도로 경량화하는 것을 목표로 한 모델.
+              경량화를 위해 Mobile BERT는 
             </p>  
 
         </ul>
@@ -62,9 +82,9 @@ permalink: /eff_model
 
 
       <div class="spacer"></div>
-      <h3>Attention wise Efficient Models</h3>
+      <h3 id="1.2">1.2 &hairsp; Attention wise Efficient Models</h3>
 
-      <div class="img-container">
+      <div class="list-container">
         <ul>
           <li>Longformer</li>        
             <p> &nbsp; 기울기 누적 방법은 전체 배치를 한 번에 계산하는 대신 작은 증분으로 기울기를 계산하는 방법을 지향합니다. 
@@ -85,110 +105,195 @@ permalink: /eff_model
 
         </ul>
       </div>
+      <hr>
 
 
 <!-- Experimental Setup -->    
     <h2>2. Experimental Setup</h2>
 
-      <div class="small-spacer"></div>
-      <h3>Data Setup</h3>
-      <p>Sequence Classification을 위한 대표적 데이터 셋 중하나인 AG_News를 사용.
-        데이터의 크기는 Train/ Valid/ Test 1000/ 100/ 100으로 설정
-        총 네가지 데이터 Label을 모든 데이터에서 고르게 분배해서 한쪽으로 치우치지 않도록 가공
-      </p>
-
-      <div class="spacer"></div>
-      <h3>Model Setup</h3>
-      <p>대표적인 PreTrained Model인 BERT를 사용.
-      </p>
-
-
-      <div class="spacer"></div>
-      <h3>Training Setup</h3>
-      <div class="small-spacer"></div>
-
-      <div class="code-container">
-        <div class="code-snippet">
-          <pre><code class="python">
-TrainingArguments(
-        output_dir= f'ckpt/{strategy}',
-        num_train_epochs= 5,
-        learning_rate= 1e-5,
-        per_device_train_batch_size= 32,
-        per_device_eval_batch_size= 32,
-        lr_scheduler_type='reduce_lr_on_plateau',
-        load_best_model_at_end= True,
-
-        save_strategy= 'epoch',
-        logging_strategy= 'epoch',
-        evaluation_strategy= 'epoch',
-
-        fp16= True if config.strategy in ['fp16', 'all'] else False,
-        fp16_opt_level= '02' if config.strategy in ['fp16', 'all'] else '01',
-        gradient_accumulation_steps = True if config.strategy in ['grad_accumulation', 'all'] else 4,
-        gradient_checkpointing= True if config.strategy in ['grad_checkpointing', 'all'] else False,
-        optim = 'adafactor' if config.strategy in ['optim', 'all'] else 'adamw_torch'
-)
-          </code></pre>
-        </div>
-      </div>
-
-
-<!-- Result -->    
-    <h2>3. Result</h2>
-    <div class="small-spacer"></div>
+    <h3>Setups for Param-wise Models</h3>
     <table class="result-table">
       <thead>
         <tr>
-          <th>Training Strategy</th>
-          <th>Training Time</th>
-          <th>GPU Occupation</th>
-          <th>Accuracy</th>
+          <th>Data Setup</th>
+          <th>Model Setup</th>
+          <th>Training Setup</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td>Vanilla Training</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-        </tr>
-        <tr>
-          <td>FP 16</td>
-          <td>결과2-1</td>
-          <td>결과2-2</td>
-          <td>결과2-3</td>
-        </tr>
-        <tr>
-          <td>Gradient Accumulation</td>
-          <td>결과2-1</td>
-          <td>결과2-2</td>
-          <td>결과2-3</td>
-        </tr>
 
-        <tr>
-          <td>Gradient Checkpointing</td>
-          <td>결과2-1</td>
-          <td>결과2-2</td>
-          <td>결과2-3</td>
-        </tr>
+          <td>
+            <ul>
+              <li><b>Dataset</b>: &hairsp; AG News</li>
+              <li><b>Train Data Volumn</b>: &hairsp; 50,000</li>
+              <li><b>Valid Data Volumn</b>: &hairsp; 5,000</li>
+              <li><b>Test Data Volumn</b>: &hairsp; 100</li>
+            </ul>
+          </td>
 
-        <tr>
-          <td>Adafactor Optimizer</td>
-          <td>결과2-1</td>
-          <td>결과2-2</td>
-          <td>결과2-3</td>
-        </tr>
+          <td>
+            <ul>
+              <li><b>BERT</b>: &hairsp; bert-base-uncased</li>
+              <li><b>Distil BERT</b>: &hairsp; 512</li>
+              <li><b>AlBERT</b>: &hairsp; 000</li>
+              <li><b>Mobile BERT</b>: &hairsp; 000</li>
+            </ul>
+          </td>
 
-        <tr>
-          <td>All Strategies Applied</td>
-          <td>결과2-1</td>
-          <td>결과2-2</td>
-          <td>결과2-3</td>
+          <td>
+            <ul>
+              <li><b>Batch Size</b>: &hairsp; 32</li>
+              <li><b>Num Epochs</b>: &hairsp; 5</li>
+              <li><b>Apply AMP</b>: &hairsp; True</li>
+              <li><b>Learning Rate</b>: &hairsp; 5e-4</li>
+              <li><b>Optimizer</b>: &hairsp; Adafactor</li>
+              <li><b>Gradient Checkpointing</b>: &hairsp; True</li>
+              <li><b>Gradient Accumulation Step</b>: &hairsp; 4</li>
+            </ul>
+          </td>          
+
         </tr>
 
       </tbody>
     </table>
+
+    <div class="spacer"></div>
+    <h3>Setups for Attention-wise Models</h3>
+    <table class="result-table">
+      <thead>
+        <tr>
+          <th>Data Setup</th>
+          <th>Model Setup</th>
+          <th>Training Setup</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+
+          <td>
+            <ul>
+              <li><b>Dataset</b>: &hairsp; IMDB</li>
+              <li><b>Train Data Volumn</b>: &hairsp; 1,000</li>
+              <li><b>Valid Data Volumn</b>: &hairsp; 100</li>
+              <li><b>Test Data Volumn</b>: &hairsp; 100</li>
+            </ul>
+          </td>
+
+          <td>
+            <ul>
+              <li><b>BERT</b>: &hairsp; bert-base-uncased</li>
+              <li><b>Longbird</b>: &hairsp; 512</li>
+              <li><b>Bigbird</b>: &hairsp; 000</li>
+            </ul>
+          </td>
+
+          <td>
+            <ul>
+              <li><b>Batch Size</b>: &hairsp; 32</li>
+              <li><b>Num Epochs</b>: &hairsp; 5</li>
+              <li><b>Apply AMP</b>: &hairsp; True</li>
+              <li><b>Learning Rate</b>: &hairsp; 5e-4</li>
+              <li><b>Optimizer</b>: &hairsp; Adafactor</li>
+              <li><b>Gradient Checkpointing</b>: &hairsp; True</li>
+              <li><b>Gradient Accumulation Step</b>: &hairsp; 4</li>
+            </ul>
+          </td>          
+
+        </tr>
+
+      </tbody>
+    </table>
+    <div class="half-spacer"></div>
+    <hr>
+
+
+
+<!-- Result -->    
+    <h2>3. Result</h2>
+
+    <h3>Param wise Efficient Models</h3>
+    <table class="result-table">
+      <thead>
+        <tr>
+          <th>Model Type</th>
+          <th>Accuracy</th>
+          <th>Epoch Time</th>
+          <th>Avg GPU</th>
+          <th>Max GPU</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>BERT (Baseline Model)</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+        </tr>
+        <tr>
+          <td>Distil BERT</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+        </tr>
+        <tr>
+          <td>AlBERT</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+        </tr>
+        <tr>
+          <td>MobileBERT</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+        </tr>        
+
+      </tbody>
+    </table>
+
+    <div class="half-spacer"></div>
+    <h3>Attention wise Efficient Models</h3>
+    <table class="result-table">
+      <thead>
+        <tr>
+          <th>Model Type</th>
+          <th>Accuracy</th>
+          <th>Epoch Time</th>
+          <th>Avg GPU</th>
+          <th>Max GPU</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>BERT (Baseline Model)</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+        </tr>
+        <tr>
+          <td>Longformer</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+        </tr>
+        <tr>
+          <td>Bigbird</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+        </tr>
+
+      </tbody>
+    </table>
+    <hr>
 
 
 <!-- Conclusion -->    

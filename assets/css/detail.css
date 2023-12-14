@@ -1,5 +1,5 @@
 #detail {
-  padding: 0 180px 80px 180px;
+  padding: 0 180px;
   box-sizing: border-box;
   display: flex;
   align-items: center;
@@ -14,17 +14,20 @@
 }
 #detail h2 {
   position: relative;
-  margin: 4.5em 0 1em 0;
+  margin: 5em 0 0.5em 0;
   font-size: 22px;
+  background-color: #eceff1;
+  padding: 10px;
+  border: 1px solid #f4f4f4;
 }
 #detail h2::after {
   content: "";
   position: absolute;
-  top: 1.4em;
+  top: 2.1em;
   left: 0;
   width: 100%;
-  height: 4px;
-  background-color: #eceff1;
+  height: 1px;
+  background-color: #A9A9A9;
 }
 
 #detail h3 {
@@ -38,8 +41,8 @@
   position: absolute;
   top: 1.4em;
   left: 0;
-  width: 120%;
-  height: 4px;
+  width: 101%;
+  height: 3px;
   background-color: #eceff1;
 }
 
@@ -63,7 +66,7 @@
 
 #detail .post hr{
   border: 0.1px solid #e8e8e8;
-  margin: 1.5em 0;
+  margin: 2em 0;
 }
 
 /* Table of Contents */
@@ -74,7 +77,7 @@
   padding-left: 1em;
 }
 .tblContents ul li {
-  margin-top: 11px;
+  margin-top: 15px;
   margin-left: 0;
 }
 .tblContents ul li a {
@@ -82,7 +85,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: flex-start;
-  font-size: 14px;
+  font-size: 16px;
   color: #808080;
   text-indent: 10px;
   font-weight: bold; 
@@ -108,7 +111,9 @@
 }
 .tblContents ul li ul li {
   margin-top: 7px;
-  font-size: 13px;
+}
+.tblContents ul li ul li a{
+  font-size: 15px;
 }
 
 /* pagination */
@@ -117,7 +122,7 @@
   width: 100%;
   align-items: center;
   justify-content: center;
-  padding: 20px 0;
+  padding: 80px 0 20px 0;
 }
 .pagination a {
   position: relative;
@@ -200,11 +205,9 @@
 }
 
 
-
-
 /*list-container*/
 .list-container {
-  margin: 1em;
+  margin: 0.5em 1em;
   color: #4c4c4c;
   line-height: 2;
 }
@@ -228,13 +231,12 @@
 }
 
 
-
 /* spaecr */
 .small-spacer {
   height: 1em;
 }
 .half-spacer {
-  height: 2.5em;
+  height: 2em;
 }
 .spacer {
   height: 3em;
@@ -247,12 +249,12 @@
   max-height: 450px; 
   overflow-x: auto; 
   overflow-y: auto; 
-  margin: 0 0.5em 0 0.5em;
+  margin: 0.5em;
 }
 
 .code-snippet {
-  background-color: #f4f4f4;
-  padding: 5px;
+  background-color: #f1f1f1;
+  padding: 20px;
   border-radius: 1px;
   font-family: "Courier New", Courier, monospace;
   font-size: 13px;
@@ -269,49 +271,33 @@
 
 /* result-table */
 .result-table {
-  width: 100%;
+  width: 95%;
   border-collapse: collapse;
   margin: 0 1em;
+  color: #4c4c4c;
 }
-
 .result-table th {
   background-color: #f2f2f2;
   padding: 10px;
   text-align: center;
   border: 1px solid #ddd;
 }
-
 .result-table td {
   padding: 10px;
   text-align: center;
   border: 1px solid #ddd;
 }
-
-
-/* setup table */
-.setup-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 0 1em;
-  table-layout: fixed;
-}
-
-.setup-table th {
-  background-color: #f2f2f2;
-  padding: 10px;
-  text-align: center;
-  border: 1px solid #ddd;
-}
-
-.setup-table td {
-  padding: 10px;
-  text-align: center;
-  border: 1px solid #ddd;
-}
-
-.setup-table td .split-column{
+.result-table td ul li {
+  margin-left: 0.2em;
+  list-style-type: none;
+  line-height: 2;
+  font-size: 15px;
   text-align: left;
-  border-right: 1px solid #ddd;
+}
+.result-table td ul li::before {
+  content: '\2022'; 
+  font-size: 1em; 
+  margin-right: 0.5em; 
 }
 
 
@@ -344,7 +330,8 @@
 /* latex */
 .latex-container {
   background-color: #f4f4f4;
-  margin: 10px; 
+  margin: 10px 15px; 
+  padding: 8px;
   color: #4c4c4c;
   text-align: center;
 }
@@ -361,14 +348,13 @@
 
 /* callout */
 .callout {
-    background-color: #f4f4f4; /* 주황색 배경 */
-    padding: 20px 30px; /* 내용과 테두리 간격 */
-    margin: 1em;
-    border-radius: 5px; /* 둥근 테두리 */
+    background-color: #f4f4f4; 
+    padding: 20px 30px; 
+    margin: 2em;
+    border-radius: 5px; 
 }
 .callout p {
   font-size: 15px;
-  font-weight: bold;
 }
 .callout .highlighted-text {
     position: relative;
@@ -378,7 +364,7 @@
 .callout .highlighted-text::before {
     content: '\F0EB'; 
     font-family: 'Font Awesome 6 Free';
-    font-size: 18px;
+    font-size: 17px;
     color: orange; /* 아이콘 색상 */
     position: absolute;
     top: 50%;
@@ -387,17 +373,50 @@
 .callout .highlighted-text::after {
   content: "";
   position: absolute;
-  top: 2.4em;
+  top: 2.2em;
   left: 0;
   width: 110%;
   height: 1.5px;
   background-color: orange;
 }
-
 .callout .highlighted-text span {
-    padding-left: 25px; /* 아이콘과 텍스트 사이의 간격 조절 */
+    padding-left: 25px;
     font-weight: bold;
-    font-size: 18px;
-    color: orange; /* 텍스트 색상 */
+    font-size: 17px;
+    color: orange; 
 }
 
+
+/* dual-container */
+.dual-container {
+  display: flex;
+  align-items: center;
+  margin: 0.5em 1em;
+  font-size: 15.5px;
+  color: #4c4c4c;
+  line-height: 1.6;
+}
+
+.dual-container img {
+  flex: 0 0 auto;
+  margin-right: 2.8em;
+  width: 300px;
+
+}
+.dual-container ul {
+  display: block;
+  width: 100%;
+}
+
+.dual-container ul li {
+  margin-bottom: 1em;
+  margin-left: 1em;
+  font-weight: bold;
+  list-style-type: disc;
+}
+.dual-container ul li ul li{
+  margin: 0.2em 0;
+  margin-left: 30px;
+  font-weight: normal;
+  list-style-type: circle;
+}
