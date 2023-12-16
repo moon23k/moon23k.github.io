@@ -5,143 +5,478 @@ permalink: /back_translation
 
 
 <div id="detail">
-  <h1 class="title">Back Translation to Overcome Data Shortage</h1>  
+  <h1 class="title">Back Translation Validation Study</h1>  
   <div class="post">
 
-
-    <h2>1. &hairsp; Project Desc</h2>
-
-      <div class="half-spacer"></div>
-      <h3>Back Translation</h3>
+    <hr>
+    <div class="callout">
+      <p class="highlighted-text"><span>Project Objective</span></p>
       <div class="small-spacer"></div>
+      <p>&nbsp; RNN은 이전 스텝의 결과값을 다음 스텝의 처리과정에 재귀적으로 반영시키며, 시퀀셜 데이터를 처리하기 용이한 네트워크 구조입니다. 대표적인 RNN Cell 구조로는 RNN, LSTM, GRU
+      이 프로젝트에서는 세가지 셀 구조별 Seq2Seq 모델 구조에서 성능이 얼마나 나오는지를 비교 분석해봅니다.
+      가설을 직접 검증해봅니다.
+      </p>
+    </div>
+
+    <div class="tblContents">
+      <ul>
+
+        <li>
+          <a href="#1">1. Background</a>
+          <ul>
+            <li>
+              <a href="#1.1">1.1 &hairsp; Teacher Forcing Training</a>
+            </li>
+            <li>
+              <a href="#1.2">1.2 &hairsp; Generative Training</a>
+            </li>
+          </ul>
+        </li>
+
+        <li>
+          <a href="#2">2. &hairsp; Code Implementation</a>
+          <ul>
+            <li>
+              <a href="#2.1">2.1 &hairsp; Cache Usable Decoder</a>
+            </li>
+            <li>
+              <a href="#2.2">2.2 &hairsp; Two-way Forward Model</a>
+            </li>                      
+          </ul>
+        </li>
+        
+
+        <li>
+          <a href="#3">3. Experimental Setup</a>
+        </li>
+
+        <li>
+          <a href="#4">4. Results</a>
+        </li>
+
+        <li>
+          <a href="#5">5. Conclusion</a>
+        </li>
+
+        <li>
+          <a href="#6">6. Reference</a>
+        </li>
+
+      </ul>
+    </div>
+    <hr>    
+
+
+<!-- Training -->    
+    <h2 id="1">1. &hairsp; Background</h2>
+
+      <h3 id="1.1">1.1 &hairsp; Teacher Forcing Training</h3>
       <p>
-        &nbsp; 대규모 사전학습 언어 모델(Large Language Models, LLM)들이 다양한 분야에서 우수한 성능을 보이고 있습니다. 
-        일반적으로 LLM은 사용자가 원하는 Down Stream Task에 맞게 Fine Tuning하는 방식을 채택하지만, 대규모 모델의 파라미터를 전부 업데이트 하는 것은 비용과 시간이 많이 소요되는 일입니다. 
-        이러한 도전에 대응하여, 파라미터의 효율적인 업데이트에 중점을 둔 새로운 방법론이 등장했는데, 그것이 바로 PEFT(Parameter Efficient Fine Tuning)입니다. PEFT는 모델을 고도로 튜닝하면서도 파라미터 업데이트를 효율적으로 수행함으로써 리소스를 절약하는 방법을 제공합니다.
-        이 프로젝트에서는 PEFT를 적용한 총 5가지 방식을 직접 실험해보고, 메모리와 시간 측면에서의 효율성과 더불어 실제 NMT(Neural Machine Translation) 작업에서의 성능을 비교 분석하려고 합니다. 각각의 PEFT 방식을 구체적으로 살펴보면서 어떻게 모델의 성능 향상과 효율적인 파라미터 업데이트가 이루어지는지 확인해 보겠습니다.
-      </p>
+        &nbsp; Transformer 모델을 활용한 자연어 생성 과제의 학습에서는 일반적으로 Teacher Forcing 방식을 사용합니다.
+        Transformer는 Attention을 활용한 병렬처리에 큰 강점을 지니고 있기 때문에, 그 효율성과 모델의 잠재력을 이끌어내는 학습을 위해서는 병렬적인 학습이 필수적입니다.
+        이를 위해 Decoder에서는 입력값의 현재 시점 이후의 값을 참조하지 못하도록 Masking을 진행합니다.
 
-      <div class="spacer"></div>
-      <h3>Prompt Tuning</h3>
-      <div class="small-spacer"></div>
+        Teacher Forcing 방식을 통해, 보다 빠르고 효율적인 학습이 가능합니다.
+        다만 Teacher Forcing은 실제 Inference에서는 제공되지 않는 정보입니다.
+        실제 Inference시에는 실제 모델의 생성 토큰들이 다음 생성 시점의 입력값으로만 주어집니다.
+
+        때문에 학습과 추론과정의 불일치에서 기인하는 추론능력의 저하라는 문제점이 존재하며, Exposure Bias 문제에 직면하기 쉬움.
+        순차적으로 추론을 이어나가는 과정에서, 앞단의 잘못된 추론 결과가 전체적으로 매우 안좋은 결과를 기인하는 꼴이 됨.
+      </p>
+      <hr>
+
+
+      <h3 id="1.2">1.2 &hairsp; Generative Training</h3>
       <p>
-        &nbsp; prompt tuning
+        &nbsp; Generative Training은 추론 과정에서의 생성 프로세스를 훈련과정에서 그대로 사용하면서 모델을 학습시키는 방식을 의미합니다.
+        효율성이 매우 저하됨
+
+        AutoRegressive 한 학습을 진행
+
+
+
+        Transformer 모델에서는 권장되지 않는 학습 방법이지만, 가용한 데이터가 매우 한정적인 경우, 모델의 성능을 향상시키는데 도움이 될 가능성이 존재합니다.
+        이 프로젝트에서는 이 가능성을 직접 검증해봅니다.
+
+        하지만 추론과 동일한 학습이라는 점에서 기인하는 장점이 분명 존재할 것으로 생각됨.  
       </p>
+      <div class="latex-container">
+
+        <div class="equation-item">
+          <p class="latex-equation">\( \mathbf{Attention \space Score} = W^T_a \tanh(W_b s_{t-1} + W_c H) \)</p>
+        </div>
+
+        <div class="equation-item">
+          <p class="latex-equation">\( \mathbf{Attention \space Distribution} = softmax(Attention \space Score) \)</p>
+        </div>
+
+
+        <div class="equation-item">
+          <p class="latex-equation">\( \mathbf{Attention \space Value} = H \cdot Attention \space Distribution \)</p>
+        </div>
+
+
+        <div class="equation-item">
+          <p class="latex-equation">\( {\Large s_t} = \text{Decoder}(y_{t-1}, s_{t-1}, c_t) \)</p>
+        </div>
+
+      </div>
+      <hr>
+
+<!-- Code Implementation -->    
+    <h2 id="2">2. &hairsp; Code Implementation</h2>
+
+    <h3 id="2.1">2.1 &hairsp; Caching</h3>   
+    <p>일반적인 Transformer의 추론과정에서 매 시점마다 Attention을 다시금 하면서, 중복되는 Attention연산이 발생하게 됩니다.
+      하지만 학습 과정에서 이런 중복 연산은 매우 비효율적이기에, 이전 시점의 Attention 연산값을 캐시에 저장해 다음 시점에 넘겨주는 방식으로 연산의 효율성을 제고시킬 수 있습니다. 
+    </p>     
+    <div class="code-container">
+      <div class="code-snippet">
+        <pre><code class="python">class DecoderLayer(nn.TransformerDecoderLayer):
+    def forward(
+        self,
+        x,
+        memory=None,
+        e_mask=None,
+        d_mask=None,
+        use_cache=False
+    ):
+
+        if not use_cache:
+            return super().forward(
+                x,
+                memory,
+                memory_key_padding_mask=e_mask,
+                tgt_mask=d_mask
+            )
+
+
+        last_token = x[:, -1:, :]
+
+        # self attention part
+        _x = self.self_attn(last_token, x, x)[0]
+
+        last_token = last_token + self.dropout1(_x)
+        last_token = self.norm1(last_token)
+
+
+        # encoder-decoder attention
+        _x = self.multihead_attn(
+            last_token, memory, memory,
+            key_padding_mask=e_mask,
+        )[0]
+
+        last_token = last_token + self.dropout2(_x)
+        last_token = self.norm2(last_token)
+
+        # final feed-forward network
+        _x = self.activation(self.linear1(last_token))
+        _x = self.linear2(self.dropout(_x))
+        last_token = last_token + self.dropout3(_x)
+        last_token = self.norm3(last_token)
+        
+        return last_token
 
 
 
+class Decoder(nn.TransformerDecoder):
 
-    <h2>2. &hairsp; Experimental Setup</h2>
+    def forward(
+        self,
+        x,
+        memory=None,
+        cache=None,
+        e_mask=None,
+        d_mask=None,
+        use_cache=True
+    ):
 
-      <div class="small-spacer"></div>
-      <h3>Data Setup</h3>
-      <div class="small-spacer"></div>
-      <p>Sequence Classification을 위한 대표적 데이터 셋 중하나인 AG_News를 사용.
-        데이터의 크기는 Train/ Valid/ Test 1000/ 100/ 100으로 설정
-        총 네가지 데이터 Label을 모든 데이터에서 고르게 분배해서 한쪽으로 치우치지 않도록 가공
-      </p>
+        output = x
 
-      <div class="spacer"></div>
-      <h3>Model Setup</h3>
-      <div class="small-spacer"></div>
-      <p>대표적인 PreTrained Model인 BERT를 사용.
-      </p>
+        #In case of not using Cache
+        if not use_cache:
+            for layer in self.layers:
+                output = layer(output, memory, e_mask, d_mask, False)
+            return output, None
 
+        #In case of using Cache
+        new_token_cache = []
+        for idx, layer in enumerate(self.layers):
+            output = layer(output, memory, use_cache=True)
+            new_token_cache.append(output)
+            
+            if cache is not None:  
+                output = torch.cat([cache[idx], output], dim=1)
 
-      <div class="spacer"></div>
-      <h3>Training Setup</h3>
-      <div class="small-spacer"></div>
+        new_cache = torch.stack(new_token_cache, dim=0)
 
-      <div class="code-container">
-        <div class="code-snippet">
-          <pre><code class="python">
-TrainingArguments(
-        output_dir= f'ckpt/{strategy}',
-        num_train_epochs= 5,
-        learning_rate= 1e-5,
-        per_device_train_batch_size= 32,
-        per_device_eval_batch_size= 32,
-        lr_scheduler_type='reduce_lr_on_plateau',
-        load_best_model_at_end= True,
+        if cache is not None:
+            new_cache = torch.cat([cache, new_cache], dim=2)
 
-        save_strategy= 'epoch',
-        logging_strategy= 'epoch',
-        evaluation_strategy= 'epoch',
-
-        fp16= True if config.strategy in ['fp16', 'all'] else False,
-        fp16_opt_level= '02' if config.strategy in ['fp16', 'all'] else '01',
-        gradient_accumulation_steps = True if config.strategy in ['grad_accumulation', 'all'] else 4,
-        gradient_checkpointing= True if config.strategy in ['grad_checkpointing', 'all'] else False,
-        optim = 'adafactor' if config.strategy in ['optim', 'all'] else 'adamw_torch'
-)
-          </code></pre>
+        return output, new_cache</code></pre>
         </div>
       </div>
 
+    <div class="half-spacer"></div>
+    <h3 id="2.2">2.2 &hairsp; Generative Model</h3>       
+    <p>Transformer의 Forward 과정에서 선택적으로 generative forward와 teacher focing forward를 각각 전개할수 있도록 코드를 구현했습니다. 덕분에 run.py의 실행시 간단한 command 조작만으로 generative training과 teacher forcing training을 선택적으로 제어할 수 있습니다.
+    </p>              
+    <div class="code-container">
+      <div class="code-snippet">
+        <pre><code class="python">class Transformer(nn.Module):
+    def __init__(self, config):
+        super(Transformer, self).__init__()
+
+        self.bos_id = config.bos_id
+        self.eos_id = config.eos_id
+        self.pad_id = config.pad_id
+
+        self.device = config.device
+        self.max_len = config.max_len
+        self.model_type = config.model_type
+        self.vocab_size = config.vocab_size
+
+        self.enc_emb = Embeddings(config)
+        self.encoder = Encoder(config)
+
+        self.dec_emb = Embeddings(config)
+        self.decoder = Decoder(
+            DecoderLayer(
+                d_model=config.hidden_dim, 
+                nhead=config.n_heads, 
+                dim_feedforward=config.pff_dim,
+                batch_first=True
+            ),
+            num_layers=config.n_layers,
+        )
+
+        self.generator = nn.Linear(config.hidden_dim, self.vocab_size)
+
+        self.out = namedtuple('Out', 'logit loss')
+        self.criterion = nn.CrossEntropyLoss()
 
 
-    <h2>3. &hairsp; Result</h2>
+    @staticmethod
+    def shift_y(y):
+        return y[:, :-1], y[:, 1:]
+
+
+    def pad_mask(self, x):
+        return x == self.pad_id
+
+
+    def dec_mask(self, x):
+        sz = x.size(1)
+        return torch.triu(torch.full((sz, sz), float('-inf')), diagonal=1).to(self.device)
+
+
+    def encode(self, x, x_mask):
+        x = self.enc_emb(x)
+        x = self.encoder(x, x_mask)
+        return x
+
+
+    def decode(
+        self, x, memory, cache=None, 
+        e_mask=None, d_mask=None, use_cache=False
+        ):
+        
+        x = self.dec_emb(x)
+        x, cache = self.decoder(x, memory, cache, e_mask, d_mask, use_cache)
+        return x, cache        
+        
+
+    def teacher_forcing_forward(self, x, y):
+        y, label = self.shift_y(y)
+        
+        e_mask = self.pad_mask(x)
+        d_mask = self.dec_mask(y)
+
+        memory = self.encode(x, e_mask)
+
+        dec_out, _ = self.decode(y, memory, None, e_mask, d_mask, use_cache=False)
+        logit = self.generator(dec_out)
+
+        self.out.logit = logit
+        self.out.loss = self.criterion(
+            logit.contiguous().view(-1, self.vocab_size), 
+            label.contiguous().view(-1)
+        )
+
+        return self.out
+    
+
+    def generative_forward(self, x, y):
+
+        _, label = self.shift_y(y)
+        batch_size, output_len = label.shape
+        logit = torch.empty(batch_size, output_len, self.vocab_size).to(self.device)
+        
+
+        pred = torch.zeros((batch_size, 1), dtype=torch.long)
+        pred = pred.fill_(self.bos_id).to(self.device)
+
+        cache=None
+        e_mask = self.pad_mask(x)
+        memory = self.encode(x, e_mask)
+
+        for idx in range(1, output_len+1):
+            y = pred[:, :idx]
+            d_out, cache = self.decode(y, memory, cache, e_mask, use_cache=True)
+
+            curr_logit = self.generator(d_out[:, -1:, :])
+            curr_pred = curr_logit.argmax(dim=-1)
+
+            logit[:, idx-1:idx, :] = curr_logit
+            pred = torch.cat([pred, curr_pred], dim=1)
+        
+        self.out.logit = logit
+        self.out.loss = self.criterion(
+            logit.contiguous().view(-1, self.vocab_size), 
+            label.contiguous().view(-1)
+        )        
+
+        return self.out
+        
+
+
+    def forward(self, x, y):
+        if self.model_type == 'generative':
+            return self.generative_forward(x, y)
+        return self.teacher_forcing_forward(x, y)</code></pre>
+      </div>
+    </div>
+    <hr>
+
+
+<!-- Experimental Setup -->    
+    <h2 id="2">2. &hairsp; Experimental Setup</h2>
+
+    <h3 id="2.1">2.1 &hairsp; Training Strategies</h3>
+    <div class="list-container">
+      <ul>
+        <li>Baseline Training</li>   
+          <p>일반적인 standard Trianin방식</p>   
+
+        <div class="small-spacer"></div>
+        <li>Back Translation</li>
+          <p>매번 모델의 순전파에서 Generation 방식을 사용한 방식.
+             주어진 모든 학습 데이터에 대해 생성적 학습 만을 적용
+          </p>
+          
+      </ul>
+    </div>
+    <hr>
+
+    <div class="small-spacer"></div>
+    <h3 id="2.2">2.2 &hairsp; Setup Arguments</h3>
+    <table class="result-table">
+      <thead>
+        <tr>
+          <th>Data Setup</th>
+          <th>Model Setup</th>
+          <th>Training Setup</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+
+          <td>
+            <ul>
+              <li><b>Dataset</b>: &nbsp; AiHub</li>
+              <li><b>Train Data Volumn</b>: &nbsp; 50,000</li>
+              <li><b>Valid Data Volumn</b>: &nbsp; 5,000</li>
+              <li><b>Test Data Volumn</b>: &nbsp; 100</li>
+              <li><b>Tokenizer</b>: &nbsp; BPE Tokenizer</li>
+              <li><b>Vocab Size</b>: &nbsp; 15,000</li>
+            </ul>
+          </td>
+
+          <td>
+            <ul>
+              <li><b>Architecture</b>: &nbsp; Transformer</li>
+              <li><b>Input Dim</b>: &nbsp; 15,000</li>
+              <li><b>Output Dim</b>: &nbsp; 15,000</li>
+              <li><b>Embedding Dim</b>: &nbsp; 512</li>
+              <li><b>Hidden Dim</b>: &nbsp; 512</li>
+              <li><b>Model Params</b>: &nbsp; 000</li>
+            </ul>
+          </td>
+
+          <td>
+            <ul>
+              <li><b>Num Epochs</b>: &nbsp; 10</li>
+              <li><b>Batch Size</b>: &nbsp; 32</li>
+              <li><b>Learning Rate</b>: &nbsp; 5e-4</li>
+              <li><b>LR Scheduler</b>: &nbsp; pleature</li>
+              <li><b>Optimizer</b>: &nbsp; AdamW</li>
+              <li><b>Gradient Accumulation Steps</b>: &nbsp; 4</li>
+            </ul>
+          </td>          
+        </tr>
+
+      </tbody>
+    </table>
+    <hr>
+
+
+<!-- Result -->    
+    <h2>3. Result</h2>
     <div class="small-spacer"></div>
     <table class="result-table">
       
       <thead>
         <tr>
-          <th>PEFT Strategy</th>
-          <th>Train Time</th>
-          <th>GPU Occupation</th>
-          <th>Accuracy</th>
+          <th>Attention Strategy</th>
+          <th>Machine Translation</th>
+          <th>Dialogue Generation</th>
+          <th>Text Summarization</th>
         </tr>
       </thead>
 
       <tbody>
         <tr>
-          <td>Baseline</td>
-          <td>174</td>
-          <td>7.00</td>
-          <td>79</td>
+          <td>Vanilla Transformer</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
         </tr>
-
+      
         <tr>
-          <td>Prompt Tuning</td>
-          <td>69</td>
-          <td>5.47</td>
-          <td>78</td>
+          <td>Simple Model</td>
+          <td>결과2-1</td>
+          <td>결과2-2</td>
+          <td>결과2-3</td>
         </tr>
+      
         <tr>
-          <td>Prefix Tuning</td>
-          <td>182</td>
-          <td>6.29</td>
-          <td>83</td>
-        </tr>
-
-        <tr>
-          <td>P Tuning</td>
-          <td>239</td>
-          <td>3.54</td>
-          <td>79</td>
-        </tr>
-
-        <tr>
-          <td>IA3</td>
-          <td>179</td>
-          <td>6.72</td>
-          <td>79</td>
+          <td>Fused Model</td>
+          <td>결과2-1</td>
+          <td>결과2-2</td>
+          <td>결과2-3</td>
         </tr>
 
       </tbody>
     </table>
+    <hr>
 
 
-    <h2>4. &hairsp; Conclusion</h2>
-    <div class="small-spacer"></div>
-    <p> &nbsp; 균형이 잘 맞는 경우가 가장 이상적. 불균형은 자연스레 성능 하락을 야기
-    </p>  
+<!-- Conclusion -->    
+    <h2>4. Conclusion</h2>
+    <hr>
+
+
+<!-- Reference -->    
+    <h2>5. Reference</h2>
+    <a class="reference" href="https://arxiv.org/abs/1706.03762">&nbsp; Attention Is All You Need</a> <br>
+    <hr>
 
 
   </div>
 </div>
 
+
 <div class="pagination">
-  <a href="{{ '/eff_model' | relative_url }}" class="btn-prev"></a>
-  <a href="{{ '/aux_train' | relative_url }}" class="btn-next"></a>
+  <a href="{{ '/peft' | relative_url }}" class="btn-prev"><span>Parameteter Efficient Fine Tuning</span></a>
+  <a href="{{ '/code_translation' | relative_url }}" class="btn-next"><span>Code Translation</span></a>
 </div>

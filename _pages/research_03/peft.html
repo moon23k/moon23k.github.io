@@ -8,56 +8,89 @@ permalink: /peft
   <h1 class="title">Parameter Efficient Fine Tuning Analystics</h1>  
   <div class="post">
 
-
-    <h2>1. &hairsp; Project Desc</h2>
-
-      <div class="half-spacer"></div>
-      <h3>Parameter Efficient Fine Tuning</h3>
+    <hr>
+    <div class="callout">
+      <p class="highlighted-text"><span>Project Objective</span></p>
       <div class="small-spacer"></div>
-      <p>
-        &nbsp; 대규모 사전학습 언어 모델(Large Language Models, LLM)들이 다양한 분야에서 우수한 성능을 보이고 있습니다. 
+      <p>&nbsp; 대규모 사전학습 언어 모델(Large Language Models, LLM)들이 다양한 분야에서 우수한 성능을 보이고 있습니다. 
         일반적으로 LLM은 사용자가 원하는 Down Stream Task에 맞게 Fine Tuning하는 방식을 채택하지만, 대규모 모델의 파라미터를 전부 업데이트 하는 것은 비용과 시간이 많이 소요되는 일입니다. 
         이러한 도전에 대응하여, 파라미터의 효율적인 업데이트에 중점을 둔 새로운 방법론이 등장했는데, 그것이 바로 PEFT(Parameter Efficient Fine Tuning)입니다. 
         PEFT는 모델을 고도로 튜닝하면서도 파라미터 업데이트를 효율적으로 수행함으로써 리소스를 절약하는 방법을 제공합니다.
         
         이 프로젝트에서는 PEFT를 적용한 총 5가지 방식을 직접 실험해보고, 메모리와 시간 측면에서의 효율성과 더불어 실제 NMT(Neural Machine Translation) 작업에서의 성능을 비교 분석하려고 합니다. 각각의 PEFT 방식을 구체적으로 살펴보면서 어떻게 모델의 성능 향상과 효율적인 파라미터 업데이트가 이루어지는지 확인해 보겠습니다.
-
-        PEFT의 핵심 아이디어는 대규모 사전학습 모델의 파라미터를 고정시키고, 최소한 필요한 만큼의 파라미터를 추가시켜, 파인튜닝 과정에서 추가된 파라미터만을 학습시키는 것입니다. 덕분에 컴퓨팅 리소스의 사용이 획기적으로 줄어들고, 시간의 절약과 편의성도 증대됩니다.
-
-        기존의 일반적인 파인튜닝의 경우, 모델의 전체 파라미터를 업데이트하며, 미세조정을 해나갑니다. Llama-2-70b 모델의 경우 140GB에 해당하는 GPU 메모리가 필요할 정도로 매우 많은 자원을 필요로 합니다.
-
-        대규모 사전학습 모델을 그대로 훈련시키는 것은, 매우 시간 소모적이고, 자원 집약적입니다. 이러한 단점은 최근 모델의 크기가 점점 더 커지는 경향성에 따라 더욱 부각돠고 있습니다.
-
-        PEFT의 모든 방법론의 핵심은 기존 사전학습 모델의 대부분 파라미터를 고정시키는 것.
       </p>
-      <hr>
+    </div>
 
-      <div class="spacer"></div>
-      <h3>Prompt Tuning</h3>
+    <div class="tblContents">
+      <ul>
 
-      <div style="text-align: center;">
-        <img src="{{ 'assets/img/research_03/prompt_tuning.png' | relative_url }}" style="width:530px; display: block; margin: 0 auto;">
-      </div>
-      <div class="small-spacer"></div>
-      <p>
-        &nbsp; 
-        prompt라는 단어에서 드러나듯이, 해결하고자 하는 과제를 잘 표현하는 특정 프롬프트를 모델에 추가하는 방식을 사용합니다. 
+        <li>
+          <a href="#1">1. &hairsp; PEFT Strategy</a>
+          <ul>
+            <li>
+              <a href="#1.1">1.1 &hairsp; Prompt Tuning</a>
+            </li>
+            <li>
+              <a href="#1.2">1.2 &hairsp; Prefix Tuning</a>
+            </li>
+            <li>
+              <a href="#1.3">1.3 &hairsp; P Tuning</a>
+            </li>            
+            <li>
+              <a href="#1.4">1.4 &hairsp; LoRA</a>
+            </li>            
+            <li>
+              <a href="#1.5">1.5 &hairsp; IA3</a>
+            </li>            
+          </ul>
+        </li>        
 
-        Prompting helps guide language model behavior by adding some input text specific to a task. Prompt tuning is an additive method for only training and updating the newly added prompt tokens to a pretrained model. This way, you can use one pretrained model whose weights are frozen, and train and update a smaller set of prompt parameters for each downstream task instead of fully finetuning a separate model. As models grow larger and larger, prompt tuning can be more efficient, and results are even better as model parameters scale.        
-      </p>
-      <hr>
+        <li>
+          <a href="#2">2. &hairsp; Experimental Setup</a>
+        </li>
+
+        <li>
+          <a href="#3">3. &hairsp; Results</a>
+        </li>
+
+        <li>
+          <a href="#4">4. &hairsp; Conclusion</a>
+        </li>
+
+        <li>
+          <a href="#5">5. &hairsp; Reference</a>
+        </li>
+
+      </ul>
+    </div>
+    <hr>    
 
 
-      <div class="spacer"></div>
-      <h3>Prefix Tuning</h3>
-      <div style="text-align: center;">
-        <img src="{{ 'assets/img/research_03/prefix_tuning.png' | relative_url }}" style="width:430px; height: 70%; display: block; margin: 0 auto;">
-      </div>
+    <h2 id="1">1. &hairsp; PEFT Strategy</h2>
+    <h3 id="1.1">1.1 &hairsp; Prompt Tuning</h3>
 
-      <div class="small-spacer"></div>
-      <p>&nbsp; 
-        Prefix tuning is an additive method where only a sequence of continuous task-specific vectors is attached to the beginning of the input, or prefix. Only the prefix parameters are optimized and added to the hidden states in every layer of the model. The tokens of the input sequence can still attend to the prefix as virtual tokens. As a result, prefix tuning stores 1000x fewer parameters than a fully finetuned model, which means you can use one large language model for many tasks.
-      </p>
+    <div style="text-align: center;">
+      <img src="{{ 'assets/img/research_03/prompt_tuning.png' | relative_url }}" style="width:530px; display: block; margin: 0 auto;">
+    </div>
+    <div class="small-spacer"></div>
+    <p>
+      &nbsp; 
+      prompt라는 단어에서 드러나듯이, 해결하고자 하는 과제를 잘 표현하는 특정 프롬프트를 모델에 추가하는 방식을 사용합니다. 
+
+      Prompting helps guide language model behavior by adding some input text specific to a task. Prompt tuning is an additive method for only training and updating the newly added prompt tokens to a pretrained model. This way, you can use one pretrained model whose weights are frozen, and train and update a smaller set of prompt parameters for each downstream task instead of fully finetuning a separate model. As models grow larger and larger, prompt tuning can be more efficient, and results are even better as model parameters scale.        
+    </p>
+    <hr>
+
+
+    <h3 id="1.2">1.2 &hairsp; Prefix Tuning</h3>
+    <div style="text-align: center;">
+      <img src="{{ 'assets/img/research_03/prefix_tuning.png' | relative_url }}" style="width:430px; height: 70%; display: block; margin: 0 auto;">
+    </div>
+
+    <div class="small-spacer"></div>
+    <p>&nbsp; 
+      Prefix tuning is an additive method where only a sequence of continuous task-specific vectors is attached to the beginning of the input, or prefix. Only the prefix parameters are optimized and added to the hidden states in every layer of the model. The tokens of the input sequence can still attend to the prefix as virtual tokens. As a result, prefix tuning stores 1000x fewer parameters than a fully finetuned model, which means you can use one large language model for many tasks.
+    </p>
 
 
       <div class="spacer"></div>
@@ -211,15 +244,98 @@ TrainingArguments(
       </tbody>
     </table>
 
+    <div class="small-spacer"></div>
+    <table class="result-table">
+      
+      <thead>
+        <tr>
+          <th>PEFT Strategy</th>
+          <th>Train Time</th>
+          <th>Accuracy</th>
+          <th>Trainable Param Ratio</th>
+          <th>Avg GPU Memory</th>
+          <th>Max GPU Memory</th>
+          
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td>Vanilla Fine Tuning</td>
+          <td>36 sec</td>
+          <td>0.81</td>
+          <td>100 %</td>
+          <td>0.43 GB</td>
+          <td>1.18 GB</td>
+        </tr>
+
+        <tr>
+          <td>Prompt Tuning</td>
+          <td>23.7 sec</td>
+          <td>0.25</td>
+          <td>0.0098 %</td>
+          <td>0.43 GB</td>
+          <td>0.68 GB</td>
+        </tr>
+
+        <tr>
+          <td>Prefix Tuning</td>
+          <td>70 sec</td>
+          <td>0.20</td>
+          <td>0.17 %</td>
+          <td>0.43 GB</td>
+          <td>0.67 GB</td>
+        </tr>
+
+        <tr>
+          <td>P Tuning</td>
+          <td>68.1 sec</td>
+          <td>0.25</td>
+          <td>0.20 %</td>
+          <td>0.43 GB</td>
+          <td>0.69 GB</td>
+        </tr>
+
+        <tr>
+          <td>LoRA</td>
+          <td>57.3 sec</td>
+          <td>0.24</td>
+          <td>0.54 %</td>
+          <td>0.43 GB</td>
+          <td>0.50 GB</td>
+        </tr>
+
+        <tr>
+          <td>IA3</td>
+          <td>61.2 sec</td>
+          <td>0.24</td>
+          <td>0.0035 %</td>
+          <td>0.42 GB</td>
+          <td>0.50 GB</td>
+        </tr>
+
+      </tbody>
+    </table>
+    <hr>
 
     <h2>4. &hairsp; Conclusion</h2>
     <div class="small-spacer"></div>
     <p> &nbsp; 균형이 잘 맞는 경우가 가장 이상적. 불균형은 자연스레 성능 하락을 야기
     </p>  
+    <hr>
+
+
+    <h2 id="5">5. &hairsp; Reference</h2>
+    <div class="small-spacer"></div>
+    <a class="reference" href="https://huggingface.co/docs/peft/index">&nbsp; Huggingface PEFT</a> <br>
+    <hr>
 
 
   </div>
 </div>
+
+
+
 
 <div class="pagination">
   <a href="{{ '/eff_model' | relative_url }}" class="btn-prev"></a>

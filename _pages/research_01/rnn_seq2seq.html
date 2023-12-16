@@ -5,52 +5,76 @@ permalink: /rnn_seq2seq
 
 
 <div id="detail">
-  <h1 class="title">RNN Cells for Seq2Seq</h1>  
+  <h1 class="title">RNN Sequence to Sequence</h1>  
   <div class="post">
 
+    <hr>
     <div class="callout">
-      <p class="highlighted-text"><span>Project Objective</span></p>
+      <p class="highlighted-text"><span>Project Overview</span></p>
       <div class="small-spacer"></div>
-      <p>&nbsp; RNN은 이전 스텝의 결과값을 다음 스텝의 처리과정에 재귀적으로 반영시키며, 시퀀셜 데이터를 처리하기 용이한 네트워크 구조입니다. 대표적인 RNN Cell 구조로는 RNN, LSTM, GRU
-      이 프로젝트에서는 세가지 셀 구조별 Seq2Seq 모델 구조에서 성능이 얼마나 나오는지를 비교 분석해봅니다.</p>
+      <p>&nbsp; 이 프로젝트에서는 세 가지 순환 신경망(<b>RNN, LSTM, GRU</b>)를 활용해 <b>Sequence to Sequence</b> 모델을 구현하고, 각 네트워크의 자연어 생성 능력을 비교합니다.
+      정확한 비교를 위해, 실험에서는 네트워크를 제외한 모든 변수는 동일하게 설정했습니다. 결과적으로 성능은 LSTM, GRU, RNN 순으로, 효율성은 RNN, GRU, LSTM 순으로 더 좋은 모습을 보였습니다. 종합적으로 순환 신경망 선택에서 GRU가 가장 합리적임을 확인했습니다.<br>
+
+      &nbsp; 추가적으로 구현이 간단하다는 것과, 적은 데이터에서 잘 동작한다는 점은 RNN Seq2Seq모델의 장점으로 작용하며, Transformer와의 동일 데이터에서의 성능 비교에서도 견줄만한 성과를 보여주며, 여전히 활용할만한 가치가 있음을 증명합니다. 
+      </p>
     </div>
 
     <div class="tblContents">
       <ul>
 
         <li>
-          <a href="#1">1. RNN Cells</a>
+          <a href="#1">1. &hairsp; Introduction</a>
           <ul>
             <li>
-              <a href="#1.1">1.1 RNN</a>
+              <a href="#1.1">1.1 &hairsp; Motivation</a>
             </li>
             <li>
-              <a href="#1.2">1.2 LSTM</a>
+              <a href="#1.2">1.2 &hairsp; Objective</a>
             </li>
-            <li>
-              <a href="#1.3">1.3 GRU</a>
-            </li>          
           </ul>
         </li>
-        
+
         <li>
-          <a href="#2">2. Architecure</a>
+          <a href="#2">2. &hairsp; Background</a>
+          <ul>
+            <li>
+              <a href="#2.1">2.1 &hairsp; RNN</a>
+            </li>
+            <li>
+              <a href="#2.2">2.2 &hairsp; LSTM</a>
+            </li>
+            <li>
+              <a href="#2.3">2.3 &hairsp; GRU</a>
+            </li>            
+          </ul>
         </li>
 
         <li>
-          <a href="#3">3. Experimental Setup</a>
+          <a href="#3">3. &hairsp; Architecture</a>
         </li>
 
         <li>
-          <a href="#4">4. Results</a>
+          <a href="#4">4. &hairsp; Experimental Setup</a>
         </li>
 
         <li>
-          <a href="#5">5. Conclusion</a>
+          <a href="#5">5. &hairsp; Results</a>
+          <ul>
+            <li>
+              <a href="#5.1">5.1 &hairsp; Quantitive Result</a>
+            </li>
+            <li>
+              <a href="#5.2">5.2 &hairsp; Qualitive Result</a>
+            </li>            
+          </ul>
         </li>
 
         <li>
-          <a href="#6">6. Reference</a>
+          <a href="#6">6. &hairsp; Conclusion</a>
+        </li>
+
+        <li>
+          <a href="#7">7. &hairsp; Reference</a>
         </li>
 
       </ul>
@@ -58,39 +82,72 @@ permalink: /rnn_seq2seq
     <hr>
 
 
-<!-- 1. RNN Cells -->    
-    <h2 id="1">1. &hairsp; RNN Cells</h2>
-    <img src="{{ 'assets/img/research_01/cells.png' | relative_url }}" style="width: 470px; height: 135px; display: block; margin: 0 auto;">
-    
-    <h3 id="1.1">1.1 &hairsp; RNN</h3>
-    <p>
-      딥러닝 모델을 구성하는 가장 기초적인 레이어인 Fully-Connected Layer의 경우, 단지 입력값에 가중치를 곱하고, 편향을 더한 값을 다음 레이어로 전달합니다.
-      레이어 간에 공유되는 정보가 없습니다.
-      하지만 이전 시점의 정보가 다음 시점의 정보와 관련 깊은 시퀀셜 데이터를 다루기 위해서는, 이전 시점의 정보를 기억하는 것이 필수적입니다.
-      순환 신경망, Recurrent Neural Network는 이전 시점의 정보를 기억하면서, 다음 데이터들을 처리합니다.
 
-      State는 시퀀스의 Element를 순회하면서, 지금까지 처리한 정보를 저장하는 벡터입니다.
+<!-- 1. Introduction -->    
+    <h2 id="1">1. &hairsp; Introduction</h2>
+    <h3 id="1.1">1.1 &hairsp; Motivation</h3>
+    <p> &nbsp; 현재 딥러닝 모델 아키텍처의 주도적인 지위는 Transformer가 차지하고 있습니다. Transformer의 우수성을 정확히 이해하기 위해서는, Transformer 이전 모델의 성능을 선행적으로 이해해야 합니다. Transformer의 도래 이전, 시퀀스 데이터를 처리하기 위한 주요 선택지는 순환 신경망이었습니다.
 
-      순환 신경망의 구조는 현재의 state가 그 다음 state에 영향을 미치는 재귀 함수적 형태를 띕니다.
-      은닉층의 노드에서 활성화 함수를 통해 도출한 결과값을 출력층 방향에 보냄과 동시에, 다시 은닉층 노드의 다음 계산의 입력에서 활용한다는 것이, 모든 순환 신경망 계열 레이어 구조의 공통적인 특징입니다.
+    최근에는 딥러닝 모델을 더 복잡한 작업에 적용하면서 Transformer와 같이 복잡한 구조를 가진 모델이 주목을 받고 있습니다. 그러나 간단한 작업에서는 여전히 순환신경망의 간결한 구조가 효과적일 수 있는데, 이는 과거에 이 모델이 주목받은 이유와 연결됩니다.
     </p>
 
-    <div class="latex-container">
+    <div class="spacer"></div>    
+    <h3 id="1.2">1.2 &hairsp; Objective</h3>
+    
+    <div class="plain-list">  
+      <ul>
+        <li>자연어 생성을 위한 기본적인 딥러닝 모델의 성능을 확인하고, 이후 더 나은 모델을 만들기 위한 기준점을 세웁니다</li>
+        <li>RNN, LSTM, GRU Cell 별 성능 차이를 직접 검증해봅니다</li>
+        <li>구현 방식이 간단하며, 적은 데이터에서도 효과적인 학습이 가능하다는 점에서 기인하는 긍정적인 면모를 확인합니다</li>
+        <li>닭잡는데 소잡는 칼을 사용할 필요가 없다 라는 말처럼 간단한 과제에서 굳이 최신의 기술을 사용할 필요성보다는 전통적이며, 직관적인 RNN 방식의 유용성을 Transformer와 비교하며 직접 확인</li>
+      </ul>
+    </div>
+    <hr>
 
-      <div class="equation-item">
-        <p class="latex-equation">
-          \( h_t = f(h_{t-1}, x_t)\)
-        </p>
-        <br>
-        <p class="latex-equation">
-          \( h_t = \text{Hidden State at time } t\)
-        </p>
-        <br>        
-        <p class="latex-equation">
-          \( f = \text{Activation Function} t\)
-        </p>                    
+<!-- 1. RNN Cells -->    
+    <h2 id="2">2. &hairsp; Background</h2>
+
+    <p> &nbsp; 딥러닝 모델을 구성하는 가장 기초적인 레이어인 Fully-Connected Layer의 경우, 단지 입력값에 가중치를 곱하고, 편향을 더한 값을 다음 레이어로 전달합니다. 즉, 레이어 간에 공유되는 정보가 없습니다.
+    하지만 이전 시점의 정보가 다음 시점의 정보와 관련 깊은 시퀀셜 데이터를 다루기 위해, 이전 시점의 정보를 기억하는 것이 필수적입니다.
+    순환 신경망은 이전 시점의 정보를 기억하면서, 다음 데이터들을 순차적으로 처리합니다.
+
+    정보의 기억을 위해 State라는 개념을 사용하는데, 이는 시퀀스의 각 요소를 순회하며, 현 시점까지 처리한 정보를 저장하는 벡터입니다. 순환 신경망은 현재의 state가 그 다음 state에 영향을 미치는 재귀 함수적 형태를 띕니다.
+
+    은닉층의 노드에서 활성화 함수를 통해 도출한 결과값을 출력층 방향에 보냄과 동시에, 다시 은닉층 노드의 다음 계산의 입력에서 활용한다는 것이, 모든 순환 신경망 계열 레이어 구조의 공통적인 특징입니다.
+
+    대표적인 순환신경망 구조로는 RNN, LSTM, GRU가 있으며, 각각의 연산방식은 아래와 같습니다.
+    </p>
+
+    <img src="{{ 'assets/img/research_01/cells.png' | relative_url }}" style="width: 470px; height: 135px; display: block; margin: 2em auto 1em auto;">
+    
+    <h3 id="2.1">2.1 &hairsp; RNN</h3>
+
+    <div class="gray-box">
+      <div class="plain-list">  
+        <ul>
+          <li>\( RNN(x_t, h_{t-1}) = y_t, h_t \) <br> RNN 네트워크는 현시점의 x값과 이전 시점의 은닉정보를 입력값으로 받아, 현시점의 출력값과 은닉정보를 반환</li>
+          <li>\( {\large h_t} = tanh(W_x x_t + W_h h_{t-1}) \) <br> x와 \( h_{t-1} \)에 각각 별도의 가중치를 곱하고 더한 값에 활성화 함수를 적용해 업데이트된 은닉정보 \( h_t \)를 생성</li>
+          <li>\( {\large y_t} = W_y h_t \) <br> 업데이트 된 \( h_t \)에 가중치 \( W_y \)를 곱해 현 시점에서의 출력값을 생성</li>
+        </ul>
       </div>
     </div>
+
+    <p> &nbsp; RNN 셀에서는
+    입력값으로 현 시점의 x값과, 이전 시점의 state를 취해, 
+    업데이트 된 state와 해당 시점에 대한 출력값인 y_t를 반환합니다.
+
+    이를 위해 가중치는 총 세가지가 필요합니다.  
+    1. x를 위한 가중치 W_x
+    2. h를 위한 가중치 W_h
+    3. y를 위한 가중치 W_y  
+
+    1. 입력값 x_t와 h_{t-1} 이 주어짐
+    2. 현 시점의 h_t를 생성하기 위해, x_t와 h_{t-1} 를 사용.
+       연산은 각 요소에 가중치를 곱하고  더한 값에 활성화 함수를 씌움
+    3. 출력값은 업데이트된 h_t에 가중치를 곱해 산출
+    </p>
+
+
 
     <div class="latex-container">
       <div class="equation-item">
@@ -111,7 +168,7 @@ permalink: /rnn_seq2seq
     </div>   
     
 
-    <h3 id="1.2">1.2 &hairsp; LSTM</h3>
+    <h3 id="2.2">2.2 &hairsp; LSTM</h3>
     <p>Daily Dialogue와 Persona Chat의 일부분을 발췌해서 데이터셋 구성.
       Daily Dialogue와 Persona Chat 모두 멀티턴 발화 데이터이기에, Daily Dialogue Dataset은 전체 대화를 하나의 싱글턴으로 분할해서 데이터에 포함시키고, Persona Chat은 첫번째 발화만을 선별해서 포함시킴.
       데이터 길이는 300자 이하의 대화 데이터만을 포함
@@ -119,7 +176,7 @@ permalink: /rnn_seq2seq
 
 
     <div class="half-spacer"></div>
-    <h3 id="1.2">1.3 &hairsp; GRU</h3>
+    <h3 id="2.2">2.3 &hairsp; GRU</h3>
     <p>Daily Dialogue와 Persona Chat의 일부분을 발췌해서 데이터셋 구성.
       Daily Dialogue와 Persona Chat 모두 멀티턴 발화 데이터이기에, Daily Dialogue Dataset은 전체 대화를 하나의 싱글턴으로 분할해서 데이터에 포함시키고, Persona Chat은 첫번째 발화만을 선별해서 포함시킴.
       데이터 길이는 300자 이하의 대화 데이터만을 포함
@@ -127,23 +184,19 @@ permalink: /rnn_seq2seq
     <hr>
 
 
-<!-- 2. Architecture -->
-    <div class="spacer"></div>
-    <h2 id="2">2. Architecture</h3>
-    <img src="{{ 'assets/img/research_01/seq2seq.png' | relative_url }}" style="width: 400px; height: 130px; display: block; margin: 0 auto;">
+<!-- 3. Architecture -->
+    <h2 id="3">3. &hairsp; Architecture</h3>
+    <img src="{{ 'assets/img/research_01/seq2seq.png' | relative_url }}" style="width: 400px; height: 130px; display: block; margin: 2em auto 1em auto;">
     <p>&nbsp; 기존의 RNN만을 사용한 구조에서는 셀을 통과하면서 x의 플로우가 흘러가면서, 점차적으로 이전의 기억을 잊어버리는 경우가 허다했습니다.
       이를 해결하기 위해 Encoder, Decoder 구조를 활용하는 모델링 방식을 Seq2seq라고 합니다.
       글자 그대로 Seq가 입력으로 들어와서 Seq가 출력으로 나오는 모델 구조라고 생각하면 됩니다.
     </p>
+    <hr>
 
 
-<!-- 3. Experimental Setup -->    
-    <div class="spacer"></div>
-    <h2 id="2">3. Experimental Setup</h2>
+<!-- 4. Experimental Setup -->
+    <h2 id="4">4. Experimental Setup</h2>
 
-
-    <div class="spacer"></div>
-    <h2>2. Experimental Setup</h2>
 
     <div class="small-spacer"></div>
     <h3>Data Setup</h3>
@@ -173,131 +226,229 @@ permalink: /rnn_seq2seq
         </li>                        
       </ul>
     </div>
+    <hr>
 
 
-
-    <h2>3. &hairsp; Result</h2>
+<!-- 5. Result -->
+    <h2 id="5">5. &hairsp; Result</h2>
     <div class="small-spacer"></div>
-    <h3>Machine Translation</h3>
-    <div class="small-spacer"></div>
-    <table class="result-table">
-      <thead>
-        <tr>
-          <th>Model Type</th>
-          <th>Evaluation Score</th>
-          <th>Avg Training Time / Epoch</th>
-          <th>Avg GPU Memory</th>
-          <th>Max GPU Memory</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>RNN Cell Model</td>
-          <td>2.12</td>
-          <td>3m 58s</td>
-          <td>0.22GB</td>
-          <td>0.82GB</td>
-        </tr>
-        <tr>
-          <td>LSTM Cell Model</td>
-          <td>8.35</td>
-          <td>4m 16s</td>
-          <td>0.27GB</td>
-          <td>1.30GB</td>
-        </tr>
-        <tr>
-          <td>GRU Cell Model</td>
-          <td>9.75</td>
-          <td>4m 6s</td>
-          <td>0.26GB</td>
-          <td>1.16GB</td>
-        </tr>
 
-      </tbody>
-    </table>
+    <h3 id="5.1">5.1 &hairsp; Quantitive Result</h3>
+
+    <div class="list-container">
+      <ul>
+        <li>Machine Translation</li>
+
+          <table class="result-table">
+            <thead>
+              <tr>
+                <th>Model Type</th>
+                <th>Eval Score</th>
+                <th>Epoch Time</th>
+                <th>Avg GPU</th>
+                <th>Max GPU</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>RNN Model</td>
+                <td>2.12</td>
+                <td>3m 58s</td>
+                <td>0.22GB</td>
+                <td>0.82GB</td>
+              </tr>
+              <tr>
+                <td>LSTM Model</td>
+                <td>8.35</td>
+                <td>4m 16s</td>
+                <td>0.27GB</td>
+                <td>1.30GB</td>
+              </tr>
+              <tr>
+                <td>GRU Model</td>
+                <td>9.75</td>
+                <td>4m 6s</td>
+                <td>0.26GB</td>
+                <td>1.16GB</td>
+              </tr>
+
+            </tbody>
+          </table>
+        
+        <div class="half-spacer"></div>
+        <li>Dialogue Generation</li>
+          <table class="result-table">
+            <thead>
+              <tr>
+                <th>Model Type</th>
+                <th>Eval Score</th>
+                <th>Epoch Time</th>
+                <th>Avg GPU</th>
+                <th>Max GPU</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>RNN Model</td>
+                <td>0.10</td>
+                <td>3m 40s</td>
+                <td>0.22GB</td>
+                <td>0.79GB</td>
+              </tr>
+              <tr>
+                <td>LSTM Model</td>
+                <td>0.37</td>
+                <td>4m 5s</td>
+                <td>0.27GB</td>
+                <td>1.23GB</td>
+              </tr>
+              <tr>
+                <td>GRU Model</td>
+                <td>2.16</td>
+                <td>3m 58s</td>
+                <td>0.26GB</td>
+                <td>1.11GB</td>
+              </tr>
+
+            </tbody>
+          </table>
+
+              
+        <div class="half-spacer"></div>
+        <li>Text Summarization</li>
+          <table class="result-table">
+            <thead>
+              <tr>
+                <th>Model Type</th>
+                <th>Eval Score</th>
+                <th>Epoch Time</th>
+                <th>Avg GPU</th>
+                <th>Max GPU</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>RNN Model</td>
+                <td>0.00</td>
+                <td>8m 6s</td>
+                <td>0.23GB</td>
+                <td>1.20GB</td>
+              </tr>
+              <tr>
+                <td>LSTM Model</td>
+                <td>2.23</td>
+                <td>9m 7s</td>
+                <td>0.29GB</td>
+                <td>2.00GB</td>
+              </tr>
+              <tr>
+                <td>GRU Model</td>
+                <td>2.19</td>
+                <td>8m 42s</td>
+                <td>0.27GB</td>
+                <td>1.82GB</td>
+              </tr>
+
+            </tbody>
+          </table>
+
+      </ul>
+    </div>
+    <hr>
 
 
-    <div class="spacer"></div>
-    <h3>Dialogue Generation</h3>
-    <div class="small-spacer"></div>
-    <table class="result-table">
-      <thead>
-        <tr>
-          <th>Model Type</th>
-          <th>Evaluation Score</th>
-          <th>Avg Train Time</th>
-          <th>Avg GPU Memory Usage</th>
-          <th>Max GPU Memory Usage</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>RNN Cell Model</td>
-          <td>0.10</td>
-          <td>3m 40s</td>
-          <td>0.22GB</td>
-          <td>0.79GB</td>
-        </tr>
-        <tr>
-          <td>LSTM Cell Model</td>
-          <td>0.37</td>
-          <td>4m 5s</td>
-          <td>0.27GB</td>
-          <td>1.23GB</td>
-        </tr>
-        <tr>
-          <td>GRU Cell Model</td>
-          <td>2.16</td>
-          <td>3m 58s</td>
-          <td>0.26GB</td>
-          <td>1.11GB</td>
-        </tr>
+    <div class="half-spacer"></div>
+    <h3 id="5.2">5.2 &hairsp; Qualitive Result</h3>
 
-      </tbody>
-    </table>
+    <div class="list-container">
+      <ul>
+        <li>Translation</li>
+
+          <table class="result-table">
+            <thead>
+              <tr>
+                <th>Model Type</th>
+                <th>Generated Sequence</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>RNN Model</td>
+                <td>here to be a generated sequence from rnn model</td>
+              </tr>
+              <tr>
+                <td>LSTM Model</td>
+                <td>2.23</td>
+              </tr>
+              <tr>
+                <td>GRU Model</td>
+                <td>2.19</td>
+              </tr>
+
+            </tbody>
+          </table>
+
+        
+        <div class="small-spacer"></div>
+        <li>Dialogue Generation</li>
+          <table class="result-table">
+            <thead>
+              <tr>
+                <th>Model Type</th>
+                <th>Generated Sequence</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>RNN Model</td>
+                <td>0.00</td>
+              </tr>
+              <tr>
+                <td>LSTM Model</td>
+                <td>2.23</td>
+              </tr>
+              <tr>
+                <td>GRU Model</td>
+                <td>2.19</td>
+              </tr>
+
+            </tbody>
+          </table>
+        
+        <div class="half-spacer"></div>
+        <li>Text Summarization</li>
+          <table class="result-table">
+            <thead>
+              <tr>
+                <th>Model Type</th>
+                <th>Generated Sequence</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>RNN Model</td>
+                <td>0.00</td>
+              </tr>
+              <tr>
+                <td>LSTM Model</td>
+                <td>2.23</td>
+              </tr>
+              <tr>
+                <td>GRU Model</td>
+                <td>2.19</td>
+              </tr>
+
+            </tbody>
+          </table>
+         
+      </ul>
+    </div>
+    <hr>
 
 
-    <div class="spacer"></div>
-    <h3>Text Summarization</h3>
-    <div class="small-spacer"></div>
-    <table class="result-table">
-      <thead>
-        <tr>
-          <th>Model Type</th>
-          <th>Evaluation Score</th>
-          <th>Avg Train Time</th>
-          <th>Avg GPU Memory Usage</th>
-          <th>Max GPU Memory Usage</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>RNN Cell Model</td>
-          <td>0.00</td>
-          <td>8m 6s</td>
-          <td>0.23GB</td>
-          <td>1.20GB</td>
-        </tr>
-        <tr>
-          <td>LSTM Cell Model</td>
-          <td>2.23</td>
-          <td>9m 7s</td>
-          <td>0.29GB</td>
-          <td>2.00GB</td>
-        </tr>
-        <tr>
-          <td>GRU Cell Model</td>
-          <td>2.19</td>
-          <td>8m 42s</td>
-          <td>0.27GB</td>
-          <td>1.82GB</td>
-        </tr>
 
-      </tbody>
-    </table>
-
-
-    <h2>4. Conclusion</h2>
+<!-- 6. Conclusion -->
+    <h2 id="6">6. &hairsp; Conclusion</h2>
     <p>
       이 프로젝트를 통해 우리는 세 가지 주요 RNN 셀인 RNN, LSTM, GRU를 활용한 Seq2seq 모델의 성능을 비교하고자 했습니다. 각 모델은 고유한 특성을 가지고 있으며, 세 가지 다양한 자연어 생성 과제에서의 성능을 평가해 보았습니다.
 
@@ -313,12 +464,16 @@ permalink: /rnn_seq2seq
       최적의 선택은 과제 및 데이터에 달렸다:
       프로젝트 결과를 종합해 볼 때, 어떤 RNN 셀이 최적인지는 해결하고자 하는 과제와 사용되는 데이터의 특성에 크게 의존합니다. 간단한 시퀀셜 데이터에는 RNN이 효과적일 수 있으며, 복잡한 문맥을 다루어야 하는 경우 LSTM이나 GRU를 선택하는 것이 더 적절할 수 있습니다. 따라서 모델 선택에 앞서 목표와 데이터의 특성을 깊이 고려하는 것이 중요하며, 실험을 통해 최적의 결과를 도출하는 것이 필요합니다.
     </p>
+    <hr>
 
-    <h2>5. Reference</h2>
+
+<!-- 6. Reference -->
+    <h2 id="7">7. &hairsp; Reference</h2>
     <a class="reference" href="https://arxiv.org/abs/1409.3215">&nbsp; Sequence to Sequence Learning with Neural Networks</a> <br> 
     <a class="reference" href="https://arxiv.org/abs/1912.05911">&nbsp; Recurrent Neural Networks (RNNs): A gentle Introduction and Overview</a> <br>
     <a class="reference" href="https://arxiv.org/abs/1909.09586">&nbsp; Understanding LSTM</a> <br> 
     <a class="reference" href="https://arxiv.org/abs/1412.3555">&nbsp; Empirical Evaluation of Gated Recurrent Neural Networks on Sequence Modeling</a>
+    <hr>
 
   </div>
 </div>

@@ -8,164 +8,278 @@ permalink: /code_translation
   <h1 class="title">Code Translation</h1>  
   <div class="post">
 
-
-    <h2>1. &hairsp; Project Desc</h2>
-
-      <div class="half-spacer"></div>
-      <h3>Code Translation</h3>
+    <hr>
+    <div class="callout">
+      <p class="highlighted-text"><span>Project Overview</span></p>
       <div class="small-spacer"></div>
-      <p>
-        &nbsp; Code Translation은 사람이 사용하는 자연어를 코드로 변환해주는 과제입니다.
-        이 프로젝트에서는 코드 생성을 위해, 사전학습된 코드 생성 모델을 GAN의 테크닉을 활용해, 원하는 프로그래밍 언어 및 라이브러리에 특화되도록
-        학습시키는 것을 목표로 합니다.
-
-
-        코드 번역 작업은 개발을 필요로 하는 사람들로 하여금, 새로운 언에 익숙해지는데 필요한 노력을 최소화 하며, 프로그래밍의 진입장벽을 낮추는 데 유용한 작업입니다.
+      <p>&nbsp; 이 프로젝트에서는 Code Translation을 잘 수행하기 위해 모델 선택, 학습 방식에서 다양한 방법론을 코드로 구현해보고, 그 결과를 분석합니다. 모델로는 기본적인 Transformer부터, Seq2Seq 사전학습 모델, 그리고 GPT 계열의 사전학습 모델을 변인으로 삼고, 학습방식에서는 기본적인 MLE방식의 학습과, 더 나은 생성을 위한 추가 학습까지 진행하며 그 결과를 도출합니다.
+      결과적으로 사전학습 모델을 기본적인 학습방식으로 사용했을때 가장 좋은 성능을 보였으며, 사용자가 원하는 코드 번역 과제에서도 실제 적용가능한 가능성을 확인했습니다.
       </p>
+    </div>
 
-      <div class="spacer"></div>
-      <h3>Code T5</h3>
-      <div class="small-spacer"></div>
-      <p>
-        &nbsp; Code T5는 통합된 사전 훈련 인코더-디코더 트랜스포머 모델입니다.
+    <div class="tblContents">
+      <ul>
 
-        기존의 Translation이 from NL to NL이었던것에 반해, Code Translation은 from NL to PL(Programming Language)입니다.
+        <li>
+          <a href="#1">1. Introduction</a>
+          <ul>
+            <li>
+              <a href="#1.1">1.1 &hairsp; Code Translation</a>
+            </li>
+            <li>
+              <a href="#1.2">1.2 &hairsp; Dataset</a>
+            </li>
+            <li>
+              <a href="#1.3">1.3 &hairsp; Model</a>
+            </li>
+            <li>
+              <a href="#1.4">1.4 &hairsp; Training</a>
+            </li>              
+          </ul>
+        </li>
 
-        일반적으로 Code Generation에서 간과되었던, Programming Language를 다루는 방식에 차이를 준 모델.
-      </p>
+        <li>
+          <a href="#2">2. &hairsp; Code Implementation</a>
+          <ul>
+            <li>
+              <a href="#2.1">2.1 &hairsp; Cache Usable Decoder</a>
+            </li>
+            <li>
+              <a href="#2.2">2.2 &hairsp; Two-way Forward Model</a>
+            </li>                      
+          </ul>
+        </li>
+        
 
-      <div class="spacer"></div>
-      <h3>Conala Dataset</h3>
-      <div class="small-spacer"></div>
-      <p>
-        &nbsp; prompt tuning
-      </p>
+        <li>
+          <a href="#3">3. Experimental Setup</a>
+        </li>
 
-      <div class="spacer"></div>
-      <h3>SeqGAN Training</h3>
-      <div class="small-spacer"></div>
-      <p>
-        &nbsp; prompt tuning
-      </p>
+        <li>
+          <a href="#4">4. Results</a>
+        </li>
 
+        <li>
+          <a href="#5">5. Conclusion</a>
+        </li>
 
-    <h2>2. &hairsp; Experimental Setup</h2>
+        <li>
+          <a href="#6">6. Reference</a>
+        </li>
 
-      <div class="small-spacer"></div>
-      <h3>Data Setup</h3>
-      <div class="small-spacer"></div>
-      <p>Sequence Classification을 위한 대표적 데이터 셋 중하나인 AG_News를 사용.
-        데이터의 크기는 Train/ Valid/ Test 1000/ 100/ 100으로 설정
-        총 네가지 데이터 Label을 모든 데이터에서 고르게 분배해서 한쪽으로 치우치지 않도록 가공
-      </p>
-
-      <div class="spacer"></div>
-      <h3>Model Setup</h3>
-      <div class="small-spacer"></div>
-      <p>대표적인 PreTrained Model인 BERT를 사용.
-      </p>
-
-
-      <div class="spacer"></div>
-      <h3>Training Setup</h3>
-      <div class="small-spacer"></div>
-
-      <div class="code-container">
-        <div class="code-snippet">
-          <pre><code class="python">
-TrainingArguments(
-        output_dir= f'ckpt/{strategy}',
-        num_train_epochs= 5,
-        learning_rate= 1e-5,
-        per_device_train_batch_size= 32,
-        per_device_eval_batch_size= 32,
-        lr_scheduler_type='reduce_lr_on_plateau',
-        load_best_model_at_end= True,
-
-        save_strategy= 'epoch',
-        logging_strategy= 'epoch',
-        evaluation_strategy= 'epoch',
-
-        fp16= True if config.strategy in ['fp16', 'all'] else False,
-        fp16_opt_level= '02' if config.strategy in ['fp16', 'all'] else '01',
-        gradient_accumulation_steps = True if config.strategy in ['grad_accumulation', 'all'] else 4,
-        gradient_checkpointing= True if config.strategy in ['grad_checkpointing', 'all'] else False,
-        optim = 'adafactor' if config.strategy in ['optim', 'all'] else 'adamw_torch'
-)
-          </code></pre>
-        </div>
-      </div>
+      </ul>
+    </div>
+    <hr>    
 
 
+<!-- Training -->    
+    <h2 id="1">1. &hairsp; Introduction</h2>
 
-    <h2>3. &hairsp; Result</h2>
-    <div class="small-spacer"></div>
+    <h3 id="1.1">1.1 &hairsp; Code Translation</h3>
+    <p>
+      &nbsp; Code Generation이라고 불리기도 하는 Code Translation은 자연어 시퀀스 입력값을 받아, 입력 시퀀스가 의미하는 바를 제대로 구현하는 프로그래밍 언어 시퀀스를 반환하는 과제입니다.
+      최근 ChatGPT등 딥러닝 모델을 통한 Code Translation은 
+
+
+      Code Translation은 사람의 자연어를 컴퓨터의 프로그래밍 언어로 변환하는 작업입니다. 프로그래밍 언어의 진입장벽을 낮추기도 하고, 개발자들 역시, 간편한 작업을 위해 최근 각광받는 Task입니다.
+
+      자연어-자연어 번역보다는 생소하기 때문에, Code Translation이라는 Task 자체에 집중해서, 
+      기본 Transformer model에서, 그리고 사전학습 모델에서, 그리고 특정 학습기법을 사용하는 방식에 따라서 어떻게 달라지는지 다양한 면모를 직접 확인해보고 인사이트를 공유하려고 합니다.
+    </p>
+    <hr>
+
+    <h3 id="1.2">1.2 &hairsp; Conala Dataset</h3>
+    <p>
+      &nbsp; Conala는 Code Translation을 위한 학습 데이터셋.
+      데이터의 구성은 다음과 같음.
+    </p>
+    <hr>
+
+    <h3 id="1.3">1.3 &hairsp; Model</h3>
+    <div class="list-container">
+      <ul>
+        <li>Transformer</li>   
+          <p>일반적인 standard Trianin방식</p>   
+
+        <div class="small-spacer"></div>
+        <li>Code BERT Fusion</li>   
+          <p>일반적인 standard Trianin방식</p>   
+
+        <div class="small-spacer"></div>
+        <li>Code LLaMA</li>
+          <p>매번 모델의 순전파에서 Generation 방식을 사용한 방식.
+             주어진 모든 학습 데이터에 대해 생성적 학습 만을 적용
+          </p>
+
+        <div class="small-spacer"></div>
+        <li>Code T5</li>
+          <p>Teacher Forcing 이후, Generative를 추가적인 학습으로 이어진행하는 학습방식.
+          </p>             
+          
+      </ul>
+    </div>
+
     <table class="result-table">
       
       <thead>
         <tr>
-          <th>PEFT Strategy</th>
-          <th>Train Time</th>
-          <th>GPU Occupation</th>
-          <th>Accuracy</th>
+          <th>Model</th>
+          <th>Params & size</th>
+          <th>note</th>
         </tr>
       </thead>
 
       <tbody>
         <tr>
-          <td>Baseline</td>
-          <td>174</td>
-          <td>7.00</td>
-          <td>79</td>
+          <td>Vanilla Transformer</td>
+          <td>-</td>
+          <td>-</td>
+        </tr>
+      
+        <tr>
+          <td>Simple Model</td>
+          <td>결과2-1</td>
+          <td>결과2-2</td>
+        </tr>
+      
+        <tr>
+          <td>Fused Model</td>
+          <td>결과2-1</td>
+          <td>결과2-2</td>
         </tr>
 
         <tr>
-          <td>Prompt Tuning</td>
-          <td>69</td>
-          <td>5.47</td>
-          <td>78</td>
-        </tr>
-        <tr>
-          <td>Prefix Tuning</td>
-          <td>182</td>
-          <td>6.29</td>
-          <td>83</td>
-        </tr>
-
-        <tr>
-          <td>P Tuning</td>
-          <td>239</td>
-          <td>3.54</td>
-          <td>79</td>
-        </tr>
-
-        <tr>
-          <td>IA3</td>
-          <td>179</td>
-          <td>6.72</td>
-          <td>79</td>
-        </tr>
+          <td>Fused Model</td>
+          <td>결과2-1</td>
+          <td>결과2-2</td>
+        </tr>        
 
       </tbody>
     </table>
 
+    <hr>      
 
-    <h2>4. &hairsp; Conclusion</h2>
+
+<!-- Experimental Setup -->    
+    <h2>2. Experimental Setup</h2>
+
+    <h3>Training Strategies</h3>
+    <div class="list-container">
+      <ul>
+        <li>Teacher Forcing Training</li>   
+          <p>일반적인 standard Trianin방식</p>   
+
+        <div class="small-spacer"></div>
+        <li>Generative Training</li>
+          <p>매번 모델의 순전파에서 Generation 방식을 사용한 방식.
+             주어진 모든 학습 데이터에 대해 생성적 학습 만을 적용
+          </p>
+
+        <div class="small-spacer"></div>
+        <li>Consecutive Training</li>
+          <p>Teacher Forcing 이후, Generative를 추가적인 학습으로 이어진행하는 학습방식.
+          </p>             
+          
+      </ul>
+    </div>
+    <hr>
+
+    <div class="half-spacer"></div>
+    <h3>Setup Arguments</h3>
+    <table class="result-table">
+      <thead>
+        <tr>
+          <th>Data Setup</th>
+          <th>Training Setup</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+
+          <td>
+            <ul>
+              <li><b>Dataset</b>: &nbsp; Conala</li>
+              <li><b>Train Data Volumn</b>: &nbsp; 50,000</li>
+              <li><b>Valid Data Volumn</b>: &nbsp; 5,000</li>
+              <li><b>Test Data Volumn</b>: &nbsp; 100</li>
+            </ul>
+          </td>
+
+          <td>
+            <ul>
+              <li><b>Num Epochs</b>: &nbsp; 10</li>
+              <li><b>Batch Size</b>: &nbsp; 32</li>
+              <li><b>Learning Rate</b>: &nbsp; 5e-4</li>
+              <li><b>LR Scheduler</b>: &nbsp; pleature</li>
+              <li><b>Optimizer</b>: &nbsp; AdamW</li>
+              <li><b>Gradient Accumulation Steps</b>: &nbsp; 4</li>
+            </ul>
+          </td>          
+        </tr>
+
+      </tbody>
+    </table>
+    <div class="half-spacer"></div>
+    <hr>
+
+
+<!-- Result -->    
+    <h2>3. Result</h2>
     <div class="small-spacer"></div>
-    <p> &nbsp; 균형이 잘 맞는 경우가 가장 이상적. 불균형은 자연스레 성능 하락을 야기
-    </p>  
+    <table class="result-table">
+      
+      <thead>
+        <tr>
+          <th>Attention Strategy</th>
+          <th>Machine Translation</th>
+          <th>Dialogue Generation</th>
+          <th>Text Summarization</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td>Vanilla Transformer</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+        </tr>
+      
+        <tr>
+          <td>Simple Model</td>
+          <td>결과2-1</td>
+          <td>결과2-2</td>
+          <td>결과2-3</td>
+        </tr>
+      
+        <tr>
+          <td>Fused Model</td>
+          <td>결과2-1</td>
+          <td>결과2-2</td>
+          <td>결과2-3</td>
+        </tr>
+
+      </tbody>
+    </table>
+    <hr>
 
 
+<!-- Conclusion -->    
+    <h2>4. Conclusion</h2>
+    <hr>
+
+
+<!-- Reference -->    
     <h2>5. Reference</h2>
-    <a class="reference" href="https://arxiv.org/abs/2109.00859">&nbsp; CodeT5: Identifier-aware Unified Pre-trained Encoder-Decoder Models for Code Understanding and Generation</a> <br> 
+    <a class="reference" href="https://arxiv.org/abs/1706.03762">&nbsp; Attention Is All You Need</a> <br>
+    <hr>
 
 
   </div>
 </div>
 
 
-
 <div class="pagination">
-  <a href="{{ '/eff_model' | relative_url }}" class="btn-prev"></a>
-  <a href="{{ '/aux_train' | relative_url }}" class="btn-next"></a>
+  <a href="{{ '/gen_train' | relative_url }}" class="btn-prev"><span>Generative Training</span></a>
+  <a href="{{ '/custom_pretrain' | relative_url }}" class="btn-next"><span>Customized Pretraining</span></a>
 </div>

@@ -8,6 +8,63 @@ permalink: /multilingual
   <h1 class="title">Multi-Lingual Translation Model</h1>  
   <div class="post">
 
+    <hr>
+    <div class="callout">
+      <p class="highlighted-text"><span>Project Objective</span></p>
+      <div class="small-spacer"></div>
+      <p>&nbsp; RNN은 이전 스텝의 결과값을 다음 스텝의 처리과정에 재귀적으로 반영시키며, 시퀀셜 데이터를 처리하기 용이한 네트워크 구조입니다. 대표적인 RNN Cell 구조로는 RNN, LSTM, GRU
+      이 프로젝트에서는 세가지 셀 구조별 Seq2Seq 모델 구조에서 성능이 얼마나 나오는지를 비교 분석해봅니다.
+      가설을 직접 검증해봅니다.
+      </p>
+    </div>
+
+    <div class="tblContents">
+      <ul>
+
+        <li>
+          <a href="#1">1. Background</a>
+          <ul>
+            <li>
+              <a href="#1.1">1.1 &hairsp; Teacher Forcing Training</a>
+            </li>
+            <li>
+              <a href="#1.2">1.2 &hairsp; Generative Training</a>
+            </li>
+          </ul>
+        </li>
+
+        <li>
+          <a href="#2">2. &hairsp; Code Implementation</a>
+          <ul>
+            <li>
+              <a href="#2.1">2.1 &hairsp; Cache Usable Decoder</a>
+            </li>
+            <li>
+              <a href="#2.2">2.2 &hairsp; Two-way Forward Model</a>
+            </li>                      
+          </ul>
+        </li>
+        
+
+        <li>
+          <a href="#3">3. Experimental Setup</a>
+        </li>
+
+        <li>
+          <a href="#4">4. Results</a>
+        </li>
+
+        <li>
+          <a href="#5">5. Conclusion</a>
+        </li>
+
+        <li>
+          <a href="#6">6. Reference</a>
+        </li>
+
+      </ul>
+    </div>
+    <hr>    
 
     <h2>1. &hairsp; Project Desc</h2>
 
