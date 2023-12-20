@@ -14,7 +14,7 @@
 }
 #detail h2 {
   position: relative;
-  margin: 6em 0 1em 0;
+  margin-top: 6em;
   font-size: 22px;
   background-color: #eceff1;
   padding: 10px;
@@ -228,21 +228,6 @@
 }
 
 
-.plain-list {
-  margin: 0 1em;
-  color: #4c4c4c;
-  line-height: 2;
-}
-.plain-list ul {
-  display: flex;
-  flex-direction: column;
-}
-.plain-list ul li {
-  margin: 0 0 0.3em 0.7em;
-  list-style-type: disc;
-}
-
-
 
 /* spaecr */
 .small-spacer {
@@ -420,7 +405,6 @@
   width: 100%;
 }
 .dual-container ul li {
-  margin-bottom: 1em;
   margin-left: 1em;
   font-weight: bold;
   list-style-type: disc;
@@ -435,6 +419,14 @@
 .gray-box {
   background-color: #f4f4f4; 
   margin: 0 10px; 
-  padding: 10px;
+  padding: 1.3em 1.9em;
+  line-height: 1;
   color: #4c4c4c;  
+}
+
+.chapter-box {
+  padding: 2em;
+  border-left: 2px solid #e8e8e8;
+  border-right: 2px solid #e8e8e8;
+  border-bottom: 2px solid #e8e8e8;
 }

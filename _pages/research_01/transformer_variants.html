@@ -21,55 +21,59 @@ permalink: /transformer_variants
       <ul>
 
         <li>
-          <a href="#1">1. Standard Transformer</a>
+          <a href="#1">1. &hairsp; Introduction</a>
+        </li>
+
+        <li>
+          <a href="#2">2. &hairsp; Standard Transformer</a>
           <ul>
             <li>
-              <a href="#1.1">1.1 Architecture</a>
+              <a href="#2.1">2.1 &hairsp; Architecture</a>
             </li>
             <li>
-              <a href="#1.2">1.2 Code Implementation</a>
+              <a href="#2.2">2.2 &hairsp; Code Implementation</a>
             </li>                                    
           </ul>
         </li>        
         
         <li>
-          <a href="#2">2. Recurrent Transformer</a>
+          <a href="#3">3. &hairsp; Recurrent Transformer</a>
           <ul>
             <li>
-              <a href="#2.1">2.1 Architecture</a>
+              <a href="#3.1">3.1 &hairsp; Architecture</a>
             </li>
             <li>
-              <a href="#2.2">2.2 Code Implementation</a>
+              <a href="#3.2">3.2 &hairsp; Code Implementation</a>
             </li>                                    
           </ul>
         </li>
 
         <li>
-          <a href="#3">3. Evolved Transformer</a>
+          <a href="#4">4. &hairsp; Evolved Transformer</a>
           <ul>
             <li>
-              <a href="#3.1">2.1 Architecture</a>
+              <a href="#4.1">4.1 &hairsp; Architecture</a>
             </li>
             <li>
-              <a href="#3.2">2.2 Code Implementation</a>
+              <a href="#4.2">4.2 &hairsp; Code Implementation</a>
             </li>                                    
           </ul>
         </li>        
 
         <li>
-          <a href="#4">4. Experimental Setup</a>
+          <a href="#5">5. &hairsp; Experimental Setup</a>
         </li>
 
         <li>
-          <a href="#5">5. Results</a>
+          <a href="#6">6. &hairsp; Results</a>
         </li>
 
         <li>
-          <a href="#6">6. Conclusion</a>
+          <a href="#7">7. &hairsp; Conclusion</a>
         </li>
 
         <li>
-          <a href="#7">7. Reference</a>
+          <a href="#8">8. &hairsp; Reference</a>
         </li>
 
       </ul>
@@ -77,27 +81,68 @@ permalink: /transformer_variants
     <hr>
 
 
+<!-- 1. Introduction -->    
+    <h2 id="1">1. &hairsp; Introduction</h2>
+    <div class="chapter-box">
+
+      <div class="list-container">
+        <ul>
+          <li>Description</li>
+            <p> &nbsp; 순환 신경망은 Transformer의 도래 이전, 시퀀셜 데이터 처리를 위한 딥러닝 모델링의 대표적인 방식이었습니다. 비록 현재는 Transformer가 기존 순환 신경망의 자리를 성공적으로 대체했지만, 간단하고 직관적인 모델링이 가능하다는 점에서 여전히 활용 가치가 있습니다. 뿐만 아니라, 자연어 생성을 위한 가장 기초적인 모델 구현 방식으로써, 이후 다양한 모델의 성능을 비교할 수 있는 기준점으로 작용가능하기에, 순환 신경망에 대한 연구는 가장 기초적이면서 필수적인 연구라고 할 수 있습니다. <br>
+
+            이 프로젝트에서는 대표적 순환 신경망 구조인 RNN, LSTM, GRU를 사용해 Sequence to Sequene 모델을 구현하고, 이를 기계 번역, 대화 생성, 문서 요약이라는 세 가지 자연어 생성과에서의 성능을 비교 분석합니다.
+            </p>
+
+          <br class="half-spacer">
+          <li>Hypothesis
+            <ul>
+              <li style="font-weight: normal;">Evolved Transformer</li>
+              <li style="font-weight: normal;">RNN, GRU, LSTM 순으로 빠른 학습</li>
+              <li style="font-weight: normal;">LSTM이 특히 긴 텍스트를 다루는 문서 요약에서 강점을 지닐 것으로 예측</li>
+              <li style="font-weight: normal;">상대적으로 시퀀스의 길이가 짧은 대화 생성에서는 LSTM이 약세를 보일 것으로 예측</li>
+            </ul>
+          </li>
+
+          <br class="half-spacer">
+          <li>Objective
+            <ul>
+              <li style="font-weight: normal;">Standard Transformer, Recurrent Transformer, Evolved Trasnformer 구현을 통한, Transformer 모델링 다양화 방식에 대한 깊은 이해</li>
+              <li style="font-weight: normal;">Standard Transformer, Recurrent Transformer, Evolved Trasnformer 모델의 자연어 생성 능력 비교 검증</li>
+              <li style="font-weight: normal;">가설에 대한 검증</li>
+            </ul>
+          </li>
+
+        </ul>
+      </div>
+
+    </div>
+
+
+
 <!-- Standard Transformer -->
     <h2 id="1">1. &hairsp; Standard Transformer</h2>
-    <h3 id="1.1">1.1 &hairsp; Architecture</h3>
-    <div class="dual-container">
-        <img src="{{ 'assets/img/research_01/standard_transformer.png' | relative_url }}" style="width: 250px; height: 350px;">
-        <p>
-        &nbsp; 앞선 프로젝트에서는 RNN을 기반으로한 Sequence to Sequence 모델 구조의 효용성에 대해 면밀히 살펴봤습니다. 
-        하지만 RNN 네트워크는 장기기억력이라는 관점에서 고질적인 문제점을 태생적으로 지니고 있으며, 이를 해결하기 위한 Attention 메커니즘의 활용 역시 기대만큼 좋은 성능을 보이지는 못했습니다.
-        Transformer는 어텐션 메커니즘 만으로 문맥 전체적인 내용을 포착하는 뛰어난 성능과 더불어 병렬처리로 인한 학습의 효율성까지 제고시킨 뛰어난 모델 구조입니다.
-        이 글에서는 Transformer의 구조에 대한 설명과 더불어, 두가지 방식에서의 Code Implementation 방식을 알아봅니다. 또한 이렇게 구현한 Transformer 모델이 세가지 자연어 생성 과제에서 어떤 성능을 보이는지 비교해봅니다.
-        </p>
-    </div>
-    <hr>
+    
+    <div class="chapter-box">
+        <h3 id="1.1">1.1 &hairsp; Architecture</h3>
+        <div class="dual-container">
+            <img src="{{ 'assets/img/research_01/standard_transformer.png' | relative_url }}" style="width: 250px; height: 350px;">
+            <p>
+            &nbsp; 앞선 프로젝트에서는 RNN을 기반으로한 Sequence to Sequence 모델 구조의 효용성에 대해 면밀히 살펴봤습니다. 
+            하지만 RNN 네트워크는 장기기억력이라는 관점에서 고질적인 문제점을 태생적으로 지니고 있으며, 이를 해결하기 위한 Attention 메커니즘의 활용 역시 기대만큼 좋은 성능을 보이지는 못했습니다.
+            Transformer는 어텐션 메커니즘 만으로 문맥 전체적인 내용을 포착하는 뛰어난 성능과 더불어 병렬처리로 인한 학습의 효율성까지 제고시킨 뛰어난 모델 구조입니다.
+            이 글에서는 Transformer의 구조에 대한 설명과 더불어, 두가지 방식에서의 Code Implementation 방식을 알아봅니다. 또한 이렇게 구현한 Transformer 모델이 세가지 자연어 생성 과제에서 어떤 성능을 보이는지 비교해봅니다.
+            </p>
+        </div>
 
-    <h3 id="1.2">1.2 &hairsp; Code Implementation</h3>
-    <div class="list-container">
-      <ul>
-        <li>Encoder</li>        
-            <div class="code-container">
-              <div class="code-snippet">
-                <pre><code class="python">class StandardEncoder(nn.Module):
+        <br class="spacer">
+        <br class="spacer">
+        <h3 id="1.2">1.2 &hairsp; Code Implementation</h3>
+        <div class="list-container">
+          <ul>
+            <li>Encoder</li>        
+                <div class="code-container">
+                  <div class="code-snippet">
+                    <pre><code class="python">class StandardEncoder(nn.Module):
     def __init__(self, config):
         super(StandardEncoder, self).__init__()
         self.embeddings = Embeddings(config)
@@ -116,14 +161,14 @@ permalink: /transformer_variants
         for layer in self.layers:
             x = layer(x, src_key_padding_mask=e_mask)
         return x</code></pre>
-              </div>
-            </div>
+                  </div>
+                </div>
 
-      <div class="half-spacer"></div>
-        <li>Decoder</li>        
-            <div class="code-container">
-              <div class="code-snippet">
-                <pre><code class="python">class StandardDecoder(nn.Module):
+            <br class="half-spacer">
+            <li>Decoder</li>        
+                <div class="code-container">
+                  <div class="code-snippet">
+                    <pre><code class="python">class StandardDecoder(nn.Module):
     def __init__(self, config):
         super(StandardDecoder, self).__init__()
         self.embeddings = Embeddings(config)
@@ -142,35 +187,36 @@ permalink: /transformer_variants
         for layer in self.layers:
             x = layer(x, memory, memory_key_padding_mask=e_mask, tgt_mask=d_mask)
         return x</code></pre>
-              </div>
-            </div>
+                  </div>
+                </div>
 
-      </ul>
+          </ul>
+        </div>
     </div>
-    <hr>
 
 
 <!-- Recurrent Transformer -->
     <h2 id="2">2. &hairsp; Recurrent Transformer</h2>
-    <h3 id="2.1">2.1 &hairsp; Architecture</h3>
-    <div class="dual-container">
-        <img src="{{ 'assets/img/research_01/recurrent_transformer.png' | relative_url }}" style="width: 250px; height: 350px;">
-        <p>
-        &nbsp; 앞선 프로젝트에서는 RNN을 기반으로한 Sequence to Sequence 모델 구조의 효용성에 대해 면밀히 살펴봤습니다. 
-        하지만 RNN 네트워크는 장기기억력이라는 관점에서 고질적인 문제점을 태생적으로 지니고 있으며, 이를 해결하기 위한 Attention 메커니즘의 활용 역시 기대만큼 좋은 성능을 보이지는 못했습니다.
-        Transformer는 어텐션 메커니즘 만으로 문맥 전체적인 내용을 포착하는 뛰어난 성능과 더불어 병렬처리로 인한 학습의 효율성까지 제고시킨 뛰어난 모델 구조입니다.
-        이 글에서는 Transformer의 구조에 대한 설명과 더불어, 두가지 방식에서의 Code Implementation 방식을 알아봅니다. 또한 이렇게 구현한 Transformer 모델이 세가지 자연어 생성 과제에서 어떤 성능을 보이는지 비교해봅니다.
-        </p>
-    </div>
-    <hr>
+    <div class="chapter-box">
+        <h3 id="2.1">2.1 &hairsp; Architecture</h3>
+        <div class="dual-container">
+            <img src="{{ 'assets/img/research_01/recurrent_transformer.png' | relative_url }}" style="width: 250px; height: 350px;">
+            <p>
+            &nbsp; 앞선 프로젝트에서는 RNN을 기반으로한 Sequence to Sequence 모델 구조의 효용성에 대해 면밀히 살펴봤습니다. 
+            하지만 RNN 네트워크는 장기기억력이라는 관점에서 고질적인 문제점을 태생적으로 지니고 있으며, 이를 해결하기 위한 Attention 메커니즘의 활용 역시 기대만큼 좋은 성능을 보이지는 못했습니다.
+            Transformer는 어텐션 메커니즘 만으로 문맥 전체적인 내용을 포착하는 뛰어난 성능과 더불어 병렬처리로 인한 학습의 효율성까지 제고시킨 뛰어난 모델 구조입니다.
+            이 글에서는 Transformer의 구조에 대한 설명과 더불어, 두가지 방식에서의 Code Implementation 방식을 알아봅니다. 또한 이렇게 구현한 Transformer 모델이 세가지 자연어 생성 과제에서 어떤 성능을 보이는지 비교해봅니다.
+            </p>
+        </div>
+    
 
-    <h3 id="2.2">2.2 &hairsp; Code Implementation</h3>
-    <div class="list-container">
-      <ul>
-        <li>Signal Generating Method</li>        
-            <div class="code-container">
-              <div class="code-snippet">
-                <pre><code class="python">def generate_signal(length, channels, min_timescale=1.0, max_timescale=1.0e4):
+        <h3 id="2.2">2.2 &hairsp; Code Implementation</h3>
+        <div class="list-container">
+          <ul>
+            <li>Signal Generating Method</li>        
+                <div class="code-container">
+                  <div class="code-snippet">
+                    <pre><code class="python">def generate_signal(length, channels, min_timescale=1.0, max_timescale=1.0e4):
     position = np.arange(length)
     num_timescales = channels // 2
     log_timescale_increment = ( math.log(float(max_timescale) / float(min_timescale)) / (float(num_timescales) - 1))
@@ -182,14 +228,14 @@ permalink: /transformer_variants
     signal =  signal.reshape([1, length, channels])
 
     return torch.from_numpy(signal).type(torch.FloatTensor)</code></pre>
-              </div>
-            </div>
+                  </div>
+                </div>
 
-      <div class="half-spacer"></div>
-        <li>Encoder</li>        
-            <div class="code-container">
-              <div class="code-snippet">
-                <pre><code class="python">class RecurrentEncoder(nn.Module):
+          <div class="half-spacer"></div>
+            <li>Encoder</li>        
+                <div class="code-container">
+                  <div class="code-snippet">
+                    <pre><code class="python">class RecurrentEncoder(nn.Module):
     def __init__(self, config):
         super(RecurrentEncoder, self).__init__()    
 
@@ -224,14 +270,14 @@ permalink: /transformer_variants
             x = self.layer(x, src_key_padding_mask=e_mask)
         
         return self.norm(x)</code></pre>
-              </div>
-            </div>
+                  </div>
+                </div>
 
-      <div class="half-spacer"></div>
-        <li>Decoder</li>        
-            <div class="code-container">
-              <div class="code-snippet">
-                <pre><code class="python">class RecurrentDecoder(nn.Module):
+          <div class="half-spacer"></div>
+            <li>Decoder</li>        
+                <div class="code-container">
+                  <div class="code-snippet">
+                    <pre><code class="python">class RecurrentDecoder(nn.Module):
     def __init__(self, config):
         super(RecurrentDecoder, self).__init__()    
 
@@ -271,35 +317,36 @@ permalink: /transformer_variants
             )
 
         return self.norm(x)</code></pre>
-              </div>
-            </div>
+                  </div>
+                </div>
 
-      </ul>
+          </ul>
+        </div>
     </div>
-    <hr>
 
 
 <!-- Evolved Transformer -->
     <h2 id="3">3. &hairsp; Evolved Transformer</h2>
-    <h3 id="3.1">3.1 &hairsp; Architecture</h3>
-    <div class="dual-container">
-        <img src="{{ 'assets/img/research_01/evolved_transformer.png' | relative_url }}" style="width: 250px; height: 350px;">
-        <p>
-        &nbsp; 앞선 프로젝트에서는 RNN을 기반으로한 Sequence to Sequence 모델 구조의 효용성에 대해 면밀히 살펴봤습니다. 
-        하지만 RNN 네트워크는 장기기억력이라는 관점에서 고질적인 문제점을 태생적으로 지니고 있으며, 이를 해결하기 위한 Attention 메커니즘의 활용 역시 기대만큼 좋은 성능을 보이지는 못했습니다.
-        Transformer는 어텐션 메커니즘 만으로 문맥 전체적인 내용을 포착하는 뛰어난 성능과 더불어 병렬처리로 인한 학습의 효율성까지 제고시킨 뛰어난 모델 구조입니다.
-        이 글에서는 Transformer의 구조에 대한 설명과 더불어, 두가지 방식에서의 Code Implementation 방식을 알아봅니다. 또한 이렇게 구현한 Transformer 모델이 세가지 자연어 생성 과제에서 어떤 성능을 보이는지 비교해봅니다.
-        </p>
-    </div>
-    <hr>
+    <div class="chapter-box">
+        <h3 id="3.1">3.1 &hairsp; Architecture</h3>
+        <div class="dual-container">
+            <img src="{{ 'assets/img/research_01/evolved_transformer.png' | relative_url }}" style="width: 250px; height: 350px;">
+            <p>
+            &nbsp; 앞선 프로젝트에서는 RNN을 기반으로한 Sequence to Sequence 모델 구조의 효용성에 대해 면밀히 살펴봤습니다. 
+            하지만 RNN 네트워크는 장기기억력이라는 관점에서 고질적인 문제점을 태생적으로 지니고 있으며, 이를 해결하기 위한 Attention 메커니즘의 활용 역시 기대만큼 좋은 성능을 보이지는 못했습니다.
+            Transformer는 어텐션 메커니즘 만으로 문맥 전체적인 내용을 포착하는 뛰어난 성능과 더불어 병렬처리로 인한 학습의 효율성까지 제고시킨 뛰어난 모델 구조입니다.
+            이 글에서는 Transformer의 구조에 대한 설명과 더불어, 두가지 방식에서의 Code Implementation 방식을 알아봅니다. 또한 이렇게 구현한 Transformer 모델이 세가지 자연어 생성 과제에서 어떤 성능을 보이는지 비교해봅니다.
+            </p>
+        </div>
+    
 
-    <h3 id="3.2">3.2 &hairsp; Code Implementation</h3>
-    <div class="list-container">
-      <ul>
-        <li>Gated Convolution & Separable Convolution</li>        
-            <div class="code-container">
-              <div class="code-snippet">
-                <pre><code class="python">class GatedConvolution(nn.Module):
+        <h3 id="3.2">3.2 &hairsp; Code Implementation</h3>
+        <div class="list-container">
+          <ul>
+            <li>Gated Convolution & Separable Convolution</li>        
+                <div class="code-container">
+                  <div class="code-snippet">
+                    <pre><code class="python">class GatedConvolution(nn.Module):
     def __init__(self, hidden_dim, kernel_size=3, padding=1):
         super(GatedConvolution,self).__init__()
         
@@ -341,15 +388,15 @@ class SeparableConv1D(nn.Module):
         out = self.depth_wise(x)
         out = self.point_wise(out)
         return out</code></pre>
-              </div>
-            </div>
+                  </div>
+                </div>
 
 
-      <div class="half-spacer"></div>
-        <li>Encoder Cell</li>        
-            <div class="code-container">
-              <div class="code-snippet">
-                <pre><code class="python">class EncoderCell(nn.Module):
+          <div class="half-spacer"></div>
+            <li>Encoder Cell</li>        
+                <div class="code-container">
+                  <div class="code-snippet">
+                    <pre><code class="python">class EncoderCell(nn.Module):
     def __init__(self, config):
         super(EncoderCell, self).__init__()
 
@@ -440,14 +487,14 @@ class SeparableConv1D(nn.Module):
         out = self.layer_norms[3](B04_out)
         out = self.pff(out) + B04_out #Dim:512
         return out </code></pre>
-              </div>
-            </div>
+                  </div>
+                </div>
 
-      <div class="half-spacer"></div>
-        <li>Decoder Cell</li>        
-            <div class="code-container">
-              <div class="code-snippet">
-                <pre><code class="python">class DecoderCell(nn.Module):
+          <div class="half-spacer"></div>
+            <li>Decoder Cell</li>        
+                <div class="code-container">
+                  <div class="code-snippet">
+                    <pre><code class="python">class DecoderCell(nn.Module):
     def __init__(self, config):
         super(DecoderCell, self).__init__()
         
@@ -569,14 +616,14 @@ class SeparableConv1D(nn.Module):
         out = self.pff(out) + B05_out #Dim:512
 
         return out</code></pre>
-              </div>
-            </div>
+                  </div>
+                </div>
 
-      <div class="half-spacer"></div>
-        <li>Encoder & Decoder</li>        
-            <div class="code-container">
-              <div class="code-snippet">
-                <pre><code class="python">class EvolvedEncoder(nn.Module):
+          <div class="half-spacer"></div>
+            <li>Encoder & Decoder</li>        
+                <div class="code-container">
+                  <div class="code-snippet">
+                    <pre><code class="python">class EvolvedEncoder(nn.Module):
     def __init__(self, config):
         super(EvolvedEncoder, self).__init__()
 
@@ -606,127 +653,228 @@ class EvolvedDecoder(nn.Module):
             x = cell(x, memory, e_mask, d_mask)
 
         return x</code></pre>
-              </div>
-            </div>
+                  </div>
+                </div>
 
 
-      </ul>
+          </ul>
+        </div>
     </div>
-    <hr>
 
 
-<!-- Experimental Setup -->
+<!-- 4. Experimental Setup -->
     <h2 id="4">4. &hairsp; Experimental Setup</h2>
+    <div class="chapter-box">
 
-    <div class="half-spacer"></div>
-    <table class="result-table">
-      <thead>
-        <tr>
-          <th>Data Setup</th>
-          <th>Model Setup</th>
-          <th>Training Setup</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
+      <div class="list-container">
+        <ul>
+          <li>Data Setup
+            <div class="dual-container">
+              <ul>
+                <li><b>Translation Task</b>: &nbsp; WMT'14 En-De</li>
+                <li><b>Dialogue Task</b>: &nbsp; Daily Dialogue</li>
+                <li><b>Summarization Task</b>: &nbsp; CNN Daily</li>
+                <li><b>Tokenizer</b>: &nbsp; Word-Level Tokenizer</li>
+              </ul>
+              <ul>
+                <li><b>Train Data Volumn</b>: &nbsp; 50,000</li>
+                <li><b>Valid Data Volumn</b>: &nbsp; 5,000</li>
+                <li><b>Test Data Volumn</b>: &nbsp; 100</li>
+                <li><b>Vocab Size</b>: &nbsp; 10,000</li>                
+              </ul>
+            </div>
+          </li>
 
-          <td>
-            <ul>
-              <li><b>Translation Task</b>: &nbsp; WMT'14 En-De</li>
-              <li><b>Dialogue Task</b>: &nbsp; Daily Dialogue</li>
-              <li><b>Summarization Task</b>: &nbsp; CNN Daily</li>
-              <li><b>Train Data Volumn</b>: &nbsp; 50,000</li>
-              <li><b>Valid Data Volumn</b>: &nbsp; 5,000</li>
-              <li><b>Test Data Volumn</b>: &nbsp; 100</li>
-              <li><b>Tokenizer</b>: &nbsp; Word-Level Tokenizer</li>
-              <li><b>Vocab Size</b>: &nbsp; 10,000</li>
-            </ul>
-          </td>
+          <br class="half-spacer">
+          <li>Model Setup
+            <div class="dual-container">
+              <ul>
+                <li><b>Input Dim</b>: &nbsp; 10,000</li>
+                <li><b>Output Dim</b>: &nbsp; 10,000</li>
+                <li><b>Embedding Dim</b>: &nbsp; 512</li>
+              </ul>
+              <ul>
+                <li><b>Hidden Dim</b>: &nbsp; 512</li>
+                <li><b>Model Params</b>: &nbsp; 000</li>
+                <li><b>Model Size</b>: &nbsp; 000</li>                
+              </ul>
+            </div>
+          </li>
 
-          <td>
-            <ul>
-              <li><b>Input Dim</b>: &nbsp; 10,000</li>
-              <li><b>Output Dim</b>: &nbsp; 10,000</li>
-              <li><b>Embedding Dim</b>: &nbsp; 512</li>
-              <li><b>Hidden Dim</b>: &nbsp; 512</li>
-              <li><b>Model Params</b>: &nbsp; 000</li>
-              <li><b>Model Size</b>: &nbsp; 000</li>
-            </ul>
-          </td>
-
-          <td>
-            <ul>
-              <li><b>Num Epochs</b>: &nbsp; 10</li>
-              <li><b>Batch Size</b>: &nbsp; 32</li>
-              <li><b>Learning Rate</b>: &nbsp; 5e-4</li>
-              <li><b>LR Scheduler</b>: &nbsp; pleature</li>
-              <li><b>Optimizer</b>: &nbsp; AdamW</li>
-              <li><b>Gradient Accumulation Steps</b>: &nbsp; 4</li>
-            </ul>
-          </td>          
-        </tr>
-
-      </tbody>
-    </table>
-    <div class="half-spacer"></div>
-    <hr>
+          <br class="half-spacer">
+          <li>Training Setup
+            <div class="dual-container">
+              <ul>
+                <li><b>Num Epochs</b>: &nbsp; 10</li>
+                <li><b>Batch Size</b>: &nbsp; 32</li>
+                <li><b>Learning Rate</b>: &nbsp; 5e-4</li>
+                <li><b>LR Scheduler</b>: &nbsp; pleature</li>
+              </ul>
+              <ul>
+                <li><b>Optimizer</b>: &nbsp; AdamW</li>
+                <li><b>Gradient Accumulation Steps</b>: &nbsp; 4
+                <li><b>Teacher Forcing Ratio</b>: &nbsp; 0.5</li>                
+              </ul>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
 
 
 
-<!-- Result -->   
+<!-- 5. Result -->
     <h2 id="5">5. &hairsp; Result</h2>
-    <div class="small-spacer"></div>
-    <table class="result-table">
-      <thead>
-        <tr>
-          <th>Model Type</th>
-          <th>Machine Translation</th>
-          <th>Dialogue Generation</th>
-          <th>Text Summarization</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Scratch Model</td>
-          <td>174</td>
-          <td>7.00</td>
-          <td>79</td>
-        </tr>
-        <tr>
-          <td>PyTorch Model</td>
-          <td>69</td>
-          <td>5.47</td>
-          <td>78</td>
-        </tr>
+    <div class="chapter-box">
 
-      </tbody>
-    </table>
-    <hr>
+      <div class="list-container">
+        <ul>
+          <li>Machine Translation</li>
+
+            <table class="result-table">
+              <thead>
+                <tr>
+                  <th>Model Type</th>
+                  <th>Eval Score</th>
+                  <th>Epoch Time</th>
+                  <th>Avg GPU</th>
+                  <th>Max GPU</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>RNN Model</td>
+                  <td>2.12</td>
+                  <td>3m 58s</td>
+                  <td>0.22GB</td>
+                  <td>0.82GB</td>
+                </tr>
+                <tr>
+                  <td>LSTM Model</td>
+                  <td>8.35</td>
+                  <td>4m 16s</td>
+                  <td>0.27GB</td>
+                  <td>1.30GB</td>
+                </tr>
+                <tr>
+                  <td>GRU Model</td>
+                  <td>9.75</td>
+                  <td>4m 6s</td>
+                  <td>0.26GB</td>
+                  <td>1.16GB</td>
+                </tr>
+
+              </tbody>
+            </table>
+          
+          <div class="half-spacer"></div>
+          <li>Dialogue Generation</li>
+            <table class="result-table">
+              <thead>
+                <tr>
+                  <th>Model Type</th>
+                  <th>Eval Score</th>
+                  <th>Epoch Time</th>
+                  <th>Avg GPU</th>
+                  <th>Max GPU</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>RNN Model</td>
+                  <td>0.10</td>
+                  <td>3m 40s</td>
+                  <td>0.22GB</td>
+                  <td>0.79GB</td>
+                </tr>
+                <tr>
+                  <td>LSTM Model</td>
+                  <td>0.37</td>
+                  <td>4m 5s</td>
+                  <td>0.27GB</td>
+                  <td>1.23GB</td>
+                </tr>
+                <tr>
+                  <td>GRU Model</td>
+                  <td>2.16</td>
+                  <td>3m 58s</td>
+                  <td>0.26GB</td>
+                  <td>1.11GB</td>
+                </tr>
+
+              </tbody>
+            </table>
+
+                
+          <div class="half-spacer"></div>
+          <li>Text Summarization</li>
+            <table class="result-table">
+              <thead>
+                <tr>
+                  <th>Model Type</th>
+                  <th>Eval Score</th>
+                  <th>Epoch Time</th>
+                  <th>Avg GPU</th>
+                  <th>Max GPU</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>RNN Model</td>
+                  <td>0.00</td>
+                  <td>8m 6s</td>
+                  <td>0.23GB</td>
+                  <td>1.20GB</td>
+                </tr>
+                <tr>
+                  <td>LSTM Model</td>
+                  <td>2.23</td>
+                  <td>9m 7s</td>
+                  <td>0.29GB</td>
+                  <td>2.00GB</td>
+                </tr>
+                <tr>
+                  <td>GRU Model</td>
+                  <td>2.19</td>
+                  <td>8m 42s</td>
+                  <td>0.27GB</td>
+                  <td>1.82GB</td>
+                </tr>
+
+              </tbody>
+            </table>
+
+          <br class="half-spacer">  
+          <li>Result Analysis</li>
+            <p> &nbsp; RNN은 다양한 정보를 함유하기에 지나치게 단순하고, LSTM은 GATE구조가 복잡하기에, 그만큼 영향을 받은 요소가 많아 학습 수렴이 어렵습니다. 때문에 모든 학습 결과에서는 GATE를 사용하면서도 단순화된 연산으로 학습의 이점이 큰 GRU가 가장 뛰어난 성능을 보임을 알 수 있습니다. 
+            </p>
+        </ul>
+      </div>
+    </div>
 
 
 <!-- Conclusion -->   
     <h2 id="6">6. &hairsp; Conclusion</h2>
-    <div class="small-spacer"></div>
-    <p> &nbsp; 이전의 RNN 계열의 모델들 보다 속도 측면, 그리고 성능 측면에서 굉장히 진일보 했음을 실험을 통해 직접적으로 확인할 수 있었음. 구현과정에서 복잡성이 증가 했다는 단점역시, Pytorch 라이브러리의 Transformer 모델을 통해 간편하게 사용할 수 있는 편의성이 있음.
+    <div class="chapter-box">
+        <p> &nbsp; 이전의 RNN 계열의 모델들 보다 속도 측면, 그리고 성능 측면에서 굉장히 진일보 했음을 실험을 통해 직접적으로 확인할 수 있었음. 구현과정에서 복잡성이 증가 했다는 단점역시, Pytorch 라이브러리의 Transformer 모델을 통해 간편하게 사용할 수 있는 편의성이 있음.
 
-    </p>  
-    <hr>
+        </p>  
+    </div>
 
 
 <!-- Reference -->   
     <h2 id="7">5. &hairsp; Reference</h2>
-    <div class="small-spacer"></div>
-
-    <a class="reference" href="https://arxiv.org/abs/1706.03762">&nbsp; Attention Is All You Need</a> <br> 
-    <a class="reference" href="https://arxiv.org/abs/1807.03819/">&nbsp; Universal Transformers</a> <br> 
-    <a class="reference" href="https://arxiv.org/abs/1901.11117">&nbsp; The Evolved Transformers</a>
-    <hr>
+    <div class="chapter-box">
+        <a class="reference" href="https://arxiv.org/abs/1706.03762">&nbsp; Attention Is All You Need</a> <br> 
+        <a class="reference" href="https://arxiv.org/abs/1807.03819/">&nbsp; Universal Transformers</a> <br> 
+        <a class="reference" href="https://arxiv.org/abs/1901.11117">&nbsp; The Evolved Transformers</a>
+    </div>
 
   </div>
 </div>
 
 
 <div class="pagination">
-  <a href="{{ '/transformer' | relative_url }}" class="btn-prev"><span>Transformer</span></a>
+  <a href="{{ '/transformer_balance' | relative_url }}" class="btn-prev"><span>Transformer Balance</span></a>
   <a href="{{ '/plm_fusion' | relative_url }}" class="btn-next"><span>PLM Fusion</span></a>
 </div>

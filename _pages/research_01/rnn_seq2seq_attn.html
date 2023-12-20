@@ -8,19 +8,31 @@ permalink: /rnn_seq2seq_attn
   <h1 class="title">RNN Seq2Seq with Attention Analytics</h1>  
   <div class="post">
 
-
+    <hr>
     <div class="callout">
-      <p class="highlighted-text"><span>Project Objective</span></p>
+      <p class="highlighted-text"><span>Project Overview</span></p>
       <div class="small-spacer"></div>
-      <p>&nbsp; RNN은 이전 스텝의 결과값을 다음 스텝의 처리과정에 재귀적으로 반영시키며, 시퀀셜 데이터를 처리하기 용이한 네트워크 구조입니다. 대표적인 RNN Cell 구조로는 RNN, LSTM, GRU
-      이 프로젝트에서는 세가지 셀 구조별 Seq2Seq 모델 구조에서 성능이 얼마나 나오는지를 비교 분석해봅니다.</p>
+      <p>&nbsp; 이 프로젝트에서는 GRU Seq2Seq 모델의 성능을 개선시키기 위해 세 가지 Attention 기법을 적용시키고, 각 방법론 별의 성능 개선 여부를 확인합니다. Attention 방법론은 Additive, Dot Product, Scaled Dot Product 방식을 사용했습니다. 결과적으로 성능면에서는 ~~~ 순으로, 효율성에서는 ~~~ 순으로 우수하다는 결과를 확인했습니다. </p>
     </div>
 
       <div class="tblContents">
         <ul>
 
           <li>
-            <a href="#1">1. &hairsp; Attention</a>
+            <a href="#1">1. &hairsp; Introduction</a>
+            <ul>
+              <li>
+                <a href="#1.1">1.1 &hairsp; Motivation</a>
+              </li>
+              <li>
+                <a href="#1.2">1.2 &hairsp; Objective</a>
+              </li>
+            </ul>
+          </li>
+
+
+          <li>
+            <a href="#2">2. &hairsp; Background</a>
             <ul>
               <li>
                 <a href="#1.1">1.1 &hairsp; Additive</a>
@@ -33,6 +45,7 @@ permalink: /rnn_seq2seq_attn
               </li>          
             </ul>
           </li>
+
 
           <li>
             <a href="#3">3. &hairsp; Experimental Setup</a>
@@ -55,9 +68,44 @@ permalink: /rnn_seq2seq_attn
       <hr>
 
 
+<!-- 1. Introduction -->    
+    <h2 id="1">1. &hairsp; Introduction</h2>
+    <h3 id="1.1">1.1 &hairsp; Motivation</h3>
+    <p> &nbsp; Transformer는 Attention 연산을 활용해 기존 RNN의 자리를 성공적으로 대체했습니다. 시기 적으로 보자면 RNN과 Transformer의 변환기 사이 RNN에서 Attention을 추가하는 방식이 사용되었습니다.
+
+    Transformer의 핵심 연산인 Attention에 대한 더 깊은 이해를 위해, 이 과정에서의 모델링 성능을 경험적으로 확인해보는 것이 필요합니다. 
+
+      Transformer 덕분에 Scaled Dot Product Attention은 매우 유명한 어텐션 기법입니다. 하지만 그 이전에 가장 유명했던 어텐션 기법은 Additive Attention과 Dot Product Attention입니다. 각각 바다나우, 루옹 어텐션으로 불리기도함.
+
+      어텐션 기법 간의 장단점을 파악.
+
+      기존 RNN기반 Seq2Seq 모델의 한계를 극복하기 위한 Attention의 태동 이유를 직접 구현을 통해 이해해봅니다. Attention에 왜 더 많은 관심이 모이고, 결과적으로 Transformer까지 이어질 수있었는지 이해해보려 합니다.
+
+      Attention의 시작을 이해함으로써, Transformer의 Scaled Dot Attention부터 효율적인 연산을 위한 Sparse Attention등 다양한 어텐션 기법이해의 토대를 구축하려 합니다.
+
+      # 아니지 구축하려 한다는 목적성은 아래의 objective로 빼야하고, 여기서는 이해하거나 살펴보거나 탐구하거나 좀더 추상적인 원하는 바가 담긴 서술어로 풀어서 사용하는 걸로!
+
+    </p>
+
+
+    <div class="spacer"></div>    
+    <h3 id="1.2">1.2 &hairsp; Objective</h3>
+    
+    <div class="plain-list">  
+      <ul>
+        <li>세가지 Attention 기법의 비교분석</li>
+        <li>Attention을 직접 구현해보며, 이해도를 증진시킵니다</li>
+        <li>Attention 기법의 유용성을 확인</li>
+        <li>Attention을 통한 GRU Seq2Seq 모델의 한계를 돌파</li>
+      </ul>
+    </div>
+    <hr>
+
+
+
 
 <!-- Project Desc -->    
-    <h2>1. &hairsp; Attention</h2>
+    <h2 id="2">2. &hairsp; Background</h2>
 
     <p>어텐션의 기본 아이디어는 디코더에서 출력 단어를 예측하는 매 시점 (time step) 마다, 인코더에서의 전체 입력 문장을 다시 한 번 참고한다는 것입니다. 단, 전체 입력 문장을 전부 다 동일한 비율로 참고하는 것이 아닌, 해당 시점에서 예측하고자 하는 토큰과 연관이 있는 입력 시퀀스의 부분을 좀 더 집중(attention)적으로 참고합니다. 어텐션을 통해 컨텍스트 벡터에 대한 의존성을 줄이고, 입출력 값 사이의 관계성도 정밀하게 처리할 수 있습니다. 이번 프로젝트에서는 이전 프로젝트에서 좋은 성능과 효율성을 보여줬던 GRU Cell을 활용한 Sequence to Sequnce 구조에 세 가지 Attention 기법을 적용하고, 다양한 자연어 생성 과제에서 성능 변화를 직접 확인해보며, 그 효용성을 검증합니다.
     Attention은 주어진 쿼리에 대해, 키에 대한 값을 이용해, 쿼리의 답을 얻기 위해 어떤 키를 살펴봐야 하는지 계싼해주는 함수입니다. 보다 자세히 말하자면, 쿼리는 어텐션의 주체를 의미하고, 키는 쿼리에 대한 어켄션의 기여도를 계산할 대상, Value는 어텐션의 크기를 계산하기 위한 값을 의미합니다. 최종적으로는 Q, K로 얻어진 Weight을 사용해, Value의 가중합으로 Attention Value(Context Value)를 산출합니다.
@@ -178,12 +226,34 @@ permalink: /rnn_seq2seq_attn
     2. QK^T 값이 커지면, softmax함수에서 gradient vanishing이 발생합니다.
 
 
-    </p><hr>
+    </p>
+    <hr>
 
+<!-- Architecture -->    
+    <h2 id="3">3. &hairsp; Architecture</h2>
+    <h3 id="3.1">3.1 &hairsp; Sequence to Sequence</h3>
+    <img src="{{ 'assets/img/research_01/seq2seq.png' | relative_url }}" style="width: 60%; height: 100%; display: block; margin: 0 auto;">
+    <div class="dual-container">
+      <p>RNN을 활용한 sequence to sequence 모델의 구조는 위의 그림과 같습니다. Encoder와 Decoder로 구성되며, 인코더는 입력값의 정보를 포함하는 Contect Vector를 생성하고, 디코더는 이 벡터값을 사용해, 매 시점마다의 결과값을 만들어 냅니다.
+        이러한 구조의 문제점은 주어진 시퀀스의 모든 정보를 한정된 벡터 공간에 투영시켜야 한다는 것입니다.
+      </p>
+      <img src="{{ 'assets/img/research_01/limit.png' | relative_url }}" style="width: 45%; height: 25%; display: block; margin: 0 auto;">
+    </div>
+    <p>주어진 시퀀스의 길이가 짧은 경우에는 큰 문제가 아닐수도 있지만, 복잡한 문제이거나 시퀀스의 길이가 길어지면서, 한정된 벡터 공간에 투영하기에는 과도한 정보가 발생하게 됩니다.
+       결과적으로 중요한 정보가 누락된 정보벡터를 사용하다보니, 성능적인 하락이 발생하게 됩니다.
+    </p>
+    <hr>
+
+    <div class="half-spacer"></div>
+    <h3 id="3.2">3.2 &hairsp; Sequence to Sequence with Attention</h3>
+    <p>한정된 벡터공간의 활용이 문제라면, 이를 한정시키지 않으면 됩니다. 
+      입력과 출력의 각 단어들간에 서로 어떤 단어들끼리 연관되어 있는가에 대한 대응관계를 모델에 학습시키는 것이 어텐션 메커니즘의 핵심입니다. 이렇게 단어들 간의 대응관계를 Phrase Alignment라고 부릅니다. 
+    </p>
+    <hr>
 
 
 <!-- Experimental Setup -->    
-    <h2>2. Experimental Setup</h2>
+    <h2 id="3">3. &hairsp; Experimental Setup</h2>
     <div class="small-spacer"></div>
     <table class="result-table">
       <thead>
@@ -306,6 +376,6 @@ permalink: /rnn_seq2seq_attn
 
 
 <div class="pagination">
-  <a href="{{ '/rnn_seq2seq' | relative_url }}" class="btn-prev"><span>RNN Cells for Seq2Seq</span></a>
+  <a href="{{ '/rnn_seq2seq' | relative_url }}" class="btn-prev"><span>RNN Seq2Seq</span></a>
   <a href="{{ '/transformer' | relative_url }}" class="btn-next"><span>Transformer</span></a>
 </div>
