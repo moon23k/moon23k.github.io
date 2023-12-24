@@ -70,7 +70,7 @@ permalink: /transformer
             이 프로젝트에서는 Transformer라는 우수한 모델에 대한 이해도를 증진시키기 위해 직접 Transformer를 구현하고, 이를 Pytorch에서 제공하는 Transformer 모델과 비교하며, 구현이 제대로 되었는지, 그리고 어떠한 차이가 있는지를 확인합니다. 
             </p>
 
-          <br class="half-spacer">
+          <div class="spacer"></div>
           <li>Objective
             <ul>
               <li style="font-weight: normal;">Transformer 모델에 대한 깊은 이해</li>
@@ -88,80 +88,61 @@ permalink: /transformer
 <!-- 2. Background -->    
     <h2 id="2">2. &hairsp; Background</h2>
     <div class="chapter-box">
-
       <div class="list-container">
         <ul>
-          <li>Transformer</li>
-            <p>&nbsp; 어텐션은 기존 단일 벡터 공간에 모든 시퀀스의 정보를 압축적으로 표현하면서 발생하는 제약을 극복하기 위한 연산 기법을 의미합니다. 매시점마다, 디코딩 과정에서 입력시퀀스에 집중할만한 정보에 더욱 집중해서 정보를 추출하기 위한 기법입니다. 기본적으로 어텐션 연산은 쿼리, 키, 밸류값을 기반으로 행해집니다. 쿼리와 키 값을 토대로, 쿼리와 키 간의 유사도를 측정하고, 유사도 수치를 확률값으로 변환합니다. 이후, 어텐션 확률값을 밸류에 곱해 최종적인 어텐션 값을 도출합니다.
 
-            이 프로젝트에서는 총 세가지의 어텐션 기법을 사용하는데, 각각은 additive, dot product, scaled dot product입니다. 
-
-            Additive Attention은 Bahdanau 어텐션으로도 불리는 유명한 어텐션 기법이고, 이후 루옹에 의한 어텐션 후속 연구에서 가장 많이 사용되는 Dot Product와, 이를 개선한, 그리고 Transformer 어텐션에서 활용되는 Scaled Dot Product를 선정했습니다. 각 어텐션에 대한 상세는 아래와 같습니다.
-            </p>
+          <li>Transformer
+            <ul>
+              <li>트랜스포머는 어텐션 메커니즘을 활용한 신경망 구조로, 장거리 종속성을 효과적으로 다루고 병렬 처리를 가능케 함</li>
+              <li>인코더와 디코더로 이루어져 텍스트 처리에 적합하며, 특히 self-attention과 포지션 임베딩을 통해 문장의 의미와 순서 정보를 효과적으로 학습해 자연어 처리에서 혁신적인 성과를 보임</li>
+              <li>기존 순환 신경망 대비 훨씬 높은 성능과 학습 효율성을 제공하며, 대규모 데이터셋에서 활용되는 강력한 모델</li>
+            </ul>
+          </li>
             
+          <div class="spacer"></div>
+          <li>Encoder & Decoder
+            <ul>
+              <li>트랜스포머의 인코더는 입력 시퀀스의 단어들을 임베딩하고, 다중 헤드 어텐션과 피드포워드 신경망을 통해 정보를 추상화. 각 인코더 레이어는 잔여 연결과 층 정규화를 활용하여 안정성을 유지하며, 입력 문장의 특징을 계층적으로 추출</li>
+              <li>디코더는 인코더의 출력을 기반으로 출력 시퀀스를 생성. 각 디코더 레이어는 다중 헤드 어텐션을 사용하여 인코더의 출력과 현재까지의 디코더 입력에 대한 어텐션을 계산하고, 피드포워드 신경망을 통해 출력을 생성. 잔여 연결과 층 정규화는 안정성을 제공하며 디코딩 과정을 안정화.</li>
+              <li>인코더와 디코더는 각각의 레이어를 통해 상호작용하며, 어텐션 메커니즘을 활용해 입력 문장의 문맥 정보를 고려하고 출력 문장을 생성. 트랜스포머의 인코더-디코더 구조는 기존의 번역 모델보다 효과적인 학습과 예측을 가능케 함.</li>
+            </ul>
+          </li>
 
           <div class="spacer"></div>
-          <li>Multi Head Attention</li>
-
-          <div class="dual-container">
-            <img src="{{ 'assets/img/research_01/bahdanau.png' | relative_url }}" style="width: 27%; height: 20%; display: block; margin: 0 1em;">
-            <p>Additive Attention, 혹은 바다나우 어텐션으로도 불리는 이 어텐션 기법은 이름에서 드러나듯, 어텐션 연산에서 각 값을 더해주는 방식을 사용합니다. 
-            t시점의 예측을 위해, Encoder의 Hidden State들과 t-1 시점의 Hidden State를 비교합니다.
-            </p>
-          </div>
-
-            <div class="latex-container">
-              <div class="equation-item">
-                  <p class="latex-equation">\( \mathbf{Attention \space Score} = W^T_a \tanh(W_b s_{t-1} + W_c H) \)</p>
-              </div>
-              <div class="equation-item">
-                  <p class="latex-equation">\( \mathbf{Attention \space Distribution} = softmax(Attention \space Score) \)</p>
-              </div>
-              <div class="equation-item">
-                  <p class="latex-equation">\( \mathbf{Attention \space Value} = H \cdot Attention \space Distribution \)</p>
-              </div>
-              <div class="equation-item">
-                  <p class="latex-equation">\( {\Large s_t} = \text{Decoder}(y_{t-1}, s_{t-1}, c_t) \)</p>
-              </div>
-            </div>
-
-            <p>&nbsp; Additive Attention, 혹은 바다나우 어텐션으로도 불리는 이 어텐션 기법은 이름에서 드러나듯, 어텐션 연산에서 각 값을 더해주는 방식을 사용합니다. 
-            </p>
+          <li>Multi Head Attention
+            <ul>
+              <li>트랜스포머의 핵심 구성 요소로, 여러 어텐션 헤드를 병렬로 활용하여 다양한 어텐션 가중치를 학습</li>
+              <li>각 헤드는 서로 다른 관점에서 정보를 추출하며, 그 결과를 결합하여 모델이 다양한 특징을 효과적으로 학습하도록 유도</li>
+              <li>Attention Score 산출을 위해 Scaled Dot Attention 방식을 사용</li>
+            </ul>
+          </li>
 
           <div class="spacer"></div>
-          <li>Module Connection</li>
+          <li>Residual Connections and Layer Normalization
+            <ul>
+              <li>트랜스포머의 각 인코더와 디코더 레이어에 적용되는 구조로, 다양한 위치의 단어들에 대한 개별적인 신경망을 사용하여 비선형성을 도입</li>
+              <li>이를 통해 모델은 단어 간의 상호작용을 강조하고 병렬 계산을 유지하며 효과적인 특징 추출이 가능</li>
+              <li>포지션 와이즈 피드 포워드는 모델의 표현력을 향상시키는 중요한 구성 요소</li>
+            </ul>
+          </li>
 
-          <div class="dual-container">
-            <img src="{{ 'assets/img/research_01/luong.png' | relative_url }}" style="width: 30%; height: 40%; display: block; margin: 0 1em;">
-            <p>Dot Product Attention은 이름에서도 드러나듯, 유사도 측정 과정에서 벡터간의 내적(Dot Product)를 사용합니다. 내적 연산은 두 벡터간의 유사도가 클수록 큰값이, 작을수록 작은 값이 도출되는 연산입니다. 별도의 학습 가능한 가중치가 필요하지 않기에 연산과정이 매우 간단하고 효율적이라는 장점이 존재합니다.
-            </p>
-          </div>
+          <div class="spacer"></div>
+          <li>Residual Connections and Layer Normalization
+            <ul>
+              <li>트랜스포머에서는 각 레이어에 잔여 연결을 도입하여 그레이디언트 소실 문제를 완화하고 네트워크의 깊이를 키움</li>
+              <li>레이어 정규화는 각 레이어의 출력을 정규화하여 안정적인 학습을 도모하고 훈련 과정을 안정화</li>
+              <li>이 두 가지 구조는 모델의 안정성과 학습 효율성을 향상시키며, 트랜스포머의 성능에 기여</li>
+            </ul>
+          </li>
 
-
-            <div class="latex-container">
-              <div class="equation-item">
-                  <p class="latex-equation">\( \mathbf{Attention \space Score} = \frac{QK^T}{\sqrt{d_k}}V \)</p>
-              </div>
-              <div class="equation-item">
-                  <p class="latex-equation">\( \mathbf{Attention \space Distribution} = softmax(Attention \space Score) \)</p>
-              </div>
-              <div class="equation-item">
-                  <p class="latex-equation">\( Attention \space Value = W^T_a \tanh(W_b s_{t-1} + W_c h_i) \)</p>
-              </div>
-              <div class="equation-item">
-                  <p class="latex-equation">\( {\Large s_t} = \text{Decoder}(y_{t-1}, s_{t-1}, c_t) \)</p>
-              </div>              
-            </div>
-
-            <p> Luong Attention이라고도 불리며, 이는 Additive Attention의 복잡한 연산과정을, 단순한 내적을 통한 유사도 계산으로 대체하며, 계산량을 줄인 어텐션 기법입니다.
-
-            </p>
-
-          <div class="half-spacer"></div>
-          <li>Embeddings</li>
-            <p> 앞서 소개한 Dot Product Attention 기법이, 연산 효율성과 성능 측면에서도 좋은 모습을 보이고는 있지만, 다음과 같은 문제점이 존재합니다.
-              1. 
-            </p>
+          <div class="spacer"></div>
+          <li>Embeddings
+            <ul>
+              <li>Transformer의 Embedding은 Token Embedding과 Positional Encoding으로 구성</li>
+              <li>Token Embedding은 시퀀스 토큰들을 고차원 벡터로 변환해 의미를 표현하기 위해 사용하며, 학습을 통해 업데아트 됨</li>
+              <li>Positional Encoding은 병렬 처리과정에서 시퀀스의 위치정보를 반영하기 위한 레이어로 Token Embedding에 더해져 순서 정보를 모델에 제공</li>
+            </ul>
+          </li>
 
         </ul>
       </div>
@@ -181,9 +162,162 @@ permalink: /transformer
 
             <div class="code-container">
               <div class="code-snippet">
-                <pre><code class="python">class Transformer(nn.Module):
+                <pre><code class="python">class MultiHeadAttention(nn.Module):
     def __init__(self, config):
-        super(Transformer, self).__init__()
+        super().__init__()
+
+        hidden_dim = config.hidden_dim
+        self.n_heads = config.n_heads
+
+        assert hidden_dim // self.n_heads
+        self.head_dim = hidden_dim // self.n_heads
+        
+        self.dropout = nn.Dropout(config.dropout_ratio)
+        self.linears = clones(nn.Linear(hidden_dim, hidden_dim), 4)
+        self.scale = torch.sqrt(torch.FloatTensor([self.head_dim])).to(config.device)
+
+
+    def forward(self, query, key, value, mask = None):
+
+        orig_shape = list(query.shape)
+        split_shape = [query.size(0), -1, self.n_heads, self.head_dim]
+
+        Q, K, V = [lin(x).view(split_shape).transpose(1, 2) \
+                   for lin, x in zip(self.linears, (query, key, value))]   
+
+        score = torch.matmul(Q, K.permute(0, 1, 3, 2)) / self.scale
+
+        if mask is not None:
+            score = score.masked_fill(mask==0, -1e10)
+
+        attention = torch.softmax(score, dim=-1)
+
+        x = torch.matmul(self.dropout(attention), V)
+        
+        x = x.permute(0, 2, 1, 3).contiguous()
+        x = x.view(orig_shape)
+
+        del Q, K, V
+
+        return self.linears[-1](x)
+
+
+
+class PositionwiseFeedForward(nn.Module):
+    def __init__(self, config):
+        super().__init__()
+
+        self.fc_1 = nn.Linear(config.hidden_dim, config.pff_dim)
+        self.fc_2 = nn.Linear(config.pff_dim, config.hidden_dim)
+        self.dropout = nn.Dropout(config.dropout_ratio)
+
+
+    def forward(self, x):
+        x = self.dropout(F.gelu(self.fc_1(x)))
+        return self.fc_2(x)        
+
+
+
+class EncoderLayer(nn.Module):
+    def __init__(self, config):
+        super().__init__()
+
+        self.self_attn = MultiHeadAttention(config)
+        self.pff = PositionwiseFeedForward(config)
+
+        hidden_dim = config.hidden_dim
+        self.self_attn_norm = nn.LayerNorm(hidden_dim)
+        self.pff_norm = nn.LayerNorm(hidden_dim)
+        
+        self.dropout = nn.Dropout(config.dropout_ratio)
+
+
+    def forward(self, x, e_mask):
+        _x = self.self_attn(x, x, x, e_mask)
+        x = self.self_attn_norm(x + self.dropout(_x))
+        _x = self.pff(x)
+        x = self.pff_norm(x + self.dropout(_x))
+
+        return x
+
+
+
+class DecoderLayer(nn.Module):
+    def __init__(self, config):
+        super().__init__()
+
+        self.self_attn = MultiHeadAttention(config)
+        self.enc_attn = MultiHeadAttention(config)
+        self.pff = PositionwiseFeedForward(config)
+
+        hidden_dim = config.hidden_dim
+        self.self_attn_norm = nn.LayerNorm(hidden_dim)
+        self.enc_attn_norm = nn.LayerNorm(hidden_dim)
+        self.pff_norm = nn.LayerNorm(hidden_dim)
+
+        self.dropout = nn.Dropout(config.dropout_ratio)
+
+
+    def forward(self, x, m, e_mask, d_mask):
+
+        _x = self.self_attn(x, x, x, d_mask)
+        x = self.self_attn_norm(x + self.dropout(_x))
+
+        _x = self.enc_attn(x, m, m, e_mask)
+        x = self.enc_attn_norm(x + self.dropout(_x))
+
+        _x = self.pff(x)
+        x = self.pff_norm(x + self.dropout(_x))
+
+        return x
+
+
+
+class Encoder(nn.Module):
+    def __init__(self, config):
+        super().__init__()
+
+        self.device = config.device
+        self.emb = Embeddings(config)
+        self.dropout = nn.Dropout(config.dropout_ratio)
+
+        self.layers = nn.ModuleList(
+            [EncoderLayer(config) for _ in range(config.n_layers)]
+        )
+
+
+    def forward(self, x, e_mask):
+        x = self.emb(x)
+        for layer in self.layers:
+            x = layer(x, e_mask)
+        return x
+
+
+
+class Decoder(nn.Module):
+    def __init__(self, config):
+        super().__init__()
+
+        self.device = config.device
+        self.emb = Embeddings(config)
+        self.dropout = nn.Dropout(config.dropout_ratio)
+
+        self.layers = nn.ModuleList(
+            [DecoderLayer(config) for _ in range(config.n_layers)]
+        )
+
+
+    def forward(self, x, memory, e_mask, d_mask):
+        x = self.emb(x)
+        for layer in self.layers:
+            x = layer(x, memory, e_mask, d_mask)
+        return x
+     
+
+
+class ScratchModel(nn.Module):
+    def __init__(self, config):
+        super(ScratchModel, self).__init__()
 
         self.pad_id = config.pad_id
         self.device = config.device
@@ -192,6 +326,9 @@ permalink: /transformer
         self.encoder = Encoder(config)
         self.decoder = Decoder(config)
         self.generator = nn.Linear(config.hidden_dim, self.vocab_size)
+
+        self.criterion = nn.CrossEntropyLoss()
+        self.out = namedtuple('Out', 'logit loss')
 
 
     def pad_mask(self, x):
@@ -218,8 +355,16 @@ permalink: /transformer
 
         memory = self.encoder(x, e_mask)
         dec_out = self.decoder(y, memory, e_mask, d_mask)
+        logit = self.generator(dec_out)
+
+        #Getting Outputs
+        self.out.logit = logit
+        self.out.loss = self.criterion(
+            logit.contiguous().view(-1, self.vocab_size), 
+            label.contiguous().view(-1)
+        )
         
-        return self.generator(dec_out)</code></pre>
+        return self.out</code></pre>
             </div>
           </div>
 
@@ -229,51 +374,120 @@ permalink: /transformer
 
             <div class="code-container">
               <div class="code-snippet">
-                <pre><code class="python">class Transformer(nn.Module):
+                <pre><code class="python">class Encoder(nn.Module):
     def __init__(self, config):
-        super(Transformer, self).__init__()
+        super(Encoder, self).__init__()
+        
+        layer = nn.TransformerEncoderLayer(
+            d_model=config.hidden_dim,
+            nhead=config.n_heads,
+            dim_feedforward=config.pff_dim,
+            dropout=config.dropout_ratio,
+            activation='gelu',
+            batch_first=True
+        )
 
-        self.pad_id = config.pad_id
+        self.embeddings = Embeddings(config)
+        self.layers = clones(layer, config.n_layers)
+
+
+    def forward(self, x, e_mask):
+
+        x = self.embeddings(x)
+        
+        for layer in self.layers:
+            x = layer(x, src_key_padding_mask=e_mask)
+        
+        return x
+
+
+
+class Decoder(nn.Module):
+    def __init__(self, config):
+        super(Decoder, self).__init__()
+
+        layer = nn.TransformerDecoderLayer(
+            d_model=config.hidden_dim,
+            nhead=config.n_heads,
+            dim_feedforward=config.pff_dim,
+            dropout=config.dropout_ratio,
+            activation='gelu',
+            batch_first=True
+        )
+
+        self.embeddings = Embeddings(config)
+        self.layers = clones(layer, config.n_layers)
+
+
+    def forward(self, x, memory, e_mask=None, d_mask=None):
+        
+        x = self.embeddings(x)
+        
+        for layer in self.layers:
+            x = layer(
+                x, memory, 
+                memory_key_padding_mask=e_mask,
+                tgt_mask=d_mask,
+            )
+
+        return x
+
+
+
+class TorchModel(nn.Module):
+    def __init__(self, config):
+        super(TorchModel, self).__init__()
+        
         self.device = config.device
+        self.pad_id = config.pad_id
         self.vocab_size = config.vocab_size
 
         self.encoder = Encoder(config)
         self.decoder = Decoder(config)
         self.generator = nn.Linear(config.hidden_dim, self.vocab_size)
 
+        self.criterion = nn.CrossEntropyLoss()
+        self.out = namedtuple('Out', 'logit loss')
 
+    
     def pad_mask(self, x):
-        return (x != self.pad_id).unsqueeze(1).unsqueeze(2)
+        return x == self.pad_id
+
+
+    @staticmethod    
+    def shift_y(x):
+        return x[:, :-1], x[:, 1:]    
 
 
     def dec_mask(self, x):
         sz = x.size(1)
-        pad_mask = self.pad_mask(x)
-        sub_mask = torch.tril(torch.ones((sz, sz), device=self.device)).bool()
-        return pad_mask & sub_mask
-
-
-    @staticmethod
-    def shift_y(x):
-        return x[:, :-1], x[:, 1:]
+        return torch.triu(torch.full((sz, sz), float('-inf')), diagonal=1).to(self.device)
 
 
     def forward(self, x, y):
         y, label = self.shift_y(y)
 
-        e_mask = self.pad_mask(x) 
+        #Masking
+        e_mask = self.pad_mask(x)
         d_mask = self.dec_mask(y)
-
+        
+        #Actual Processing
         memory = self.encoder(x, e_mask)
         dec_out = self.decoder(y, memory, e_mask, d_mask)
+        logit = self.generator(dec_out)
         
-        return self.generator(dec_out)</code></pre>
+        #Getting Outputs
+        self.out.logit = logit
+        self.out.loss = self.criterion(
+            logit.contiguous().view(-1, self.vocab_size), 
+            label.contiguous().view(-1)
+        )
+        
+        return self.out</code></pre>
             </div>
           </div>
         </div>
       </div>
-
-
 
 
 
@@ -446,7 +660,7 @@ permalink: /transformer
 
 
 
-    <h2>4. &hairsp; Conclusion</h2>
+    <h2 id="6">6. &hairsp; Conclusion</h2>
 
     <div class="chapter-box">
 
@@ -460,7 +674,7 @@ permalink: /transformer
     </div>
 
 
-    <h2 id="7" class="h3-mt">5. &hairsp; Reference</h2>
+    <h2 id="7" class="h3-mt">7. &hairsp; Reference</h2>
     <div class="chapter-box">
       <a class="reference" href="https://arxiv.org/abs/1706.03762">&nbsp; Attention Is All You Need</a> <br> 
       <a class="reference" href="http://nlp.seas.harvard.edu/annotated-transformer/">&nbsp; The Annotated Transformer</a> <br> 
@@ -473,5 +687,5 @@ permalink: /transformer
 
 <div class="pagination">
   <a href="{{ '/rnn_seq2seq_attn' | relative_url }}" class="btn-prev"><span>RNN Seq2sSeq with Attention</span></a>
-  <a href="{{ '/transformer_variants' | relative_url }}" class="btn-next"><span>Transformer Variants</span></a>
+  <a href="{{ '/transformer_balance' | relative_url }}" class="btn-next"><span>Transformer Balance</span></a>
 </div>

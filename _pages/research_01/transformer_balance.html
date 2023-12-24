@@ -14,7 +14,7 @@ permalink: /transformer_balance
       <div class="small-spacer"></div>
       <p>&nbsp; 이 프로젝트에서는 Transformer Seq2Seq 모델의 Encoder와 Decoder 사이 균형성에 따른 성능 변화를 다각적으로 검증합니다.
 
-        균형성의 변인으로는 주요 연산 레이어 차원, 인코더 및 디코더 레이어의 개수, 어텐션 헤드의 개수를 설정했으며, 각 변인을 적용한 모델을 Wide, Deep, Diverse 모델이라고 명명하고, 기본설정만으로 구성된 Base Line 모델과 모든 변인이 적용된 Large 모델과의 성능 비교 실험을 진행합니다.
+        균형성의 변인으로는 주요 연산 레이어 차원, 인코더 및 디코더 레이어의 개수, 어텐션 헤드의 개수를 설정했으며, 각 변인을 적용한 모델을 Wide, Deep, Diverse 모델이라고 명명하고, 변인이 적용된 모델간 성능을 비교합니다.
 
         성능의 측정에는 인코딩과 디코딩 중요도가 상이한 세 가지 자연어 생성 과제를 선택했으며, ~~ 하다는 결과를 확인했습니다.
 
@@ -30,6 +30,10 @@ permalink: /transformer_balance
 
         <li>
           <a href="#2">2. &hairsp; Background</a>
+          <ul>
+            <li><a href="#2.1">2.1 &hairsp; Task Balance</a></li>
+            <li><a href="#2.2">2.2 &hairsp; Model Balance</a></li>
+          </ul>
         </li>
 
         <li>
@@ -57,32 +61,6 @@ permalink: /transformer_balance
     <hr>
 
 
-<!-- 1. Introduction -->    
-    <h2 id="1">1. &hairsp; Introduction</h2>
-    <h3 id="1.1">1.1 &hairsp; Motivation</h3>
-    <p> &nbsp; Transformer는 다양한 딥러닝 처리 과제에서 널리 사용되는 뛰어난 모델입니다. 일반적으로 Transformer Seq2Seq 모델의 활용 시, Encoder와 Decoder의 설정을 대부분 일치시킵니다. 
-
-      일치 시키는 가장 주된 이유는 모델의 안정성을 위함입니다. 서로 다른 설정값에서 모델의 학습이 더 어려워지며, 결과적으로 성능 하락을 야기하기 쉽습니다.
-
-      하지만 해결하려는 과제 마다의 특성을 면밀히 살펴보면, 특정 과제는 Encoder가 Decoder보다 중요하게 작용해야하는 과제가 존재하기도, 반대로 Decoder가 Encoder보다 중요하게 역할을 해줘야 하는 경우 역시도 존재합니다.
-
-      대대수의 경우에서, 해결하고자 하는 과제의 성격과는 무관하게 균형잡힌 Transformer 모델을 사용하기 때문에 Encoder와 Decoder 균형성에 대한 연구가 상대적으로 부족합니다.
-
-      이러한 문제점을 직접 해결하고, 모델 디자인에 있어 균형성에 대한 중요성, 혹은 의도적인 불균형성의 효과 등을 실험적으로 확인하는 것이 이 프로젝트의 주된 목적입니다.
-    </p>
-
-
-    <div class="spacer"></div>    
-    <h3 id="1.2">1.2 &hairsp; Objective</h3>
-    
-    <div class="list-container">  
-      <ul>
-        <li style="font-weight: normal;">Transformer 모델에서 네 가지 밸런스 설정 변인에 따른 성능 변화 확인</li>
-        <li style="font-weight: normal;">인코딩 디코딩의 중요도가 상이한 자연어 생성 과제에서 실제 성능 확인</li>
-        <li style="font-weight: normal;">Transformer 모델 디자인 시 밸런스 설정에 대한 기준 확립</li>
-      </ul>
-    </div>
-    <hr>
 
 
 <!-- 1. Introduction -->    
@@ -92,28 +70,23 @@ permalink: /transformer_balance
       <div class="list-container">
         <ul>
           <li>Description</li>
-            <p> &nbsp; 순환 신경망은 Transformer의 도래 이전, 시퀀셜 데이터 처리를 위한 딥러닝 모델링의 대표적인 방식이었습니다. 비록 현재는 Transformer가 기존 순환 신경망의 자리를 성공적으로 대체했지만, 간단하고 직관적인 모델링이 가능하다는 점에서 여전히 활용 가치가 있습니다. 뿐만 아니라, 자연어 생성을 위한 가장 기초적인 모델 구현 방식으로써, 이후 다양한 모델의 성능을 비교할 수 있는 기준점으로 작용가능하기에, 순환 신경망에 대한 연구는 가장 기초적이면서 필수적인 연구라고 할 수 있습니다. <br>
+            <p> &nbsp; Transformer는 다양한 딥러닝 처리 과제에서 널리 사용되는 뛰어난 모델입니다. 일반적으로 Transformer Seq2Seq 모델의 활용 시, Encoder와 Decoder의 설정을 대부분 일치시킵니다. 
 
-            이 프로젝트에서는 대표적 순환 신경망 구조인 RNN, LSTM, GRU를 사용해 Sequence to Sequene 모델을 구현하고, 이를 기계 번역, 대화 생성, 문서 요약이라는 세 가지 자연어 생성과에서의 성능을 비교 분석합니다.
+            일치 시키는 가장 주된 이유는 모델의 안정성을 위함입니다. 서로 다른 설정값에서 모델의 학습이 더 어려워지며, 결과적으로 성능 하락을 야기하기 쉽습니다.
+
+            하지만 해결하려는 과제 마다의 특성을 면밀히 살펴보면, 특정 과제는 Encoder가 Decoder보다 중요하게 작용해야하는 과제가 존재하기도, 반대로 Decoder가 Encoder보다 중요하게 역할을 해줘야 하는 경우 역시도 존재합니다.
+
+            대대수의 경우에서, 해결하고자 하는 과제의 성격과는 무관하게 균형잡힌 Transformer 모델을 사용하기 때문에 Encoder와 Decoder 균형성에 대한 연구가 상대적으로 부족합니다.
+
+            이러한 문제점을 직접 해결하고, 모델 디자인에 있어 균형성에 대한 중요성, 혹은 의도적인 불균형성의 효과 등을 실험적으로 확인하는 것이 이 프로젝트의 주된 목적입니다.
             </p>
-
-          <br class="half-spacer">
-          <li>Hypothesis
-            <ul>
-              <li style="font-weight: normal;">LSTM, GRU, RNN 순으로 높은 성능</li>
-              <li style="font-weight: normal;">RNN, GRU, LSTM 순으로 빠른 학습</li>
-              <li style="font-weight: normal;">LSTM이 특히 긴 텍스트를 다루는 문서 요약에서 강점을 지닐 것으로 예측</li>
-              <li style="font-weight: normal;">상대적으로 시퀀스의 길이가 짧은 대화 생성에서는 LSTM이 약세를 보일 것으로 예측</li>
-            </ul>
-          </li>
 
           <br class="half-spacer">
           <li>Objective
             <ul>
-              <li style="font-weight: normal;">RNN, LSTM, GRU 을 활용한 seq2seq 모델링 방식의 이해</li>
-              <li style="font-weight: normal;">세 가지 순환 신경망의 성능 비교 검증</li>
-              <li style="font-weight: normal;">가설에 대한 검증</li>
-              <li style="font-weight: normal;">실험 결과를 통해, 이후 자연어 생성을 위한 모델링 성능의 기준점을 확립</li>
+              <li style="font-weight: normal;">Transformer 모델에서 네 가지 밸런스 설정 변인에 따른 성능 변화 확인</li>
+              <li style="font-weight: normal;">인코딩 디코딩의 중요도가 상이한 자연어 생성 과제에서 실제 성능 확인</li>
+              <li style="font-weight: normal;">Transformer 모델 디자인 시 밸런스 설정에 대한 기준 확립</li>
             </ul>
           </li>
 
@@ -125,318 +98,342 @@ permalink: /transformer_balance
 
 
 
-<!-- 2. Architecture -->
-    <h2 id="1">1. &hairsp; Balance</h2>
+<!-- 2. Background -->
+    <h2 id="2">2. &hairsp; Background</h2>
+    <div class="chapter-box">
 
-    <h3 id="1.1">1.1 &hairsp; Task Balance</h3>
+      <h3 id="2.2">2.1 &hairsp; Task Balance</h3>
 
-    <div class="list-container">  
-      <ul>
-        <li>기계 번역</li>
-          <p class="gray-box">&nbsp; 기계 번역은 특정 언어로 표현된 시퀀스를 입력값으로 받아, 동일한 의미의 다른 언어 시퀀스를 반환하는 자연어 생성 과제를 의미합니다.
-            가령 "I am a student"라는 표현을 "나는 학생입니다" 로 변환하는것.
-            이 과제에서는 입력 시퀀스와 출력 시퀀스 간 거의 1:1 대응관계에 있다고 볼 수 있습니다.
-            덕분에 인코딩과 디코딩의 비중이 균형적이라고 볼 수 있습니다.
-          </p><br>        
+      <div class="list-container">  
+        <ul>
+          <li>기계 번역</li>
+            <p class="gray-box">&nbsp; 기계 번역은 특정 언어로 표현된 시퀀스를 입력값으로 받아, 동일한 의미의 다른 언어 시퀀스를 반환하는 자연어 생성 과제를 의미합니다.
+              가령 "I am a student"라는 표현을 "나는 학생입니다" 로 변환하는것.
+              이 과제에서는 입력 시퀀스와 출력 시퀀스 간 거의 1:1 대응관계에 있다고 볼 수 있습니다.
+              덕분에 인코딩과 디코딩의 비중이 균형적이라고 볼 수 있습니다.
+            </p><br>        
 
-        <li>대화 생성</li>
-          <p class="gray-box">&nbsp; 대화 생성은 입력 시퀀스의 의미를 파악해, 적절한 답변을 출력하는 자연어 생성 과제입니다.
-             이때 "Hi"라는 입력값에 대해, 다양한 출력 시퀀스가 모두 맞는 경우가 될 수 있으며, 
-             1:1 대응이라기 보단, 자연스럽고 다양한 시퀀스 생성이 더욱 중요한 과제라고 볼 수 있습니다.
+          <li>대화 생성</li>
+            <p class="gray-box">&nbsp; 대화 생성은 입력 시퀀스의 의미를 파악해, 적절한 답변을 출력하는 자연어 생성 과제입니다.
+               이때 "Hi"라는 입력값에 대해, 다양한 출력 시퀀스가 모두 맞는 경우가 될 수 있으며, 
+               1:1 대응이라기 보단, 자연스럽고 다양한 시퀀스 생성이 더욱 중요한 과제라고 볼 수 있습니다.
 
-             때문에 인코딩과 디코딩 부분에서 디코딩이 더욱 중요하게 작용하는 과제라고 볼 수 있습니다.
-             대표적으로 대화 생성에 특화된 GPT 계열 모델들역시 Decoder를 적극활용하고 있다는 점도 강력한 근거로 작용할 수 있습니다.
+               때문에 인코딩과 디코딩 부분에서 디코딩이 더욱 중요하게 작용하는 과제라고 볼 수 있습니다.
+               대표적으로 대화 생성에 특화된 GPT 계열 모델들역시 Decoder를 적극활용하고 있다는 점도 강력한 근거로 작용할 수 있습니다.
 
-          </p><br>        
+            </p><br>        
 
-        <li>문서 요약</li>
-          <p class="gray-box">&nbsp; 문서 요약은 긴 입력시퀀스에서 중요한 내용만을 파악하고, 이를 다시 새롭게 요약된 시퀀스로 반환하는 자연어 생성 과제입니다.
-            입력 시퀀스의 길이가 출력 시퀀스에 비해 매우 길다는 특징이 있습니다.
-            때문에 입력 시퀀스에서 파악해야하는 정보의 양이 매우 많습니다.
-            자연스럽게 이는 인코딩과 디코딩의 비중중에서 인코딩의 비중이 매우 크다는 것을 시사합니다.
-            실제 문서요약의 성능 개선을 위해, 인코더 방면에서의 연구들이 더 활발하게 이루어지고 있스빈다. 
-          </p>              
+          <li>문서 요약</li>
+            <p class="gray-box">&nbsp; 문서 요약은 긴 입력시퀀스에서 중요한 내용만을 파악하고, 이를 다시 새롭게 요약된 시퀀스로 반환하는 자연어 생성 과제입니다.
+              입력 시퀀스의 길이가 출력 시퀀스에 비해 매우 길다는 특징이 있습니다.
+              때문에 입력 시퀀스에서 파악해야하는 정보의 양이 매우 많습니다.
+              자연스럽게 이는 인코딩과 디코딩의 비중중에서 인코딩의 비중이 매우 크다는 것을 시사합니다.
+              실제 문서요약의 성능 개선을 위해, 인코더 방면에서의 연구들이 더 활발하게 이루어지고 있스빈다. 
+            </p>              
 
-      </ul>
-    </div>
-    <hr>
+        </ul>
+      </div>
+    
+
+      <div class="spacer"></div>
+      <h3 id="2.2">2.2 &hairsp; Model Balance</h3>
+        <div class="list-container">
+          <ul>
+            <li>Width</li>
+              <p class="gray-box">&nbsp; 차원의 크기. 모든 차원의 크기를 동일하게 늘리는 것이 아니라, Encoder에서 혹은 Decoder에서 공통적으로 적용되는 Hidden Dimension과 PFF 차원의 사이즈를 조절합니다. 이 차원의 크기가 커질수록 담을수 있는 정보의 양도 많아집니다.
+              
+              차원의 크기를 조절하는 Encoder_Wide Model과 Decoder Wide Model을 사용하는 경우, Encoder의 차원과 Decoder에서 사용하는 차원이 달라 발생하는 문제를 Connection Layer를 둠으로써 해결합니다.
+              </p><br>
+
+            <li>Depth</li>
+              <p class="gray-box">&nbsp; Transformer의 인코더와 디코더는 각각 복수개의 인코더 레이어와 디코더 레이어로 구성됩니다. 이때 레이어의 개수에 따라 레이어가 많을수록 더 많은 연산 과정 속에서 주어진 시퀀스에 대한 보다 깊은 이해능력이 배양됩니다. 
+              </p><br>
+
+            <li>Diversity</li>
+              <p class="gray-box">&nbsp; Transformer의 핵심 연산 부라고 할 수 있는 Multi Head Attention 구현부에서 Attention Head는 몇개의 쪼개진 조각으로 주어진 벡터를 파악할 것인지를 결정하는 계수입니다. 이 Attention Head의 개수가 많을 수록, 다양한 관점에서 다각적인 의미 해석 및 추출이 가능하게 됩니다. 
+              </p>     
+          </ul>
+        </div>
+      </div>
 
 
-    <h3 id="1.2">1.2 &hairsp; Transformer Balance</h3>
-    <div class="list-container">
-      <ul>
-        <li>Dimension</li>
-          <p class="gray-box">&nbsp; 차원의 크기. 모든 차원의 크기를 동일하게 늘리는 것이 아니라, Encoder에서 혹은 Decoder에서 공통적으로 적용되는 Hidden Dimension과 PFF 차원의 사이즈를 조절합니다. 이 차원의 크기가 커질수록 담을수 있는 정보의 양도 많아집니다.
-          
-          차원의 크기를 조절하는 Encoder_Wide Model과 Decoder Wide Model을 사용하는 경우, Encoder의 차원과 Decoder에서 사용하는 차원이 달라 발생하는 문제를 Connection Layer를 둠으로써 해결합니다.
-          </p><br>
+    <h2 id="3">3. &hairsp; Architecture</h3>
+    <div class="chapter-box">
 
-        <li>Num of Layers</li>
-          <p class="gray-box">&nbsp; Transformer의 인코더와 디코더는 각각 복수개의 인코더 레이어와 디코더 레이어로 구성됩니다. 이때 레이어의 개수에 따라 레이어가 많을수록 더 많은 연산 과정 속에서 주어진 시퀀스에 대한 보다 깊은 이해능력이 배양됩니다. 
-          </p><br>
+      <div class="list-container">
+        <ul>
+          <li>Back-bone Model</li>
 
-        <li>Num of Attn Heads</li>
-          <p class="gray-box">&nbsp; Transformer의 핵심 연산 부라고 할 수 있는 Multi Head Attention 구현부에서 Attention Head는 몇개의 쪼개진 조각으로 주어진 벡터를 파악할 것인지를 결정하는 계수입니다. 이 Attention Head의 개수가 많을 수록, 다양한 관점에서 다각적인 의미 해석 및 추출이 가능하게 됩니다. 
-          </p>     
-      </ul>
-    </div>
-    <hr>
+          <div class="dual-container">
+            <img src="{{ 'assets/img/research_01/standard_transformer.png' | relative_url }}" style="width: 30%; height: 30%;">
 
+            <p> &nbsp; 실험을 위한 BackBone Architecture로는 Standard Transformer Seq2Seq 모델 구조를 사용합니다. 모델은 Encoder와 Decoder로 구성되며, 일반적으로는 주요 구성 하이퍼 파라미터인 Hidden Dimension, PFF Dimension, Num of Layers, Num of Attention Heads이 모두 동일하게 설정된 모델을 의미합니다.
 
-    <h2 id="2">2. &hairsp; Architecture</h3>
+            각 모델 별 변인으로는 크게 차원의 크기, 레이어의 개수, 어텐션 헤드의 개수를 설정했습니다. 이 각 요소에 대한 상세는 아래와 같습니다.
+            </p>
+          </div>
 
-    <div class="dual-container">
-      <img src="{{ 'assets/img/research_01/standard_transformer.png' | relative_url }}" style="width: 30%; height: 30%;">
-
-      <p> &nbsp; 실험을 위한 BackBone Architecture로는 Standard Transformer Seq2Seq 모델 구조를 사용합니다. 모델은 Encoder와 Decoder로 구성되며, 일반적으로는 주요 구성 하이퍼 파라미터인 Hidden Dimension, PFF Dimension, Num of Layers, Num of Attention Heads이 모두 동일하게 설정된 모델을 의미합니다.
-
-      각 모델 별 변인으로는 크게 차원의 크기, 레이어의 개수, 어텐션 헤드의 개수를 설정했습니다. 이 각 요소에 대한 상세는 아래와 같습니다.
+      <div class="half-spacer"></div>
+      <li>Width Unbalanced Model</li>
+      <p>Width 측면에서 밸런스를 의도적으로 붕괴시킨 모델입니다. Encoder의 무게중심을 더 크게 준 모델을 Encoder_Width Model이라고, 디코더에 무게중심을 더 준 모델을 Decoder Width_Model이라고 명명하고, Back-bone 모델에서 공유되는 Hidden Dimension차원을 2배만큼 증가 시킴으로써, 인코더 혹은 디코더의 은닉차원에서 함유할수 있는 정보의 양을 늘린 모델입니다.        
       </p>
+
+
+      <div class="spacer"></div>
+      <li>Depth Unbalanced Model</li>
+      <p>Width 측면에서 밸런스를 의도적으로 붕괴시킨 모델입니다. Encoder의 무게중심을 더 크게 준 모델을 Encoder_Width Model이라고, 디코더에 무게중심을 더 준 모델을 Decoder Width_Model이라고 명명하고, Back-bone 모델에서 공유되는 Hidden Dimension차원을 2배만큼 증가 시킴으로써, 인코더 혹은 디코더의 은닉차원에서 함유할수 있는 정보의 양을 늘린 모델입니다.        
+      </p>      
+
+
+      <div class="spacer"></div>
+      <li>Diversity Unbalanced Model</li>
+      <p>Width 측면에서 밸런스를 의도적으로 붕괴시킨 모델입니다. Encoder의 무게중심을 더 크게 준 모델을 Encoder_Width Model이라고, 디코더에 무게중심을 더 준 모델을 Decoder Width_Model이라고 명명하고, Back-bone 모델에서 공유되는 Hidden Dimension차원을 2배만큼 증가 시킴으로써, 인코더 혹은 디코더의 은닉차원에서 함유할수 있는 정보의 양을 늘린 모델입니다.        
+      </p>
+
+      <div class="spacer"></div>
+      <li>Comparison Table</li>      
+      <table class="result-table">
+        <thead>
+          <tr>
+            <th>Model Type</th>
+            <th>Dimension</th>
+            <th>Connect Layer</th>
+            <th>Num of Layers</th>
+            <th>Num of Attn Heads</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <td><b>Base</b></td>
+            <td>Dimension</td>
+            <td>No</td>
+            <td>N Layers</td>
+            <td>N Heads</td>
+          </tr>
+
+          <tr>
+            <td><b>Wide</b></td>
+            <td>Dimension * 2</td>
+            <td>Yes</td>
+            <td>N Layers</td>
+            <td>N Heads</td>
+          </tr>
+
+          <tr>
+            <td><b>Deep</b></td>
+            <td>Dimension</td>
+            <td>No</td>
+            <td>N Layers * 2</td>
+            <td>N Heads</td>
+          </tr>
+
+          <tr>
+            <td><b>Diverse</b></td>
+            <td>Dimension</td>
+            <td>No</td>
+            <td>N Layers</td>
+            <td>N Heads * 2</td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+
+<!-- 4. Experimental Setup -->
+    <h2 id="4">4. Experimental Setup</h2>
+    <div class="chapter-box">
+
+      <div class="list-container">
+        <ul>
+          <li>Data Setup
+            <div class="dual-container">
+              <ul>
+                <li><b>Translation Task</b>: &nbsp; WMT'14 En-De</li>
+                <li><b>Dialogue Task</b>: &nbsp; Daily Dialogue</li>
+                <li><b>Summarization Task</b>: &nbsp; CNN Daily</li>
+                <li><b>Tokenizer</b>: &nbsp; Word-Level Tokenizer</li>
+              </ul>
+              <ul>
+                <li><b>Train Data Volumn</b>: &nbsp; 50,000</li>
+                <li><b>Valid Data Volumn</b>: &nbsp; 5,000</li>
+                <li><b>Test Data Volumn</b>: &nbsp; 100</li>
+                <li><b>Vocab Size</b>: &nbsp; 10,000</li>                
+              </ul>
+            </div>
+          </li>
+
+          <br class="half-spacer">
+          <li>Model Setup
+            <div class="dual-container">
+              <ul>
+                <li><b>Input Dim</b>: &nbsp; 10,000</li>
+                <li><b>Output Dim</b>: &nbsp; 10,000</li>
+                <li><b>Embedding Dim</b>: &nbsp; 512</li>
+              </ul>
+              <ul>
+                <li><b>Hidden Dim</b>: &nbsp; 512</li>
+                <li><b>Model Params</b>: &nbsp; 000</li>
+                <li><b>Model Size</b>: &nbsp; 000</li>                
+              </ul>
+            </div>
+          </li>
+
+          <br class="half-spacer">
+          <li>Training Setup
+            <div class="dual-container">
+              <ul>
+                <li><b>Num Epochs</b>: &nbsp; 10</li>
+                <li><b>Batch Size</b>: &nbsp; 32</li>
+                <li><b>Learning Rate</b>: &nbsp; 5e-4</li>
+                <li><b>LR Scheduler</b>: &nbsp; pleature</li>
+              </ul>
+              <ul>
+                <li><b>Optimizer</b>: &nbsp; AdamW</li>
+                <li><b>Gradient Accumulation Steps</b>: &nbsp; 4
+                <li><b>Teacher Forcing Ratio</b>: &nbsp; 0.5</li>                
+              </ul>
+            </div>
+          </li>
+        </ul>
+      </div>
     </div>
 
-    <table class="result-table">
-      <thead>
-        <tr>
-          <th>Model Type</th>
-          <th>Dimension</th>
-          <th>Connect Layer</th>
-          <th>Num of Layers</th>
-          <th>Num of Attn Heads</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr>
-          <td><b>Base</b></td>
-          <td>Dimension</td>
-          <td>No</td>
-          <td>N Layers</td>
-          <td>N Heads</td>
-        </tr>
-
-        <tr>
-          <td><b>Wide</b></td>
-          <td>Dimension * 2</td>
-          <td>Yes</td>
-          <td>N Layers</td>
-          <td>N Heads</td>
-        </tr>
-
-        <tr>
-          <td><b>Deep</b></td>
-          <td>Dimension</td>
-          <td>No</td>
-          <td>N Layers * 2</td>
-          <td>N Heads</td>
-        </tr>
-
-        <tr>
-          <td><b>Diverse</b></td>
-          <td>Dimension</td>
-          <td>No</td>
-          <td>N Layers</td>
-          <td>N Heads * 2</td>
-        </tr>
-
-        <tr>
-          <td><b>Large</b></td>
-          <td>Dimension * 2</td>
-          <td>Yes</td>
-          <td>N Layers * 2</td>
-          <td>N Heads * 2</td>
-        </tr>        
-
-      </tbody>
-    </table>
-    <hr>
 
 
-    <hr>
+<!-- Result --> 
+    <h2 id="5">5. &hairsp; Result</h2>
 
-    <h2 id="3">3. &hairsp; Experimental Setup</h2>
-    <div class="small-spacer"></div>
+    <div class="chapter-box">
 
-    <h3 id="3.1">3.1 &hairsp; Data & Training Setup</h3>
-    <table class="result-table">
-      <thead>
-        <tr>
-          <th>Data Setup</th>
-          <th>Training Setup</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
+      <div class="list-container">
+        <ul>
+          <li>Machine Translation</li>
 
-          <td>
-            <ul>
-              <li><b>Translation Task</b>: &nbsp; WMT'14 En-De</li>
-              <li><b>Dialogue Task</b>: &nbsp; Daily Dialogue</li>
-              <li><b>Summarization Task</b>: &nbsp; CNN Daily</li>
-              <li><b>Train Data Volumn</b>: &nbsp; 50,000</li>
-              <li><b>Valid Data Volumn</b>: &nbsp; 5,000</li>
-              <li><b>Test Data Volumn</b>: &nbsp; 100</li>
-              <li><b>Tokenizer Type</b>: &nbsp; BPE</li>
-              <li><b>Vocab Size</b>: &nbsp; 15,000</li>
-            </ul>
-          </td>
+            <table class="result-table">
+              <thead>
+                <tr>
+                  <th>Model Type</th>
+                  <th>Eval Score</th>
+                  <th>Epoch Time</th>
+                  <th>Avg GPU</th>
+                  <th>Max GPU</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Scratch Model</td>
+                  <td>12.16</td>
+                  <td>53s</td>
+                  <td>0.20 GB</td>
+                  <td>1.05 GB</td>
+                </tr>
+                <tr>
+                  <td>PyTorch Model</td>
+                  <td>13.28</td>
+                  <td>45s</td>
+                  <td>0.20GB</td>
+                  <td>0.95GB</td>
+                </tr>
 
-          <td>
-            <ul>
-              <li><b>Num Epochs</b>: &nbsp; 10</li>
-              <li><b>Batch Size</b>: &nbsp; 32</li>
-              <li><b>Learning Rate</b>: &nbsp; 5e-4</li>
-              <li><b>LR Scheduler</b>: &nbsp; pleature</li>
-              <li><b>Optimizer</b>: &nbsp; AdamW</li>
-              <li><b>Gradient Accumulation Steps</b>: &nbsp; 4</li>
-              <li><b>Early Stopping</b>: &nbsp; True</li>
-              <li><b>Early Stop Patience</b>: &nbsp; 3</li>
-            </ul>
-          </td>          
-        </tr>
+              </tbody>
+            </table>
 
-      </tbody>
-    </table>
+          <div class="spacer"></div>
+          <li>Dialogue Generation</li>
 
-    <div class="half-spacer"></div>
-    <h3 id="3.2">3.2 &hairsp; Model Setup</h3>
+            <table class="result-table">
+              <thead>
+                <tr>
+                  <th>Model Type</th>
+                  <th>Eval Score</th>
+                  <th>Epoch Time</th>
+                  <th>Avg GPU</th>
+                  <th>Max GPU</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Scratch Model</td>
+                  <td>12.16</td>
+                  <td>53s</td>
+                  <td>0.20 GB</td>
+                  <td>1.05 GB</td>
+                </tr>
+                <tr>
+                  <td>PyTorch Model</td>
+                  <td>13.28</td>
+                  <td>45s</td>
+                  <td>0.20GB</td>
+                  <td>0.95GB</td>
+                </tr>
 
-    <table class="result-table">
-      <thead>
-        <tr>
-          <th>Model Type</th>
-          <th>Enc Hidden & PFF Dim</th>
-          <th>Dec Hidden & PFF Dim</th>
-          <th>Dec Hidden & PFF Dim</th>
-          <th>Num of Layers</th>
-          <th>Num of Attn Heads</th>
-        </tr>
-      </thead>
+              </tbody>
+            </table>
 
-      <tbody>
-        <tr>
-          <td><b>Base</b></td>
-          <td>Dimension</td>
-          <td>No</td>
-          <td>N Layers</td>
-          <td>N Heads</td>
-        </tr>
+          <div class="spacer"></div>
+          <li>Text Summarization</li>
 
-        <tr>
-          <td><b>Wide</b></td>
-          <td>Dimension * 2</td>
-          <td>Yes</td>
-          <td>N Layers</td>
-          <td>N Heads</td>
-        </tr>
+            <table class="result-table">
+              <thead>
+                <tr>
+                  <th>Model Type</th>
+                  <th>Eval Score</th>
+                  <th>Epoch Time</th>
+                  <th>Avg GPU</th>
+                  <th>Max GPU</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Scratch Model</td>
+                  <td>12.16</td>
+                  <td>53s</td>
+                  <td>0.20 GB</td>
+                  <td>1.05 GB</td>
+                </tr>
+                <tr>
+                  <td>PyTorch Model</td>
+                  <td>13.28</td>
+                  <td>45s</td>
+                  <td>0.20GB</td>
+                  <td>0.95GB</td>
+                </tr>
 
-        <tr>
-          <td><b>Deep</b></td>
-          <td>Dimension</td>
-          <td>No</td>
-          <td>N Layers * 2</td>
-          <td>N Heads</td>
-        </tr>
-
-        <tr>
-          <td><b>Diverse</b></td>
-          <td>Dimension</td>
-          <td>No</td>
-          <td>N Layers</td>
-          <td>N Heads * 2</td>
-        </tr>
-
-        <tr>
-          <td><b>Large</b></td>
-          <td>Dimension * 2</td>
-          <td>Yes</td>
-          <td>N Layers * 2</td>
-          <td>N Heads * 2</td>
-        </tr>        
-
-      </tbody>
-    </table>
-    <hr>
-
+              </tbody>
+            </table>
+        </ul>
+      </div>
+    </div>
 
 
-    <h2 id="4">4. &hairsp; Result</h2>
-    <div class="small-spacer"></div>
-    <table class="result-table">
-      <thead>
-        <tr>
-          <th>Model Type</th>
-          <th>Machine Translation</th>
-          <th>Dialogue Generation</th>
-          <th>Text Summarization</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Baseline Model</td>
-          <td>174</td>
-          <td>7.00</td>
-          <td>79</td>
-        </tr>
+    <h2 id="6">6. &hairsp; Conclusion</h2>
 
-        <tr>
-          <td>Encoder Wide Model</td>
-          <td>69</td>
-          <td>5.47</td>
-          <td>78</td>
-        </tr>
-        <tr>
-          <td>Encoder Deep Model</td>
-          <td>182</td>
-          <td>6.29</td>
-          <td>83</td>
-        </tr>
+    <div class="chapter-box">
 
-        <tr>
-          <td>Decoder Wide Model</td>
-          <td>239</td>
-          <td>3.54</td>
-          <td>79</td>
-        </tr>
-
-        <tr>
-          <td>Decoder Deep Model</td>
-          <td>179</td>
-          <td>6.72</td>
-          <td>79</td>
-        </tr>
-
-        <tr>
-          <td>Large Model</td>
-          <td>85</td>
-          <td>2.91</td>
-          <td>80</td>
-        </tr>
-
-      </tbody>
-    </table>
-    <hr>
+      <div class="list-container">
+        <ul>
+          <li>Machine Translation</li>
+          <li>Machine Translation</li>
+          <li>Machine Translation</li>
+        </ul>
+      </div>
+    </div>
 
 
-    <h2>4. &hairsp; Conclusion</h2>
-    <div class="small-spacer"></div>
-    <p> &nbsp; 프로젝트의 가설은 인코딩과 디코딩의 중요도가 다른 세가지 태스크에서, 단순한 인코더와 디코더의 조작으로 긍정적인 효과를 확인할수 있을것이라는 것이었습니다.
-      이를 위해 총 5가지 모델 변수를 만들어, 각 과제에서 학습 및 성능 측정을 진행했습니다.
-      결과는 ... <br>
-      태스크에 대한 이해를 바탕으로 Transformer를 재량껏 조절한다면, 해당과제에 대한 성능 개선을 이룰수 있는 가능성을 확인했습니다.
-    </p>
-    <hr>  
-
-
-    <h2 id="7" class="h3-mt">5. &hairsp; Reference</h2>
-
-    <a class="reference" href="https://arxiv.org/abs/1706.03762">&nbsp; Attention Is All You Need</a> 
-    <hr>
+    <h2 id="7" class="h3-mt">7. &hairsp; Reference</h2>
+    <div class="chapter-box">
+      <a class="reference" href="https://arxiv.org/abs/1706.03762">&nbsp; Attention Is All You Need</a> 
+    </div>
 
   </div>
 </div>
 
 
 <div class="pagination">
-  <a href="{{ '/transformer_variants' | relative_url }}" class="btn-prev"><span>Transformer Variants</span></a>
-  <a href="{{ '/plm_fusion' | relative_url }}" class="btn-next"><span>PLM Encoder Fusion</span></a>
+  <a href="{{ '/transformer' | relative_url }}" class="btn-prev"><span>Transformer from Scratch</span></a>
+  <a href="{{ '/transformer_variants' | relative_url }}" class="btn-next"><span>Transformer Variants</span></a>
 </div>
