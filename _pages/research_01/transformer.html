@@ -5,17 +5,17 @@ permalink: /transformer
 
 
 <div id="detail">
-  <h1 class="title">Transformer Implementation and Validation</h1>  
+  <h1 class="title">Transformer Implementation from Scratch</h1>  
   <div class="post">
 
     <hr>
     <div class="callout">
       <p class="highlighted-text"><span>Project Objective</span></p>
       <div class="small-spacer"></div>
-      <p>&nbsp; 앞선 프로젝트에서는 RNN을 기반으로한 Sequence to Sequence 모델 구조의 효용성에 대해 면밀히 살펴봤습니다. 
-        하지만 RNN 네트워크는 장기기억력이라는 관점에서 고질적인 문제점을 태생적으로 지니고 있으며, 이를 해결하기 위한 Attention 메커니즘의 활용 역시 기대만큼 좋은 성능을 보이지는 못했습니다.
-        Transformer는 어텐션 메커니즘 만으로 문맥 전체적인 내용을 포착하는 뛰어난 성능과 더불어 병렬처리로 인한 학습의 효율성까지 제고시킨 뛰어난 모델 구조입니다.
-        이 글에서는 Transformer의 구조에 대한 설명과 더불어, 두가지 방식에서의 Code Implementation 방식을 알아봅니다. 또한 이렇게 구현한 Transformer 모델이 세가지 자연어 생성 과제에서 어떤 성능을 보이는지 비교해봅니다.
+      <p>&nbsp; 이 프로젝트에서는 현재 딥러닝 모델링의 가장 유명한 Back Bone 모델인 Transformer를 직접 코드로 처음부터 끝까지 구현하고, 직접 구현한 Scratch Model를 Pytorch 라이브러이에서 제공하는 Transformer모델과 성능 비교하며, 구현이 잘 되었는지를 검증합니다. 
+      프로젝트의 목적은 Transformer에 대한 심도있는 이해와 코드 구현이며, 모델의 성능 검증을 위해서는 세가지 자연어 생성 과제를 선정했습니다.
+      실험 결과 Torch Model이 Scratch Model대비 효율성과 성능 측면 모두에서 더 나은 성과를 보였습니다. 
+      이는 Multi Head Attention을 구현하는 과정에서 고도화의 문제에서 기인한 차이점입니다. 실제 Scratch Model에 Pytorch의 MultiHead Attention 클래스를 사용하면, Torch모델과 거의 동일한 성능및 효율성이 나옴을 확인했습니다.
       </p>
     </div>
 
@@ -31,27 +31,7 @@ permalink: /transformer
         </li>
 
         <li>
-          <a href="#1">1. Transformer</a>
-          <ul>
-            <li>
-              <a href="#1.1">1.1 Transformer Implementation</a>
-            </li>
-            <li>
-              <a href="#1.2">1.2 Encoder</a>
-            </li>
-            <li>
-              <a href="#1.3">1.3 Decoder</a>
-            </li>          
-            <li>
-              <a href="#1.4">1.4 Embeddings</a>
-            </li>
-            <li>
-              <a href="#1.5">1.5 Multi Head Attention</a>
-            </li>
-            <li>
-              <a href="#1.6">1.6 Position wise Feed Forward</a>
-            </li>                                    
-          </ul>
+          <a href="#3">3. &hairsp; Code Implementation</a>
         </li>
 
         <li>
@@ -105,16 +85,103 @@ permalink: /transformer
 
 
 
-<!-- Transformer Implementation -->    
-    <h2 id="1">1. &hairsp; Transformer Implementation</h2>
-    <h3 id="1.1">1.1 &hairsp; Transformer</h3>
-    <p>&nbsp; Transformer Model은 임베딩과, 인코더, 디코더 그리고 Generator로 구성됩니다. x데이터는 임베딩과 인코더를 거쳐 Memory Vector로 변환되고, 디코더는 y데이터와 메모리 벡터를 사용해 최종 Hidden Vector를 생성합니다.
-      그리고 마지막 선형 변환 레이어를 통해 Vocab Size만큼의 Token으로 시퀀스를 변환해서 최종 결과값을 반환합니다.
-    </p>      
+<!-- 2. Background -->    
+    <h2 id="2">2. &hairsp; Background</h2>
+    <div class="chapter-box">
 
-    <div class="code-container">
-      <div class="code-snippet">
-        <pre><code class="python">class Transformer(nn.Module):
+      <div class="list-container">
+        <ul>
+          <li>Transformer</li>
+            <p>&nbsp; 어텐션은 기존 단일 벡터 공간에 모든 시퀀스의 정보를 압축적으로 표현하면서 발생하는 제약을 극복하기 위한 연산 기법을 의미합니다. 매시점마다, 디코딩 과정에서 입력시퀀스에 집중할만한 정보에 더욱 집중해서 정보를 추출하기 위한 기법입니다. 기본적으로 어텐션 연산은 쿼리, 키, 밸류값을 기반으로 행해집니다. 쿼리와 키 값을 토대로, 쿼리와 키 간의 유사도를 측정하고, 유사도 수치를 확률값으로 변환합니다. 이후, 어텐션 확률값을 밸류에 곱해 최종적인 어텐션 값을 도출합니다.
+
+            이 프로젝트에서는 총 세가지의 어텐션 기법을 사용하는데, 각각은 additive, dot product, scaled dot product입니다. 
+
+            Additive Attention은 Bahdanau 어텐션으로도 불리는 유명한 어텐션 기법이고, 이후 루옹에 의한 어텐션 후속 연구에서 가장 많이 사용되는 Dot Product와, 이를 개선한, 그리고 Transformer 어텐션에서 활용되는 Scaled Dot Product를 선정했습니다. 각 어텐션에 대한 상세는 아래와 같습니다.
+            </p>
+            
+
+          <div class="spacer"></div>
+          <li>Multi Head Attention</li>
+
+          <div class="dual-container">
+            <img src="{{ 'assets/img/research_01/bahdanau.png' | relative_url }}" style="width: 27%; height: 20%; display: block; margin: 0 1em;">
+            <p>Additive Attention, 혹은 바다나우 어텐션으로도 불리는 이 어텐션 기법은 이름에서 드러나듯, 어텐션 연산에서 각 값을 더해주는 방식을 사용합니다. 
+            t시점의 예측을 위해, Encoder의 Hidden State들과 t-1 시점의 Hidden State를 비교합니다.
+            </p>
+          </div>
+
+            <div class="latex-container">
+              <div class="equation-item">
+                  <p class="latex-equation">\( \mathbf{Attention \space Score} = W^T_a \tanh(W_b s_{t-1} + W_c H) \)</p>
+              </div>
+              <div class="equation-item">
+                  <p class="latex-equation">\( \mathbf{Attention \space Distribution} = softmax(Attention \space Score) \)</p>
+              </div>
+              <div class="equation-item">
+                  <p class="latex-equation">\( \mathbf{Attention \space Value} = H \cdot Attention \space Distribution \)</p>
+              </div>
+              <div class="equation-item">
+                  <p class="latex-equation">\( {\Large s_t} = \text{Decoder}(y_{t-1}, s_{t-1}, c_t) \)</p>
+              </div>
+            </div>
+
+            <p>&nbsp; Additive Attention, 혹은 바다나우 어텐션으로도 불리는 이 어텐션 기법은 이름에서 드러나듯, 어텐션 연산에서 각 값을 더해주는 방식을 사용합니다. 
+            </p>
+
+          <div class="spacer"></div>
+          <li>Module Connection</li>
+
+          <div class="dual-container">
+            <img src="{{ 'assets/img/research_01/luong.png' | relative_url }}" style="width: 30%; height: 40%; display: block; margin: 0 1em;">
+            <p>Dot Product Attention은 이름에서도 드러나듯, 유사도 측정 과정에서 벡터간의 내적(Dot Product)를 사용합니다. 내적 연산은 두 벡터간의 유사도가 클수록 큰값이, 작을수록 작은 값이 도출되는 연산입니다. 별도의 학습 가능한 가중치가 필요하지 않기에 연산과정이 매우 간단하고 효율적이라는 장점이 존재합니다.
+            </p>
+          </div>
+
+
+            <div class="latex-container">
+              <div class="equation-item">
+                  <p class="latex-equation">\( \mathbf{Attention \space Score} = \frac{QK^T}{\sqrt{d_k}}V \)</p>
+              </div>
+              <div class="equation-item">
+                  <p class="latex-equation">\( \mathbf{Attention \space Distribution} = softmax(Attention \space Score) \)</p>
+              </div>
+              <div class="equation-item">
+                  <p class="latex-equation">\( Attention \space Value = W^T_a \tanh(W_b s_{t-1} + W_c h_i) \)</p>
+              </div>
+              <div class="equation-item">
+                  <p class="latex-equation">\( {\Large s_t} = \text{Decoder}(y_{t-1}, s_{t-1}, c_t) \)</p>
+              </div>              
+            </div>
+
+            <p> Luong Attention이라고도 불리며, 이는 Additive Attention의 복잡한 연산과정을, 단순한 내적을 통한 유사도 계산으로 대체하며, 계산량을 줄인 어텐션 기법입니다.
+
+            </p>
+
+          <div class="half-spacer"></div>
+          <li>Embeddings</li>
+            <p> 앞서 소개한 Dot Product Attention 기법이, 연산 효율성과 성능 측면에서도 좋은 모습을 보이고는 있지만, 다음과 같은 문제점이 존재합니다.
+              1. 
+            </p>
+
+        </ul>
+      </div>
+    </div>
+
+
+
+
+<!-- Code Implementation -->    
+    <h2 id="3">3. &hairsp; Code Implementation</h2>
+
+    <div class="chapter-box">
+
+      <div class="list-container">
+        <ul>
+          <li>Scratch Model Implementation</li>
+
+            <div class="code-container">
+              <div class="code-snippet">
+                <pre><code class="python">class Transformer(nn.Module):
     def __init__(self, config):
         super(Transformer, self).__init__()
 
@@ -153,248 +220,61 @@ permalink: /transformer
         dec_out = self.decoder(y, memory, e_mask, d_mask)
         
         return self.generator(dec_out)</code></pre>
-      </div>
-    </div>
-    <hr>
+            </div>
+          </div>
 
-    <h3 id="1.2">1.2 &hairsp; Encoder</h3>
-    <p>Transformer Model은 임베딩과, 인코더, 디코더 그리고 Generator로 구성됩니다. x데이터는 임베딩과 인코더를 거쳐 Memory Vector로 변환되고, 디코더는 y데이터와 메모리 벡터를 사용해 최종 Hidden Vector를 생성합니다.
-      그리고 마지막 선형 변환 레이어를 통해 Vocab Size만큼의 Token으로 시퀀스를 변환해서 최종 결과값을 반환합니다.
-    </p>
-    <div class="code-container">
-      <div class="code-snippet">
-        <pre><code class="python">class EncoderLayer(nn.Module):
+
+          <div class="spacer"></div>
+          <li>Pytorch Model Implementation</li>
+
+            <div class="code-container">
+              <div class="code-snippet">
+                <pre><code class="python">class Transformer(nn.Module):
     def __init__(self, config):
-        super().__init__()
+        super(Transformer, self).__init__()
 
-        self.self_attn = MultiHeadAttention(config)
-        self.pff = PositionwiseFeedForward(config)
-
-        hidden_dim = config.hidden_dim
-        self.self_attn_norm = nn.LayerNorm(hidden_dim)
-        self.pff_norm = nn.LayerNorm(hidden_dim)
-        
-        self.dropout = nn.Dropout(config.dropout_ratio)
-
-
-    def forward(self, x, e_mask):
-        _x = self.self_attn(x, x, x, e_mask)
-        x = self.self_attn_norm(x + self.dropout(_x))
-        _x = self.pff(x)
-        x = self.pff_norm(x + self.dropout(_x))
-
-        return x
-
-
-
-class Encoder(nn.Module):
-    def __init__(self, config):
-        super().__init__()
-
+        self.pad_id = config.pad_id
         self.device = config.device
-        self.emb = Embeddings(config)
-        self.dropout = nn.Dropout(config.dropout_ratio)
+        self.vocab_size = config.vocab_size
 
-        self.layers = nn.ModuleList(
-            [EncoderLayer(config) for _ in range(config.n_layers)]
-        )
+        self.encoder = Encoder(config)
+        self.decoder = Decoder(config)
+        self.generator = nn.Linear(config.hidden_dim, self.vocab_size)
 
 
-    def forward(self, x, e_mask):
-        x = self.emb(x)
-        for layer in self.layers:
-            x = layer(x, e_mask)
-        return x</code></pre>
+    def pad_mask(self, x):
+        return (x != self.pad_id).unsqueeze(1).unsqueeze(2)
+
+
+    def dec_mask(self, x):
+        sz = x.size(1)
+        pad_mask = self.pad_mask(x)
+        sub_mask = torch.tril(torch.ones((sz, sz), device=self.device)).bool()
+        return pad_mask & sub_mask
+
+
+    @staticmethod
+    def shift_y(x):
+        return x[:, :-1], x[:, 1:]
+
+
+    def forward(self, x, y):
+        y, label = self.shift_y(y)
+
+        e_mask = self.pad_mask(x) 
+        d_mask = self.dec_mask(y)
+
+        memory = self.encoder(x, e_mask)
+        dec_out = self.decoder(y, memory, e_mask, d_mask)
+        
+        return self.generator(dec_out)</code></pre>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-    <hr>
-
-
-    <h3 id="1.3">1.3 &hairsp; Decoder</h3>
-    <p>디코더는 디코더 레이어를 중첩시킨 구조로 이루어져 있습니다. 각각의 디코더 레이어에서는 
-    </p>
-    <div class="code-container">
-      <div class="code-snippet">
-        <pre><code class="python">class DecoderLayer(nn.Module):
-    def __init__(self, config):
-        super().__init__()
-
-        self.self_attn = MultiHeadAttention(config)
-        self.enc_attn = MultiHeadAttention(config)
-        self.pff = PositionwiseFeedForward(config)
-
-        hidden_dim = config.hidden_dim
-        self.self_attn_norm = nn.LayerNorm(hidden_dim)
-        self.enc_attn_norm = nn.LayerNorm(hidden_dim)
-        self.pff_norm = nn.LayerNorm(hidden_dim)
-
-        self.dropout = nn.Dropout(config.dropout_ratio)
-
-
-    def forward(self, x, m, e_mask, d_mask):
-
-        _x = self.self_attn(x, x, x, d_mask)
-        x = self.self_attn_norm(x + self.dropout(_x))
-
-        _x = self.enc_attn(x, m, m, e_mask)
-        x = self.enc_attn_norm(x + self.dropout(_x))
-
-        _x = self.pff(x)
-        x = self.pff_norm(x + self.dropout(_x))
-
-        return x
 
 
 
-class Decoder(nn.Module):
-    def __init__(self, config):
-        super().__init__()
-
-        self.device = config.device
-        self.emb = Embeddings(config)
-        self.dropout = nn.Dropout(config.dropout_ratio)
-
-        self.layers = nn.ModuleList(
-            [DecoderLayer(config) for _ in range(config.n_layers)]
-        )
-
-
-    def forward(self, x, memory, e_mask, d_mask):
-        x = self.emb(x)
-        for layer in self.layers:
-            x = layer(x, memory, e_mask, d_mask)
-        return x</code></pre>
-      </div>
-    </div>
-    <hr>
-
-
-    <h3 id="1.4">1.4 &hairsp; Embedding</h3>
-    <p>디코더는 디코더 레이어를 중첩시킨 구조로 이루어져 있습니다. 각각의 디코더 레이어에서는 
-    </p>
-    <div class="code-container">
-      <div class="code-snippet">
-        <pre><code class="python">class PositionalEncoding(nn.Module):
-    def __init__(self, config):
-        super(PositionalEncoding, self).__init__()
-        
-        max_len = config.max_len if config.task != 'summarization' else config.max_len * 4
-        pe = torch.zeros(max_len, config.emb_dim)
-        
-        position = torch.arange(0, max_len).unsqueeze(1)
-        div_term = torch.exp(
-            torch.arange(0, config.emb_dim, 2) * -(math.log(10000.0) / config.emb_dim)
-        )
-        
-        pe[:, 0::2] = torch.sin(position * div_term)
-        pe[:, 1::2] = torch.cos(position * div_term)
-        pe = pe.unsqueeze(0)
-
-        self.register_buffer('pe', pe)
-        
-
-    def forward(self, x):
-        return x + self.pe[:, :x.size(1)]
-
-
-
-class Embeddings(nn.Module):
-    def __init__(self, config):
-        super(Embeddings, self).__init__()
-
-        self.tok_emb = nn.Embedding(config.vocab_size, config.emb_dim)
-        self.scale = math.sqrt(config.emb_dim)
-
-        self.pos_emb = PositionalEncoding(config)
-        self.pos_dropout = nn.Dropout(config.dropout_ratio)
-
-        self.use_fc_layer = (config.emb_dim != config.hidden_dim)
-        if self.use_fc_layer:
-            self.fc = nn.Linear(config.emb_dim, config.hidden_dim)
-            self.fc_dropout = nn.Dropout(config.dropout_ratio)
-
-
-    def forward(self, x):
-        out = self.tok_emb(x) * self.scale
-        out = self.pos_dropout(self.pos_emb(out))
-
-        if not self.use_fc_layer:
-            return out
-        return self.fc_dropout(self.fc(out))</code></pre>
-      </div>
-    </div>
-    <hr>
-
-
-    <h3 id="1.5">1.5 &hairsp; Multi Head Attention</h3>
-    <p>디코더는 디코더 레이어를 중첩시킨 구조로 이루어져 있습니다. 각각의 디코더 레이어에서는 
-    </p>
-    <div class="code-container">
-      <div class="code-snippet">
-        <pre><code class="python">class MultiHeadAttention(nn.Module):
-    def __init__(self, config):
-        super().__init__()
-
-        hidden_dim = config.hidden_dim
-        self.n_heads = config.n_heads
-
-        assert hidden_dim // self.n_heads
-        self.head_dim = hidden_dim // self.n_heads
-        
-        self.dropout = nn.Dropout(config.dropout_ratio)
-        self.linears = clones(nn.Linear(hidden_dim, hidden_dim), 4)
-        self.scale = torch.sqrt(torch.FloatTensor([self.head_dim])).to(config.device)
-
-
-    def forward(self, query, key, value, mask = None):
-        orig_shape = list(query.shape)
-        split_shape = [query.size(0), -1, self.n_heads, self.head_dim]
-
-        Q, K, V = [lin(x).view(split_shape).transpose(1, 2) \
-                   for lin, x in zip(self.linears, (query, key, value))]   
-
-        score = torch.matmul(Q, K.permute(0, 1, 3, 2)) / self.scale
-
-        if mask is not None:
-            score = score.masked_fill(mask==0, -1e10)
-
-        attention = torch.softmax(score, dim=-1)
-
-        x = torch.matmul(self.dropout(attention), V)
-        
-        x = x.permute(0, 2, 1, 3).contiguous()
-        x = x.view(orig_shape)
-
-        del Q, K, V
-
-        return self.linears[-1](x)</code></pre>
-      </div>
-    </div>
-    <hr>
-
-
-    <h3 id="1.6">1.6 &hairsp; Position-wise Feed Forward</h3>
-    <p>디코더는 디코더 레이어를 중첩시킨 구조로 이루어져 있습니다. 각각의 디코더 레이어에서는 
-    </p>
-
-    <div class="code-container">
-      <div class="code-snippet">
-        <pre><code class="python">class PositionwiseFeedForward(nn.Module):
-    def __init__(self, config):
-        super().__init__()
-
-        self.fc_1 = nn.Linear(config.hidden_dim, config.pff_dim)
-        self.fc_2 = nn.Linear(config.pff_dim, config.hidden_dim)
-        self.dropout = nn.Dropout(config.dropout_ratio)
-
-
-    def forward(self, x):
-        x = self.dropout(F.gelu(self.fc_1(x)))
-        return self.fc_2(x)</code></pre>
-      </div>
-    </div>
-    <div class="half-spacer"></div>
-    <hr>
 
 
 
@@ -460,116 +340,132 @@ class Embeddings(nn.Module):
 
 
 <!-- Result --> 
-    <h2>3. &hairsp; Result</h2>
-    <h3>Machine Translation</h3>
-    <table class="result-table">
-      <thead>
-        <tr>
-          <th>Model Type</th>
-          <th>Eval Score</th>
-          <th>Epoch Time</th>
-          <th>Avg GPU</th>
-          <th>Max GPU</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Scratch Model</td>
-          <td>12.16</td>
-          <td>53s</td>
-          <td>0.20 GB</td>
-          <td>1.05 GB</td>
-        </tr>
-        <tr>
-          <td>PyTorch Model</td>
-          <td>13.28</td>
-          <td>45s</td>
-          <td>0.20GB</td>
-          <td>0.95GB</td>
-        </tr>
+    <h2 id="5">5. &hairsp; Result</h2>
 
-      </tbody>
-    </table>
+    <div class="chapter-box">
+
+      <div class="list-container">
+        <ul>
+          <li>Machine Translation</li>
+
+            <table class="result-table">
+              <thead>
+                <tr>
+                  <th>Model Type</th>
+                  <th>Eval Score</th>
+                  <th>Epoch Time</th>
+                  <th>Avg GPU</th>
+                  <th>Max GPU</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Scratch Model</td>
+                  <td>12.16</td>
+                  <td>53s</td>
+                  <td>0.20 GB</td>
+                  <td>1.05 GB</td>
+                </tr>
+                <tr>
+                  <td>PyTorch Model</td>
+                  <td>13.28</td>
+                  <td>45s</td>
+                  <td>0.20GB</td>
+                  <td>0.95GB</td>
+                </tr>
+
+              </tbody>
+            </table>
+
+          <div class="spacer"></div>
+          <li>Dialogue Generation</li>
+
+            <table class="result-table">
+              <thead>
+                <tr>
+                  <th>Model Type</th>
+                  <th>Eval Score</th>
+                  <th>Epoch Time</th>
+                  <th>Avg GPU</th>
+                  <th>Max GPU</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Scratch Model</td>
+                  <td>12.16</td>
+                  <td>53s</td>
+                  <td>0.20 GB</td>
+                  <td>1.05 GB</td>
+                </tr>
+                <tr>
+                  <td>PyTorch Model</td>
+                  <td>13.28</td>
+                  <td>45s</td>
+                  <td>0.20GB</td>
+                  <td>0.95GB</td>
+                </tr>
+
+              </tbody>
+            </table>
+
+          <div class="spacer"></div>
+          <li>Text Summarization</li>
+
+            <table class="result-table">
+              <thead>
+                <tr>
+                  <th>Model Type</th>
+                  <th>Eval Score</th>
+                  <th>Epoch Time</th>
+                  <th>Avg GPU</th>
+                  <th>Max GPU</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Scratch Model</td>
+                  <td>12.16</td>
+                  <td>53s</td>
+                  <td>0.20 GB</td>
+                  <td>1.05 GB</td>
+                </tr>
+                <tr>
+                  <td>PyTorch Model</td>
+                  <td>13.28</td>
+                  <td>45s</td>
+                  <td>0.20GB</td>
+                  <td>0.95GB</td>
+                </tr>
+
+              </tbody>
+            </table>
+        </ul>
+      </div>
+    </div>
 
 
-    <div class="half-spacer"></div>
-    <h3>Dialogue Generation</h3>
-    <table class="result-table">
-      <thead>
-        <tr>
-          <th>Model Type</th>
-          <th>Eval Score</th>
-          <th>Epoch Time</th>
-          <th>Avg GPU</th>
-          <th>Max GPU</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Scratch Model</td>
-          <td>1.29</td>
-          <td>52s</td>
-          <td>0.20 GB</td>
-          <td>0.91 GB</td>
-        </tr>
-        <tr>
-          <td>PyTorch Model</td>
-          <td>2.47</td>
-          <td>45s</td>
-          <td>0.20GB</td>
-          <td>0.83GB</td>
-        </tr>
-
-      </tbody>
-    </table>
-
-
-    <div class="half-spacer"></div>
-    <h3>Text Summarization</h3>
-    <table class="result-table">
-      <thead>
-        <tr>
-          <th>Model Type</th>
-          <th>Eval Score</th>
-          <th>Epoch Time</th>
-          <th>Avg GPU</th>
-          <th>Max GPU</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Scratch Model</td>
-          <td>5.84</td>
-          <td> 6m 27s</td>
-          <td>0.22 GB</td>
-          <td>5.63 GB</td>
-        </tr>
-        <tr>
-          <td>PyTorch Model</td>
-          <td>7.94</td>
-          <td> 2m 50s</td>
-          <td>0.21GB</td>
-          <td>2.90GB</td>
-        </tr>
-
-      </tbody>
-    </table>
-    <div class="half-spacer"></div>
-    <hr>
 
     <h2>4. &hairsp; Conclusion</h2>
-    <p> &nbsp; 이전의 RNN 계열의 모델들 보다 속도 측면, 그리고 성능 측면에서 굉장히 진일보 했음을 실험을 통해 직접적으로 확인할 수 있었음. 구현과정에서 복잡성이 증가 했다는 단점역시, Pytorch 라이브러리의 Transformer 모델을 통해 간편하게 사용할 수 있는 편의성이 있음.
 
-    위의 결과를 보면, 성능, 시간, 메모리 사용 모든 측면에서 Pytorch에서 제공하는 모델이 우수함을 알 수 있습니다. 이는 Attention클래스에서 더욱 다양하고, 정밀한 코드 구현으로 인한 차이가 가장 큽니다. 그래도 대체 불가능할 정도로 차이가 많이 나는것은 아니라는 점이 고무적이긴 합니다.
+    <div class="chapter-box">
 
-    </p>  
+      <div class="list-container">
+        <ul>
+          <li>Machine Translation</li>
+          <li>Machine Translation</li>
+          <li>Machine Translation</li>
+        </ul>
+      </div>
+    </div>
+
 
     <h2 id="7" class="h3-mt">5. &hairsp; Reference</h2>
-
-    <a class="reference" href="https://arxiv.org/abs/1706.03762">&nbsp; Attention Is All You Need</a> <br> 
-    <a class="reference" href="http://nlp.seas.harvard.edu/annotated-transformer/">&nbsp; The Annotated Transformer</a> <br> 
-    <a class="reference" href="https://pytorch.org/docs/stable/generated/torch.nn.Transformer.html">&nbsp; Pytorch Transformer Official Page</a>
-    <hr>
+    <div class="chapter-box">
+      <a class="reference" href="https://arxiv.org/abs/1706.03762">&nbsp; Attention Is All You Need</a> <br> 
+      <a class="reference" href="http://nlp.seas.harvard.edu/annotated-transformer/">&nbsp; The Annotated Transformer</a> <br> 
+      <a class="reference" href="https://pytorch.org/docs/stable/generated/torch.nn.Transformer.html">&nbsp; Pytorch Transformer Official Page</a>
+    </div>
 
   </div>
 </div>

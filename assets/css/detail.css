@@ -209,7 +209,6 @@
 .list-container {
   margin: 0 1em;
   color: #4c4c4c;
-  line-height: 2;
 }
 .list-container ul {
   display: flex;
@@ -220,11 +219,13 @@
   font-weight: bold;
   list-style-type: disc;
   font-size: 16px;
+  line-height: 1.7;
 }
 .list-container ul li ul li {
   font-weight: normal;
   list-style-type: circle;
   font-size: 15px;
+  line-height: 2;
 }
 
 
@@ -234,7 +235,7 @@
   height: 1em;
 }
 .half-spacer {
-  height: 2em;
+  height: 2.5em;
 }
 .spacer {
   height: 3em;
@@ -272,16 +273,17 @@
   width: 95%;
   border-collapse: collapse;
   margin: 0.5em 1em;
+  font-size: 15px;
   color: #4c4c4c;
 }
 .result-table th {
   background-color: #f2f2f2;
-  padding: 5px;
+  padding: 5px 0;
   text-align: center;
   border: 1px solid #ddd;
 }
 .result-table td {
-  padding: 5px;
+  padding: 5px 0;
   text-align: center;
   border: 1px solid #ddd;
 }
@@ -305,17 +307,17 @@
   position: relative; 
   padding-left: 10px; 
   text-decoration: none; 
-  font-size: 16px;
+  font-size: 15px;
   font-family: "Arial", serif;
   font-style: italic;
+  font-weight: bold;
   color: #4c4c4c;    
   letter-spacing: 1px;
-  line-height: 1.9; 
-  margin-left: 8px;
+  line-height: 2.1; 
 }
 .reference::before {
   content: '\2022'; /* dot unicode */
-  font-size: 16px; /* dot size */
+  font-size: 15px; /* dot size */
   color: #4c4c4c; /* dot color */
   position: absolute; 
   left: 0; /* align left */
@@ -334,7 +336,7 @@
   text-align: center;
 }
 .latex-equation {
-    font-size: 15px; 
+    font-size: 14px; 
     margin: 10px 0;
     display: inline-block;
     white-space: nowrap;
@@ -389,8 +391,6 @@
 .dual-container {
   display: flex;
   align-items: center;
-  margin: 0.5em 1em;
-  font-size: 15.5px;
   color: #4c4c4c;
   line-height: 1.6;
 }

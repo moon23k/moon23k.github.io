@@ -66,22 +66,12 @@ permalink: /rnn_seq2seq
             이 프로젝트에서는 대표적 순환 신경망 구조인 RNN, LSTM, GRU를 사용해 Sequence to Sequene 모델을 구현하고, 이를 기계 번역, 대화 생성, 문서 요약이라는 세 가지 자연어 생성과에서의 성능을 비교 분석합니다.
             </p>
 
-          <br class="half-spacer">
-          <li>Hypothesis
-            <ul>
-              <li style="font-weight: normal;">LSTM, GRU, RNN 순으로 높은 성능</li>
-              <li style="font-weight: normal;">RNN, GRU, LSTM 순으로 빠른 학습</li>
-              <li style="font-weight: normal;">LSTM이 특히 긴 텍스트를 다루는 문서 요약에서 강점을 지닐 것으로 예측</li>
-              <li style="font-weight: normal;">상대적으로 시퀀스의 길이가 짧은 대화 생성에서는 LSTM이 약세를 보일 것으로 예측</li>
-            </ul>
-          </li>
-
-          <br class="half-spacer">
+          <div class="spacer"></div>
           <li>Objective
             <ul>
               <li style="font-weight: normal;">RNN, LSTM, GRU 을 활용한 seq2seq 모델링 방식의 이해</li>
               <li style="font-weight: normal;">세 가지 순환 신경망의 성능 비교 검증</li>
-              <li style="font-weight: normal;">가설에 대한 검증</li>
+              <li style="font-weight: normal;">LSTM, GRU, RNN 순으로 성능 평가 순위가 나올 것이라는 가설 검증</li>
               <li style="font-weight: normal;">실험 결과를 통해, 이후 자연어 생성을 위한 모델링 성능의 기준점을 확립</li>
             </ul>
           </li>
@@ -93,7 +83,7 @@ permalink: /rnn_seq2seq
 
 
 
-<!-- 1. RNN Cells -->    
+<!-- 2. Background -->    
     <h2 id="2">2. &hairsp; Background</h2>
     <div class="chapter-box">
       <p> &nbsp; 딥러닝 모델을 구성하는 가장 기초적인 레이어인 Fully-Connected Layer의 경우, 입력값에 가중치를 곱하고, 편향을 더한 값을 다음 레이어로 전달합니다. 이때 레이어 간에 공유되는 정보가 없습니다.
@@ -201,13 +191,13 @@ permalink: /rnn_seq2seq
             이 구조의 문제점은 장기기억력 이슈가 생긴다는 것.
             </p>          
 
-          <br class="half-spacer">
+          <div class="half-spacer"></div>
           <li>RNN Seq2Seq</li>
             <img src="{{ 'assets/img/research_01/seq2seq.png' | relative_url }}" style="width: 400px; height: 130px; display: block; margin: 2em auto 1em auto;">
             <p>&nbsp; 장기기억력의 문제를 해소하기 위해, Encoder와 Decoder로 이루어 진 모델 구조입니다. "Sequence to Sequence Learning with Neural Networks" 에서 제시된 모델 구조.
             </p>
 
-          <br class="half-spacer">
+          <div class="half-spacer"></div>
           <li>Code Implementation</li>
             <div class="code-container">
               <div class="code-snippet">
@@ -280,7 +270,7 @@ permalink: /rnn_seq2seq
             </div>
           </li>
 
-          <br class="half-spacer">
+          <div class="half-spacer"></div>
           <li>Model Setup
             <div class="dual-container">
               <ul>
@@ -296,7 +286,7 @@ permalink: /rnn_seq2seq
             </div>
           </li>
 
-          <br class="half-spacer">
+          <div class="half-spacer"></div>
           <li>Training Setup
             <div class="dual-container">
               <ul>
@@ -459,12 +449,12 @@ permalink: /rnn_seq2seq
             <p>&nbsp; 토큰의 벡터 변환을 위한 Embedding Layer와 실제 연산을 위한 순환 신경망 레이어만으로 구성된 단순산 Encoder, Decoder 구조로 이루어져 있으며, 
             </p>
 
-          <br class="half-spacer">
+          <div class="half-spacer"></div>
           <li>세 가지 순환 신경망의 성능 비교 검증</li>
             <p>LSTM은 게이트 메커니즘을 통해 장기 의존성 문제를 해결하는 데 강점을 보입니다. 복잡한 문맥을 학습하고 기억하는 데 탁월하며, 긴 시퀀스 데이터에서 뛰어난 성능을 발휘할 수 있습니다. 하지만 LSTM은 더 많은 파라미터를 가지고 있어서 더 많은 데이터와 계산 리소스가 필요할 수 있습니다.
             </p>
 
-          <br class="half-spacer">
+          <div class="half-spacer"></div>
           <li>가설 검증
             <ul>
               <li>LSTM, GRU, RNN 순으로 높은 성능</li>
@@ -479,8 +469,7 @@ permalink: /rnn_seq2seq
             </ul>
           </li>
             
-
-          <br class="half-spacer">
+          <div class="half-spacer"></div>
           <li>최소 기준치 확립</li>
             <p>앞서 언급했듯이 순환 신경망을 사용한 Seq2Seq모델은 앞으로 다루게 될 다양한 Seq2Seq 모델들의 시작점입니다. 고도화 된 모델일지라도 하이퍼 파라미터 설정이나, 훈련 방식 등의 이유에서 잘못된 성능이 나올수도 있습니다. 이때, 최소한의 동작은 하는 구나 하는 판단의 근거로 다음과 같은 스코어를 활용할 수 있습니다. <br> 
               기계번역 BLEU Score: 00.00, 대화 생성 Rouge Score: 00.00, 문서 요약 Rouge Score: 00.00 이하의 성능ㅇ
