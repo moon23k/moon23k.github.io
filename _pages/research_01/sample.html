@@ -1,22 +1,23 @@
 ---
 layout: default
-permalink: /multilingual
+permalink: /sample
 ---
 
 
 <div id="detail">
-  <h1 class="title">Multi-Lingual Translation Model</h1>  
+  <h1 class="title">Seq2Seq Application Methods of Pretrained Language Encoder</h1>
+    
   <div class="post">
+
+
+
 
     <hr>
     <div class="callout">
       <p class="highlighted-text"><span>Project Objective</span></p>
       <div class="small-spacer"></div>
-      <p>&nbsp; 이 프로젝트에서는 다언어를 지원하는 번역 모델에 대한 통합적인 연구를 진행합니다.
-        WMT 14의 En-De, En-Cs, En-Cz를 Task로 선정했으며, 영어 문장을 입력값으로 받아, 사용자의 필요에 따라 독일어, 체코어 등으로 변환할 수 있는 다언어 생성 가능한 모델의 개발을 목적으로 합니다. 이런 다언어 이해를 위해 T5의 학습방법을 참조해서 Prefix를 활용한 학습을 진행합니다. 
-        그리고 더 나은 성능을 위한 Balance 탐구와 그 적용 후 성능을 확인합니다.
-
-        다언어 지원에 관련한 지식을 직관적으로 확인하고, 인사이트를 공유합니다.
+      <p>&nbsp; 이 프로젝트에서는 사전학습된 언어 인코더 모델을 Seq2Seq 아키텍처에서 활용하기 위한 세 가지 방법론을 구현하고, 각 방법론의 성능을 세 가지 자연어 생성 과제에서 비교합니다. 변인이 되는 세 가지 모델구조는 각각 Simple, Fused, Full Model이라고 명명하고 있으며, 각 방법론의 성능은 ~~하게 나왔습니다. 이를 통해 ~~하다는 사실을 확인할 수 있었습니다.
+      실험에 대한 자세한 코드 구현은 "~~"에서 확인 할 수 있습니다.
       </p>
     </div>
 
@@ -28,11 +29,11 @@ permalink: /multilingual
         </li>
 
         <li>
-          <a href="#2">2. &hairsp; Model</a>
+          <a href="#2">2. &hairsp; Background</a>
         </li>
 
         <li>
-          <a href="#3">3. &hairsp; Training</a>
+          <a href="#3">3. &hairsp; Code Implementation</a>
         </li>
 
         <li>
@@ -55,6 +56,7 @@ permalink: /multilingual
     </div>
     <hr>
 
+
 <!-- 1. Introduction -->    
     <h2 id="1">&hairsp; 1. &hairsp; Introduction</h2>
     <div class="chapter-box">
@@ -62,18 +64,19 @@ permalink: /multilingual
       <div class="list-container">
         <ul>
           <li>Description</li>
-          <p>&nbsp; 기계 번역은 가장 유명한 자연어 생성과제중 하나입니다. 덕분에 단일 언어 번역 과제에서의 성능을 향상시키기 위한 모델 관점에서의, 학습법 관점에서의 다양한 연구들이 있습니다. 하지만, 다언어 번역을 위한 모델링 및 학습 방식에 대한 연구는 상대적으로 부족합니다. 이 프로젝트에서는 다언어 번역 모델에 대한 연구가 부족하다는 문제점을 직접 해결하려 합니다.
-          다언어 번역도 크게 세 가지로 나누어볼수 있습니다. 다언어를 이해하고, 하나의 언어로 변환하는 모델. 하나의 언어를 이해하고, 다언어로 표현할 수 있는 모델. 다언어를 이해하고, 다언어로 변환할 수 있는 모델.
-          각 모델은 인코더 혹은 디코더의 무게중심이 상이합니다. 첫번째는 인코더의 성능이, 두번째는 디코더의 성능이, 마지막은 인코더와 디코더가 모두 중요하게 작용합니다.
-
-          </p>
+            <p> &nbsp; 사전학습 모델들은 다양한 자연어 처리 과제에서 좋은 성능을 보입니다. 처리하고자 하는 과제의 목적성에 맞게 사전학습 모델의 구조 역시 다양합니다.
+            BERT처럼 Encoding을 중시하는 모델구조, GPT처럼 Decoding을 중시하는 구조, 그리고 BART 처럼 Encoder-Decoder로 구성된 모델등.
+            그 중에서도 BERT 계열의 모델들이 가장 많음. 
+            때문에 Seq2Seq 모델에서 단순히 사전학습된 Seq2Seq 모델을 사용하는 것을 넘어, 이미 잘 구축되어 있는 Pretrained Language Encoder를 Seq2Seq에서 활용하기 위한 세 가지 방법론을 직접 구현하고,
+            자연어 생성 문제에서 비교 분석해봅니다.   
+            </p>
 
           <div class="half-spacer"></div>
           <li>Objective
             <ul>
-              <li style="font-weight: normal;">다언어 번역을 위한 깊은 이해 증진</li>
-              <li style="font-weight: normal;">인코더와 디코더의 디자인 밸런스 조정을 통해 목적에 맞는 모델 디자인 적합성 확인</li>
-              <li style="font-weight: normal;">다언어 모델링의 가능성을 다양한 방면에서 확인</li>
+              <li style="font-weight: normal;">사전학습 인코더 모델을 생성과제에서 사용하기 위한 지식 습득</li>
+              <li style="font-weight: normal;">세 가지 방법론의 성능 비교 검증</li>
+              <li style="font-weight: normal;">실험 결과를 통해, 이후 자연어 생성을 위한 모델링 다양성 확보</li>
             </ul>
           </li>
 
@@ -84,33 +87,114 @@ permalink: /multilingual
 
 
 
-<!-- 2. Model -->    
+<!-- 2. Background -->    
     <h2 id="2">&hairsp; 2. &hairsp; Background</h2>
     <div class="chapter-box">
 
       <div class="list-container">
         <ul>
-          <li>Multi Encoding Single Decoding</li>
-          <p>&nbsp; 프로젝트의 실험에서는 한국어-영어 번역과제를 선정했습니다. 이를 위한 데이터 셋으로는 Ai Hub의 공개데이터를 사용했습니다. 총 10개의 세부 항목으로 나누어진 데이터 중, 가장 범용적인 언어 표현 도메인으로 이루어진 000 데이터 들을 사용합니다. 총 데이터 개수는 000개이며, 이 중, 학습, 검증, 테스트 데이터 셋으로 각각 000 개씩 사용합니다. 데이터 예시는 아래와 같습니다. 
-          </p>
+          <li>PLE Encoder Model</li>
+            <div class="dual-container">
+              <img src="{{ 'assets/img/research_01/standard_transformer.png' | relative_url }}" style="width: 27%; height: 25%;">
+              <p>&nbsp; Transformer Seq2Seq 모델 구조에서, Encoder를 Pretrained Language Encoder Model로 대체한 모델입니다. 연산은 기존 Transformer Seq2Seq의 연산 과정과 동일하게 적용됩니다. Encoder는 Context Vector를 생성하고, Decoder는 Context Vector와 Teacher Forcing을 활용해 예측값을 생성하는 방식으로 학습이 진행됩니다..
+              </p>
+            </div>      
 
           <div class="spacer"></div>
-          <li>Single Encoding Multi Decoding</li>
-          <p>&nbsp; PLE Fused Model은 "Incorporating BERT into Neural Machine Translation" 논문에서 제시한 모델 구조를 사용합니다. 사전학습된 인코더 모델을 그대로 인코더로만 사용하는것이 아니라, 인코딩과 디코딩 과정에 추가적인 정보전달을 위한 모델로 활용합니다.
-          </p>
+          <li>PLE Fusion Model</li>
+          <div class="dual-container">
+            <img src="{{ 'assets/img/research_01/fusion.png' | relative_url }}" style="width: 40%; height: 40%;">
+            <p>&nbsp; PLE Fused Model은 "Incorporating BERT into Neural Machine Translation" 논문에서 제시한 모델 구조를 사용합니다. 사전학습된 인코더 모델을 그대로 인코더로만 사용하는것이 아니라, 인코딩과 디코딩 과정에 추가적인 정보전달을 위한 모델로 활용합니다.
+            </p>
+          </div>
 
           <div class="spacer"></div>
-          <li>Multi Encoding Multi Decoding</li>
-          <p>&nbsp; PLE Fused Model은 "Incorporating BERT into Neural Machine Translation" 논문에서 제시한 모델 구조를 사용합니다. 사전학습된 인코더 모델을 그대로 인코더로만 사용하는것이 아니라, 인코딩과 디코딩 과정에 추가적인 정보전달을 위한 모델로 활용합니다.
+          <li>PLE Encoder Decoder Model</li>          
+          <p>&nbsp; PLE Encoder Decoder Model은 Transformer Encoder & Decoder 모두에 Pretrained Language Encoder Model의 학습된 가중치를 활용하는 방법입니다.
+            구현에서는 Hugging Face의 EncoderDecoder Model을 활용합니다.
           </p>
-
+          
         </ul>
       </div>
     </div>
 
 
-<!-- 4. Experimental Setup -->
-    <h2 id="4">&hairsp; 4. &hairsp; Experimental Setup</h2>
+
+<!-- Code Implementation -->    
+    <h2 id="3">&hairsp; 3. &hairsp; Code Implementation</h2>
+    <div class="chapter-box">
+
+      <div class="list-container">
+        <ul>
+          <li>PLE Encoder</li>
+
+          <div class="code-container">
+            <div class="code-snippet">
+              <pre><code class="python">def generate_signal(length, channels, min_timescale=1.0, max_timescale=1.0e4):
+        position = np.arange(length)
+        num_timescales = channels // 2
+        log_timescale_increment = ( math.log(float(max_timescale) / float(min_timescale)) / (float(num_timescales) - 1))
+        inv_timescales = min_timescale * np.exp(np.arange(num_timescales).astype(np.float) * -log_timescale_increment)
+        scaled_time = np.expand_dims(position, 1) * np.expand_dims(inv_timescales, 0)
+
+        signal = np.concatenate([np.sin(scaled_time), np.cos(scaled_time)], axis=1)
+        signal = np.pad(signal, [[0, 0], [0, channels % 2]], 'constant', constant_values=[0.0, 0.0])
+        signal =  signal.reshape([1, length, channels])
+
+        return torch.from_numpy(signal).type(torch.FloatTensor)</code></pre>
+            </div>
+          </div>
+
+          <div class="spacer"></div>
+          <li>PLE Fusion</li>
+
+          <div class="code-container">
+            <div class="code-snippet">
+              <pre><code class="python">def generate_signal(length, channels, min_timescale=1.0, max_timescale=1.0e4):
+        position = np.arange(length)
+        num_timescales = channels // 2
+        log_timescale_increment = ( math.log(float(max_timescale) / float(min_timescale)) / (float(num_timescales) - 1))
+        inv_timescales = min_timescale * np.exp(np.arange(num_timescales).astype(np.float) * -log_timescale_increment)
+        scaled_time = np.expand_dims(position, 1) * np.expand_dims(inv_timescales, 0)
+
+        signal = np.concatenate([np.sin(scaled_time), np.cos(scaled_time)], axis=1)
+        signal = np.pad(signal, [[0, 0], [0, channels % 2]], 'constant', constant_values=[0.0, 0.0])
+        signal =  signal.reshape([1, length, channels])
+
+        return torch.from_numpy(signal).type(torch.FloatTensor)</code></pre>
+            </div>
+          </div>
+
+
+          <div class="spacer"></div>
+          <li>PLE Encoder Decoder</li>
+
+          <div class="code-container">
+            <div class="code-snippet">
+              <pre><code class="python">def generate_signal(length, channels, min_timescale=1.0, max_timescale=1.0e4):
+        position = np.arange(length)
+        num_timescales = channels // 2
+        log_timescale_increment = ( math.log(float(max_timescale) / float(min_timescale)) / (float(num_timescales) - 1))
+        inv_timescales = min_timescale * np.exp(np.arange(num_timescales).astype(np.float) * -log_timescale_increment)
+        scaled_time = np.expand_dims(position, 1) * np.expand_dims(inv_timescales, 0)
+
+        signal = np.concatenate([np.sin(scaled_time), np.cos(scaled_time)], axis=1)
+        signal = np.pad(signal, [[0, 0], [0, channels % 2]], 'constant', constant_values=[0.0, 0.0])
+        signal =  signal.reshape([1, length, channels])
+
+        return torch.from_numpy(signal).type(torch.FloatTensor)</code></pre>
+            </div>
+          </div>
+
+
+        </ul>          
+      </div>    
+    </div>
+
+
+
+<!-- 3. Experimental Setup -->
+    <h2 id="3">&hairsp; 3. &hairsp; Experimental Setup</h2>
     <div class="chapter-box">
 
       <div class="list-container">
@@ -118,7 +202,7 @@ permalink: /multilingual
           <li>Data Setup
             <div class="dual-container">
               <ul>
-                <li>Dataset: &nbsp; Conala</li>
+                <li>Translation Task: &nbsp; WMT'14 En-De</li>
                 <li>Dialogue Task: &nbsp; Daily Dialogue</li>
                 <li>Summarization Task: &nbsp; CNN Daily</li>
                 <li>Tokenizer: &nbsp; AlBERT Tokenizer</li>
@@ -166,14 +250,13 @@ permalink: /multilingual
               </ul>
             </div>
           </li>
-        
         </ul>
       </div>
     </div>
 
 
-<!-- 5. Result -->
-    <h2 id="5">&hairsp; 5. &hairsp; Result</h2>
+<!-- 4. Result -->
+    <h2 id="4">&hairsp; 4. &hairsp; Result</h2>
     <div class="chapter-box">
 
       <div class="list-container">
@@ -302,8 +385,9 @@ permalink: /multilingual
     </div>
 
 
-<!-- 6. Conclusion -->
-    <h2 id="6">&hairsp; 6. &hairsp; Conclusion</h2>
+
+<!-- 5. Conclusion -->
+    <h2 id="5">&hairsp; 5. &hairsp; Conclusion</h2>
     <div class="chapter-box">
 
       <div class="list-container">
@@ -343,18 +427,21 @@ permalink: /multilingual
     </div>
 
 
+
 <!-- Reference -->    
-    <h2 id="7">7. &hairsp; Reference</h2>
+    <h2 id="6">&hairsp; 6. Reference</h2>
     <div class="chapter-box">
       <a class="reference" href="https://arxiv.org/abs/1706.03762">&nbsp; Attention Is All You Need</a> <br> 
-      <a class="reference" href="https://aclanthology.org/D18-1045.pdf">&nbsp; Understanding Back-Translation at Scale</a> 
+      <a class="reference" href="https://arxiv.org/abs/2002.06823">&nbsp; Incorporating BERT into Neural Machine Translation</a> <br> 
+      <a class="reference" href="https://arxiv.org/abs/1907.12461">&nbsp; Leveraging Pre-trained Checkpoints for Sequence Generation Tasks</a> <br> 
+      <a class="reference" href="https://huggingface.co/docs/transformers/model_doc/encoder-decoder">&nbsp; HuggingFace EncoderDecoder Model</a>
     </div>
-
 
   </div>
 </div>
 
+
 <div class="pagination">
-  <a href="{{ '/eff_model' | relative_url }}" class="btn-prev"></a>
-  <a href="{{ '/aux_train' | relative_url }}" class="btn-next"></a>
+  <a href="{{ '/balance' | relative_url }}" class="btn-prev"><span>Transformer Balance</span></a>
+  <a href="{{ '/eff_train' | relative_url }}" class="btn-next"><span>Efficient Training</span></a>
 </div>

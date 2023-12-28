@@ -27,15 +27,7 @@ permalink: /aux_train
         </li>
 
         <li>
-          <a href="#2">2. &hairsp; Training</a>
-          <ul>
-            <li>
-              <a href="#1.1">1.1 &hairsp; Traditional Training</a>
-            </li>
-            <li>
-              <a href="#1.2">1.2 &hairsp; Auxiliary Training</a>
-            </li>
-          </ul>
+          <a href="#2">2. &hairsp; Training Methodology</a>
         </li>
 
         <li>
@@ -43,7 +35,7 @@ permalink: /aux_train
         </li>
 
         <li>
-          <a href="#4">4. &hairsp; Results</a>
+          <a href="#4">4. &hairsp; Result</a>
         </li>
 
         <li>
@@ -71,16 +63,6 @@ permalink: /aux_train
             </p>
 
           <br class="half-spacer">
-          <li>Hypothesis
-            <ul>
-              <li style="font-weight: normal;">LSTM, GRU, RNN 순으로 높은 성능</li>
-              <li style="font-weight: normal;">RNN, GRU, LSTM 순으로 빠른 학습</li>
-              <li style="font-weight: normal;">LSTM이 특히 긴 텍스트를 다루는 문서 요약에서 강점을 지닐 것으로 예측</li>
-              <li style="font-weight: normal;">상대적으로 시퀀스의 길이가 짧은 대화 생성에서는 LSTM이 약세를 보일 것으로 예측</li>
-            </ul>
-          </li>
-
-          <br class="half-spacer">
           <li>Objective
             <ul>
               <li style="font-weight: normal;">RNN, LSTM, GRU 을 활용한 seq2seq 모델링 방식의 이해</li>
@@ -96,8 +78,8 @@ permalink: /aux_train
     </div>
 
 
-
-    <h2>1. &hairsp; Training Objective</h2>
+<!-- 2. Training Objective -->    
+    <h2 id="2">2. &hairsp; Training Objective</h2>
     <div class="chapter-box">
 
       <div class="list-container">
@@ -156,8 +138,8 @@ permalink: /aux_train
     </div>
 
 
-<!-- 4. Experimental Setup -->
-    <h2 id="4">4. Experimental Setup</h2>
+<!-- 3. Experimental Setup -->
+    <h2 id="3">&hairsp; 3. &hairsp; Experimental Setup</h2>
     <div class="chapter-box">
 
       <div class="list-container">
@@ -165,49 +147,51 @@ permalink: /aux_train
           <li>Data Setup
             <div class="dual-container">
               <ul>
-                <li><b>Translation Task</b>: &nbsp; WMT'14 En-De</li>
-                <li><b>Dialogue Task</b>: &nbsp; Daily Dialogue</li>
-                <li><b>Summarization Task</b>: &nbsp; CNN Daily</li>
-                <li><b>Tokenizer</b>: &nbsp; Word-Level Tokenizer</li>
+                <li>Translation Task: &nbsp; WMT'14 En-De</li>
+                <li>Dialogue Task: &nbsp; Daily Dialogue</li>
+                <li>Summarization Task: &nbsp; CNN Daily</li>
+                <li>Tokenizer: &nbsp; AlBERT Tokenizer</li>
               </ul>
               <ul>
-                <li><b>Train Data Volumn</b>: &nbsp; 50,000</li>
-                <li><b>Valid Data Volumn</b>: &nbsp; 5,000</li>
-                <li><b>Test Data Volumn</b>: &nbsp; 100</li>
-                <li><b>Vocab Size</b>: &nbsp; 10,000</li>                
+                <li>Train Data Volumn: &nbsp; 50,000</li>
+                <li>Valid Data Volumn: &nbsp; 5,000</li>
+                <li>Test Data Volumn: &nbsp; 100</li>
+                <li>Vocab Size: &nbsp; 10,000</li>                
               </ul>
             </div>
           </li>
 
-          <br class="half-spacer">
+          <div class="half-spacer"></div>
           <li>Model Setup
             <div class="dual-container">
               <ul>
-                <li><b>Input Dim</b>: &nbsp; 10,000</li>
-                <li><b>Output Dim</b>: &nbsp; 10,000</li>
-                <li><b>Embedding Dim</b>: &nbsp; 512</li>
+                <li>PLE Architecture: &nbsp; AlBERT</li>
+                <li>PLE Name: &nbsp; albert-v2</li>
+                <li>Input Dim: &nbsp; 10,000</li>
+                <li>Output Dim: &nbsp; 10,000</li>
               </ul>
               <ul>
-                <li><b>Hidden Dim</b>: &nbsp; 512</li>
-                <li><b>Model Params</b>: &nbsp; 000</li>
-                <li><b>Model Size</b>: &nbsp; 000</li>                
+                <li>Embedding Dim: &nbsp; 512</li>
+                <li>Hidden Dim: &nbsp; 512</li>
+                <li>Model Params: &nbsp; 000</li>
+                <li>Model Size: &nbsp; 000</li>                
               </ul>
             </div>
           </li>
 
-          <br class="half-spacer">
+          <div class="half-spacer"></div>
           <li>Training Setup
             <div class="dual-container">
               <ul>
-                <li><b>Num Epochs</b>: &nbsp; 10</li>
-                <li><b>Batch Size</b>: &nbsp; 32</li>
-                <li><b>Learning Rate</b>: &nbsp; 5e-4</li>
-                <li><b>LR Scheduler</b>: &nbsp; pleature</li>
+                <li>Num Epochs: &nbsp; 10</li>
+                <li>Batch Size: &nbsp; 32</li>
+                <li>Learning Rate: &nbsp; 5e-4</li>
+                <li>LR Scheduler: &nbsp; pleature</li>
               </ul>
               <ul>
-                <li><b>Optimizer</b>: &nbsp; AdamW</li>
-                <li><b>Gradient Accumulation Steps</b>: &nbsp; 4
-                <li><b>Teacher Forcing Ratio</b>: &nbsp; 0.5</li>                
+                <li>Optimizer: &nbsp; AdamW</li>
+                <li>Gradient Accumulation Steps: &nbsp; 4
+                <li>Teacher Forcing Ratio: &nbsp; 0.5</li>                
               </ul>
             </div>
           </li>
@@ -216,8 +200,8 @@ permalink: /aux_train
     </div>
 
 
-<!-- 5. Result -->
-    <h2 id="5">5. &hairsp; Result</h2>
+<!-- 4. Result -->
+    <h2 id="4">4. &hairsp; Result</h2>
     <div class="chapter-box">
 
       <div class="list-container">
@@ -346,8 +330,8 @@ permalink: /aux_train
     </div>
 
 
-<!-- 6. Conclusion -->
-    <h2 id="6">6. &hairsp; Conclusion</h2>
+<!-- 5. Conclusion -->
+    <h2 id="5">5. &hairsp; Conclusion</h2>
     <div class="chapter-box">
 
       <div class="list-container">
@@ -389,7 +373,7 @@ permalink: /aux_train
 
 
 <!-- 6. Reference -->
-    <h2 id="7">7. &hairsp; Reference</h2>
+    <h2 id="6">6. &hairsp; Reference</h2>
     <div class="chapter-box">
       <a class="reference" href="https://arxiv.org/abs/1409.3215">&nbsp; Sequence to Sequence Learning with Neural Networks</a> <br> 
       <a class="reference" href="https://arxiv.org/abs/1912.05911">&nbsp; Recurrent Neural Networks (RNNs): A gentle Introduction and Overview</a> <br>
@@ -402,6 +386,6 @@ permalink: /aux_train
 
 
 <div class="pagination">
-  <a href="{{ '/plm_fusion' | relative_url }}" class="btn-prev"><span>PLM Fusion</span></a>
+  <a href="{{ '/sample' | relative_url }}" class="btn-prev"><span>SAMPLE</span></a>
   <a href="{{ '/scheduled_sampling' | relative_url }}" class="btn-next"><span>Scheduled Sampling</span></a>
 </div>

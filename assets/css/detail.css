@@ -51,11 +51,6 @@
   font-size: 27px;
   font-style: italic;
 }
-#detail .title-line {
-  width: 100%;
-  height: 4px;
-  background-color: #eceff1;
-}
 
 #detail .post p{
   margin: 0 0.5em 0 0.5em;
@@ -278,12 +273,12 @@
 }
 .result-table th {
   background-color: #f2f2f2;
-  padding: 5px 0;
+  padding: 6px 0;
   text-align: center;
   border: 1px solid #ddd;
 }
 .result-table td {
-  padding: 5px 0;
+  padding: 6px 0;
   text-align: center;
   border: 1px solid #ddd;
 }
