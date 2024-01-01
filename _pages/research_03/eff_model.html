@@ -8,42 +8,47 @@ permalink: /eff_model
   <h1 class="title">Efficient PLM Comparision</h1>  
   <div class="post">
 
-
+    <hr>
     <div class="callout">
       <p class="highlighted-text"><span>Project Objective</span></p>
       <div class="small-spacer"></div>
-      <p>&nbsp; 사전학습된 모델이 좋은 성능을 보인다는 것은 다양한 방면에 걸쳐 입증되어 왔습니다. 일반적으로 더 큰 모델일수록 더 좋은 성능을 보이고는 있지만, 그 만큼 많은 컴퓨팅자원을 필요로합니다. 때문에 모델의 성능을 최대한 유지하면서도 모델의 크기를 줄이거나, 연산을 단순화 하는 등의 효율성을 제고시키기 위한 모델들이 제시되었습니다. 하지만 이러한 효율적 모델들을 동일한 조건에서 비교 검증해보는 연구는 부재합니다. 이런 문제를 해결하고, 효율성의 측면에서 다양한 사전학습 모델들을 검증해봅니다.</p>
+      <p>&nbsp; 이 프로젝트에서는 효율적인 사전학습 모델들의 효율성과 성능을 비교합니다. 총 두가지의 모델군으로 나누어 비교를 진행합니다.
+        첫번째 모델군에는 파라미터의 수를 줄여 경량화 함으로써 효율성을 제고시킨 모델들을. 두번째 모델군은 어텐션 연산과정에서 효율성을 증대시킨 모델들.
+        모든 모델군의 Baseline 모델로는 BERT를 설정
+        첫번째 모델군에
+
+      사전학습된 모델이 좋은 성능을 보인다는 것은 다양한 방면에 걸쳐 입증되어 왔습니다. 일반적으로 더 큰 모델일수록 더 좋은 성능을 보이고는 있지만, 그 만큼 많은 컴퓨팅자원을 필요로합니다. 때문에 모델의 성능을 최대한 유지하면서도 모델의 크기를 줄이거나, 연산을 단순화 하는 등의 효율성을 제고시키기 위한 모델들이 제시되었습니다. 하지만 이러한 효율적 모델들을 동일한 조건에서 비교 검증해보는 연구는 부재합니다. 이런 문제를 해결하고, 효율성의 측면에서 다양한 사전학습 모델들을 검증해봅니다.</p>
     </div>
 
     <div class="tblContents">
       <ul>
 
         <li>
-          <a href="#1">1. &hairsp; Efficient Pretrained Models</a>
-          <ul>
-            <li>
-              <a href="#1.1">1.1 &hairsp; Parameter wise Efficient Models</a>
-            </li>
-            <li>
-              <a href="#1.2">1.2 &hairsp; Attention wise Efficient Models</a>
-            </li>
-          </ul>
+          <a href="#1">1. &hairsp; Introduction</a>
         </li>
 
         <li>
-          <a href="#2">2. &hairsp; Experimental Setup</a>
+          <a href="#2">2. &hairsp; Parameter-wise Efficient Models</a>
         </li>
 
         <li>
-          <a href="#3">3. &hairsp; Results</a>
+          <a href="#3">3. &hairsp; Attention-wise Efficient Models</a>
         </li>
 
         <li>
-          <a href="#4">4. &hairsp; Conclusion</a>
+          <a href="#4">4. &hairsp; Experimental Setup</a>
         </li>
 
         <li>
-          <a href="#5">5. &hairsp; Reference</a>
+          <a href="#5">5. &hairsp; Results</a>
+        </li>
+
+        <li>
+          <a href="#6">6. &hairsp; Conclusion</a>
+        </li>
+
+        <li>
+          <a href="#7">7. &hairsp; Reference</a>
         </li>
 
       </ul>
@@ -51,260 +56,519 @@ permalink: /eff_model
     <hr>
 
 
-<!-- Project Desc -->    
-    <h2 id="1">1. &hairsp; Efficient Pretrained Models</h2>
 
-      <h3 id="1.1">1.1 &hairsp; Attention wise Efficient Models</h3>
+<!-- 1. Introduction -->    
+    <h2 id="1">&hairsp; 1. &hairsp; Introduction</h2>
+    <div class="chapter-box">
 
       <div class="list-container">
         <ul>
-          <li>AlBERT</li>        
-            <p> 기울기 누적 방법은 전체 배치를 한 번에 계산하는 대신 작은 증분으로 기울기를 계산하는 방법을 지향합니다. 
-              이 방법은 모델을 통해 순전파와 역전파를 수행하면서 작은 배치에서 반복적으로 기울기를 계산하고 이 과정 동안 기울기를 누적하는 방식으로 이루어집니다. 
-              충분한 수의 기울기가 누적되면 모델의 최적화 단계가 실행됩니다. 
-              기울기 누적을 사용하면 GPU 메모리 용량의 제한을 초과하여 효과적인 배치 크기를 증가시킬 수 있습니다. 
-              그러나 기울기 누적에 의해 도입된 추가적인 순전파와 역전파는 훈련 과정을 느리게 만들 수 있다는 점을 주의해야 합니다.
-            </p>  
+          <li>Description</li>
+            <p> &nbsp; 앞선 프로젝트에서는 RNN을 기반으로한 Sequence to Sequence 모델 구조의 효용성에 대해 면밀히 살펴봤습니다. 하지만 RNN 네트워크는 장기기억력이라는 관점에서 고질적인 문제점을 태생적으로 지니고 있으며, 이를 해결하기 위한 Attention 메커니즘의 활용 역시 기대만큼 좋은 성능을 보이지는 못했습니다. Transformer는 어텐션 메커니즘 만으로 문맥 전체적인 내용을 포착하는 뛰어난 성능과 더불어 병렬처리로 인한 학습의 효율성까지 제고시킨 뛰어난 모델 구조입니다. <br>
 
-          <div class="half-spacer"></div>
-          <li>Distill BERT</li>        
-            <p> &nbsp; Knowledge Distillation을 활용해 BERT와 거의 비슷하면서도, 매우 적은 파라미터를 보유한 모델.
-            </p>  
+            Transformer는 Attention Mechanism만으로 획기적인 성능 향상과 더불어 효율성 역시 증진시킨 모델입니다.
+            현재 활용되는 대부분의 좋은 성능의 모델들은 Transformer를 바탕으로 하고 있으며, 특히 NLP에서는 더욱 그러합니다.
+            <br>
+            이 프로젝트에서는 Transformer라는 우수한 모델에 대한 이해도를 증진시키기 위해 직접 Transformer를 구현하고, 이를 Pytorch에서 제공하는 Transformer 모델과 비교하며, 구현이 제대로 되었는지, 그리고 어떠한 차이가 있는지를 확인합니다. 
+            </p>
 
-          <div class="half-spacer"></div>
-          <li>Mobile BERT</li>        
-            <p> &nbsp; 생활 필수품인 모바일 디바이스에서도 사용할 수 있을 정도로 경량화하는 것을 목표로 한 모델.
-              경량화를 위해 Mobile BERT는 
-            </p>  
+          <div class="spacer"></div>
+          <li>Objective
+            <ul>
+              <li style="font-weight: normal;">효율성 증진과 크로스 오버로 발생가능한 성능 하락 사이 </li>
+              <li style="font-weight: normal;">다양한 구현 방식에 따른 Transformer의 성능 차이를 직접 확인</li>
+              <li style="font-weight: normal;">Transformer의 자연어 생성 능력 측정을 통해 Transformer BaseLine 확립</li>
+              <li style="font-weight: normal;">직접 구현한 Transformer와 Pytorch에서 제공하는 Transformer모델의 성능 비교</li>
+            </ul>
+          </li>
 
         </ul>
       </div>
 
+    </div>
 
-      <div class="spacer"></div>
-      <h3 id="1.2">1.2 &hairsp; Attention wise Efficient Models</h3>
 
+
+<!-- 2. Parameter-wise Efficient Models -->    
+    <h2 id="2">&hairsp; 2. &hairsp; Parameter-wise Efficient Models</h2>
+    <div class="chapter-box">      
       <div class="list-container">
         <ul>
-          <li>Longformer</li>        
-            <p> &nbsp; 기울기 누적 방법은 전체 배치를 한 번에 계산하는 대신 작은 증분으로 기울기를 계산하는 방법을 지향합니다. 
-              이 방법은 모델을 통해 순전파와 역전파를 수행하면서 작은 배치에서 반복적으로 기울기를 계산하고 이 과정 동안 기울기를 누적하는 방식으로 이루어집니다. 
-              충분한 수의 기울기가 누적되면 모델의 최적화 단계가 실행됩니다. 
-              기울기 누적을 사용하면 GPU 메모리 용량의 제한을 초과하여 효과적인 배치 크기를 증가시킬 수 있습니다. 
-              그러나 기울기 누적에 의해 도입된 추가적인 순전파와 역전파는 훈련 과정을 느리게 만들 수 있다는 점을 주의해야 합니다.
-            </p>  
+          <li>AlBERT
+            <ul>
+              
+              <li>LSTM은 장기기억력 보존을 목적으로 개선된 순환 신경망 구조로, 3개의 게이트와 2개의 State를 사용.</li>
+              
+              <li><b>Forget Gate (0~1)</b>: &nbsp; \( f_t = \theta (W_f x_t + U_f h_{t-1} + b_f) \) <br>과거 정보를 기억할지 아닐지 여부를 결정하는 Gate. 1에 가까울수록 과거 정보를 강하게 유지</li>
+              
+              <li><b>Input Gate(0~1)</b>: &nbsp; \( i_t = \theta (W_i x_t + U_i h_{t-1} + b_i) \) <br> 현재 들어온 정보를 기억할지 아닐지 여부를 결정하는 Gate. 1에 가까울 수록 현재 정보를 유지</li>
+              
+              <li><b>Output Gate(0~1)</b>: &nbsp; \( o_t = \theta (W_o x_t + U_o h_{t-1} + b_o) \) <br> 어떤 정보를 내보내서 Hidden State를 업데이트 할지 결정하는 Gate. 1에 가까울수록 Hidden State 업데이트 시 많은 정보를 사용</li>
+              
+              <li><b>Cell State</b>: &nbsp; \( c_t = f_t \cdot c_{t-1} + i_t \cdot tanh(W_c x_t + U_c h_{t-1} + b_c) \) <br> 장기 상태(Long Term State)를 표현하기 위한 벡터</li>
+              
+              <li><b>Hidden State</b>: &nbsp; \( o_t \cdot tanh c_{t} \) <br> 단기 상태(Short Term State)를 표현하기 위한 벡터</li>
 
-          <div class="half-spacer"></div>
-          <li>Bigbird</li>        
-            <p> &nbsp; 기울기 누적 방법은 전체 배치를 한 번에 계산하는 대신 작은 증분으로 기울기를 계산하는 방법을 지향합니다. 
-              이 방법은 모델을 통해 순전파와 역전파를 수행하면서 작은 배치에서 반복적으로 기울기를 계산하고 이 과정 동안 기울기를 누적하는 방식으로 이루어집니다. 
-              충분한 수의 기울기가 누적되면 모델의 최적화 단계가 실행됩니다. 
-              기울기 누적을 사용하면 GPU 메모리 용량의 제한을 초과하여 효과적인 배치 크기를 증가시킬 수 있습니다. 
-              그러나 기울기 누적에 의해 도입된 추가적인 순전파와 역전파는 훈련 과정을 느리게 만들 수 있다는 점을 주의해야 합니다.
-            </p>  
+              <li>연산 과정이 복잡해, 연산 속도가 상대적으로 느림</li>
+            </ul>
+
+          </li>
+
+
+          <div class="spacer"></div>
+          <li>Distil BERT
+            <ul>
+
+              <li>GRU는 LSTM의 취지와 동일하게 네트워크의 장기기억력을 향상시키기 위한 네트워크이지만, LSTM보다 간단한 구조를 지니고 있으며, 파라미터의 수 또한 적어 LSTM보다 학습속도가 빠름</li>
+              
+              <li><b>Update Gate(0~1)</b>: &nbsp; \( z_t = \theta (W_z x_t + U_z h_{t-1} + b_z) \) <br> LSTM Cell의 Forget, Input Gate와 유사한 역할을 하며, 과거와 현재의 정보를 각각 얼마나 반영할지에 대한 비율값을 표현</li>
+
+              <li><b>Reset Gate(0~1)</b>: &nbsp; \( r_t = \theta (W_r x_t + U_r h_{t-1} + b_r) \) <br> 현 시점 Hidden State를 구성함에 있어, 이전시점의 Hidden State를 얼마나 반영할지 결정. 1에 가까울수록 이전 Hidden State를 많이 반영.</li>
+
+              <li>\( \mathbf{\tilde{h}} \) : &nbsp; \( tanh(W_h x_t + r_t \cdot U_h h_{t-1} + b_h) \) <br> 현 시점 Hidden State 연산을 위한 중간 계산 과정이며, 이 과정에서 reset gate 사용
+
+              <li>\( \mathbf{h_t} \) : &nbsp; \( z_t \cdot h_{t-1} + (1- z_t)\cdot \tilde{h_t} \) <br> 현 시점 Hidden State 연산에서 Update Gate를 사용하며, \(z_t \)와 \(1- z_t \)는 각각 과거와 현재 정보의 비율을 의미
+
+              <li>연산의 복잡성 및 속도는 RNN과 LSTM 중간정도에 위치</li>
+            </ul>
+          </li>
+
+          <div class="spacer"></div>
+          <li>Mobile BERT
+            <ul>
+
+              <li>GRU는 LSTM의 취지와 동일하게 네트워크의 장기기억력을 향상시키기 위한 네트워크이지만, LSTM보다 간단한 구조를 지니고 있으며, 파라미터의 수 또한 적어 LSTM보다 학습속도가 빠름</li>
+              
+              <li><b>Update Gate(0~1)</b>: &nbsp; \( z_t = \theta (W_z x_t + U_z h_{t-1} + b_z) \) <br> LSTM Cell의 Forget, Input Gate와 유사한 역할을 하며, 과거와 현재의 정보를 각각 얼마나 반영할지에 대한 비율값을 표현</li>
+
+              <li><b>Reset Gate(0~1)</b>: &nbsp; \( r_t = \theta (W_r x_t + U_r h_{t-1} + b_r) \) <br> 현 시점 Hidden State를 구성함에 있어, 이전시점의 Hidden State를 얼마나 반영할지 결정. 1에 가까울수록 이전 Hidden State를 많이 반영.</li>
+
+              <li>\( \mathbf{\tilde{h}} \) : &nbsp; \( tanh(W_h x_t + r_t \cdot U_h h_{t-1} + b_h) \) <br> 현 시점 Hidden State 연산을 위한 중간 계산 과정이며, 이 과정에서 reset gate 사용
+
+              <li>\( \mathbf{h_t} \) : &nbsp; \( z_t \cdot h_{t-1} + (1- z_t)\cdot \tilde{h_t} \) <br> 현 시점 Hidden State 연산에서 Update Gate를 사용하며, \(z_t \)와 \(1- z_t \)는 각각 과거와 현재 정보의 비율을 의미
+
+              <li>연산의 복잡성 및 속도는 RNN과 LSTM 중간정도에 위치</li>
+            </ul>
+          </li>
+
+
+          <div class="spacer"></div>
+          <li>Comparision Table</li>
+            <table class="result-table">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>BERT</th>
+                  <th>Distil BERT</th>
+                  <th>AlBERT</th>
+                  <th>Mobile BERT</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><b>Parameters</b></td>
+                  <td>Low</td>
+                  <td>High</td>
+                  <td>Medium</td>
+                  <td>Medium</td>
+                </tr>
+
+                <tr>
+                  <td><b>Size</b></td>
+                  <td>Low</td>
+                  <td>High</td>
+                  <td>Medium</td>
+                  <td>Medium</td>
+                </tr>
+
+                <tr>
+                  <td><b>Model Name</b></td>
+                  <td>bert-base-uncased</td>
+                  <td>High</td>
+                  <td>Medium</td>
+                  <td>Medium</td>
+                </tr>
+
+                <tr>
+                  <td><b>Tokenizer</b></td>
+                  <td>Low</td>
+                  <td>High</td>
+                  <td>Medium</td>
+                </tr>
+
+                <tr>
+                  <td><b>Vocab Size</b></td>
+                  <td>Low</td>
+                  <td>High</td>
+                  <td>Medium</td>
+                </tr>
+
+                <tr>
+                  <td><b>Light Weightening Strategy</b></td>
+                  <td>None</td>
+                  <td>Knowledge Distillation</td>
+                  <td>Parameter Factorization</td>
+                  <td>Medium</td>
+                </tr>                
+
+              </tbody>
+            </table>
 
         </ul>
       </div>
-      <hr>
+    </div>         
 
 
-<!-- Experimental Setup -->    
-    <h2>2. Experimental Setup</h2>
 
-    <h3>Setups for Param-wise Models</h3>
-    <table class="result-table">
-      <thead>
-        <tr>
-          <th>Data Setup</th>
-          <th>Model Setup</th>
-          <th>Training Setup</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-
-          <td>
+<!-- 3. Attention-wise Efficient Models -->    
+    <h2 id="3">&hairsp; 3. &hairsp; Attention-wise Efficient Models</h2>
+    <div class="chapter-box">      
+      <div class="list-container">
+        <ul>
+          <li>Longformer
             <ul>
-              <li><b>Dataset</b>: &hairsp; AG News</li>
-              <li><b>Train Data Volumn</b>: &hairsp; 50,000</li>
-              <li><b>Valid Data Volumn</b>: &hairsp; 5,000</li>
-              <li><b>Test Data Volumn</b>: &hairsp; 100</li>
-            </ul>
-          </td>
+              
+              <li>LSTM은 장기기억력 보존을 목적으로 개선된 순환 신경망 구조로, 3개의 게이트와 2개의 State를 사용.</li>
+              
+              <li><b>Forget Gate (0~1)</b>: &nbsp; \( f_t = \theta (W_f x_t + U_f h_{t-1} + b_f) \) <br>과거 정보를 기억할지 아닐지 여부를 결정하는 Gate. 1에 가까울수록 과거 정보를 강하게 유지</li>
+              
+              <li><b>Input Gate(0~1)</b>: &nbsp; \( i_t = \theta (W_i x_t + U_i h_{t-1} + b_i) \) <br> 현재 들어온 정보를 기억할지 아닐지 여부를 결정하는 Gate. 1에 가까울 수록 현재 정보를 유지</li>
+              
+              <li><b>Output Gate(0~1)</b>: &nbsp; \( o_t = \theta (W_o x_t + U_o h_{t-1} + b_o) \) <br> 어떤 정보를 내보내서 Hidden State를 업데이트 할지 결정하는 Gate. 1에 가까울수록 Hidden State 업데이트 시 많은 정보를 사용</li>
+              
+              <li><b>Cell State</b>: &nbsp; \( c_t = f_t \cdot c_{t-1} + i_t \cdot tanh(W_c x_t + U_c h_{t-1} + b_c) \) <br> 장기 상태(Long Term State)를 표현하기 위한 벡터</li>
+              
+              <li><b>Hidden State</b>: &nbsp; \( o_t \cdot tanh c_{t} \) <br> 단기 상태(Short Term State)를 표현하기 위한 벡터</li>
 
-          <td>
+              <li>연산 과정이 복잡해, 연산 속도가 상대적으로 느림</li>
+            </ul>
+
+          </li>
+
+
+          <div class="spacer"></div>
+          <li>Bigbird
             <ul>
-              <li><b>BERT</b>: &hairsp; bert-base-uncased</li>
-              <li><b>Distil BERT</b>: &hairsp; 512</li>
-              <li><b>AlBERT</b>: &hairsp; 000</li>
-              <li><b>Mobile BERT</b>: &hairsp; 000</li>
+
+              <li>GRU는 LSTM의 취지와 동일하게 네트워크의 장기기억력을 향상시키기 위한 네트워크이지만, LSTM보다 간단한 구조를 지니고 있으며, 파라미터의 수 또한 적어 LSTM보다 학습속도가 빠름</li>
+              
+              <li><b>Update Gate(0~1)</b>: &nbsp; \( z_t = \theta (W_z x_t + U_z h_{t-1} + b_z) \) <br> LSTM Cell의 Forget, Input Gate와 유사한 역할을 하며, 과거와 현재의 정보를 각각 얼마나 반영할지에 대한 비율값을 표현</li>
+
+              <li><b>Reset Gate(0~1)</b>: &nbsp; \( r_t = \theta (W_r x_t + U_r h_{t-1} + b_r) \) <br> 현 시점 Hidden State를 구성함에 있어, 이전시점의 Hidden State를 얼마나 반영할지 결정. 1에 가까울수록 이전 Hidden State를 많이 반영.</li>
+
+              <li>\( \mathbf{\tilde{h}} \) : &nbsp; \( tanh(W_h x_t + r_t \cdot U_h h_{t-1} + b_h) \) <br> 현 시점 Hidden State 연산을 위한 중간 계산 과정이며, 이 과정에서 reset gate 사용
+
+              <li>\( \mathbf{h_t} \) : &nbsp; \( z_t \cdot h_{t-1} + (1- z_t)\cdot \tilde{h_t} \) <br> 현 시점 Hidden State 연산에서 Update Gate를 사용하며, \(z_t \)와 \(1- z_t \)는 각각 과거와 현재 정보의 비율을 의미
+
+              <li>연산의 복잡성 및 속도는 RNN과 LSTM 중간정도에 위치</li>
             </ul>
-          </td>
-
-          <td>
-            <ul>
-              <li><b>Batch Size</b>: &hairsp; 32</li>
-              <li><b>Num Epochs</b>: &hairsp; 5</li>
-              <li><b>Apply AMP</b>: &hairsp; True</li>
-              <li><b>Learning Rate</b>: &hairsp; 5e-4</li>
-              <li><b>Optimizer</b>: &hairsp; Adafactor</li>
-              <li><b>Gradient Checkpointing</b>: &hairsp; True</li>
-              <li><b>Gradient Accumulation Step</b>: &hairsp; 4</li>
-            </ul>
-          </td>          
-
-        </tr>
-
-      </tbody>
-    </table>
-
-    <div class="spacer"></div>
-    <h3>Setups for Attention-wise Models</h3>
-    <table class="result-table">
-      <thead>
-        <tr>
-          <th>Data Setup</th>
-          <th>Model Setup</th>
-          <th>Training Setup</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-
-          <td>
-            <ul>
-              <li><b>Dataset</b>: &hairsp; IMDB</li>
-              <li><b>Train Data Volumn</b>: &hairsp; 1,000</li>
-              <li><b>Valid Data Volumn</b>: &hairsp; 100</li>
-              <li><b>Test Data Volumn</b>: &hairsp; 100</li>
-            </ul>
-          </td>
-
-          <td>
-            <ul>
-              <li><b>BERT</b>: &hairsp; bert-base-uncased</li>
-              <li><b>Longbird</b>: &hairsp; 512</li>
-              <li><b>Bigbird</b>: &hairsp; 000</li>
-            </ul>
-          </td>
-
-          <td>
-            <ul>
-              <li><b>Batch Size</b>: &hairsp; 32</li>
-              <li><b>Num Epochs</b>: &hairsp; 5</li>
-              <li><b>Apply AMP</b>: &hairsp; True</li>
-              <li><b>Learning Rate</b>: &hairsp; 5e-4</li>
-              <li><b>Optimizer</b>: &hairsp; Adafactor</li>
-              <li><b>Gradient Checkpointing</b>: &hairsp; True</li>
-              <li><b>Gradient Accumulation Step</b>: &hairsp; 4</li>
-            </ul>
-          </td>          
-
-        </tr>
-
-      </tbody>
-    </table>
-    <div class="half-spacer"></div>
-    <hr>
+          </li>
 
 
 
-<!-- Result -->    
-    <h2>3. Result</h2>
+          <div class="spacer"></div>
+          <li>Comparision Table</li>
+            <table class="result-table">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>BERT</th>
+                  <th>Longformer</th>
+                  <th>Bigbird</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><b>Parameters</b></td>
+                  <td>Low</td>
+                  <td>High</td>
+                  <td>Medium</td>
+                </tr>
 
-    <h3>Param wise Efficient Models</h3>
-    <table class="result-table">
-      <thead>
-        <tr>
-          <th>Model Type</th>
-          <th>Accuracy</th>
-          <th>Epoch Time</th>
-          <th>Avg GPU</th>
-          <th>Max GPU</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>BERT (Baseline Model)</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-        </tr>
-        <tr>
-          <td>Distil BERT</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-        </tr>
-        <tr>
-          <td>AlBERT</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-        </tr>
-        <tr>
-          <td>MobileBERT</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-        </tr>        
+                <tr>
+                  <td><b>Size</b></td>
+                  <td>Low</td>
+                  <td>High</td>
+                  <td>Medium</td>
+                </tr>
 
-      </tbody>
-    </table>
+                <tr>
+                  <td><b>Model Name</b></td>
+                  <td>bert-base-uncased</td>
+                  <td>High</td>
+                  <td>Medium</td>
+                </tr>
 
-    <div class="half-spacer"></div>
-    <h3>Attention wise Efficient Models</h3>
-    <table class="result-table">
-      <thead>
-        <tr>
-          <th>Model Type</th>
-          <th>Accuracy</th>
-          <th>Epoch Time</th>
-          <th>Avg GPU</th>
-          <th>Max GPU</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>BERT (Baseline Model)</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-        </tr>
-        <tr>
-          <td>Longformer</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-        </tr>
-        <tr>
-          <td>Bigbird</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-        </tr>
+                <tr>
+                  <td><b>Tokenizer</b></td>
+                  <td>Low</td>
+                  <td>High</td>
+                  <td>Medium</td>
+                </tr>
 
-      </tbody>
-    </table>
-    <hr>
+                <tr>
+                  <td><b>Vocab Size</b></td>
+                  <td>Low</td>
+                  <td>High</td>
+                  <td>Medium</td>
+                </tr>
 
+                <tr>
+                  <td><b>Attention</b></td>
+                  <td>Full Attention</td>
+                  <td>Sparse Attention</td>
+                  <td>Sparse Attention</td>
+                </tr>                
 
-<!-- Conclusion -->    
-    <h2>4. Conclusion</h2>
+              </tbody>
+            </table>
+
+        </ul>
+      </div>
+    </div>         
 
 
 
-<!-- Reference -->    
-    <h2>5. Reference</h2>
+
+<!-- 4. Experimental Setup -->
+    <h2 id="4">&hairsp; 4. Experimental Setup</h2>
+    <div class="chapter-box">
+
+      <div class="list-container">
+        <ul>
+          <li>Data Setup
+            <div class="dual-container">
+              <ul>
+                <li><b>Translation Task</b>: &nbsp; WMT'14 En-De</li>
+                <li><b>Dialogue Task</b>: &nbsp; Daily Dialogue</li>
+                <li><b>Summarization Task</b>: &nbsp; CNN Daily</li>
+                <li><b>Tokenizer</b>: &nbsp; Word-Level Tokenizer</li>
+              </ul>
+              <ul>
+                <li><b>Train Data Volumn</b>: &nbsp; 50,000</li>
+                <li><b>Valid Data Volumn</b>: &nbsp; 5,000</li>
+                <li><b>Test Data Volumn</b>: &nbsp; 100</li>
+                <li><b>Vocab Size</b>: &nbsp; 10,000</li>                
+              </ul>
+            </div>
+          </li>
+
+          <div class="half-spacer"></div>
+          <li>Model Setup
+            <div class="dual-container">
+              <ul>
+                <li><b>Input Dim</b>: &nbsp; 10,000</li>
+                <li><b>Output Dim</b>: &nbsp; 10,000</li>
+                <li><b>Embedding Dim</b>: &nbsp; 512</li>
+                <li><b>RNN Model Params</b>: &nbsp; 512</li>
+                <li><b>LSTM Model Params</b>: &nbsp; 512</li>
+                <li><b>GRU Model Params</b>: &nbsp; 512</li>
+              </ul>
+              <ul>
+                <li><b>Hidden Dim</b>: &nbsp; 512</li>
+                <li><b>Bi-Directional</b>: &nbsp; True</li>
+                <li><b>N Layers</b>: &nbsp; 1</li>                
+                <li><b>RNN Model Size</b>: &nbsp; 512</li>
+                <li><b>LSTM Model Size</b>: &nbsp; 512</li>
+                <li><b>GRU Model Size</b>: &nbsp; 512</li>
+              </ul>
+            </div>
+          </li>
 
 
+          <div class="half-spacer"></div>
+          <li>Training Setup
+            <div class="dual-container">
+              <ul>
+                <li><b>Num Epochs</b>: &nbsp; 10</li>
+                <li><b>Batch Size</b>: &nbsp; 32</li>
+                <li><b>Learning Rate</b>: &nbsp; 5e-4</li>
+                <li><b>LR Scheduler</b>: &nbsp; pleature</li>
+              </ul>
+              <ul>
+                <li><b>Hardware</b>: &nbsp; T4</li>
+                <li><b>Optimizer</b>: &nbsp; AdamW</li>
+                <li><b>Gradient Accumulation Steps</b>: &nbsp; 4
+                <li><b>Teacher Forcing Ratio</b>: &nbsp; 0.5</li>                
+              </ul>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+
+<!-- 5. Result -->
+    <h2 id="5">&hairsp; 5. &hairsp; Result</h2>
+    <div class="chapter-box">
+
+      <div class="list-container">
+        <ul>
+          <li>Machine Translation</li>
+
+            <table class="result-table">
+              <thead>
+                <tr>
+                  <th>Model Type</th>
+                  <th>Eval Score</th>
+                  <th>Epoch Time</th>
+                  <th>Avg GPU</th>
+                  <th>Max GPU</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>RNN Model</td>
+                  <td>2.12</td>
+                  <td>3m 58s</td>
+                  <td>0.22GB</td>
+                  <td>0.82GB</td>
+                </tr>
+                <tr>
+                  <td>LSTM Model</td>
+                  <td>8.35</td>
+                  <td>4m 16s</td>
+                  <td>0.27GB</td>
+                  <td>1.30GB</td>
+                </tr>
+                <tr>
+                  <td>GRU Model</td>
+                  <td>9.75</td>
+                  <td>4m 6s</td>
+                  <td>0.26GB</td>
+                  <td>1.16GB</td>
+                </tr>
+
+              </tbody>
+            </table>
+          
+          <div class="half-spacer"></div>
+          <li>Dialogue Generation</li>
+            <table class="result-table">
+              <thead>
+                <tr>
+                  <th>Model Type</th>
+                  <th>Eval Score</th>
+                  <th>Epoch Time</th>
+                  <th>Avg GPU</th>
+                  <th>Max GPU</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>RNN Model</td>
+                  <td>0.10</td>
+                  <td>3m 40s</td>
+                  <td>0.22GB</td>
+                  <td>0.79GB</td>
+                </tr>
+                <tr>
+                  <td>LSTM Model</td>
+                  <td>0.37</td>
+                  <td>4m 5s</td>
+                  <td>0.27GB</td>
+                  <td>1.23GB</td>
+                </tr>
+                <tr>
+                  <td>GRU Model</td>
+                  <td>2.16</td>
+                  <td>3m 58s</td>
+                  <td>0.26GB</td>
+                  <td>1.11GB</td>
+                </tr>
+
+              </tbody>
+            </table>
+
+                
+          <div class="half-spacer"></div>
+          <li>Text Summarization</li>
+            <table class="result-table">
+              <thead>
+                <tr>
+                  <th>Model Type</th>
+                  <th>Eval Score</th>
+                  <th>Epoch Time</th>
+                  <th>Avg GPU</th>
+                  <th>Max GPU</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>RNN Model</td>
+                  <td>0.00</td>
+                  <td>8m 6s</td>
+                  <td>0.23GB</td>
+                  <td>1.20GB</td>
+                </tr>
+                <tr>
+                  <td>LSTM Model</td>
+                  <td>2.23</td>
+                  <td>9m 7s</td>
+                  <td>0.29GB</td>
+                  <td>2.00GB</td>
+                </tr>
+                <tr>
+                  <td>GRU Model</td>
+                  <td>2.19</td>
+                  <td>8m 42s</td>
+                  <td>0.27GB</td>
+                  <td>1.82GB</td>
+                </tr>
+
+              </tbody>
+            </table>
+
+          <div class="spacer"></div>  
+          <li>Result Analysis</li>
+            <p> &nbsp; 결과를 확인해보면, 모든 과제에서 GRU가 가장 좋은 성능을 보입니다. RNN은 다양한 정보를 함유하기에 연산 과정이 지나치게 단순하고, LSTM은 연산 과정이 복잡하기에 그만큼 학습 과정에서 영향받는 요소가 많아 학습 수렴이 어렵습니다. 때문에 모든 학습 결과에서는 GATE를 사용하면서도 단순화된 연산으로 학습의 이점이 큰 GRU가 가장 뛰어난 성능을 보임을 알 수 있습니다. 
+            뿐만 아니라, 학습 데이터가 3만개에 불과하다는 점에서 GRU의 성능이 좋게 나온것에 큰 영향을 미친것으로 보입니다.
+            학습 데이터를 더 크게 설정한 경우에는, LSTM의 성능이 향상될 것으로 예상됩니다.  
+            </p>
+        </ul>
+      </div>
+    </div>
+
+
+
+<!-- 6. Conclusion -->
+    <h2 id="6">&hairsp; 6. &hairsp; Conclusion</h2>
+    <div class="chapter-box">
+
+      <div class="list-container">
+        <ul>
+          <li>RNN, LSTM, GRU 을 활용한 seq2seq 모델링 방식의 이해</li>
+            <p>&nbsp; 시퀀스의 벡터 변환을 위한 Embedding Layer와 실제 연산을 위한 순환 신경망 레이어만으로 구성된 Encoder, Decoder 구조 구현. 그리고 Teacher Forcing 기능을 포함하는 디코딩의 구현을 통해 RNN Sequence to Sequnce Modeling에 대한 코드적 이해도를 증진시킬 수 있었습니다.
+            </p>
+
+          <div class="half-spacer"></div>
+          <li>세 가지 순환 신경망의 성능 비교 검증</li>
+            <p>적은 학습 데이터 바탕의 자연어 생성 과제에서는 GRU가 RNN 및 LSTM보다 좋은 성능을 보입니다. 
+            </p>
+            
+          <div class="half-spacer"></div>
+          <li>최소 기준치 확립</li>
+            <p>앞서 언급했듯이 순환 신경망을 사용한 Seq2Seq모델은 앞으로 다루게 될 다양한 Seq2Seq 모델들의 시작점입니다. 고도화 된 모델일지라도 하이퍼 파라미터 설정이나, 훈련 방식 등의 이유에서 잘못된 성능이 나올수도 있습니다. 이때, 최소한의 동작은 하는 구나 하는 판단의 근거로 다음과 같은 스코어를 활용할 수 있습니다. <br> 
+            기계번역 BLEU Score: 00.00, 대화 생성 Rouge Score: 00.00, 문서 요약 Rouge Score: 00.00 이하의 성능ㅇ
+            </p>
+
+        </ul>
+      </div>
+    </div>
+
+
+<!-- 6. Reference -->
+    <h2 id="7">&hairsp; 7. &hairsp; Reference</h2>
+    <div class="chapter-box">
+      <a class="reference" href="https://arxiv.org/abs/1412.3555">&nbsp; Paper Review</a><br>
+      <a class="reference" href="https://arxiv.org/abs/1412.3555">&nbsp; Entire Code</a><br>
+
+      <a class="reference" href="https://arxiv.org/abs/1409.3215">&nbsp; Sequence to Sequence Learning with Neural Networks</a> <br> 
+      <a class="reference" href="https://arxiv.org/abs/1912.05911">&nbsp; Recurrent Neural Networks (RNNs): A gentle Introduction and Overview</a> <br>
+      <a class="reference" href="https://arxiv.org/abs/1909.09586">&nbsp; Understanding LSTM</a> <br> 
+      <a class="reference" href="https://arxiv.org/abs/1412.3555">&nbsp; Empirical Evaluation of Gated Recurrent Neural Networks on Sequence Modeling</a>
+
+    </div>
 
 
   </div>

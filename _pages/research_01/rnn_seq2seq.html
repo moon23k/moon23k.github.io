@@ -12,8 +12,7 @@ permalink: /rnn_seq2seq
     <div class="callout">
       <p class="highlighted-text"><span>Project Overview</span></p>
       <div class="small-spacer"></div>
-      <p>&nbsp; 이 프로젝트에서는 세 가지 순환 신경망(<b>RNN, LSTM, GRU</b>)를 활용해 <b>Sequence to Sequence</b> 모델을 구현하고, 각 네트워크의 자연어 생성 능력을 비교합니다.
-      정확한 비교를 위해, 네트워크를 제외한 모든 변수는 동일하게 설정했으며, 성능은 GRU, LSTM, RNN 순으로 우수하다는 결과를 확인했습니다. Transformer에 비하면 아쉬운 성능이지만, 간단한 구조와 적은 파라미터 만으로도 자연어 생성에서 능력을 지녔다는 점에서, 소규모 연구에서 활용될 가능성이 여전히 남아 있음을 확인 할 수 있었습니다.
+      <p>&nbsp; 이 프로젝트에서는 세 가지 순환 신경망(<b>RNN, LSTM, GRU</b>)을 활용해 <b>Sequence to Sequence</b> 모델을 구현하고, 각 모델 별 자연어 생성 능력을 비교합니다. 자연어 생성 능력을 다각적으로 확인하기 위해 과제로 기계번역, 대화생성, 문서요약을 선정했으며, 정확한 비교를 위해 네트워크를 제외한 모든 실험 변수는 동일하게 설정했습니다. 실험 결과 GRU, LSTM, RNN 순으로 우수한 성능을 기록했습니다. 결과에 영향을 미친 요소로는 Gate의 유무와 연산의 복잡성에서 기인하는 학습 수렴 난이도의 차이가 크게 작용한 것으로 판단됩니다. Transformer에 비해 아쉬운 성능이지만, 간단한 구조와 적은 파라미터 만으로도 자연어 생성이 가능하다는 점에서 소규모 연구에서 활용될 가능성이 여전히 남아 있음을 확인했습니다.
       </p>
     </div>
 
@@ -55,24 +54,23 @@ permalink: /rnn_seq2seq
 
 
 <!-- 1. Introduction -->    
-    <h2 id="1">1. &hairsp; Introduction</h2>
+    <h2 id="1">&hairsp; 1. &hairsp; Introduction</h2>
     <div class="chapter-box">
 
       <div class="list-container">
         <ul>
           <li>Description</li>
-            <p> &nbsp; 순환 신경망은 Transformer의 도래 이전, 시퀀셜 데이터 처리를 위한 딥러닝 모델링의 대표적인 방식이었습니다. 비록 현재는 Transformer가 기존 순환 신경망의 자리를 성공적으로 대체했지만, 간단하고 직관적인 모델링이 가능하다는 점에서 여전히 활용 가치가 있습니다. 뿐만 아니라, 자연어 생성을 위한 가장 기초적인 모델 구현 방식으로써, 이후 다양한 모델의 성능을 비교할 수 있는 기준점으로 작용가능하기에, 순환 신경망에 대한 연구는 가장 기초적이면서 필수적인 연구라고 할 수 있습니다. <br>
-
-            이 프로젝트에서는 대표적 순환 신경망 구조인 RNN, LSTM, GRU를 사용해 Sequence to Sequene 모델을 구현하고, 이를 기계 번역, 대화 생성, 문서 요약이라는 세 가지 자연어 생성과에서의 성능을 비교 분석합니다.
+            <p> &nbsp; 현재 ChatGPT, LLaMA, T5, BERT 등 다양한 사전학습 모델들이 자연어 처리에서 괄목할 만한 성과를 보이고 있습니다. 이런 Transformer 기반의 대규모 사전학습 모델의 도래 이전, 자연어 처리를 위한 딥러닝 모델의 기초는 순환 신경망과, Seq2Seq 아키텍처라고 할 수 있습니다. 이 프로젝트에서는 가장 초기의 신경망과 모델 구조를 면밀히 살핌으로써 추후 다양한 모델 성능의 기준점을 세우려 합니다.
+            순환 신경망이란 이전 시점의 결과값을 현 시점 결과값 산출 과정에서 재귀적으로 활용하는 신경망을 총칭하며, Seq2Seq 아키텍처는 문맥 벡터를 만들기 위한 Encoder와 시퀀스 생성을 위한 Decoder로 이루어진 구조 방식을 의미합니다.
+            순환신경망과 Seq2Seq 모두, 자연어 생성을 위한 가장 기초적인 지식인만큼, 많은 레퍼런스들이 존재합니다. 하지만, 대표적 순환 신경망 셀들을 활용한 Seq2Seq 모델 구조에서 성격이 상이한 자연어 생성 과제에서의 성능 비교 평가 연구는 부재합니다. 때문에 이 프로젝트에서는 RNN, LSTM, GRU를 활용해 Seq2Seq 모델을 구현하고, 각 모델별 기계번역, 대화생성, 문서요약 과제에서 성능을 비교합니다.
             </p>
 
           <div class="spacer"></div>
           <li>Objective
             <ul>
-              <li style="font-weight: normal;">RNN, LSTM, GRU 을 활용한 seq2seq 모델링 방식의 이해</li>
-              <li style="font-weight: normal;">세 가지 순환 신경망의 성능 비교 검증</li>
-              <li style="font-weight: normal;">LSTM, GRU, RNN 순으로 성능 평가 순위가 나올 것이라는 가설 검증</li>
-              <li style="font-weight: normal;">실험 결과를 통해, 이후 자연어 생성을 위한 모델링 성능의 기준점을 확립</li>
+              <li style="font-weight: normal;">RNN, LSTM, GRU을 활용한 Seq2Seq 모델에 대한 심층적 이해</li>
+              <li style="font-weight: normal;">세 가지 모델 별 자연어 생성 성능 비교 검증</li>
+              <li style="font-weight: normal;">딥러닝 모델을 통한 자연어 생성 성능의 Baseline 확립함으로써, 추후 모델 연구의 기준점으로 활용</li>
             </ul>
           </li>
 
@@ -84,39 +82,80 @@ permalink: /rnn_seq2seq
 
 
 <!-- 2. Background -->    
-    <h2 id="2">2. &hairsp; Background</h2>
-    <div class="chapter-box">
-      <p> &nbsp; 딥러닝 모델을 구성하는 가장 기초적인 레이어인 Fully-Connected Layer의 경우, 입력값에 가중치를 곱하고, 편향을 더한 값을 다음 레이어로 전달합니다. 이때 레이어 간에 공유되는 정보가 없습니다.
-      
-      하지만 시퀀셜 데이터를 다루기 위해, 이전 시점의 정보를 기억하는 것이 필수적입니다. 순환 신경망은 이전 시점의 정보를 기억하면서, 다음 데이터들을 순차적으로 처리합니다. <br>
-
-      정보의 기억을 위해 State라는 개념을 사용하는데, 이는 시퀀스의 각 요소를 순회하며, 현 시점까지 처리한 정보를 저장하는 벡터입니다. 순환 신경망은 현재의 state가 그 다음 state에 영향을 미치는 재귀 함수적 형태를 띕니다.
-
-      은닉층의 노드에서 활성화 함수를 통해 도출한 결과값을 출력층 방향에 보냄과 동시에, 다시 은닉층 노드의 다음 계산의 입력에서 활용한다는 것이, 모든 순환 신경망 계열 레이어 구조의 공통적인 특징입니다.
-
-      대표적인 순환신경망 구조로는 RNN, LSTM, GRU가 있으며, 각각의 연산방식은 아래와 같습니다.
-      </p>
-
-      <img src="{{ 'assets/img/research_01/cells.png' | relative_url }}" style="width: 470px; height: 135px; display: block; margin: 2em auto 1em auto;">
-      
-
+    <h2 id="2">&hairsp; 2. &hairsp; Background</h2>
+    <div class="chapter-box">      
       <div class="list-container">
         <ul>
-          <li>RNN</li>
-            <p>
-            </p>          
+          <li>순환 신경망</li>
+          <img src="{{ 'assets/img/research_01/fnn_rnn.png' | relative_url }}" style="width: 65%; height: 50%; display: block; margin: 0 auto;">
+          <p> &nbsp; 딥러닝 모델을 구성하는 가장 기초적인 레이어인 Feed Forward Neural Network의 경우, 입력값에 가중치를 곱하고, 편향을 더한 값을 다음 레이어로 전달합니다. 
+            이때 레이어 간 공유되는 정보는 없습니다.
+          
+          하지만 시퀀셜 데이터를 다루기 위해, 이전 시점의 정보를 기억하는 것이 필수적입니다. 순환 신경망은 이전 시점의 정보를 기억하면서, 다음 데이터들을 순차적으로 처리합니다. <br>
 
-          <br class="half-spacer">
-          <li>LSTM</li>
-            <p>
-            </p>
+          정보의 기억을 위해 State라는 개념을 사용하는데, 이는 시퀀스의 각 요소를 순회하며, 현 시점까지 처리한 정보를 저장하는 벡터입니다. 순환 신경망은 현재의 state가 그 다음 state에 영향을 미치는 재귀 함수적 형태를 띕니다.
 
-          <br class="half-spacer">
-          <li>GRU</li>
-            <p>
-            </p>
+          은닉층의 노드에서 활성화 함수를 통해 도출한 결과값을 출력층 방향에 보냄과 동시에, 다시 은닉층 노드의 다음 계산의 입력에서 활용한다는 것이, 모든 순환 신경망 계열 레이어 구조의 공통적인 특징입니다.
 
-          <br class="half-spacer">
+          대표적인 순환신경망 구조로는 RNN, LSTM, GRU가 있으며, 각각의 연산방식은 아래와 같습니다.
+          </p>
+
+          <div class="spacer"></div>
+          <div class="half-spacer"></div>
+          <img src="{{ 'assets/img/research_01/cells.png' | relative_url }}" style="width: 70%; height: 50%; display: block; margin: 0 auto;">
+          
+          <div class="half-spacer"></div>
+          <li>RNN Cell
+            <ul>
+              <li>RNN Cell은 가장 기본적인 순환신경망 네트워크로, 이전 시점의 Hidden State를 현 시점 예측을 위해 사용. 연산은 Hidden State 산출과 \( y_n \) 산출을 위한 두 단계로 진행됨.</li>
+              <li>\( h_n = tanh(W_h h_{n-1} + W_x x_n + b1) \)</li>
+              <li>\( y_n = W_y h_n + b2 \)</li>
+              <li>연산 과정이 단순한만큼 연산 속도가 빠름</li>
+              <li>시퀀스의 길이가 길어짐에 따라 Gradient Vanishing 문제 발생</li>
+            </ul>
+          </li>
+
+          <div class="spacer"></div>
+          <li>LSTM Cell
+            <ul>
+              
+              <li>LSTM은 장기기억력 보존을 목적으로 개선된 순환 신경망 구조로, 3개의 게이트와 2개의 State를 사용.</li>
+              
+              <li><b>Forget Gate (0~1)</b>: &nbsp; \( f_t = \theta (W_f x_t + U_f h_{t-1} + b_f) \) <br>과거 정보를 기억할지 아닐지 여부를 결정하는 Gate. 1에 가까울수록 과거 정보를 강하게 유지</li>
+              
+              <li><b>Input Gate(0~1)</b>: &nbsp; \( i_t = \theta (W_i x_t + U_i h_{t-1} + b_i) \) <br> 현재 들어온 정보를 기억할지 아닐지 여부를 결정하는 Gate. 1에 가까울 수록 현재 정보를 유지</li>
+              
+              <li><b>Output Gate(0~1)</b>: &nbsp; \( o_t = \theta (W_o x_t + U_o h_{t-1} + b_o) \) <br> 어떤 정보를 내보내서 Hidden State를 업데이트 할지 결정하는 Gate. 1에 가까울수록 Hidden State 업데이트 시 많은 정보를 사용</li>
+              
+              <li><b>Cell State</b>: &nbsp; \( c_t = f_t \cdot c_{t-1} + i_t \cdot tanh(W_c x_t + U_c h_{t-1} + b_c) \) <br> 장기 상태(Long Term State)를 표현하기 위한 벡터</li>
+              
+              <li><b>Hidden State</b>: &nbsp; \( o_t \cdot tanh c_{t} \) <br> 단기 상태(Short Term State)를 표현하기 위한 벡터</li>
+
+              <li>연산 과정이 복잡해, 연산 속도가 상대적으로 느림</li>
+            </ul>
+
+          </li>
+
+          <div class="spacer"></div>
+          <li>GRU Cell
+            <ul>
+
+              <li>GRU는 LSTM의 취지와 동일하게 네트워크의 장기기억력을 향상시키기 위한 네트워크이지만, LSTM보다 간단한 구조를 지니고 있으며, 파라미터의 수 또한 적어 LSTM보다 학습속도가 빠름</li>
+              
+              <li><b>Update Gate(0~1)</b>: &nbsp; \( z_t = \theta (W_z x_t + U_z h_{t-1} + b_z) \) <br> LSTM Cell의 Forget, Input Gate와 유사한 역할을 하며, 과거와 현재의 정보를 각각 얼마나 반영할지에 대한 비율값을 표현</li>
+
+              <li><b>Reset Gate(0~1)</b>: &nbsp; \( r_t = \theta (W_r x_t + U_r h_{t-1} + b_r) \) <br> 현 시점 Hidden State를 구성함에 있어, 이전시점의 Hidden State를 얼마나 반영할지 결정. 1에 가까울수록 이전 Hidden State를 많이 반영.</li>
+
+              <li>\( \mathbf{\tilde{h}} \) : &nbsp; \( tanh(W_h x_t + r_t \cdot U_h h_{t-1} + b_h) \) <br> 현 시점 Hidden State 연산을 위한 중간 계산 과정이며, 이 과정에서 reset gate 사용
+
+              <li>\( \mathbf{h_t} \) : &nbsp; \( z_t \cdot h_{t-1} + (1- z_t)\cdot \tilde{h_t} \) <br> 현 시점 Hidden State 연산에서 Update Gate를 사용하며, \(z_t \)와 \(1- z_t \)는 각각 과거와 현재 정보의 비율을 의미
+
+              <li>연산의 복잡성 및 속도는 RNN과 LSTM 중간정도에 위치</li>
+            </ul>
+          </li>
+
+
+          <div class="spacer"></div>
           <li>Comparision Table</li>
             <table class="result-table">
               <thead>
@@ -180,64 +219,129 @@ permalink: /rnn_seq2seq
 
 
 <!-- 3. Architecture -->
-    <h2 id="3">3. &hairsp; Architecture</h3>
+    <h2 id="3">&hairsp; 3. &hairsp; Architecture</h3>
     <div class="chapter-box">
 
       <div class="list-container">
         <ul>
-          <li>RNN Many to Many</li>
-            <img src="{{ 'assets/img/research_01/seq2seq.png' | relative_url }}" style="width: 400px; height: 130px; display: block; margin: 2em auto 1em auto;">
+          <li>Traditional RNN Architecture</li>
+            <img src="{{ 'assets/img/research_01/many.png' | relative_url }}" style="width: 60%; height: 40%; display: block; margin: 10px auto;">
             <p>RNN Cell을 활용한 자연어 생성의 가장 기초적인 구조는 위와 같이, 이전 시점의 State와 현 시점의 입력값을 받아, 현 시점의 출력값을 반환하고, 다음 시점의 연산을 위해 현시점에서 업데이트 된 State를 넘겨주는 것입니다. <br>
-            이 구조의 문제점은 장기기억력 이슈가 생긴다는 것.
+            Many to Many 같은 경우, 입출력 시퀀스의 길이가 고정되어 있습니다.
+            하지만 일반적인 자연어 생성과정에서 입출력값은 다분히 가변적입니다. 이런 문제를 해결하기 위한 방법으로 Sequence to Sequence가 제안되었습니다.
             </p>          
 
-          <div class="half-spacer"></div>
-          <li>RNN Seq2Seq</li>
-            <img src="{{ 'assets/img/research_01/seq2seq.png' | relative_url }}" style="width: 400px; height: 130px; display: block; margin: 2em auto 1em auto;">
-            <p>&nbsp; 장기기억력의 문제를 해소하기 위해, Encoder와 Decoder로 이루어 진 모델 구조입니다. "Sequence to Sequence Learning with Neural Networks" 에서 제시된 모델 구조.
+          <div class="spacer"></div>
+          <li>RNN Sequence to Sequence Architecture</li>
+            <img src="{{ 'assets/img/research_01/seq2seq.png' | relative_url }}" style="width: 60%; height: 50%; display: block; margin: 10px auto;">
+            <p>&nbsp; <b>Sequence to Sequence Learning with Neural Networks</b> 에서 제시된 모델 구조. 글자 그대로 Sequence를 입력값으로 받아, Sequence를 출력값으로 반환하는 모델 구조를 의미합니다.
+              Encoder와 Decoder라는 모듈로 구성됨. 인코더는 입력 시퀀스의 모든 토큰들을 순차적으로 입력받아 처리한 후, 마지막에 모든 토큰들의 정보들을 압축한 하나의 벡터를 반환. 이 벡터를 Context Vector라고 함. 디코더는 Context Vector를 받아 매 시점마다 순차적으로 토큰들을 출력하며, 시퀀스를 만들어냄. <br> 
+              학습 과정에서 Teacher Forcing 사용으로, 학습의 안정성을 도모.
             </p>
 
-          <div class="half-spacer"></div>
+          <div class="spacer"></div>
           <li>Code Implementation</li>
             <div class="code-container">
               <div class="code-snippet">
-                <pre><code class="python">class MultiHeadAttention(nn.Module):
+                <pre><code class="python">class Encoder(nn.Module):
     def __init__(self, config):
-        super().__init__()
-
-        hidden_dim = config.hidden_dim
-        self.n_heads = config.n_heads
-
-        assert hidden_dim // self.n_heads
-        self.head_dim = hidden_dim // self.n_heads
+        super(Encoder, self).__init__()
         
+        self.embedding = nn.Embedding(
+            config.vocab_size, 
+            config.emb_dim
+        )
         self.dropout = nn.Dropout(config.dropout_ratio)
-        self.linears = clones(nn.Linear(hidden_dim, hidden_dim), 4)
-        self.scale = torch.sqrt(torch.FloatTensor([self.head_dim])).to(config.device)
+
+        if config.model_type == 'rnn':
+            self.net = nn.RNN(**config.kwargs)
+        elif config.model_type == 'lstm':
+            self.net = nn.LSTM(**config.kwargs)
+        elif config.model_type == 'gru':
+            self.net = nn.GRU(**config.kwargs)
 
 
-    def forward(self, query, key, value, mask = None):
-        orig_shape = list(query.shape)
-        split_shape = [query.size(0), -1, self.n_heads, self.head_dim]
+    def forward(self, x):
+        x = self.dropout(self.embedding(x)) 
+        _, hiddens = self.net(x)
+        return hiddens
 
-        Q, K, V = [lin(x).view(split_shape).transpose(1, 2) \
-                   for lin, x in zip(self.linears, (query, key, value))]   
 
-        score = torch.matmul(Q, K.permute(0, 1, 3, 2)) / self.scale
 
-        if mask is not None:
-            score = score.masked_fill(mask==0, -1e10)
+class Decoder(nn.Module):
+    def __init__(self, config):
+        super(Decoder, self).__init__()
+    
+        self.embedding = nn.Embedding(
+            config.vocab_size, 
+            config.emb_dim
+        )
 
-        attention = torch.softmax(score, dim=-1)
-
-        x = torch.matmul(self.dropout(attention), V)
+        self.dropout = nn.Dropout(config.dropout_ratio)
         
-        x = x.permute(0, 2, 1, 3).contiguous()
-        x = x.view(orig_shape)
+        if config.model_type == 'rnn':
+            self.net = nn.RNN(**config.kwargs)
+        elif config.model_type == 'lstm':
+            self.net = nn.LSTM(**config.kwargs)
+        elif config.model_type == 'gru':
+            self.net = nn.GRU(**config.kwargs)
+    
+        self.fc_out = nn.Linear(
+            config.hidden_dim * config.direction, 
+            config.vocab_size
+        )
 
-        del Q, K, V
+    
+    
+    def forward(self, x, hiddens):
+        x = self.dropout(self.embedding(x.unsqueeze(1)))
+        out, hiddens = self.net(x, hiddens)
+        out = self.fc_out(out)
+        return out.squeeze(1), hiddens
 
-        return self.linears[-1](x)</code></pre>
+
+
+class Seq2Seq(nn.Module):
+    def __init__(self, config):
+        super(Seq2Seq, self).__init__()
+
+        self.device = config.device
+        self.pad_id = config.pad_id
+        self.vocab_size = config.vocab_size
+        
+        self.encoder = Encoder(config)
+        self.decoder = Decoder(config)
+
+        self.out = namedtuple('Out', 'logit loss')
+        self.criterion = nn.CrossEntropyLoss().to(self.device)
+
+    
+    def forward(self, x, y, teacher_forcing_ratio=0.5):
+        
+        batch_size, max_len = y.shape
+        
+        outputs = torch.Tensor(batch_size, max_len, self.vocab_size)
+        outputs = outputs.fill_(self.pad_id).to(self.device)
+
+        dec_input = y[:, 0]
+        hiddens = self.encoder(x)
+
+        for t in range(1, max_len):
+            out, hiddens = self.decoder(dec_input, hiddens)
+            outputs[:, t] = out
+            pred = out.argmax(-1)
+            teacher_force = random.random() < teacher_forcing_ratio
+            dec_input = y[:, t] if teacher_force else pred
+
+        logit = outputs[:, 1:] 
+        
+        self.out.logit = logit
+        self.out.loss = self.criterion(
+            logit.contiguous().view(-1, self.vocab_size), 
+            y[:, 1:].contiguous().view(-1)
+        )
+        
+        return self.out </code></pre>
               </div>
             </div>
 
@@ -248,7 +352,7 @@ permalink: /rnn_seq2seq
 
 
 <!-- 4. Experimental Setup -->
-    <h2 id="4">4. Experimental Setup</h2>
+    <h2 id="4">&hairsp; 4. Experimental Setup</h2>
     <div class="chapter-box">
 
       <div class="list-container">
@@ -277,14 +381,21 @@ permalink: /rnn_seq2seq
                 <li><b>Input Dim</b>: &nbsp; 10,000</li>
                 <li><b>Output Dim</b>: &nbsp; 10,000</li>
                 <li><b>Embedding Dim</b>: &nbsp; 512</li>
+                <li><b>RNN Model Params</b>: &nbsp; 512</li>
+                <li><b>LSTM Model Params</b>: &nbsp; 512</li>
+                <li><b>GRU Model Params</b>: &nbsp; 512</li>
               </ul>
               <ul>
                 <li><b>Hidden Dim</b>: &nbsp; 512</li>
-                <li><b>Model Params</b>: &nbsp; 000</li>
-                <li><b>Model Size</b>: &nbsp; 000</li>                
+                <li><b>Bi-Directional</b>: &nbsp; True</li>
+                <li><b>N Layers</b>: &nbsp; 1</li>                
+                <li><b>RNN Model Size</b>: &nbsp; 512</li>
+                <li><b>LSTM Model Size</b>: &nbsp; 512</li>
+                <li><b>GRU Model Size</b>: &nbsp; 512</li>
               </ul>
             </div>
           </li>
+
 
           <div class="half-spacer"></div>
           <li>Training Setup
@@ -296,6 +407,7 @@ permalink: /rnn_seq2seq
                 <li><b>LR Scheduler</b>: &nbsp; pleature</li>
               </ul>
               <ul>
+                <li><b>Hardware</b>: &nbsp; T4</li>
                 <li><b>Optimizer</b>: &nbsp; AdamW</li>
                 <li><b>Gradient Accumulation Steps</b>: &nbsp; 4
                 <li><b>Teacher Forcing Ratio</b>: &nbsp; 0.5</li>                
@@ -309,7 +421,7 @@ permalink: /rnn_seq2seq
 
 
 <!-- 5. Result -->
-    <h2 id="5">5. &hairsp; Result</h2>
+    <h2 id="5">&hairsp; 5. &hairsp; Result</h2>
     <div class="chapter-box">
 
       <div class="list-container">
@@ -429,9 +541,11 @@ permalink: /rnn_seq2seq
               </tbody>
             </table>
 
-          <br class="half-spacer">  
+          <div class="spacer"></div>  
           <li>Result Analysis</li>
-            <p> &nbsp; RNN은 다양한 정보를 함유하기에 지나치게 단순하고, LSTM은 GATE구조가 복잡하기에, 그만큼 영향을 받은 요소가 많아 학습 수렴이 어렵습니다. 때문에 모든 학습 결과에서는 GATE를 사용하면서도 단순화된 연산으로 학습의 이점이 큰 GRU가 가장 뛰어난 성능을 보임을 알 수 있습니다. 
+            <p> &nbsp; 결과를 확인해보면, 모든 과제에서 GRU가 가장 좋은 성능을 보입니다. RNN은 다양한 정보를 함유하기에 연산 과정이 지나치게 단순하고, LSTM은 연산 과정이 복잡하기에 그만큼 학습 과정에서 영향받는 요소가 많아 학습 수렴이 어렵습니다. 때문에 모든 학습 결과에서는 GATE를 사용하면서도 단순화된 연산으로 학습의 이점이 큰 GRU가 가장 뛰어난 성능을 보임을 알 수 있습니다. 
+            뿐만 아니라, 학습 데이터가 3만개에 불과하다는 점에서 GRU의 성능이 좋게 나온것에 큰 영향을 미친것으로 보입니다.
+            학습 데이터를 더 크게 설정한 경우에는, LSTM의 성능이 향상될 것으로 예상됩니다.  
             </p>
         </ul>
       </div>
@@ -440,39 +554,24 @@ permalink: /rnn_seq2seq
 
 
 <!-- 6. Conclusion -->
-    <h2 id="6">6. &hairsp; Conclusion</h2>
+    <h2 id="6">&hairsp; 6. &hairsp; Conclusion</h2>
     <div class="chapter-box">
 
       <div class="list-container">
         <ul>
           <li>RNN, LSTM, GRU 을 활용한 seq2seq 모델링 방식의 이해</li>
-            <p>&nbsp; 토큰의 벡터 변환을 위한 Embedding Layer와 실제 연산을 위한 순환 신경망 레이어만으로 구성된 단순산 Encoder, Decoder 구조로 이루어져 있으며, 
+            <p>&nbsp; 시퀀스의 벡터 변환을 위한 Embedding Layer와 실제 연산을 위한 순환 신경망 레이어만으로 구성된 Encoder, Decoder 구조 구현. 그리고 Teacher Forcing 기능을 포함하는 디코딩의 구현을 통해 RNN Sequence to Sequnce Modeling에 대한 코드적 이해도를 증진시킬 수 있었습니다.
             </p>
 
           <div class="half-spacer"></div>
           <li>세 가지 순환 신경망의 성능 비교 검증</li>
-            <p>LSTM은 게이트 메커니즘을 통해 장기 의존성 문제를 해결하는 데 강점을 보입니다. 복잡한 문맥을 학습하고 기억하는 데 탁월하며, 긴 시퀀스 데이터에서 뛰어난 성능을 발휘할 수 있습니다. 하지만 LSTM은 더 많은 파라미터를 가지고 있어서 더 많은 데이터와 계산 리소스가 필요할 수 있습니다.
+            <p>적은 학습 데이터 바탕의 자연어 생성 과제에서는 GRU가 RNN 및 LSTM보다 좋은 성능을 보입니다. 
             </p>
-
-          <div class="half-spacer"></div>
-          <li>가설 검증
-            <ul>
-              <li>LSTM, GRU, RNN 순으로 높은 성능</li>
-                <p> LSTM의 연산과정이 가장 복잡하고, 다양한 GATE를 사용하기 떄문에, 좋은 성능을 낼 것이라고 예측했으나, 되려 복잡한 연산으로 인해, 학습 시 수렴에 어려움이 생겼습니다.
-                오히려 GATE를 사용하면서도, 연산의 단순화를 도모한 GRU의 학습 성능이 가장 좋은 것을 확인했습니다
-                </p>
-
-              <li>RNN, GRU, LSTM 순으로 빠른 학습</li>
-                <p> 학습 속도 및 GPU 사용량으로 확인해본 효율성은 가설과 마찬가지로 RNN, GRU, LSTM 순으로 나타났습니다.
-                </p>
-              <li></li>
-            </ul>
-          </li>
             
           <div class="half-spacer"></div>
           <li>최소 기준치 확립</li>
             <p>앞서 언급했듯이 순환 신경망을 사용한 Seq2Seq모델은 앞으로 다루게 될 다양한 Seq2Seq 모델들의 시작점입니다. 고도화 된 모델일지라도 하이퍼 파라미터 설정이나, 훈련 방식 등의 이유에서 잘못된 성능이 나올수도 있습니다. 이때, 최소한의 동작은 하는 구나 하는 판단의 근거로 다음과 같은 스코어를 활용할 수 있습니다. <br> 
-              기계번역 BLEU Score: 00.00, 대화 생성 Rouge Score: 00.00, 문서 요약 Rouge Score: 00.00 이하의 성능ㅇ
+            기계번역 BLEU Score: 00.00, 대화 생성 Rouge Score: 00.00, 문서 요약 Rouge Score: 00.00 이하의 성능ㅇ
             </p>
 
         </ul>
@@ -481,12 +580,16 @@ permalink: /rnn_seq2seq
 
 
 <!-- 6. Reference -->
-    <h2 id="7">7. &hairsp; Reference</h2>
+    <h2 id="7">&hairsp; 7. &hairsp; Reference</h2>
     <div class="chapter-box">
+      <a class="reference" href="https://arxiv.org/abs/1412.3555">&nbsp; Paper Review</a><br>
+      <a class="reference" href="https://arxiv.org/abs/1412.3555">&nbsp; Entire Code</a><br>
+
       <a class="reference" href="https://arxiv.org/abs/1409.3215">&nbsp; Sequence to Sequence Learning with Neural Networks</a> <br> 
       <a class="reference" href="https://arxiv.org/abs/1912.05911">&nbsp; Recurrent Neural Networks (RNNs): A gentle Introduction and Overview</a> <br>
       <a class="reference" href="https://arxiv.org/abs/1909.09586">&nbsp; Understanding LSTM</a> <br> 
       <a class="reference" href="https://arxiv.org/abs/1412.3555">&nbsp; Empirical Evaluation of Gated Recurrent Neural Networks on Sequence Modeling</a>
+
     </div>
 
   </div>
