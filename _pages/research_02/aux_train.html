@@ -27,23 +27,27 @@ permalink: /aux_train
         </li>
 
         <li>
-          <a href="#2">2. &hairsp; Training Methodology</a>
+          <a href="#2">2. &hairsp; Background</a>
         </li>
 
         <li>
-          <a href="#3">3. &hairsp; Experimental Setup</a>
+          <a href="#3">3. &hairsp; Training</a>
         </li>
 
         <li>
-          <a href="#4">4. &hairsp; Result</a>
+          <a href="#4">4. &hairsp; Experimental Setup</a>
         </li>
 
         <li>
-          <a href="#5">5. &hairsp; Conclusion</a>
+          <a href="#5">5. &hairsp; Result</a>
         </li>
 
         <li>
-          <a href="#6">6. &hairsp; Reference</a>
+          <a href="#6">6. &hairsp; Conclusion</a>
+        </li>
+
+        <li>
+          <a href="#7">7. &hairsp; Reference</a>
         </li>
 
       </ul>
@@ -58,17 +62,16 @@ permalink: /aux_train
       <div class="list-container">
         <ul>
           <li>Description</li>
-            <p> &nbsp; Exposure Bias는 자연어 생성 모델에서 자주 발생하는 문제입니다. 자연어 생성 모델의 학습과정에서는 정답이 주어지는 Teacher Forcing방식을 사용하지만, <br>
-
+            <p> &nbsp; 자연어 생성 과정에서 Transformer Seq2Seq 모델은 많은 성과를 이뤘지만, 여전히 특정 토큰에 노출되는 Bias 현상인 Exposure Bias에 대한 도전이 남아있습니다. 이러한 문제를 극복하고자, 본 프로젝트는 Auxiliary Training을 활용하여 Exposure Bias를 최소화하고자 합니다. 특히, Auxiliary Training의 목적은 First Token Prediction에 주목하며 이를 통해 모델이 첫 토큰을 더 정확하게 예측하도록 하는 것입니다.<br>
+            본 프로젝트의 주요 목표는 Exposure Bias를 최소화하여 모델이 훈련 시와 테스트 시에 일관된 예측을 수행할 수 있도록 하는 것입니다. 이를 위해 Auxiliary Training을 도입하며, 특히 First Token Prediction을 목적으로 합니다.
             </p>
 
           <br class="half-spacer">
           <li>Objective
             <ul>
-              <li style="font-weight: normal;">RNN, LSTM, GRU 을 활용한 seq2seq 모델링 방식의 이해</li>
-              <li style="font-weight: normal;">세 가지 순환 신경망의 성능 비교 검증</li>
-              <li style="font-weight: normal;">가설에 대한 검증</li>
-              <li style="font-weight: normal;">실험 결과를 통해, 이후 자연어 생성을 위한 모델링 성능의 기준점을 확립</li>
+              <li style="font-weight: normal;">Auxiliary Training을 통한 Exposure Bias 개선 여부 확인</li>
+              <li style="font-weight: normal;">Auxiliary Training Objective로 First Token Prediction의 적절성 검증</li>
+              <li style="font-weight: normal;">Auxiliary Training Ratio에 따른 성능 검토</li>
             </ul>
           </li>
 
@@ -78,19 +81,42 @@ permalink: /aux_train
     </div>
 
 
-<!-- 2. Training Objective -->    
-    <h2 id="2">2. &hairsp; Training Objective</h2>
+<!-- 2. Background -->    
+    <h2 id="2">2. &hairsp; Background</h2>
     <div class="chapter-box">
 
       <div class="list-container">
         <ul>
-          <li>Main Objective: &hairsp; Maximum Likelihood Estimation
-            <p>
+          <li>Transformer
+            <p>&nbsp; Transformer Seq2Seq 모델은 언어 생성 작업에서 뛰어난 성과를 보여주며, Attention 메커니즘을 통해 문맥을 파악하는 능력으로 자연어 처리 분야에서 널리 활용되고 있습니다. 그러나, 특히 긴 문장에서 Exposure Bias라는 문제가 나타나기도 합니다.
             </p>
           </li>
 
           <br class="half-spacer">
-          <li>Auxiliary Objective: &hairsp; First Token Prediction
+          <li>Exposure Bias
+            <p>&nbsp; Exposure Bias는 모델이 훈련할 때와 테스트할 때 서로 다른 토큰의 분포에 노출되어 발생하는 차이를 나타냅니다. 이는 모델이 훈련 단계에서는 실제로 관측된 토큰을 보고 예측을 수행하면서 발생하며, 이로 인해 생성된 문장의 일관성과 품질에 영향을 미칠 수 있습니다.
+            </p>
+          </li>
+        <ul>          
+      </div>
+    </div>
+
+
+<!-- 2. Training -->    
+    <h2 id="3">3. &hairsp; Training</h2>
+    <div class="chapter-box">
+
+      <div class="list-container">
+        <ul>
+          <li>Auxiliary Training
+            <p>&nbsp; Auxiliary Training은 Main이 되는 Training Objective에 더불어 추가적인 Training Objective를 두고 학습을 진행하는 방식을 의미합니다.
+            </p>
+          </li>
+
+          <br class="half-spacer">
+          <li>First Token Prediction
+            <p>&nbsp; Auxiliary Training Objective로는 First Token Prediction를 선정합니다. 첫번쨰 토큰을 잘 예측하는 것이 가장 중요할 것이라는 가설
+            </p>
             <div class="code-container">
               <div class="code-snippet">
                 <pre><code class="python">class MultiHeadAttention(nn.Module):
@@ -211,34 +237,31 @@ permalink: /aux_train
             <table class="result-table">
               <thead>
                 <tr>
-                  <th>Model Type</th>
-                  <th>Eval Score</th>
-                  <th>Epoch Time</th>
-                  <th>Avg GPU</th>
-                  <th>Max GPU</th>
+                  <th>Aux Ratio</th>
+                  <th>BLEU Score</th>
+                  <th>Aux Score</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>RNN Model</td>
-                  <td>2.12</td>
+                  <td>0.0</td>
+                  <td>00</td>
                   <td>3m 58s</td>
-                  <td>0.22GB</td>
-                  <td>0.82GB</td>
                 </tr>
                 <tr>
-                  <td>LSTM Model</td>
+                  <td>0.1</td>
                   <td>8.35</td>
                   <td>4m 16s</td>
-                  <td>0.27GB</td>
-                  <td>1.30GB</td>
                 </tr>
                 <tr>
-                  <td>GRU Model</td>
+                  <td>0.3</td>
                   <td>9.75</td>
                   <td>4m 6s</td>
-                  <td>0.26GB</td>
-                  <td>1.16GB</td>
+                </tr>
+                <tr>
+                  <td>0.5</td>
+                  <td>9.75</td>
+                  <td>4m 6s</td>
                 </tr>
 
               </tbody>
@@ -249,34 +272,31 @@ permalink: /aux_train
             <table class="result-table">
               <thead>
                 <tr>
-                  <th>Model Type</th>
-                  <th>Eval Score</th>
-                  <th>Epoch Time</th>
-                  <th>Avg GPU</th>
-                  <th>Max GPU</th>
+                  <th>Aux Ratio</th>
+                  <th>ROUGE Score</th>
+                  <th>Aux Score</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>RNN Model</td>
-                  <td>0.10</td>
-                  <td>3m 40s</td>
-                  <td>0.22GB</td>
-                  <td>0.79GB</td>
-                </tr>
-                <tr>
-                  <td>LSTM Model</td>
-                  <td>0.37</td>
-                  <td>4m 5s</td>
-                  <td>0.27GB</td>
-                  <td>1.23GB</td>
-                </tr>
-                <tr>
-                  <td>GRU Model</td>
-                  <td>2.16</td>
+                  <td>0.0</td>
+                  <td>00</td>
                   <td>3m 58s</td>
-                  <td>0.26GB</td>
-                  <td>1.11GB</td>
+                </tr>
+                <tr>
+                  <td>0.1</td>
+                  <td>8.35</td>
+                  <td>4m 16s</td>
+                </tr>
+                <tr>
+                  <td>0.3</td>
+                  <td>9.75</td>
+                  <td>4m 6s</td>
+                </tr>
+                <tr>
+                  <td>0.5</td>
+                  <td>9.75</td>
+                  <td>4m 6s</td>
                 </tr>
 
               </tbody>
@@ -288,34 +308,31 @@ permalink: /aux_train
             <table class="result-table">
               <thead>
                 <tr>
-                  <th>Model Type</th>
-                  <th>Eval Score</th>
-                  <th>Epoch Time</th>
-                  <th>Avg GPU</th>
-                  <th>Max GPU</th>
+                  <th>Aux Ratio</th>
+                  <th>ROUGE Score</th>
+                  <th>Aux Score</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>RNN Model</td>
-                  <td>0.00</td>
-                  <td>8m 6s</td>
-                  <td>0.23GB</td>
-                  <td>1.20GB</td>
+                  <td>0.0</td>
+                  <td>00</td>
+                  <td>3m 58s</td>
                 </tr>
                 <tr>
-                  <td>LSTM Model</td>
-                  <td>2.23</td>
-                  <td>9m 7s</td>
-                  <td>0.29GB</td>
-                  <td>2.00GB</td>
+                  <td>0.1</td>
+                  <td>8.35</td>
+                  <td>4m 16s</td>
                 </tr>
                 <tr>
-                  <td>GRU Model</td>
-                  <td>2.19</td>
-                  <td>8m 42s</td>
-                  <td>0.27GB</td>
-                  <td>1.82GB</td>
+                  <td>0.3</td>
+                  <td>9.75</td>
+                  <td>4m 6s</td>
+                </tr>
+                <tr>
+                  <td>0.5</td>
+                  <td>9.75</td>
+                  <td>4m 6s</td>
                 </tr>
 
               </tbody>

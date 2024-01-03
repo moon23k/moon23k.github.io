@@ -3,64 +3,102 @@ layout: default
 permalink: /eff_train
 ---
 
-
 <div id="detail">
-  <h1 class="title">Effective Training Methodology Analytics</h1>  
+  <h1 class="title">Efficient Training Methodology Analytics</h1>  
   <div class="post">
-    <h2>1. &hairsp; Project Desc</h2>
 
+    <hr>
+    <div class="callout">
+      <p class="highlighted-text"><span>Project Objective</span></p>
       <div class="small-spacer"></div>
-      <h3>Deep Learning Model Training</h3>
-      <div class="small-spacer"></div>
-      <p>
-        &nbsp; 현재 다양한 사전학습 딥러닝 모델들이 다양한 분야에서 좋은 성능을 보여주고 있습니다. 
-        대부분의 사전학습 모델들은 성능을 극대화 하기 위해, 더 큰 모델 파라미터를 보유하는 경향을 지니고 개발되어 왔습니다.
-        모델의 크기가 커지면서 성능이 좋아지는 경향성이 있기는 하지만, 그만큼 
-      </p>
+      <p>&nbsp; 이 프로젝트에서는 효율적인 사전학습 모델들의 효율성과 성능을 비교합니다. 총 두가지의 모델군으로 나누어 비교를 진행합니다.
+        첫번째 모델군에는 파라미터의 수를 줄여 경량화 함으로써 효율성을 제고시킨 모델들을. 두번째 모델군은 어텐션 연산과정에서 효율성을 증대시킨 모델들.
+        모든 모델군의 Baseline 모델로는 BERT를 설정
+        첫번째 모델군에
 
-      <div class="spacer"></div>
-      <h3>Mixed Precision Training</h3>
-      <div class="small-spacer"></div>
-      <p> &nbsp; 혼합 정밀도 훈련(Mixed Precision Training)은 모델 훈련의 계산 효율성을 최적화하기 위한 기술로, 특정 변수에 대해 낮은 정밀도 숫자 형식을 활용합니다. 
-        일반적으로 대부분의 모델은 변수를 나타내고 처리하기 위해 32비트 부동 소수점 정밀도(fp32 또는 float32)를 사용합니다. 
-        그러나 모든 변수가 정확한 결과를 얻기 위해 이러한 높은 정밀도 수준을 필요로 하는 것은 아닙니다. 
-        특정 변수의 정밀도를 16비트 부동 소수점(fp16 또는 float16)과 같은 낮은 숫자 형식으로 줄임으로써 계산 속도를 높일 수 있습니다. 
-        이 방법에서는 일부 계산이 반 정밀도에서 수행되고 일부는 여전히 전체 정밀도에서 수행되기 때문에 이 방법을 혼합 정밀도 훈련이라고 부릅니다.
-      </p>  
+      사전학습된 모델이 좋은 성능을 보인다는 것은 다양한 방면에 걸쳐 입증되어 왔습니다. 일반적으로 더 큰 모델일수록 더 좋은 성능을 보이고는 있지만, 그 만큼 많은 컴퓨팅자원을 필요로합니다. 때문에 모델의 성능을 최대한 유지하면서도 모델의 크기를 줄이거나, 연산을 단순화 하는 등의 효율성을 제고시키기 위한 모델들이 제시되었습니다. 하지만 이러한 효율적 모델들을 동일한 조건에서 비교 검증해보는 연구는 부재합니다. 이런 문제를 해결하고, 효율성의 측면에서 다양한 사전학습 모델들을 검증해봅니다.</p>
+    </div>
 
-      <div class="spacer"></div>
-      <h3>Gradient Accumulation</h3>
-      <div class="small-spacer"></div>
-      <p> &nbsp; 기울기 누적 방법은 전체 배치를 한 번에 계산하는 대신 작은 증분으로 기울기를 계산하는 방법을 지향합니다. 
-        이 방법은 모델을 통해 순전파와 역전파를 수행하면서 작은 배치에서 반복적으로 기울기를 계산하고 이 과정 동안 기울기를 누적하는 방식으로 이루어집니다. 
-        충분한 수의 기울기가 누적되면 모델의 최적화 단계가 실행됩니다. 
-        기울기 누적을 사용하면 GPU 메모리 용량의 제한을 초과하여 효과적인 배치 크기를 증가시킬 수 있습니다. 
-        그러나 기울기 누적에 의해 도입된 추가적인 순전파와 역전파는 훈련 과정을 느리게 만들 수 있다는 점을 주의해야 합니다.
-      </p>  
+    <div class="tblContents">
+      <ul>
 
+        <li>
+          <a href="#1">1. &hairsp; Introduction</a>
+        </li>
 
-      <div class="spacer"></div>
-      <h3>Gradient Checkpointing</h3>
-      <div class="small-spacer"></div>
-      <p> &nbsp; 순전파에서 모든 활성화 값을 저장하여 역전파 중에 기울기를 계산하는 것은 상당한 메모리 오버헤드를 초래할 수 있습니다. 
-        활성화 값을 버리고 역전파 중에 필요할 때 다시 계산하는 대안적인 방법은 상당한 계산 오버헤드를 도입하고 훈련 과정을 느리게 만들 수 있습니다.
-        Gradient Checkpointing은 이 두 가지 접근법 사이의 타협점을 제공하며 계산 그래프 전체에서 전략적으로 선택된 활성화 값을 저장하여 기울기를 다시 계산해야 하는 활성화 값의 일부만 다시 계산하면 됩니다.
-      </p>  
+        <li>
+          <a href="#2">2. &hairsp; Efficient Trainings</a>
+        </li>
 
+        <li>
+          <a href="#3">3. &hairsp; Attention-wise Efficient Models</a>
+        </li>
 
-      <div class="spacer"></div>
-      <h3>Efficient Optimizer</h3>
-      <div class="small-spacer"></div>
-      <p> &nbsp; 트랜스포머 모델을 훈련하는 데 가장 일반적으로 사용되는 옵티마이저는 Adam 또는 AdamW(가중치 감소가 적용된 Adam)입니다. 
-        Adam은 이전 기울기의 이동 평균을 저장하여 좋은 수렴을 달성하지만, 모델 파라미터 수에 비례한 추가적인 메모리 풋프린트를 추가합니다. 
-        이를 해결하기 위해 대체 옵티마이저를 사용할 수 있습니다. 
+        <li>
+          <a href="#4">4. &hairsp; Experimental Setup</a>
+        </li>
 
-        대표적인 대체 옵티마인저인 Adafactor는 각 가중치 행렬의 각 원소에 대한 롤링 평균을 저장하지 않습니다. 
-        대신에 롤링 평균의 행 및 열별로 집계된 정보를 유지하여 풋프린트를 크게 감소시킵니다. 
-        그러나 Adam과 비교하여 Adafactor는 특정 경우에는 수렴이 더 느릴 수 있습니다.
-      </p>  
+        <li>
+          <a href="#5">5. &hairsp; Results</a>
+        </li>
+
+        <li>
+          <a href="#6">6. &hairsp; Conclusion</a>
+        </li>
+
+        <li>
+          <a href="#7">7. &hairsp; Reference</a>
+        </li>
+
+      </ul>
+    </div>
+    <hr>
 
 
+Mixed Precision Training
+Gradient Accumulation
+Gradient Checkpointing
+Efficient Optimizer
+
+
+<!-- 1. Introduction -->    
+    <h2 id="1">&hairsp; 1. &hairsp; Introduction</h2>
+    <div class="chapter-box">
+
+      <div class="list-container">
+        <ul>
+          <li>Description</li>
+            <p> &nbsp; 현재 다양한 대규모 사전학습 언어 모델들이 자연어 처리 분야에서 뛰어난 활약을 보이고 있습니다. 하지만 모델이 과도하게 크기 때문에 일반적인 컴퓨팅 자원에서 학습 및 추론이 어렵다는 단점이 존재. 
+              비단 커지고, 고성능 만을 쫒는 연구뿐만아니라, 효율적인 모델을 향한 다양한 연구 역시 진행되고 있음. 대표적인 효율적 모델 연구는 두 갈래로 나누어볼 수 있음. 모델의 파라미터 개수를 감소시키는 방향과, 핵심연산인 Attention의 \( O^2 \) 복잡성을 개선시키는 방향의 연구.
+              첫번째 연구를 Parameter-wise Efficient Model, 두번째는 Attention-wise Efficient Model이라고 명명하고, 각 연구에 부합하는 모델들을
+              <br>
+              파라미터 효율적 모델들로는 Distil BERT, AlBERT, Mobile BERT
+              어텐션 효율적 모델로는 Longformer, BigBird
+              <br>
+              두 모델 군의 비교의 근거가 되는 Baseline Model로는 모두 BERT를 사용.
+              <br>
+              데이터를 굳이 두개로 쪼개서 사용할 이유가 없을듯 ... ㅇㅇㅇ 이거는 코드 구현을 위한 참고!
+
+            </p>
+
+          <div class="spacer"></div>
+          <li>Objective
+            <ul>
+              <li style="font-weight: normal;">효율성 증진과 크로스 오버로 발생가능한 성능 하락 사이 </li>
+              <li style="font-weight: normal;">다양한 구현 방식에 따른 Transformer의 성능 차이를 직접 확인</li>
+              <li style="font-weight: normal;">Transformer의 자연어 생성 능력 측정을 통해 Transformer BaseLine 확립</li>
+              <li style="font-weight: normal;">직접 구현한 Transformer와 Pytorch에서 제공하는 Transformer모델의 성능 비교</li>
+            </ul>
+          </li>
+
+        </ul>
+      </div>
+
+    </div>
+
+
+
+<!-- 1. Introduction -->    
     <h2>2. &hairsp; Experimental Setup</h2>
 
       <div class="small-spacer"></div>
@@ -184,4 +222,10 @@ TrainingArguments(
 <div class="pagination">
   <a href="{{ '/transformer_variants' | relative_url }}" class="btn-prev"></a>
   <a href="{{ '/eff_model' | relative_url }}" class="btn-next"></a>
+</div>
+
+
+<div class="pagination">
+  <a href="{{ '/gan_train' | relative_url }}" class="btn-prev"><span>SeqGAN</span></a>
+  <a href="{{ '/eff_model' | relative_url }}" class="btn-next"><span>Efficient Models</span></a>
 </div>

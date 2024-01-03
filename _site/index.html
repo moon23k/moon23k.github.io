@@ -63,7 +63,7 @@
   <div class="btn-block">
     <a href="/resume" class="btn-type-1">Resume</a>
     <a href="https://github.com/moon23k" class="btn-type-1">Github</a>
-    <a href="https://shy-vole-f74.notion.site/Hello-I-m-Moon-e1ecc2e40b32405e997713cfb44e4f3c?pvs=4" class="btn-type-1">Notion</a>
+    <a href="https://shy-vole-f74.notion.site/Hello-I-m-Moon-e1ecc2e40b32405e997713cfb44e4f3c?pvs=4" class="btn-type-1">Study Log</a>
   </div>
 </div>
 
@@ -74,7 +74,7 @@
   <div class="full-width">
     <h3>Model Structure</h3>
     <p>
-      &nbsp; 머신러닝 엔지니어링에서 모델의 구조적 디자인은 모델의 성능을 결정하는 핵심 요소입니다. 특히 Sequence to Sequence 구조와 같이 Encoder와 Decoder가 모두 필요한 경우, 모델 디자인의 중요성은 더욱 강조됩니다. 아래의 프로젝트들은 학습 방법 및 데이터 처리 등 다른 변수를 일정하게 유지하면서 모델 구조에만 중점을 두고, 각 구조별 특징을 파악하는 것에 집중합니다. 
+      &nbsp; 머신러닝 엔지니어링에서 모델의 구조적 디자인은 성능에 결정적인 영향을 미치는 주요 요소입니다. 특히 Encoder와 Decoder가 모두 필요한 Sequence to Sequence 구조에서, 모델 디자인의 중요성은 더욱 강조됩니다. 아래의 프로젝트들은 학습 방법 및 데이터 처리 등 다른 변수를 일정하게 유지하면서 모델 구조에 중점을 두어, 각 구조의 특징을 파악하는데 집중합니다.
     </p>
   </div>
 
@@ -154,7 +154,7 @@
       <ul>
         <li>
           <p> &nbsp;
-            Transformer의 변형 모델인 Recurrent, Evolved Transformer 모델을 구현하고, 각 모델의 성능을 Standard Transformer와 비교 검증
+            레이어간 재귀적 연결 방식을 사용한 <b>Recurrent Transformer</b>와 NAS 방식으로 고도화 된 <b>Evolved Transformer</b>를 구현하고, <b>Standard Transformer</b>와 자연어 생성 능력 비교 검증
           </p>
           <div class="btn-list">
             <a href="/transformer_variants" class="btn-type-1">Detail</a>
@@ -166,11 +166,11 @@
     </div>
 
     <div class='parallel-item'>
-      <h3>SAMPLE</h3>
+      <h3>S.A.M.P.L.E.</h3>
       <ul>
         <li>
           <p> &nbsp;
-            사전 학습 된 Encoder 언어 모델을 Sequence to Sequence 구조에서 활용하기 위한 세 가지 방법론을 자연어 생성 과제에서 비교 검증
+            <b>S</b>eq2Seq <b>A</b>pplication <b>M</b>ethods of <b>P</b>retrained <b>L</b>anguage <b>E</b>ncoder model의 약어로, 사전 학습 인코더를 자연어 생성 과제에서 활용하기 위한 방법론을 탐구
           </p>
           <div class="btn-list">
             <a href="/sample" class="btn-type-1">Detail</a>
@@ -369,7 +369,7 @@
       <ul>
         <li>
           <p> &nbsp; 
-            데이터의 부족함을 극복하고 모델의 성능을 향상시키기 위한 Back Translation 방식을 구현하고, 그 실효성 검증
+            충분한 학습이 이뤄지고, 그 이상의 성능 개선을 위한 데이터 증강 요법인 Back Translation이, 학습 데이터가 부족한 상황에서 어떤 실효성을 지니는지 확인 
           </p>
           <div class="btn-list">
             <a href="/back_translation" class="btn-type-1">Detail</a>
@@ -385,7 +385,7 @@
       <ul>
         <li>
           <p> &nbsp; 
-            다언어를 동시에 다룰수 있는 Multi Lingual Translation Model을 학습시키고, 각 언어 쌍으로만 학습한 모델과의 성능 차이를 비교 검증
+            다언어-단일언어, 단일언어-다언어, 다언어-다언어 번역 모델을 학습 및 평가하며, 세 가지 단언어 번역에 대한 학습 결과를 직접 확인 및 개선 여부 파악
           </p>
           <div class="btn-list">
             <a href="/multilingual" class="btn-type-1">Detail</a>
