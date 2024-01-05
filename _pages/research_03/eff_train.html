@@ -23,31 +23,31 @@ permalink: /eff_train
       <ul>
 
         <li>
-          <a href="#1">1. &hairsp; Introduction</a>
+          <a href="#1">&hairsp; 1. &hairsp; Introduction</a>
         </li>
 
         <li>
-          <a href="#2">2. &hairsp; Efficient Trainings</a>
+          <a href="#2">&hairsp; 2. &hairsp; Background</a>
         </li>
 
         <li>
-          <a href="#3">3. &hairsp; Attention-wise Efficient Models</a>
+          <a href="#3">&hairsp; 3. &hairsp; Training Strategy</a>
         </li>
 
         <li>
-          <a href="#4">4. &hairsp; Experimental Setup</a>
+          <a href="#4">&hairsp; 4. &hairsp; Experimental Setup</a>
         </li>
 
         <li>
-          <a href="#5">5. &hairsp; Results</a>
+          <a href="#5">&hairsp; 5. &hairsp; Results</a>
         </li>
 
         <li>
-          <a href="#6">6. &hairsp; Conclusion</a>
+          <a href="#6">&hairsp; 6. &hairsp; Conclusion</a>
         </li>
 
         <li>
-          <a href="#7">7. &hairsp; Reference</a>
+          <a href="#7">&hairsp; 7. &hairsp; Reference</a>
         </li>
 
       </ul>
@@ -55,10 +55,6 @@ permalink: /eff_train
     <hr>
 
 
-Mixed Precision Training
-Gradient Accumulation
-Gradient Checkpointing
-Efficient Optimizer
 
 
 <!-- 1. Introduction -->    
@@ -98,131 +94,275 @@ Efficient Optimizer
 
 
 
-<!-- 1. Introduction -->    
-    <h2>2. &hairsp; Experimental Setup</h2>
+<!-- 2. Background -->    
+    <h2 id="2">&hairsp; 2. &hairsp; Background</h2>
+    <div class="chapter-box">
+      <div class="list-container">
+        <ul>
 
-      <div class="small-spacer"></div>
-      <h3>Data Setup</h3>
-      <div class="small-spacer"></div>
-      <p>Sequence Classification을 위한 대표적 데이터 셋 중하나인 AG_News를 사용.
-        데이터의 크기는 Train/ Valid/ Test 1000/ 100/ 100으로 설정
-        총 네가지 데이터 Label을 모든 데이터에서 고르게 분배해서 한쪽으로 치우치지 않도록 가공
-      </p>
+          <li>Pretrained Language Model
+            <ul>
+              <li>대규모 사전학습 언어 모델은 언어 이해의 혁신을 이끌고 있습니다. 이 모델들은 방대한 양의 텍스트 데이터를 학습하여 언어의 다양한 측면을 이해하고, 문맥을 파악하는 데에 뛰어난 성과를 보입니다. 이로써 자연어 처리, 기계 번역, 질문 응답 시스템 등 다양한 언어 관련 작업에서 높은 성능을 보이고 있습니다.</li>
+              <li>대규모 사전학습 언어 모델은 다양한 도메인에서 적용 가능성이 높습니다. 의학, 법률, 공학, 예술 등 다양한 분야에서 특정 전문 용어나 문맥을 이해하고 처리할 수 있어, 효율적인 작업 수행이 가능합니다. 이는 기존의 작은 규모 모델로는 어려웠던 다양한 분야에서의 자연어 이해 능력을 혁신적으로 개선하고 있습니다.</li>
+              <li>대규모 사전학습 언어 모델은 창의적인 활용과 새로운 애플리케이션 개발을 촉진하고 있습니다. 예를 들어, AI 기반의 문학 창작, 음악 작곡, 예술 창작 등에서도 높은 수준의 창의성을 발휘하며 새로운 가능성을 열어가고 있습니다.</li>
+            </ul>
+          </li>
+            
+          <div class="spacer"></div>
+          <li>Limitation
+            <ul>
+              <li>대규모 사전학습 언어 모델은 엄청난 양의 매개변수를 가지고 있어 연산 비용이 상당히 높습니다. 이로 인해 모델을 학습하고 사용하는 데에 많은 컴퓨팅 자원이 필요하며, 이는 비용 측면에서 부담이 될 수 있습니다.</li>
+              <li>대규모 모델의 사용은 주로 대규모 기업이나 연구기관에 제한되어 있는 경우가 많습니다. 작은 기업이나 연구팀은 이러한 모델을 사용하기 어렵거나 비용 문제로 제약을 받을 수 있어, 기술의 불균형적인 접근이 우려되고 있습니다.</li>
+              <li>모델의 경량화, 연산 효율성 증대와 같은 모델 측면의 효율성 제고를 위한 연구뿐만 아니라, 학습과정에서의 효율성 증대를 위한 연구도 필수적</li>
+            </ul>
+          </li>
 
-      <div class="spacer"></div>
-      <h3>Model Setup</h3>
-      <div class="small-spacer"></div>
-      <p>대표적인 PreTrained Model인 BERT를 사용.
-      </p>
-
-
-      <div class="spacer"></div>
-      <h3>Training Setup</h3>
-      <div class="small-spacer"></div>
-
-      <div class="code-container">
-        <div class="code-snippet">
-          <pre><code class="python">
-TrainingArguments(
-        output_dir= f'ckpt/{strategy}',
-        num_train_epochs= 5,
-        learning_rate= 1e-5,
-        per_device_train_batch_size= 32,
-        per_device_eval_batch_size= 32,
-        lr_scheduler_type='reduce_lr_on_plateau',
-        load_best_model_at_end= True,
-
-        save_strategy= 'epoch',
-        logging_strategy= 'epoch',
-        evaluation_strategy= 'epoch',
-
-        fp16= True if config.strategy in ['fp16', 'all'] else False,
-        fp16_opt_level= '02' if config.strategy in ['fp16', 'all'] else '01',
-        gradient_accumulation_steps = True if config.strategy in ['grad_accumulation', 'all'] else 4,
-        gradient_checkpointing= True if config.strategy in ['grad_checkpointing', 'all'] else False,
-        optim = 'adafactor' if config.strategy in ['optim', 'all'] else 'adamw_torch'
-)
-          </code></pre>
-        </div>
+        </ul>
       </div>
+    </div>
 
 
 
-    <h2>3. &hairsp; Result</h2>
-    <div class="small-spacer"></div>
-    <table class="result-table">
-      <thead>
-        <tr>
-          <th>Training Strategy</th>
-          <th>Training Time</th>
-          <th>Accuracy</th>
-          <th>Avg GPU Memory</th>
-          <th>Max GPU Memory</th>
-          
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Vanilla Training</td>
-          <td>174</td>
-          <td>7.00</td>
-          <td>79</td>
-        </tr>
-        <tr>
-          <td>Mixed Precision (FP 16)</td>
-          <td>69</td>
-          <td>5.47</td>
-          <td>78</td>
-        </tr>
-        <tr>
-          <td>Gradient Accumulation</td>
-          <td>182</td>
-          <td>6.29</td>
-          <td>83</td>
-        </tr>
+<!-- 2. Background -->    
+    <h2 id="3">&hairsp; 3. &hairsp; Training Strategy</h2>
+    <div class="chapter-box">
+      <div class="list-container">
+        <ul>
 
-        <tr>
-          <td>Gradient Checkpointing</td>
-          <td>239</td>
-          <td>3.54</td>
-          <td>79</td>
-        </tr>
+          <li>Mixed Precision Training
+            <ul>
+              <li>Mixed Precision Training은 모델 훈련의 계산 효율성을 최적화하기 위해 특정 변수에 대해 낮은 정밀도 숫자 형식을 활용하는 기술입니다.</li>
+              <li>일반적으로 대부분의 모델은 변수를 표현하고 처리하기 위해 32비트 부동 소수점 정밀도(float32)를 사용합니다. 그러나 모든 변수가 정확한 결과를 얻기 위해 이 높은 정밀도 수준이 필요한 것은 아닙니다.</li>
+              <li>특정 변수의 정밀도를 16비트 부동 소수점(float16)과 같은 낮은 숫자 형식으로 감소시킴으로써 계산 속도를 높일 수 있습니다. 이 방식에서는 일부 계산이 반 정밀도에서 수행되고 일부는 여전히 전 정밀도에서 수행합니다.</li>
+            </ul>
+          </li>
+            
+          <div class="spacer"></div>
+          <li>Gradient Accumulation
+            <ul>
+              <li>Gradient Accumulation은 전체 배치를 한 번에 계산하는 대신 작은 증분으로 기울기를 계산하려는 방법입니다.</li>
+              <li>이 방식은 모델을 전방향 및 역방향 패스를 수행하여 작은 배치에서 반복적으로 기울기를 계산하고 이를 누적시키는 것을 포함합니다.</li>
+              <li>충분한 기울기가 누적되면 모델의 최적화 단계가 실행됩니다.</li>
+              <li>경사 누적을 사용하면 GPU 메모리 용량의 제한을 초과하여 효과적인 배치 크기를 증가시킬 수 있습니다.</li>
+            </ul>
+          </li>
 
-        <tr>
-          <td>Adafactor Optimizer</td>
-          <td>179</td>
-          <td>6.72</td>
-          <td>79</td>
-        </tr>
+          <div class="spacer"></div>
+          <li>Gradient Checkpointing
+            <ul>
+              <li>일부 대형 모델은 배치 크기를 1로 설정하고 경사 누적을 사용해도 메모리 문제에 직면할 수 있습니다. 이는 메모리 저장 공간이 필요한 다른 구성 요소들도 있기 때문입니다.</li>
+              <li>전방향 패스에서 모든 활성화를 저장하여 역방향 패스에서 그래디언트를 계산하는 것은 상당한 메모리 오버헤드를 초래할 수 있습니다. 활성화를 버리고 역방향 패스에서 필요할 때 다시 계산하는 대안적인 접근은 상당한 계산 오버헤드를 도입하고 훈련 프로세스를 늦출 수 있습니다.</li>
+              <li>경사 체크포인팅은 이 두 접근 사이의 타협점을 제공하며 계산 그래프 전체에서 전략적으로 선택된 활성화만 저장하여 그래디언트를 계산할 때 일부 활성화만 다시 계산하면 됩니다.</li>
+            </ul>
+          </li>
 
-        <tr>
-          <td>All Strategies Applied</td>
-          <td>85</td>
-          <td>2.91</td>
-          <td>80</td>
-        </tr>
+          <div class="spacer"></div>
+          <li>Efficient Optimizer
+            <ul>
+              <li>트랜스포머 모델을 훈련하는 데 가장 일반적으로 사용되는 Adam 옵티마이저는 이전 기울기의 이동 평균을 저장하여 좋은 수렴을 달성합니다. 그러나 이로 인해 모델 매개변수의 수만큼의 추가 메모리 공간이 필요합니다. </li>
+              <li>이를 해결하기 위해 대안적인 옵티마이저를 사용할 수 있으며, 대표적인 대안책이 Adafactor 옵티마이저입니다</li>
+              <li>Adafactor는 가중치 행렬의 각 요소에 대해 이동 평균을 저장하지 않습니다. 대신, 집약된 정보를 유지함으로써 연산 효율성을 개선합니다. 그러나 Adam과 비교할 때 Adafactor는 특정 경우에 느린 수렴 속도를 가질 수 있습니다.</li>
+            </ul>
+          </li>
 
-      </tbody>
-    </table>
+        </ul>
+      </div>
+    </div>
 
 
-    <h2>4. &hairsp; Conclusion</h2>
-    <div class="small-spacer"></div>
-    <p> &nbsp; 순전파에서 모든 활성화 값을 저장하여 역전파 중에 기울기를 계산하는 것은 상당한 메모리 오버헤드를 초래할 수 있습니다. 
-      활성화 값을 버리고 역전파 중에 필요할 때 다시 계산하는 대안적인 방법은 상당한 계산 오버헤드를 도입하고 훈련 과정을 느리게 만들 수 있습니다.
-      Gradient Checkpointing은 이 두 가지 접근법 사이의 타협점을 제공하며 계산 그래프 전체에서 전략적으로 선택된 활성화 값을 저장하여 기울기를 다시 계산해야 하는 활성화 값의 일부만 다시 계산하면 됩니다.
-    </p>  
 
-    <h2 id="7" class="h3-mt">5. &hairsp; Reference</h2>
+<!-- 1. Introduction -->    
+    <h2>&hairsp; 4. &hairsp; Experimental Setup</h2>
+    <div class="chapter-box">
+
+      <div class="list-container">
+        <ul>
+          <li>Data Setup
+            <div class="dual-container">
+              <ul>
+                <li><b>Translation Task</b>: &nbsp; WMT'14 En-De</li>
+                <li><b>Dialogue Task</b>: &nbsp; Daily Dialogue</li>
+                <li><b>Summarization Task</b>: &nbsp; CNN Daily</li>
+                <li><b>Tokenizer</b>: &nbsp; Word-Level Tokenizer</li>
+              </ul>
+              <ul>
+                <li><b>Train Data Volumn</b>: &nbsp; 50,000</li>
+                <li><b>Valid Data Volumn</b>: &nbsp; 5,000</li>
+                <li><b>Test Data Volumn</b>: &nbsp; 100</li>
+                <li><b>Vocab Size</b>: &nbsp; 15,000</li>                
+              </ul>
+            </div>
+          </li>
+
+          <div class="spacer"></div>
+          <li>Model Setup
+            <div class="dual-container">
+              <ul>
+                <li><b>Input Dim</b>: &nbsp; 15,000</li>
+                <li><b>Output Dim</b>: &nbsp; 15,000</li>
+                <li><b>Hidden Dim</b>: &nbsp; 256</li>
+                <li><b>PFF Dim</b>: &nbsp; 512</li>
+              </ul>
+              <ul>
+                <li><b>N Layers</b>: &nbsp; 3</li>
+                <li><b>N Heads</b>: &nbsp; 8</li>
+                <li><b>Model Params</b>: &nbsp; 000</li>
+                <li><b>Model Size</b>: &nbsp; 000</li>                
+              </ul>
+            </div>
+          </li>
+
+          <div class="spacer"></div>
+          <li>Model Setup</li>
+
+          <div class="code-container">
+            <div class="code-snippet">
+              <pre><code class="python">TrainingArguments(
+    output_dir= f'ckpt/{strategy}',
+    num_train_epochs= 5,
+    learning_rate= 1e-5,
+    per_device_train_batch_size= 32,
+    per_device_eval_batch_size= 32,
+    lr_scheduler_type='reduce_lr_on_plateau',
+    load_best_model_at_end= True,
+
+    save_strategy= 'epoch',
+    logging_strategy= 'epoch',
+    evaluation_strategy= 'epoch',
+
+    fp16= True if config.strategy in ['fp16', 'all'] else False,
+    fp16_opt_level= '02' if config.strategy in ['fp16', 'all'] else '01',
+    gradient_accumulation_steps = True if config.strategy in ['grad_accumulation', 'all'] else 4,
+    gradient_checkpointing= True if config.strategy in ['grad_checkpointing', 'all'] else False,
+    optim = 'adafactor' if config.strategy in ['optim', 'all'] else 'adamw_torch'
+)</code></pre>
+            </div>
+          </div>
+
+        </ul>
+      </div>
+    </div>
+
+
+
+    <h2 id="5">&hairsp; 5. &hairsp; Result</h2>
+    <div class="chapter-box">
+
+      <div class="list-container">
+        <ul>
+          <li>Machine Translation</li>
+
+          <table class="result-table">
+            <thead>
+              <tr>
+                <th>Training Strategy</th>
+                <th>Training Time</th>
+                <th>Accuracy</th>
+                <th>Avg GPU Memory</th>
+                <th>Max GPU Memory</th>
+                
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Vanilla Training</td>
+                <td>174</td>
+                <td>7.00</td>
+                <td>79</td>
+              </tr>
+              <tr>
+                <td>Mixed Precision (FP 16)</td>
+                <td>69</td>
+                <td>5.47</td>
+                <td>78</td>
+              </tr>
+              <tr>
+                <td>Gradient Accumulation</td>
+                <td>182</td>
+                <td>6.29</td>
+                <td>83</td>
+              </tr>
+
+              <tr>
+                <td>Gradient Checkpointing</td>
+                <td>239</td>
+                <td>3.54</td>
+                <td>79</td>
+              </tr>
+
+              <tr>
+                <td>Adafactor Optimizer</td>
+                <td>179</td>
+                <td>6.72</td>
+                <td>79</td>
+              </tr>
+
+              <tr>
+                <td>All Strategies Applied</td>
+                <td>85</td>
+                <td>2.91</td>
+                <td>80</td>
+              </tr>
+
+            </tbody>
+          </table>
+
+        <div class="spacer"></div>  
+        <li>Result Analysis</li>
+          <p> &nbsp; 위의 결과 표를 통해 기계번역, 대화생성, 문서요약 모든 자연어 과제에서 Torch Model이 Scratch Model보다 성능적으로도, 효율성에서도 우수함을 확인할 수 있었습니다. 모델의 파라미터 및 연산과정은 동일하지만, Multi Head Attention 연산과정의 고도화 부족이 이러한 차이를 유발한 것으로 판단됩니다. 실제   
+          </p>
+      </ul>
+    </div>
+    </div>
+
+
+
+    <h2 id="6">&hairsp; 6. &hairsp; Conclusion</h2>
+    <div class="chapter-box">
+
+      <div class="list-container">
+        <ul>
+          <li>직접 코드 구현을 통한 Transformer 모델에 대한 깊은 이해</li>
+            <p>모델 구현을 통해 논문에서 글로 서술된 Transformer를 코드적으로 이해하게 되었습니다. 
+                특히 모델의 구현을 위한 다양한 코드 구현을 했지만, 간단한 부분에서의 다른 구현이 성능의 하락을 야기하기도 했습니다.
+                가장 대표적으로는 코드적으로 깔끔해 보이기는 했지만, 안좋은 성능을 보였던 아래와 같은 경우도 존재했습니다.
+                결과적으로 가장 직관적으로 구현한 코드가 좋은 성능을 보였습니다. <br>
+                추가적으로 논문에서 소개한 Transformer Base 모델과 동일한 하이퍼 파라미터를 적용하면, 데이터량 대비 과도하게 큰 모델이 되어 학습이 정상적으로 진행되지 않음을 실험적으로 확인.
+                학습 요건에 맞는 모델링 구성이 중요함을 알게됨.
+            </p>
+        
+
+          <div class="spacer"></div>
+          <li>Transformer의 자연어 생성 능력 측정</li>
+          <p>&nbsp; 5만개라는 소규모 데이터로 학습했음에도 불구하고, Transformer는 기계번역, 대화생성, 문서요약이라는 어려운 과제에서 000이라는 성능을 기록했습니다.
+            Transformer 이전 가장 많이 활용되던 RNN Sequence to Sequence with Attention 모델과 비교하면 00%의 성능 개선, 00%의 효율성 개선이라는 뛰어난 기술적 진보를 만들어냈습니다.
+          </p>
+
+          <div class="spacer"></div>
+          <li>직접 구현한 Transformer와 Pytorch에서 제공하는 Transformer모델의 성능 비교</li>
+          <p>Pytorch에서 제공하는 Transformer모델이 직접 구현한 Transformer 모델보다 성능 및 효율성 측면에서 모두 뛰어남을 보였습니다.
+                모델 파라미터 개수, 연산과정에서는 차이가 없으나, 이러한 차이를 만들어낸 가장 큰 원인은 Multi Head Attention클래스의 고도화 였습니다.
+                직접 구현한 모델에 Multi Head Attention클래스만 이식해서 실험해본 결과, Pytorch 모델과 동일한 성능을 보임.
+          </p>
+        </ul>
+      </div>
+    </div>
+
+
+
+    <h2 id="7">&hairsp; 7. &hairsp; Reference</h2>
+    <div class="chapter-box">
+      <a class="reference" href="https://arxiv.org/abs/1706.03762">&nbsp; Attention Is All You Need</a> <br> 
+      <a class="reference" href="http://nlp.seas.harvard.edu/annotated-transformer/">&nbsp; The Annotated Transformer</a> <br> 
+      <a class="reference" href="https://pytorch.org/docs/stable/generated/torch.nn.Transformer.html">&nbsp; Pytorch Transformer Official Reference</a>
+
+    </div>
+
 
 
   </div>
 </div>
 
-<div class="pagination">
-  <a href="{{ '/transformer_variants' | relative_url }}" class="btn-prev"></a>
-  <a href="{{ '/eff_model' | relative_url }}" class="btn-next"></a>
-</div>
 
 
 <div class="pagination">

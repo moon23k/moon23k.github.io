@@ -5,7 +5,7 @@ permalink: /sample
 
 
 <div id="detail">
-  <h1 class="title">Seq2Seq Application Methods of Pretrained Language Encoder</h1>
+  <h1 class="title">Transformer Fusion</h1>
     
   <div class="post">
 
@@ -16,7 +16,7 @@ permalink: /sample
     <div class="callout">
       <p class="highlighted-text"><span>Project Objective</span></p>
       <div class="small-spacer"></div>
-      <p>&nbsp; 이 프로젝트에서는 사전학습된 언어 인코더 모델을 Seq2Seq 아키텍처에서 활용하기 위한 세 가지 방법론을 구현하고, 각 방법론의 성능을 세 가지 자연어 생성 과제에서 비교합니다. 변인이 되는 세 가지 모델구조는 각각 Simple, Fused, Full Model이라고 명명하고 있으며, 각 방법론의 성능은 ~~하게 나왔습니다. 이를 통해 ~~하다는 사실을 확인할 수 있었습니다.
+      <p>&nbsp; 이 프로젝트에서는 사전학습된 언어 인코더 모델을 Seq2Seq 아키텍처에서 활용하기 위한 두 가지 방법론을 구현하고, 각 방법론의 성능을 세 가지 자연어 생성 과제에서 비교합니다. 변인이 되는 세 가지 모델구조는 각각 Simple, Fused, Full Model이라고 명명하고 있으며, 각 방법론의 성능은 ~~하게 나왔습니다. 이를 통해 ~~하다는 사실을 확인할 수 있었습니다.
       실험에 대한 자세한 코드 구현은 "~~"에서 확인 할 수 있습니다.
       </p>
     </div>
@@ -275,21 +275,21 @@ permalink: /sample
               </thead>
               <tbody>
                 <tr>
-                  <td>RNN Model</td>
+                  <td>PLE Encoder</td>
                   <td>2.12</td>
                   <td>3m 58s</td>
                   <td>0.22GB</td>
                   <td>0.82GB</td>
                 </tr>
                 <tr>
-                  <td>LSTM Model</td>
+                  <td>PLE Fusion</td>
                   <td>8.35</td>
                   <td>4m 16s</td>
                   <td>0.27GB</td>
                   <td>1.30GB</td>
                 </tr>
                 <tr>
-                  <td>GRU Model</td>
+                  <td>PLE Encoder Decoder</td>
                   <td>9.75</td>
                   <td>4m 6s</td>
                   <td>0.26GB</td>

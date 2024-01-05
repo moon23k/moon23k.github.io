@@ -402,6 +402,7 @@
 .dual-container ul {
   display: block;
   width: 100%;
+  padding-right: 2em;
 }
 .dual-container ul li {
   margin-left: 1em;
