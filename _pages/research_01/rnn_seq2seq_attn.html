@@ -12,7 +12,8 @@ permalink: /rnn_seq2seq_attn
     <div class="callout">
       <p class="highlighted-text"><span>Project Overview</span></p>
       <div class="small-spacer"></div>
-      <p>&nbsp; 이 프로젝트에서는 GRU Seq2Seq 모델의 성능을 개선시키기 위해 Luong이 제시한 세가지 Global Attention 기법을 적용시키고, 각 방법론 별의 성능 개선 여부를 확인합니다. Attention 방법론은 Additive, Dot Product, Scaled Dot Product 방식을 사용했습니다. 결과적으로 성능면에서는 ~~~ 순으로, 효율성에서는 ~~~ 순으로 우수하다는 결과를 확인했습니다. 
+      <p>&nbsp; 이 프로젝트에서는 GRU Seq2Seq 모델의 성능을 개선시키기 위해 Luong이 제시한 세가지 Global Attention 기법을 적용시키고, 각 방법론 별의 성능 개선 여부를 확인합니다. Attention 방법론은 Dot Product, General, Concat 방식을 사용했습니다. 기존 RNN Seq2Seq와의 성능 비교를 위해, 모든 변인은 이전 프로젝트에서의 설정값과 동일하게 적용했으며, 오직 Attention 메커니즘의 적용 여부만을 유일 변인으로 남겨두었습니다. 
+      자연어 생성 능력 확인을 위한 과제로는 기계번역, 대화생성, 문서요약을 선정했으며, 결과는...
       </p>
     </div>
 
@@ -59,18 +60,23 @@ permalink: /rnn_seq2seq_attn
       <div class="list-container">
         <ul>
           <li>Description</li>
-            <p> &nbsp; 순환 신경망은 Transformer의 도래 이전, 시퀀셜 데이터 처리를 위한 딥러닝 모델링의 대표적인 방식이었습니다. 비록 현재는 Transformer가 기존 순환 신경망의 자리를 성공적으로 대체했지만, 간단하고 직관적인 모델링이 가능하다는 점에서 여전히 활용 가치가 있습니다. 뿐만 아니라, 자연어 생성을 위한 가장 기초적인 모델 구현 방식으로써, 이후 다양한 모델의 성능을 비교할 수 있는 기준점으로 작용가능하기에, 순환 신경망에 대한 연구는 가장 기초적이면서 필수적인 연구라고 할 수 있습니다. <br>
+            <p> &nbsp; 이전 프로젝트에서는 RNN Seq2Seq 모델에 대해 자세히 살펴보았습니다. 하지만 기존의 방식에서는 시퀀스의 모든 정보를 한정된 벡터에 압축하여 표현하다보니, 필연적으로 정보의 소실이 발생하게 됩니다. 그리고 이러한 정보의 소실은 시퀀스의 길이가 길어질 수록 뚜렸하게 발생합니다. 기존의 문제를 보완하기 위해, 매번 생성 시점마다 입력시퀀스와 관련성이 깊은 주요 정보만에 더욱 집중해서 처리하기 위한 방식이 바로 Attention입니다. 
 
-            이 프로젝트에서는 대표적 순환 신경망 구조인 RNN, LSTM, GRU를 사용해 Sequence to Sequene 모델을 구현하고, 이를 기계 번역, 대화 생성, 문서 요약이라는 세 가지 자연어 생성과에서의 성능을 비교 분석합니다.
+            <br>
+
+            가장 대표적인 Attention 적용 방식은 Bahdanau Attention을 사용하는 방식이며, 이에 대한 레퍼런스 코드들도 즐비하게 존재합니다. 하지만 상대적으로 Luong Attetnion에 대한 레퍼런스는 적으며, Luong이 제시한 세 가지 Global Attention마다의 자연어 생성 성능을 비교 검증하는 연구는 존재하지 않습니다.
+
+            <br>
+
+            때문에 이 프로젝트에서는 레퍼런스의 부재를 직접 해소하기 위한 일련의 실험 과정을 공유합니다. 모델 구조의 경우 이전 실험에서 가장 안정적인 성능을 보였던 GRU Seq2Seq 구조를 선택했으며, Hyperparameter를 포함한 실험 변수는 모두 이전 실험과 동일하게 적용했습니다. 덕분에 Attention 적용 여부에 따른 성능 변화 추이를 보다 객관적으로 바라볼 수 있습니다. 
+
             </p>
 
           <div class="spacer"></div>
           <li>Objective
             <ul>
-              <li style="font-weight: normal;">RNN, LSTM, GRU 을 활용한 seq2seq 모델링 방식의 이해</li>
-              <li style="font-weight: normal;">세 가지 순환 신경망의 성능 비교 검증</li>
-              <li style="font-weight: normal;">가설에 대한 검증</li>
-              <li style="font-weight: normal;">실험 결과를 통해, 이후 자연어 생성을 위한 모델링 성능의 기준점을 확립</li>
+              <li style="font-weight: normal;">기존 RNN Seq2Seq 개선을 위한 Attention 적용 방식의 이해</li>
+              <li style="font-weight: normal;">세 가지 Luong Attention 적용에 따른 성능 변화 확인</li>
             </ul>
           </li>
 
@@ -91,80 +97,34 @@ permalink: /rnn_seq2seq_attn
 
             이 프로젝트에서는 총 세가지의 어텐션 기법을 사용하는데, 각각은 additive, dot product, scaled dot product입니다. 
 
-            Additive Attention은 Bahdanau 어텐션으로도 불리는 유명한 어텐션 기법이고, 이후 루옹에 의한 어텐션 후속 연구에서 가장 많이 사용되는 Dot Product와, 이를 개선한, 그리고 Transformer 어텐션에서 활용되는 Scaled Dot Product를 선정했습니다. 각 어텐션에 대한 상세는 아래와 같습니다.
+            루옹 어텐션을 사용했습니다.
             </p>
 
-            <div class="gray-box">
-              <p>1. Attention Score 구하기 <br>
-                2. Attention Distribution 구하기 <br>
-                3. Attention Value 구하기 
-              </p>
-            </div>
-
-            
 
           <div class="spacer"></div>
-          <li>Additive Attention</li>
+          <li>Dot Product Attention
+            <ul>
+              <li>\( score = s_t^T h_j \)</li>
+              <li>Dot Product Attention은 이름에서도 드러나듯, 유사도 측정 과정에서 벡터간의 내적(Dot Product)를 사용합니다. 내적 연산은 두 벡터간의 유사도가 클수록 큰값이, 작을수록 작은 값이 도출되는 연산입니다. 별도의 학습 가능한 가중치가 필요하지 않기에 연산과정이 매우 간단하고 효율적이라는 장점이 존재합니다.</li>
+            </ul>
+          </li>
 
-          <div class="dual-container">
-            <img src="{{ 'assets/img/research_01/bahdanau.png' | relative_url }}" style="width: 27%; height: 20%; display: block; margin: 0 1em;">
-            <p>Additive Attention, 혹은 바다나우 어텐션으로도 불리는 이 어텐션 기법은 이름에서 드러나듯, 어텐션 연산에서 각 값을 더해주는 방식을 사용합니다. 
-            t시점의 예측을 위해, Encoder의 Hidden State들과 t-1 시점의 Hidden State를 비교합니다.
-            </p>
-          </div>
-
-            <div class="latex-container">
-              <div class="equation-item">
-                  <p class="latex-equation">\( \mathbf{Attention \space Score} = W^T_a \tanh(W_b s_{t-1} + W_c H) \)</p>
-              </div>
-              <div class="equation-item">
-                  <p class="latex-equation">\( \mathbf{Attention \space Distribution} = softmax(Attention \space Score) \)</p>
-              </div>
-              <div class="equation-item">
-                  <p class="latex-equation">\( \mathbf{Attention \space Value} = H \cdot Attention \space Distribution \)</p>
-              </div>
-              <div class="equation-item">
-                  <p class="latex-equation">\( {\Large s_t} = \text{Decoder}(y_{t-1}, s_{t-1}, c_t) \)</p>
-              </div>
-            </div>
-
-            <p>&nbsp; Additive Attention, 혹은 바다나우 어텐션으로도 불리는 이 어텐션 기법은 이름에서 드러나듯, 어텐션 연산에서 각 값을 더해주는 방식을 사용합니다. 
-            </p>
 
           <div class="spacer"></div>
-          <li>Dot Product Attention</li>
-
-          <div class="dual-container">
-            <img src="{{ 'assets/img/research_01/luong.png' | relative_url }}" style="width: 30%; height: 40%; display: block; margin: 0 1em;">
-            <p>Dot Product Attention은 이름에서도 드러나듯, 유사도 측정 과정에서 벡터간의 내적(Dot Product)를 사용합니다. 내적 연산은 두 벡터간의 유사도가 클수록 큰값이, 작을수록 작은 값이 도출되는 연산입니다. 별도의 학습 가능한 가중치가 필요하지 않기에 연산과정이 매우 간단하고 효율적이라는 장점이 존재합니다.
-            </p>
-          </div>
-
-
-            <div class="latex-container">
-              <div class="equation-item">
-                  <p class="latex-equation">\( \mathbf{Attention \space Score} = \frac{QK^T}{\sqrt{d_k}}V \)</p>
-              </div>
-              <div class="equation-item">
-                  <p class="latex-equation">\( \mathbf{Attention \space Distribution} = softmax(Attention \space Score) \)</p>
-              </div>
-              <div class="equation-item">
-                  <p class="latex-equation">\( Attention \space Value = W^T_a \tanh(W_b s_{t-1} + W_c h_i) \)</p>
-              </div>
-              <div class="equation-item">
-                  <p class="latex-equation">\( {\Large s_t} = \text{Decoder}(y_{t-1}, s_{t-1}, c_t) \)</p>
-              </div>              
-            </div>
-
-            <p> Luong Attention이라고도 불리며, 이는 Additive Attention의 복잡한 연산과정을, 단순한 내적을 통한 유사도 계산으로 대체하며, 계산량을 줄인 어텐션 기법입니다.
-
-            </p>
+          <li>General Attention
+            <ul>
+              <li>\( score = s_t^T W_a h_j \)</li>
+              <li>Dot Product Attention은 이름에서도 드러나듯, 유사도 측정 과정에서 벡터간의 내적(Dot Product)를 사용합니다. 내적 연산은 두 벡터간의 유사도가 클수록 큰값이, 작을수록 작은 값이 도출되는 연산입니다. 별도의 학습 가능한 가중치가 필요하지 않기에 연산과정이 매우 간단하고 효율적이라는 장점이 존재합니다.</li>
+            </ul>
+          </li>
 
           <div class="half-spacer"></div>
-          <li>Scaled Dot Product Attention</li>
-            <p> 앞서 소개한 Dot Product Attention 기법이, 연산 효율성과 성능 측면에서도 좋은 모습을 보이고는 있지만, 다음과 같은 문제점이 존재합니다.
-              1. 
-            </p>
+          <li>Concat Attention
+            <ul>
+              <li>\( score = v_a^T tanh(W_a s_t + U_a h_j) \)</li>
+              <li>Dot Product Attention은 이름에서도 드러나듯, 유사도 측정 과정에서 벡터간의 내적(Dot Product)를 사용합니다. 내적 연산은 두 벡터간의 유사도가 클수록 큰값이, 작을수록 작은 값이 도출되는 연산입니다. 별도의 학습 가능한 가중치가 필요하지 않기에 연산과정이 매우 간단하고 효율적이라는 장점이 존재합니다.</li>
+            </ul>
+          </li>
 
         </ul>
       </div>
@@ -411,7 +371,7 @@ class Seq2Seq(nn.Module):
                 <li><b>Num Epochs</b>: &nbsp; 10</li>
                 <li><b>Batch Size</b>: &nbsp; 32</li>
                 <li><b>Learning Rate</b>: &nbsp; 5e-4</li>
-                <li><b>LR Scheduler</b>: &nbsp; pleature</li>
+                <li><b>LR Scheduler</b>: &nbsp; ReduceLROnPlateau</li>
               </ul>
               <ul>
                 <li><b>Optimizer</b>: &nbsp; AdamW</li>

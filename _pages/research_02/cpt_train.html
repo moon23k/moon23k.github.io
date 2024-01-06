@@ -1,21 +1,19 @@
 ---
 layout: default
-permalink: /aux_train
+permalink: /cpt_train
 ---
 
 
 <div id="detail">
-  <h1 class="title">Auxiliary Training Experiment to Address Exposure Bias</h1>  
+  <h1 class="title">Customized Pretraining Research</h1>  
   <div class="post">
 
     <hr>
     <div class="callout">
       <p class="highlighted-text"><span>Project Objective</span></p>
       <div class="small-spacer"></div>
-      <p>&nbsp; 이 프로젝트에서 Exposure Bias의 완화를 위한 보조적인 Training Objective를 활용하는 Auxiliary Training을 수행하고, 모델의 생성 능력에 긍정적인 효과를 견인하는지 직접 확인합니다. <br>
-      모델 아키텍처는 Standard Transformer를 사용했으며, 
-      Auxiliary Training Objective는 First Token Prediction을 선정했습니다. 보조 함수 목표의 반영 비율은 최소 0.1부터 최대 0.5까지 달리하며 적용해가며, 성능 변화를 확인합니다. 
-      결과는 성능 개선은 전혀 없었고, 이유는 이미 MLE 방식의 학습에서 First Token Prediction을 반영하고 있으며, 되려 전체적인 학습의 수렴을 방해한다는 것으로 판단됩니다.
+      <p>&nbsp; 이 프로젝트에서는 해결하고자 하는 과제에 맞게 모델을 사전학습 시키고, 이렇게 사전학습 된 모델을 활용하는 경우에서 성능의 변화를 확인합니다. 사전 학습 목표로는 Masked Lanugage Modeling, Casual Lanugage Modeling, Masked Casual Lanugage Modeling을 사용해 사전학습 목표에 따른 차이점을 자세히 들여다 봅니다.<br>
+
       </p>
     </div>
 
@@ -56,22 +54,22 @@ permalink: /aux_train
 
 
 <!-- 1. Introduction -->    
-    <h2 id="1">1. &hairsp; Introduction</h2>
+    <h2 id="1">&hairsp; 1. &hairsp; Introduction</h2>
     <div class="chapter-box">
 
       <div class="list-container">
         <ul>
           <li>Description</li>
-            <p> &nbsp; 자연어 생성 과정에서 Transformer Seq2Seq 모델은 많은 성과를 이뤘지만, 여전히 특정 토큰에 노출되는 Bias 현상인 Exposure Bias에 대한 도전이 남아있습니다. 이러한 문제를 극복하고자, 본 프로젝트는 Auxiliary Training을 활용하여 Exposure Bias를 최소화하고자 합니다. 특히, Auxiliary Training의 목적은 First Token Prediction에 주목하며 이를 통해 모델이 첫 토큰을 더 정확하게 예측하도록 하는 것입니다.<br>
+            <p> &nbsp; 일반적으로 Transformer는 <br>
             본 프로젝트의 주요 목표는 Exposure Bias를 최소화하여 모델이 훈련 시와 테스트 시에 일관된 예측을 수행할 수 있도록 하는 것입니다. 이를 위해 Auxiliary Training을 도입하며, 특히 First Token Prediction을 목적으로 합니다.
             </p>
 
           <br class="half-spacer">
           <li>Objective
             <ul>
-              <li style="font-weight: normal;">Auxiliary Training을 통한 Exposure Bias 개선 여부 확인</li>
-              <li style="font-weight: normal;">Auxiliary Training Objective로 First Token Prediction의 적절성 검증</li>
-              <li style="font-weight: normal;">Auxiliary Training Ratio에 따른 성능 검토</li>
+              <li style="font-weight: normal;">소규모 데이터셋에서 Generative Training의 효용성 검증</li>
+              <li style="font-weight: normal;">Cache를 활용해 효울적인 생성이 가능한 Transformer 구현</li>
+              <li style="font-weight: normal;">데이터를 증가시킨 상황에서의 일반적인 훈련 방식에서의 성능과도 비교하며, Transformer 학습 방식 및 상황별 성능 변화 확인</li>
             </ul>
           </li>
 
@@ -82,84 +80,56 @@ permalink: /aux_train
 
 
 <!-- 2. Background -->    
-    <h2 id="2">2. &hairsp; Background</h2>
+    <h2 id="2">&hairsp; 2. &hairsp; Background</h2>
     <div class="chapter-box">
 
       <div class="list-container">
         <ul>
-          <li>Transformer
+          <li>Pretrained Model
             <p>&nbsp; Transformer Seq2Seq 모델은 언어 생성 작업에서 뛰어난 성과를 보여주며, Attention 메커니즘을 통해 문맥을 파악하는 능력으로 자연어 처리 분야에서 널리 활용되고 있습니다. 그러나, 특히 긴 문장에서 Exposure Bias라는 문제가 나타나기도 합니다.
             </p>
           </li>
 
-          <br class="half-spacer">
-          <li>Exposure Bias
-            <p>&nbsp; Exposure Bias는 모델이 훈련할 때와 테스트할 때 서로 다른 토큰의 분포에 노출되어 발생하는 차이를 나타냅니다. 이는 모델이 훈련 단계에서는 실제로 관측된 토큰을 보고 예측을 수행하면서 발생하며, 이로 인해 생성된 문장의 일관성과 품질에 영향을 미칠 수 있습니다.
+          <li>Pretrained Model
+            <p>&nbsp; Transformer Seq2Seq 모델은 언어 생성 작업에서 뛰어난 성과를 보여주며, Attention 메커니즘을 통해 문맥을 파악하는 능력으로 자연어 처리 분야에서 널리 활용되고 있습니다. 그러나, 특히 긴 문장에서 Exposure Bias라는 문제가 나타나기도 합니다.
             </p>
           </li>
+
         <ul>          
       </div>
     </div>
 
 
-<!-- 2. Training -->    
-    <h2 id="3">3. &hairsp; Training</h2>
+<!-- 3. Pre Training -->    
+    <h2 id="3">&hairsp; 3. &hairsp; Pretraining</h2>
     <div class="chapter-box">
 
       <div class="list-container">
         <ul>
-          <li>Auxiliary Training
+          <li>Masked Language Modeling
             <p>&nbsp; Auxiliary Training은 Main이 되는 Training Objective에 더불어 추가적인 Training Objective를 두고 학습을 진행하는 방식을 의미합니다.
+              다만, 일반적인 생성방식으로 학습하는 것은 너무 오랜시간이 소요되기 때문에, 효율성을 위해 생성을 위한 디코딩과정에 Cache를 활용하는 모델을 구현하여 사용합니다.
+              코드 구현은 아래와 같습니다.
             </p>
           </li>
 
-          <br class="half-spacer">
-          <li>First Token Prediction
-            <p>&nbsp; Auxiliary Training Objective로는 First Token Prediction를 선정합니다. 첫번쨰 토큰을 잘 예측하는 것이 가장 중요할 것이라는 가설
+          <div class="spacer"></div>
+          <li>Casual Language Modeling
+            <p>&nbsp; Auxiliary Training은 Main이 되는 Training Objective에 더불어 추가적인 Training Objective를 두고 학습을 진행하는 방식을 의미합니다.
+              다만, 일반적인 생성방식으로 학습하는 것은 너무 오랜시간이 소요되기 때문에, 효율성을 위해 생성을 위한 디코딩과정에 Cache를 활용하는 모델을 구현하여 사용합니다.
+              코드 구현은 아래와 같습니다.
             </p>
-            <div class="code-container">
-              <div class="code-snippet">
-                <pre><code class="python">class MultiHeadAttention(nn.Module):
-    def __init__(self, config):
-        super().__init__()
-
-        hidden_dim = config.hidden_dim
-        self.n_heads = config.n_heads
-
-        assert hidden_dim // self.n_heads
-        self.head_dim = hidden_dim // self.n_heads
-        
-        self.dropout = nn.Dropout(config.dropout_ratio)
-        self.linears = clones(nn.Linear(hidden_dim, hidden_dim), 4)
-        self.scale = torch.sqrt(torch.FloatTensor([self.head_dim])).to(config.device)
-
-
-    def forward(self, query, key, value, mask = None):
-        orig_shape = list(query.shape)
-        split_shape = [query.size(0), -1, self.n_heads, self.head_dim]
-
-        Q, K, V = [lin(x).view(split_shape).transpose(1, 2) \
-                   for lin, x in zip(self.linears, (query, key, value))]   
-
-        score = torch.matmul(Q, K.permute(0, 1, 3, 2)) / self.scale
-
-        if mask is not None:
-            score = score.masked_fill(mask==0, -1e10)
-
-        attention = torch.softmax(score, dim=-1)
-
-        x = torch.matmul(self.dropout(attention), V)
-        
-        x = x.permute(0, 2, 1, 3).contiguous()
-        x = x.view(orig_shape)
-
-        del Q, K, V
-
-        return self.linears[-1](x)</code></pre>
-              </div>
-            </div>
           </li>
-        <ul>          
+
+          <div class="spacer"></div>
+          <li>Masked Casual Language Modeling
+            <p>&nbsp; Auxiliary Training은 Main이 되는 Training Objective에 더불어 추가적인 Training Objective를 두고 학습을 진행하는 방식을 의미합니다.
+              다만, 일반적인 생성방식으로 학습하는 것은 너무 오랜시간이 소요되기 때문에, 효율성을 위해 생성을 위한 디코딩과정에 Cache를 활용하는 모델을 구현하여 사용합니다.
+              코드 구현은 아래와 같습니다.
+            </p>
+          </li>
+
+        </ul>          
       </div>
     </div>
 
@@ -175,14 +145,15 @@ permalink: /aux_train
               <ul>
                 <li>Translation Task: &nbsp; WMT'14 En-De</li>
                 <li>Dialogue Task: &nbsp; Daily Dialogue</li>
-                <li>Summarization Task: &nbsp; CNN Daily</li>
-                <li>Tokenizer: &nbsp; AlBERT Tokenizer</li>
+                <li>Summarization Task: &nbsp; CNN Daily Mail</li>
+                <li>Tokenizer: &nbsp; BPE Tokenizer</li>
               </ul>
               <ul>
+                <li>Vocab Size: &nbsp; 15,000</li>
                 <li>Train Data Volumn: &nbsp; 50,000</li>
                 <li>Valid Data Volumn: &nbsp; 5,000</li>
                 <li>Test Data Volumn: &nbsp; 100</li>
-                <li>Vocab Size: &nbsp; 10,000</li>                
+                                
               </ul>
             </div>
           </li>
@@ -191,16 +162,15 @@ permalink: /aux_train
           <li>Model Setup
             <div class="dual-container">
               <ul>
-                <li>PLE Architecture: &nbsp; AlBERT</li>
-                <li>PLE Name: &nbsp; albert-v2</li>
-                <li>Input Dim: &nbsp; 10,000</li>
-                <li>Output Dim: &nbsp; 10,000</li>
+                <li>Architecture: &nbsp; Transformer</li>
+                <li>Input Dim: &nbsp; 15,000</li>
+                <li>Output Dim: &nbsp; 15,000</li>
               </ul>
               <ul>
                 <li>Embedding Dim: &nbsp; 512</li>
                 <li>Hidden Dim: &nbsp; 512</li>
-                <li>Model Params: &nbsp; 000</li>
-                <li>Model Size: &nbsp; 000</li>                
+                <li>Model Params: &nbsp; 15,488,664</li>
+                <li>Model Size: &nbsp; 60.085 MB</li>                
               </ul>
             </div>
           </li>
@@ -216,9 +186,9 @@ permalink: /aux_train
               </ul>
               <ul>
                 <li>Optimizer: &nbsp; AdamW</li>
-                <li>Apply Mixed Precision: &nbsp; True</li>
-                <li>Gradient Accumulation Steps: &nbsp; 4
-                <li>Teacher Forcing Ratio: &nbsp; 0.5</li>                
+                <li>Apply Gradient Checkpoint: &nbsp; True</li>
+                <li>Gradient Accumulation Steps: &nbsp; 4</li>
+                <li>Early Stop Patient: &nbsp; 3</li>
               </ul>
             </div>
           </li>
@@ -238,7 +208,7 @@ permalink: /aux_train
             <table class="result-table">
               <thead>
                 <tr>
-                  <th>Aux Ratio</th>
+                  <th>Pretraining Type</th>
                   <th>Score</th>
                   <th>Epoch Time</th>
                   <th>Avg GPU</th>
@@ -247,32 +217,25 @@ permalink: /aux_train
               </thead>
               <tbody>
                 <tr>
-                  <td>0.0</td>
-                  <td>12.99</td>
-                  <td>0m 44s</td>
+                  <td>Masked</td>
+                  <td>3.36</td>
+                  <td>0m 11s</td>
                   <td>0.20GB</td>
-                  <td>0.95GB</td>
+                  <td>0.85GB</td>
                 </tr>
                 <tr>
-                  <td>0.1</td>
-                  <td>2.11</td>
-                  <td>1m 00s</td>
-                  <td>0.20GB</td>
-                  <td>0.95GB</td>
+                  <td>Casual</td>
+                  <td>0.00</td>
+                  <td>4m 40s</td>
+                  <td>1.92GB</td>
+                  <td>3.86GB</td>
                 </tr>
                 <tr>
-                  <td>0.3</td>
-                  <td>7.34</td>
-                  <td>1m 00s</td>
-                  <td>0.20GB</td>
-                  <td>0.95GB</td>
-                </tr>
-                <tr>
-                  <td>0.5</td>
-                  <td>6.94</td>
-                  <td>1m 00s</td>
-                  <td>0.20GB</td>
-                  <td>0.95GB</td>
+                  <td>Masked Casual</td>
+                  <td>0.66</td>
+                  <td>4m 49s</td>
+                  <td>1.92GB</td>
+                  <td>3.86GB</td>
                 </tr>
 
               </tbody>
@@ -283,7 +246,7 @@ permalink: /aux_train
             <table class="result-table">
               <thead>
                 <tr>
-                  <th>Aux Ratio</th>
+                  <th>Pretraining Type</th>
                   <th>Score</th>
                   <th>Epoch Time</th>
                   <th>Avg GPU</th>
@@ -292,44 +255,37 @@ permalink: /aux_train
               </thead>
               <tbody>
                 <tr>
-                  <td>0.0</td>
-                  <td>2.03</td>
-                  <td>0m 43s</td>
+                  <td>Masked</td>
+                  <td>3.36</td>
+                  <td>0m 11s</td>
                   <td>0.20GB</td>
-                  <td>0.95GB</td>
+                  <td>0.85GB</td>
                 </tr>
                 <tr>
-                  <td>0.1</td>
-                  <td>2.31</td>
-                  <td>0m 59s</td>
-                  <td>0.20GB</td>
-                  <td>0.95GB</td>
+                  <td>Casual</td>
+                  <td>0.00</td>
+                  <td>4m 40s</td>
+                  <td>1.92GB</td>
+                  <td>3.86GB</td>
                 </tr>
                 <tr>
-                  <td>0.3</td>
-                  <td>2.34</td>
-                  <td>0m 59s</td>
-                  <td>0.20GB</td>
-                  <td>0.95GB</td>
-                </tr>
-                <tr>
-                  <td>0.5</td>
-                  <td>0.82</td>
-                  <td>0m 59s</td>
-                  <td>0.20GB</td>
-                  <td>0.95GB</td>
+                  <td>Masked Casual</td>
+                  <td>0.66</td>
+                  <td>4m 49s</td>
+                  <td>1.92GB</td>
+                  <td>3.86GB</td>
                 </tr>
 
               </tbody>
             </table>
 
-                
+
           <div class="half-spacer"></div>
           <li>Text Summarization</li>
             <table class="result-table">
               <thead>
                 <tr>
-                  <th>Aux Ratio</th>
+                  <th>Pretraining Type</th>
                   <th>Score</th>
                   <th>Epoch Time</th>
                   <th>Avg GPU</th>
@@ -338,40 +294,35 @@ permalink: /aux_train
               </thead>
               <tbody>
                 <tr>
-                  <td>0.0</td>
-                  <td>7.60</td>
-                  <td>2m 44s</td>
-                  <td>0.21GB</td>
-                  <td>2.98GB</td>
+                  <td>Masked</td>
+                  <td>3.36</td>
+                  <td>0m 11s</td>
+                  <td>0.20GB</td>
+                  <td>0.85GB</td>
                 </tr>
                 <tr>
-                  <td>0.1</td>
-                  <td>2.95</td>
-                  <td>3m 8s</td>
-                  <td>0.21GB</td>
-                  <td>2.98GB</td>
+                  <td>Casual</td>
+                  <td>0.00</td>
+                  <td>4m 40s</td>
+                  <td>1.92GB</td>
+                  <td>3.86GB</td>
                 </tr>
                 <tr>
-                  <td>0.3</td>
-                  <td>4.10</td>
-                  <td>3m 8s</td>
-                  <td>0.21GB</td>
-                  <td>2.98GB</td>
-                </tr>
-                <tr>
-                  <td>0.5</td>
-                  <td>5.39</td>
-                  <td>3m 8s</td>
-                  <td>0.21GB</td>
-                  <td>2.98GB</td>
+                  <td>Masked Casual</td>
+                  <td>0.66</td>
+                  <td>4m 49s</td>
+                  <td>1.92GB</td>
+                  <td>3.86GB</td>
                 </tr>
 
               </tbody>
             </table>
 
-          <br class="half-spacer">  
+
+          <div class="half-spacer"></div>  
           <li>Result Analysis</li>
-            <p> &nbsp; RNN은 다양한 정보를 함유하기에 지나치게 단순하고, LSTM은 GATE구조가 복잡하기에, 그만큼 영향을 받은 요소가 많아 학습 수렴이 어렵습니다. 때문에 모든 학습 결과에서는 GATE를 사용하면서도 단순화된 연산으로 학습의 이점이 큰 GRU가 가장 뛰어난 성능을 보임을 알 수 있습니다. 
+            <p> &nbsp; 두 가지 과제에서 모두 Generative Training은 성능과 효율성 측면에서 가장 낮은 결과를 보이며, 효용성이 매우 떨어짐을 확인할 수 있습니다.
+              Transformer의 학습에서 Generative Training이 얼마나 비효율적인지 직접 확인할 수 있었습니다.
             </p>
         </ul>
       </div>
@@ -388,12 +339,12 @@ permalink: /aux_train
             <p>&nbsp; 토큰의 벡터 변환을 위한 Embedding Layer와 실제 연산을 위한 순환 신경망 레이어만으로 구성된 단순산 Encoder, Decoder 구조로 이루어져 있으며, 
             </p>
 
-          <br class="half-spacer">
+          <div class="half-spacer"></div>
           <li>세 가지 순환 신경망의 성능 비교 검증</li>
             <p>LSTM은 게이트 메커니즘을 통해 장기 의존성 문제를 해결하는 데 강점을 보입니다. 복잡한 문맥을 학습하고 기억하는 데 탁월하며, 긴 시퀀스 데이터에서 뛰어난 성능을 발휘할 수 있습니다. 하지만 LSTM은 더 많은 파라미터를 가지고 있어서 더 많은 데이터와 계산 리소스가 필요할 수 있습니다.
             </p>
 
-          <br class="half-spacer">
+          <div class="half-spacer"></div>
           <li>가설 검증
             <ul>
               <li>LSTM, GRU, RNN 순으로 높은 성능</li>
@@ -421,7 +372,7 @@ permalink: /aux_train
 
 
 <!-- 6. Reference -->
-    <h2 id="6">6. &hairsp; Reference</h2>
+    <h2 id="6">&hairsp; 6. &hairsp; Reference</h2>
     <div class="chapter-box">
       <a class="reference" href="https://arxiv.org/abs/1706.03762">&nbsp; Attention Is All You Need</a> 
     </div>
@@ -431,6 +382,6 @@ permalink: /aux_train
 
 
 <div class="pagination">
-  <a href="{{ '/transformer_fusion' | relative_url }}" class="btn-prev"><span>Transformer Fusion</span></a>
-  <a href="{{ '/scheduled_sampling' | relative_url }}" class="btn-next"><span>Scheduled Sampling</span></a>
+  <a href="{{ '/scheduled_sampling' | relative_url }}" class="btn-prev"><span>Scheduled Sampling</span></a>
+  <a href="{{ '/gan_train' | relative_url }}" class="btn-next"><span>SeqGAN Training</span></a>
 </div>

@@ -16,8 +16,7 @@ permalink: /sample
     <div class="callout">
       <p class="highlighted-text"><span>Project Objective</span></p>
       <div class="small-spacer"></div>
-      <p>&nbsp; 이 프로젝트에서는 사전학습된 언어 인코더 모델을 Seq2Seq 아키텍처에서 활용하기 위한 두 가지 방법론을 구현하고, 각 방법론의 성능을 세 가지 자연어 생성 과제에서 비교합니다. 변인이 되는 세 가지 모델구조는 각각 Simple, Fused, Full Model이라고 명명하고 있으며, 각 방법론의 성능은 ~~하게 나왔습니다. 이를 통해 ~~하다는 사실을 확인할 수 있었습니다.
-      실험에 대한 자세한 코드 구현은 "~~"에서 확인 할 수 있습니다.
+      <p>&nbsp; 이 프로젝트에서는 사전 학습된 언어 인코더 모델을 Seq2Seq 아키텍처에서 활용하기 위한 두 가지 방법론을 구현하고, 각 방법론의 성능을 세 가지 자연어 생성 과제에서 비교합니다. 변인이 되는 세 가지 모델구조는 각각 Simple, Fusion Model이라고 명명하며, 모델 구조라는 변인을 제외한 모든 실험 변수들은 동일하게 적용합니다. 자연어 생성 능력 평가를 위해 기계번역, 대화생성, 문서요약이라는 세 가지 과제를 선정했습니다.
       </p>
     </div>
 
@@ -29,27 +28,23 @@ permalink: /sample
         </li>
 
         <li>
-          <a href="#2">2. &hairsp; Background</a>
+          <a href="#2">2. &hairsp; Architecture</a>
         </li>
 
         <li>
-          <a href="#3">3. &hairsp; Code Implementation</a>
+          <a href="#3">3. &hairsp; Experimental Setup</a>
         </li>
 
         <li>
-          <a href="#4">4. &hairsp; Experimental Setup</a>
+          <a href="#4">4. &hairsp; Results</a>
         </li>
 
         <li>
-          <a href="#5">5. &hairsp; Results</a>
+          <a href="#5">5. &hairsp; Conclusion</a>
         </li>
 
         <li>
-          <a href="#6">6. &hairsp; Conclusion</a>
-        </li>
-
-        <li>
-          <a href="#7">7. &hairsp; Reference</a>
+          <a href="#6">6. &hairsp; Reference</a>
         </li>
 
       </ul>
@@ -64,19 +59,17 @@ permalink: /sample
       <div class="list-container">
         <ul>
           <li>Description</li>
-            <p> &nbsp; 사전학습 모델들은 다양한 자연어 처리 과제에서 좋은 성능을 보입니다. 처리하고자 하는 과제의 목적성에 맞게 사전학습 모델의 구조 역시 다양합니다.
-            BERT처럼 Encoding을 중시하는 모델구조, GPT처럼 Decoding을 중시하는 구조, 그리고 BART 처럼 Encoder-Decoder로 구성된 모델등.
-            그 중에서도 BERT 계열의 모델들이 가장 많음. 
-            때문에 Seq2Seq 모델에서 단순히 사전학습된 Seq2Seq 모델을 사용하는 것을 넘어, 이미 잘 구축되어 있는 Pretrained Language Encoder를 Seq2Seq에서 활용하기 위한 세 가지 방법론을 직접 구현하고,
-            자연어 생성 문제에서 비교 분석해봅니다.   
+            <p> &nbsp; 최근 BERT를 필두로 한, 다양한 사전학습 인코더 모델들이 다양한 자연어 처리 영역에서 좋은 성과를 보이고 있습니다. 사전학습 인코더 모델의 경우, 그 적용 범위가 더 넓은 덕에 더 다양하게 연구되어지고 있는 반면, 상대적으로 사전학습 Seq2Seq 모델의 수는 적습니다. 때문에 이 프로젝트에서는 다양한 사전학습 인코더 모델을 Transformer Seq2Seq 구조안에서 사용하기 위한 두 가지 모델링 방법론을 직접 구현하고, 각 방법론 간의 성능 차이를 직접 확인합니다. <br>
+
+            실험 모델의 Backbone 모델은 Transformer이며, 사전학습 인코더 모델로는 하드웨어의 한계를 고려해 비교적 가벼운 AlBERT 사전학습 모델을 선정했습니다. 가장 간단한 방식의 사전학습 인코더의 적용 모델을 Simple Model, 그리고 기본 Transformer 골조 안에서 사전학습 모델의 결과값을 적절히 혼합해서 사용하기 위한 모델구조를 Fusion Model이라고 명명합니다. 그리고 각 모델의 성능은 기계번역, 대화생성, 문서요약이라는 세 가지 자연어 생성 과제에서 진행합니다. 모델 구조를 제외한 모든 실험 변인은 동일하게 적용합니다.
+
             </p>
 
           <div class="half-spacer"></div>
           <li>Objective
             <ul>
-              <li style="font-weight: normal;">사전학습 인코더 모델을 생성과제에서 사용하기 위한 지식 습득</li>
-              <li style="font-weight: normal;">세 가지 방법론의 성능 비교 검증</li>
-              <li style="font-weight: normal;">실험 결과를 통해, 이후 자연어 생성을 위한 모델링 다양성 확보</li>
+              <li style="font-weight: normal;">사전학습 인코더 모델을 Transformer Seq2Seq에서 활용하기 위한 방법론 별 자연어 생성 능력 비교</li>
+              <li style="font-weight: normal;">추후 다양한 사전학습 모델 사용을 통한 다양한 연구로의 발전 가능성 제고</li>
             </ul>
           </li>
 
@@ -87,109 +80,323 @@ permalink: /sample
 
 
 
-<!-- 2. Background -->    
-    <h2 id="2">&hairsp; 2. &hairsp; Background</h2>
+
+<!-- 2. Architecture -->    
+    <h2 id="2">&hairsp; 2. &hairsp; Architecture</h2>
     <div class="chapter-box">
 
       <div class="list-container">
         <ul>
-          <li>PLE Encoder Model</li>
+          <li>Simple Model</li>
             <div class="dual-container">
               <img src="{{ 'assets/img/research_01/standard_transformer.png' | relative_url }}" style="width: 27%; height: 25%;">
               <p>&nbsp; Transformer Seq2Seq 모델 구조에서, Encoder를 Pretrained Language Encoder Model로 대체한 모델입니다. 연산은 기존 Transformer Seq2Seq의 연산 과정과 동일하게 적용됩니다. Encoder는 Context Vector를 생성하고, Decoder는 Context Vector와 Teacher Forcing을 활용해 예측값을 생성하는 방식으로 학습이 진행됩니다..
               </p>
             </div>      
+            <div class="code-container">
+              <div class="code-snippet">
+                <pre><code class="python">class Decoder(nn.Module):
+    def __init__(self, config):
+        super(Decoder, self).__init__()
+
+        layer = nn.TransformerDecoderLayer(
+            d_model=config.hidden_dim,
+            nhead=config.n_heads,
+            dim_feedforward=config.pff_dim,
+            dropout=config.dropout_ratio,
+            activation='gelu',
+            batch_first=True
+        )
+
+        self.embeddings = Embeddings(config)
+        self.layers = clones(layer, config.n_layers)
+
+
+    def forward(self, x, memory, e_mask=None, d_mask=None):
+        
+        x = self.embeddings(x)
+        
+        for layer in self.layers:
+            x = layer(
+                x, memory, 
+                memory_key_padding_mask=e_mask,
+                tgt_mask=d_mask,
+            )
+
+        return x
+
+
+
+
+class SimpleModel(nn.Module):
+    def __init__(self, config):
+        super(SimpleModel, self).__init__()
+        
+        self.pad_id = config.pad_id
+        self.device = config.device
+        self.max_len = config.max_len
+        self.vocab_size = config.vocab_size
+
+        self.encoder = BertModel.from_pretrained(config.plm_mname)
+        self.decoder = Decoder(config)
+        self.generator = nn.Linear(config.hidden_dim, config.vocab_size)
+
+        self.criterion = nn.CrossEntropyLoss()
+        self.outputs = namedtuple('outputs', ('logits', 'loss'))
+
+
+    def pad_mask(self, x):
+        return (x != self.pad_id).unsqueeze(1).unsqueeze(2)
+
+
+    def dec_mask(self, x):
+        seq_len = x.size(-1)
+        attn_shape = (1, seq_len, seq_len)
+        subsequent_mask = torch.triu(torch.ones(attn_shape), diagonal=1).type(torch.uint8) == 0
+        return self.pad_mask(x) & subsequent_mask.to(self.device)
+
+
+    def shift_right(self, labels):
+        shifted = labels.new_zeros(labels.size(0), labels.size(1)-1)
+        shifted = labels[:, :-1].clone()
+        #shifted[:, 0] = self.pad_id #or self.decoder_start_token_id
+        return shifted
+
+
+    def generate(self, input_ids, attention_mask):
+        batch_size = input_ids.size(0)
+        
+        e_mask = self.pad_mask(input_ids)
+        
+        memory = self.encoder(
+            input_ids=input_ids, 
+            attention_mask=attention_mask
+        ).last_hidden_state
+
+        preds = torch.zeros(batch_size, self.max_len, dtype=torch.long)
+        preds = preds.fill_(self.pad_id).to(self.device)
+        
+        for i in range(1, self.max_len):
+            d_mask = self.dec_mask(preds)
+            dec_out = self.decoder(preds, memory, e_mask, d_mask)
+            logits = self.generator(dec_out).argmax(-1)
+            
+            if logits.sum() == 0:
+                break
+
+            preds[i] = logits
+
+        return preds.tolist()
+
+
+    def forward(self, input_ids, attention_mask, labels):
+        shifted_labels = self.shift_right(labels)
+        e_mask = self.pad_mask(input_ids)
+        d_mask = self.dec_mask(shifted_labels)
+        
+        memory = self.encoder(input_ids=input_ids, 
+                              attention_mask=attention_mask).last_hidden_state
+        d_out = self.decoder(shifted_labels, memory, e_mask, d_mask)
+        
+        logits = self.generator(d_out)
+        loss = self.criterion(logits.view(-1, self.vocab_size), 
+                              labels[:, 1:].contiguous().view(-1))
+
+        return self.outputs(logits, loss)</code></pre>
+              </div>
+            </div>
+
 
           <div class="spacer"></div>
-          <li>PLE Fusion Model</li>
+          <li>Fusion Model</li>
           <div class="dual-container">
             <img src="{{ 'assets/img/research_01/fusion.png' | relative_url }}" style="width: 40%; height: 40%;">
             <p>&nbsp; PLE Fused Model은 "Incorporating BERT into Neural Machine Translation" 논문에서 제시한 모델 구조를 사용합니다. 사전학습된 인코더 모델을 그대로 인코더로만 사용하는것이 아니라, 인코딩과 디코딩 과정에 추가적인 정보전달을 위한 모델로 활용합니다.
             </p>
           </div>
 
-          <div class="spacer"></div>
-          <li>PLE Encoder Decoder Model</li>          
-          <p>&nbsp; PLE Encoder Decoder Model은 Transformer Encoder & Decoder 모두에 Pretrained Language Encoder Model의 학습된 가중치를 활용하는 방법입니다.
-            구현에서는 Hugging Face의 EncoderDecoder Model을 활용합니다.
-          </p>
+          <div class="code-container">
+            <div class="code-snippet">
+              <pre><code class="python">class EncoderLayer(nn.Module):
+    def __init__(self, config):
+        super(EncoderLayer, self).__init__()
+        
+        self.self_attn = MultiHeadAttention(config)
+        self.bert_attn = MultiHeadAttention(config)
+        self.pff = PositionwiseFeedForward(config)
+
+        self.s_sublayer = SublayerConnection(config) #self attn
+        self.b_sublayer = SublayerConnection(config) #bert attn
+        self.p_sublayer = SublayerConnection(config) #pff
+
+
+    def forward(self, x, mask, bert_out):
+        b = bert_out
+
+        #BERT Attn & Self Attn
+        residual = x
+        b = self.b_sublayer(x, lambda x: self.bert_attn(x, b, b, mask))
+        s = self.s_sublayer(x, lambda x: self.self_attn(x, x, x, mask))
+        x = residual + s * 0.5 + b * 0.5  #residual conn
+
+        #Position wise FFN
+        residual = x
+        x = self.p_sublayer(x, self.pff)
+        return residual + x  #residual conn
+
+
+
+
+class DecoderLayer(nn.Module):
+    def __init__(self, config):
+        super(DecoderLayer, self).__init__()
+
+        self.self_attn = MultiHeadAttention(config)
+        self.bert_attn = MultiHeadAttention(config)
+        self.enc_dec_attn = MultiHeadAttention(config)
+        self.pff = PositionwiseFeedForward(config)
+
+        self.s_sublayer = SublayerConnection(config) #self
+        self.b_sublayer = SublayerConnection(config) #bert
+        self.e_sublayer = SublayerConnection(config) #encoder
+        self.p_sublayer = SublayerConnection(config) #pff
+
+
+    def forward(self, x, memory, e_mask, d_mask, bert_out):
+        m = memory
+        b = bert_out
+
+        #Self Attn
+        residual = x
+        s = self.s_sublayer(x, lambda x: self.self_attn(x, x, x, d_mask))
+        x = residual + s  #residual conn
+        
+
+        #BERT Attn & Enc-Dec Attn
+        residual = x
+        b = self.b_sublayer(x, lambda x: self.bert_attn(x, b, b, e_mask))
+        e = self.b_sublayer(x, lambda x: self.bert_attn(x, m, m, e_mask))
+        x = residual + b * 0.5 + e * 0.5  #residual conn
+        
+
+        #Position wise FFN
+        residual = x
+        x = self.p_sublayer(x, self.pff)
+        return residual + x  #residual conn
+
+
+
+class Encoder(nn.Module):
+    def __init__(self, config):
+        super(Encoder, self).__init__()
+        self.emb = Embeddings(config)
+        self.norm = nn.LayerNorm(config.hidden_dim)
+        self.layers = clones(EncoderLayer(config), config.n_layers)
+
+    def forward(self, x, mask, bert_out):
+        x = self.emb(x)
+        for layer in self.layers:
+            x = layer(x, mask, bert_out)
+        return self.norm(x)
+
+
+
+class Decoder(nn.Module):
+    def __init__(self, config):
+        super(Decoder, self).__init__()
+        self.emb = Embeddings(config)
+        self.norm = nn.LayerNorm(config.hidden_dim)
+        self.layers = clones(DecoderLayer(config), config.n_layers)
+        
+
+    def forward(self, x, memory, e_mask, d_mask, bert_out):
+        x = self.emb(x)
+        for layer in self.layers:
+            x = layer(x, memory, e_mask, d_mask, bert_out)
+        return self.norm(x)
+
+
+
+class FusionModel(nn.Module):
+    def __init__(self, config):
+        super(FusionModel, self).__init__()
+        
+        self.device = config.device
+        self.pad_id = config.pad_id
+        self.max_len = config.max_len
+        self.vocab_size = config.vocab_size
+
+        self.ple = AutoModel.from_pretrained(config.mname)
+        self.encoder = Encoder(config)
+        self.decoder = Decoder(config)
+        self.generator = nn.Linear(config.hidden_dim, config.vocab_size)
+
+        self.criterion = nn.CrossEntropyLoss()
+        self.outputs = namedtuple('outputs', ('logits', 'loss'))
+
+
+    def pad_mask(self, x):
+        return (x != self.pad_id).unsqueeze(1).unsqueeze(2)
+
+
+    def dec_mask(self, x):
+        seq_len = x.size(-1)
+        attn_shape = (1, seq_len, seq_len)
+        subsequent_mask = torch.triu(torch.ones(attn_shape), diagonal=1).type(torch.uint8) == 0
+        return self.pad_mask(x) & subsequent_mask.to(self.device)
+
+
+    def shift_right(self, labels):
+        shifted = labels.new_zeros(labels.size(0), labels.size(1)-1)
+        shifted = labels[:, :-1].clone()
+        #shifted[:, 0] = self.pad_id #or self.decoder_start_token_id
+        return shifted
+
+
+    def generate(self, input_ids, attention_mask):
+        batch_size = input_ids.size(0)
+        
+        e_mask = self.pad_mask(input_ids)
+        ple_out = self.ple(input_ids, attention_mask).last_hidden_state
+        memory = self.encoder(input_ids, e_mask, ple_out)
+
+        preds = torch.zeros(batch_size, self.max_len).to(self.device)
+        for i in range(1, self.max_len):
+            d_mask = self.dec_mask(preds)
+            dec_out = self.decoder(preds, memory, e_mask, d_mask)
+            logits = self.generator(dec_out).argmax(-1)
+
+            if logits.sum() == 0:
+                break
+
+            preds[i] = logits
+
+        return preds.tolist()
+
+
+    def forward(self, input_ids, attention_mask, labels):
+        y = self.shift_right(labels)
+
+        e_mask = self.pad_mask(input_ids)
+        d_mask = self.dec_mask(y)
+        
+        ple_out = self.ple(input_ids, attention_mask).last_hidden_state
+
+        memory = self.encoder(input_ids, e_mask, ple_out)
+        d_out = self.decoder(y, memory, e_mask, d_mask, ple_out)
+        
+        logits = self.generator(d_out)
+        loss = self.criterion(logits.view(-1, self.vocab_size), 
+                              labels[:, 1:].contiguous().view(-1))
+
+        return self.outputs(logits, loss)</code></pre>
+            </div>
+          </div>
           
         </ul>
       </div>
     </div>
 
-
-
-<!-- Code Implementation -->    
-    <h2 id="3">&hairsp; 3. &hairsp; Code Implementation</h2>
-    <div class="chapter-box">
-
-      <div class="list-container">
-        <ul>
-          <li>PLE Encoder</li>
-
-          <div class="code-container">
-            <div class="code-snippet">
-              <pre><code class="python">def generate_signal(length, channels, min_timescale=1.0, max_timescale=1.0e4):
-        position = np.arange(length)
-        num_timescales = channels // 2
-        log_timescale_increment = ( math.log(float(max_timescale) / float(min_timescale)) / (float(num_timescales) - 1))
-        inv_timescales = min_timescale * np.exp(np.arange(num_timescales).astype(np.float) * -log_timescale_increment)
-        scaled_time = np.expand_dims(position, 1) * np.expand_dims(inv_timescales, 0)
-
-        signal = np.concatenate([np.sin(scaled_time), np.cos(scaled_time)], axis=1)
-        signal = np.pad(signal, [[0, 0], [0, channels % 2]], 'constant', constant_values=[0.0, 0.0])
-        signal =  signal.reshape([1, length, channels])
-
-        return torch.from_numpy(signal).type(torch.FloatTensor)</code></pre>
-            </div>
-          </div>
-
-          <div class="spacer"></div>
-          <li>PLE Fusion</li>
-
-          <div class="code-container">
-            <div class="code-snippet">
-              <pre><code class="python">def generate_signal(length, channels, min_timescale=1.0, max_timescale=1.0e4):
-        position = np.arange(length)
-        num_timescales = channels // 2
-        log_timescale_increment = ( math.log(float(max_timescale) / float(min_timescale)) / (float(num_timescales) - 1))
-        inv_timescales = min_timescale * np.exp(np.arange(num_timescales).astype(np.float) * -log_timescale_increment)
-        scaled_time = np.expand_dims(position, 1) * np.expand_dims(inv_timescales, 0)
-
-        signal = np.concatenate([np.sin(scaled_time), np.cos(scaled_time)], axis=1)
-        signal = np.pad(signal, [[0, 0], [0, channels % 2]], 'constant', constant_values=[0.0, 0.0])
-        signal =  signal.reshape([1, length, channels])
-
-        return torch.from_numpy(signal).type(torch.FloatTensor)</code></pre>
-            </div>
-          </div>
-
-
-          <div class="spacer"></div>
-          <li>PLE Encoder Decoder</li>
-
-          <div class="code-container">
-            <div class="code-snippet">
-              <pre><code class="python">def generate_signal(length, channels, min_timescale=1.0, max_timescale=1.0e4):
-        position = np.arange(length)
-        num_timescales = channels // 2
-        log_timescale_increment = ( math.log(float(max_timescale) / float(min_timescale)) / (float(num_timescales) - 1))
-        inv_timescales = min_timescale * np.exp(np.arange(num_timescales).astype(np.float) * -log_timescale_increment)
-        scaled_time = np.expand_dims(position, 1) * np.expand_dims(inv_timescales, 0)
-
-        signal = np.concatenate([np.sin(scaled_time), np.cos(scaled_time)], axis=1)
-        signal = np.pad(signal, [[0, 0], [0, channels % 2]], 'constant', constant_values=[0.0, 0.0])
-        signal =  signal.reshape([1, length, channels])
-
-        return torch.from_numpy(signal).type(torch.FloatTensor)</code></pre>
-            </div>
-          </div>
-
-
-        </ul>          
-      </div>    
-    </div>
 
 
 
@@ -241,9 +448,10 @@ permalink: /sample
                 <li>Num Epochs: &nbsp; 10</li>
                 <li>Batch Size: &nbsp; 32</li>
                 <li>Learning Rate: &nbsp; 5e-4</li>
-                <li>LR Scheduler: &nbsp; pleature</li>
+                <li>Learning Rate for PLE: &nbsp; 5e-5</li>                
               </ul>
               <ul>
+                <li>LR Scheduler: &nbsp; ReduceLROnPlateau</li>                
                 <li>Optimizer: &nbsp; AdamW</li>
                 <li>Gradient Accumulation Steps: &nbsp; 4
                 <li>Teacher Forcing Ratio: &nbsp; 0.5</li>                
@@ -275,25 +483,18 @@ permalink: /sample
               </thead>
               <tbody>
                 <tr>
-                  <td>PLE Encoder</td>
-                  <td>2.12</td>
-                  <td>3m 58s</td>
-                  <td>0.22GB</td>
-                  <td>0.82GB</td>
+                  <td>Simple</td>
+                  <td>-</td>
+                  <td>-</td>
+                  <td>-</td>
+                  <td>-</td>
                 </tr>
                 <tr>
-                  <td>PLE Fusion</td>
-                  <td>8.35</td>
-                  <td>4m 16s</td>
-                  <td>0.27GB</td>
-                  <td>1.30GB</td>
-                </tr>
-                <tr>
-                  <td>PLE Encoder Decoder</td>
-                  <td>9.75</td>
-                  <td>4m 6s</td>
-                  <td>0.26GB</td>
-                  <td>1.16GB</td>
+                  <td>Fusion</td>
+                  <td>-</td>
+                  <td>-</td>
+                  <td>-</td>
+                  <td>-</td>
                 </tr>
 
               </tbody>
@@ -313,25 +514,18 @@ permalink: /sample
               </thead>
               <tbody>
                 <tr>
-                  <td>RNN Model</td>
-                  <td>0.10</td>
-                  <td>3m 40s</td>
-                  <td>0.22GB</td>
-                  <td>0.79GB</td>
+                  <td>Simple</td>
+                  <td>-</td>
+                  <td>-</td>
+                  <td>-</td>
+                  <td>-</td>
                 </tr>
                 <tr>
-                  <td>LSTM Model</td>
-                  <td>0.37</td>
-                  <td>4m 5s</td>
-                  <td>0.27GB</td>
-                  <td>1.23GB</td>
-                </tr>
-                <tr>
-                  <td>GRU Model</td>
-                  <td>2.16</td>
-                  <td>3m 58s</td>
-                  <td>0.26GB</td>
-                  <td>1.11GB</td>
+                  <td>Fusion</td>
+                  <td>-</td>
+                  <td>-</td>
+                  <td>-</td>
+                  <td>-</td>
                 </tr>
 
               </tbody>
@@ -352,25 +546,18 @@ permalink: /sample
               </thead>
               <tbody>
                 <tr>
-                  <td>RNN Model</td>
-                  <td>0.00</td>
-                  <td>8m 6s</td>
-                  <td>0.23GB</td>
-                  <td>1.20GB</td>
+                  <td>Simple</td>
+                  <td>-</td>
+                  <td>-</td>
+                  <td>-</td>
+                  <td>-</td>
                 </tr>
                 <tr>
-                  <td>LSTM Model</td>
-                  <td>2.23</td>
-                  <td>9m 7s</td>
-                  <td>0.29GB</td>
-                  <td>2.00GB</td>
-                </tr>
-                <tr>
-                  <td>GRU Model</td>
-                  <td>2.19</td>
-                  <td>8m 42s</td>
-                  <td>0.27GB</td>
-                  <td>1.82GB</td>
+                  <td>Fusion</td>
+                  <td>-</td>
+                  <td>-</td>
+                  <td>-</td>
+                  <td>-</td>
                 </tr>
 
               </tbody>
@@ -378,7 +565,8 @@ permalink: /sample
 
           <div class="half-spacer"></div>
           <li>Result Analysis</li>
-            <p> &nbsp; RNN은 다양한 정보를 함유하기에 지나치게 단순하고, LSTM은 GATE구조가 복잡하기에, 그만큼 영향을 받은 요소가 많아 학습 수렴이 어렵습니다. 때문에 모든 학습 결과에서는 GATE를 사용하면서도 단순화된 연산으로 학습의 이점이 큰 GRU가 가장 뛰어난 성능을 보임을 알 수 있습니다. 
+            <p style="color: red;"> &nbsp; 사전 학습된 모델과 초기화 된 Transformer의 부분 요소들을 한번에 학습하다보니, 정상적인 학습이 이루어지지 않았습니다.
+              이를 해결하기 위해, 사전학습 모델에 별도의 Learning Rate와 Optimizer를 두는 방식을 사용했으나, 이 역시 효과적이지는 않습니다. 추후 학습 실패의 원인을 찾아 보완할 예정입니다.
             </p>
         </ul>
       </div>
@@ -392,34 +580,13 @@ permalink: /sample
 
       <div class="list-container">
         <ul>
-          <li>RNN, LSTM, GRU 을 활용한 seq2seq 모델링 방식의 이해</li>
-            <p>&nbsp; 토큰의 벡터 변환을 위한 Embedding Layer와 실제 연산을 위한 순환 신경망 레이어만으로 구성된 단순산 Encoder, Decoder 구조로 이루어져 있으며, 
+          <li>Transformer의 틀 안에서 사전학습 언어 인코더 모델을 활용할 수 있는 아키텍처 구현</li>
+            <p>&nbsp; 가장 
             </p>
 
           <div class="half-spacer"></div>
           <li>세 가지 순환 신경망의 성능 비교 검증</li>
             <p>LSTM은 게이트 메커니즘을 통해 장기 의존성 문제를 해결하는 데 강점을 보입니다. 복잡한 문맥을 학습하고 기억하는 데 탁월하며, 긴 시퀀스 데이터에서 뛰어난 성능을 발휘할 수 있습니다. 하지만 LSTM은 더 많은 파라미터를 가지고 있어서 더 많은 데이터와 계산 리소스가 필요할 수 있습니다.
-            </p>
-
-          <div class="half-spacer"></div>
-          <li>가설 검증
-            <ul>
-              <li>LSTM, GRU, RNN 순으로 높은 성능</li>
-                <p> LSTM의 연산과정이 가장 복잡하고, 다양한 GATE를 사용하기 떄문에, 좋은 성능을 낼 것이라고 예측했으나, 되려 복잡한 연산으로 인해, 학습 시 수렴에 어려움이 생겼습니다.
-                오히려 GATE를 사용하면서도, 연산의 단순화를 도모한 GRU의 학습 성능이 가장 좋은 것을 확인했습니다
-                </p>
-
-              <li>RNN, GRU, LSTM 순으로 빠른 학습</li>
-                <p> 학습 속도 및 GPU 사용량으로 확인해본 효율성은 가설과 마찬가지로 RNN, GRU, LSTM 순으로 나타났습니다.
-                </p>
-              <li></li>
-            </ul>
-          </li>
-            
-          <div class="half-spacer"></div>
-          <li>최소 기준치 확립</li>
-            <p>앞서 언급했듯이 순환 신경망을 사용한 Seq2Seq모델은 앞으로 다루게 될 다양한 Seq2Seq 모델들의 시작점입니다. 고도화 된 모델일지라도 하이퍼 파라미터 설정이나, 훈련 방식 등의 이유에서 잘못된 성능이 나올수도 있습니다. 이때, 최소한의 동작은 하는 구나 하는 판단의 근거로 다음과 같은 스코어를 활용할 수 있습니다. <br> 
-              기계번역 BLEU Score: 00.00, 대화 생성 Rouge Score: 00.00, 문서 요약 Rouge Score: 00.00 이하의 성능ㅇ
             </p>
 
         </ul>
@@ -433,9 +600,9 @@ permalink: /sample
     <div class="chapter-box">
       <a class="reference" href="https://arxiv.org/abs/1706.03762">&nbsp; Attention Is All You Need</a> <br> 
       <a class="reference" href="https://arxiv.org/abs/2002.06823">&nbsp; Incorporating BERT into Neural Machine Translation</a> <br> 
-      <a class="reference" href="https://arxiv.org/abs/1907.12461">&nbsp; Leveraging Pre-trained Checkpoints for Sequence Generation Tasks</a> <br> 
-      <a class="reference" href="https://huggingface.co/docs/transformers/model_doc/encoder-decoder">&nbsp; HuggingFace EncoderDecoder Model</a>
+      <a class="reference" href="https://arxiv.org/abs/1907.12461">&nbsp; Leveraging Pre-trained Checkpoints for Sequence Generation Tasks</a>
     </div>
+
 
   </div>
 </div>

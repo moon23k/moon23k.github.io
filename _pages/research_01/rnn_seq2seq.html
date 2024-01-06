@@ -234,9 +234,8 @@ permalink: /rnn_seq2seq
           <div class="spacer"></div>
           <li>RNN Sequence to Sequence Architecture</li>
             <img src="{{ 'assets/img/research_01/seq2seq.png' | relative_url }}" style="width: 60%; height: 50%; display: block; margin: 10px auto;">
-            <p>&nbsp; <b>Sequence to Sequence Learning with Neural Networks</b> 에서 제시된 모델 구조. 글자 그대로 Sequence를 입력값으로 받아, Sequence를 출력값으로 반환하는 모델 구조를 의미합니다.
-              Encoder와 Decoder라는 모듈로 구성됨. 인코더는 입력 시퀀스의 모든 토큰들을 순차적으로 입력받아 처리한 후, 마지막에 모든 토큰들의 정보들을 압축한 하나의 벡터를 반환. 이 벡터를 Context Vector라고 함. 디코더는 Context Vector를 받아 매 시점마다 순차적으로 토큰들을 출력하며, 시퀀스를 만들어냄. <br> 
-              학습 과정에서 Teacher Forcing 사용으로, 학습의 안정성을 도모.
+            <p>&nbsp; <b>Sequence to Sequence Learning with Neural Networks</b> 에서 제시된 모델 구조입니다. 글자 그대로 Sequence를 입력값으로 받아, Sequence를 출력값으로 반환하는 모델 구조를 의미합니다.
+              Encoder와 Decoder라는 모듈로 구성되며, 인코더는 입력 시퀀스의 모든 토큰들을 순차적으로 입력받아 처리한 후, 마지막에 모든 토큰들의 정보들을 압축한 하나의 벡터를 반환합니다. 이 벡터를 Context Vector라고 합니다. 디코더는 Context Vector를 받아 매 시점마다 순차적으로 토큰들을 출력하며, 시퀀스를 만들어 반환합니다. <br>
             </p>
 
           <div class="spacer"></div>
@@ -366,8 +365,8 @@ class Seq2Seq(nn.Module):
                 <li><b>Tokenizer</b>: &nbsp; Word-Level Tokenizer</li>
               </ul>
               <ul>
-                <li><b>Train Data Volumn</b>: &nbsp; 50,000</li>
-                <li><b>Valid Data Volumn</b>: &nbsp; 5,000</li>
+                <li><b>Train Data Volumn</b>: &nbsp; 30,000</li>
+                <li><b>Valid Data Volumn</b>: &nbsp; 1,000</li>
                 <li><b>Test Data Volumn</b>: &nbsp; 100</li>
                 <li><b>Vocab Size</b>: &nbsp; 10,000</li>                
               </ul>
@@ -404,7 +403,7 @@ class Seq2Seq(nn.Module):
                 <li><b>Num Epochs</b>: &nbsp; 10</li>
                 <li><b>Batch Size</b>: &nbsp; 32</li>
                 <li><b>Learning Rate</b>: &nbsp; 5e-4</li>
-                <li><b>LR Scheduler</b>: &nbsp; pleature</li>
+                <li><b>LR Scheduler</b>: &nbsp; ReduceLROnPlateau</li>
               </ul>
               <ul>
                 <li><b>Hardware</b>: &nbsp; T4</li>
@@ -565,13 +564,12 @@ class Seq2Seq(nn.Module):
 
           <div class="half-spacer"></div>
           <li>세 가지 순환 신경망의 성능 비교 검증</li>
-            <p>적은 학습 데이터 바탕의 자연어 생성 과제에서는 GRU가 RNN 및 LSTM보다 좋은 성능을 보입니다. 
+            <p>이 프로젝트에서 진행한 세 가지 자연어 생성과제에서 가장 안정적인 성능을 보인것은 GRU입니다. 일반적으로 LSTM이 더 좋은 성능을 보이곤 하는데, 데이터가 적다는 점에서 학습 수렴이 빠르게 되었다는 점이 주요하게 작용한 것으로 판단됩니다. 다만 문서 요약이라는 시퀀스의 길이가 길고, 난이도도 어려운 과제에서는 LSTM이 GRU를 앞서는 모습을 확인했습니다.
             </p>
             
           <div class="half-spacer"></div>
           <li>최소 기준치 확립</li>
-            <p>앞서 언급했듯이 순환 신경망을 사용한 Seq2Seq모델은 앞으로 다루게 될 다양한 Seq2Seq 모델들의 시작점입니다. 고도화 된 모델일지라도 하이퍼 파라미터 설정이나, 훈련 방식 등의 이유에서 잘못된 성능이 나올수도 있습니다. 이때, 최소한의 동작은 하는 구나 하는 판단의 근거로 다음과 같은 스코어를 활용할 수 있습니다. <br> 
-            기계번역 BLEU Score: 00.00, 대화 생성 Rouge Score: 00.00, 문서 요약 Rouge Score: 00.00 이하의 성능ㅇ
+            <p>앞서 언급했듯이 순환 신경망을 사용한 Seq2Seq모델은 앞으로 다루게 될 다양한 Seq2Seq 모델들의 시작점으로 볼 수 있습니다. 앞으로 Transformer를 비롯한 다양한 모델들을 개발하고 성능을 실험하는 과정에서 최소한의 기준치로써, 기계번역 BLEU Score: 9.75, 대화 생성 Rouge Score: 2.16, 문서 요약 Rouge Score: 2.23을 사용할 수 있습니다.<br> 
             </p>
 
         </ul>
@@ -582,14 +580,10 @@ class Seq2Seq(nn.Module):
 <!-- 6. Reference -->
     <h2 id="7">&hairsp; 7. &hairsp; Reference</h2>
     <div class="chapter-box">
-      <a class="reference" href="https://arxiv.org/abs/1412.3555">&nbsp; Paper Review</a><br>
-      <a class="reference" href="https://arxiv.org/abs/1412.3555">&nbsp; Entire Code</a><br>
-
       <a class="reference" href="https://arxiv.org/abs/1409.3215">&nbsp; Sequence to Sequence Learning with Neural Networks</a> <br> 
       <a class="reference" href="https://arxiv.org/abs/1912.05911">&nbsp; Recurrent Neural Networks (RNNs): A gentle Introduction and Overview</a> <br>
       <a class="reference" href="https://arxiv.org/abs/1909.09586">&nbsp; Understanding LSTM</a> <br> 
       <a class="reference" href="https://arxiv.org/abs/1412.3555">&nbsp; Empirical Evaluation of Gated Recurrent Neural Networks on Sequence Modeling</a>
-
     </div>
 
   </div>

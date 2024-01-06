@@ -23,23 +23,27 @@ permalink: /gan_train
         </li>
 
         <li>
-          <a href="#2">2. &hairsp; Training Methodology</a>
+          <a href="#2">2. &hairsp; Background</a>
         </li>
 
         <li>
-          <a href="#3">3. &hairsp; Experimental Setup</a>
+          <a href="#3">3. &hairsp; Training</a>
         </li>
 
         <li>
-          <a href="#4">4. &hairsp; Result</a>
+          <a href="#4">4. &hairsp; Experimental Setup</a>
         </li>
 
         <li>
-          <a href="#5">5. &hairsp; Conclusion</a>
+          <a href="#5">5. &hairsp; Result</a>
         </li>
 
         <li>
-          <a href="#6">6. &hairsp; Reference</a>
+          <a href="#6">6. &hairsp; Conclusion</a>
+        </li>
+
+        <li>
+          <a href="#7">7. &hairsp; Reference</a>
         </li>
 
       </ul>
@@ -74,12 +78,14 @@ permalink: /gan_train
 
 
 
-<!-- Training -->    
-    <h2 id="1">1. &hairsp; Training Strategy</h2>
+<!-- 2. Background -->    
+    <h2 id="2">2. &hairsp; Background</h2>
+    <div class="chapter-box">
 
-      <h3 id="1.1">1.1 &hairsp; GAN</h3>
-
-      <p>&nbsp; GAN은 Generator와 Discriminator가 적대적으로 학습
+      <div class="list-container">
+        <ul>
+          <li>GAN
+            <p>&nbsp; GAN은 Generator와 Discriminator가 적대적으로 학습
         Generator: 실제와 유사한 결과값을 창출하려고, Discriminatofrom r를 속일정도록
         Discriminator: Generator의 생성 결과와 실제 정답 레이블 간의 차이를 잘 찾아내도록 학습
 
@@ -89,263 +95,272 @@ permalink: /gan_train
         덕분에 단순한 Loss Function만으로는 다듬기 힘든 부분까지 모델이 학습할 수 있게 유도합니다.
 
         여러 방면에서 학습이 매우 효과적임을 입증함.
-      </p><hr>
+            </p>
+          </li>
 
-      <div class="half-spacer"></div>
-      <h3 id="1.2">1.2 &hairsp; Sequence GAN</h3>
-
-      <div class="dual-container">
-          <img src="{{ 'assets/img/research_02/seqgan.png' | relative_url }}" style="width: 350px; height: 150px;">
-          <p>
-          &nbsp; 앞선 프로젝트에서는 RNN을 기반으로한 Sequence to Sequence 모델 구조의 효용성에 대해 면밀히 살펴봤습니다. 
-          하지만 RNN 네트워크는 장기기억력이라는 관점에서 고질적인 문제점을 태생적으로 지니고 있으며, 이를 해결하기 위한 Attention 메커니즘의 활용 역시 기대만큼 좋은 성능을 보이지는 못했습니다.
-          </p>
+          <br class="half-spacer">
+          <li>Sequence GAN
+            <div class="dual-container">
+                <img src="{{ 'assets/img/research_02/seqgan.png' | relative_url }}" style="width: 350px; height: 150px;">
+                <p>
+                &nbsp; 앞선 프로젝트에서는 RNN을 기반으로한 Sequence to Sequence 모델 구조의 효용성에 대해 면밀히 살펴봤습니다. 
+                하지만 RNN 네트워크는 장기기억력이라는 관점에서 고질적인 문제점을 태생적으로 지니고 있으며, 이를 해결하기 위한 Attention 메커니즘의 활용 역시 기대만큼 좋은 성능을 보이지는 못했습니다.
+                </p>
+            </div>
+          </li>
+        <ul>          
       </div>
-      <p>
-      &nbsp; 앞선 프로젝트에서는 RNN을 기반으로한 Sequence to Sequence 모델 구조의 효용성에 대해 면밀히 살펴봤습니다. 
-      하지만 RNN 네트워크는 장기기억력이라는 관점에서 고질적인 문제점을 태생적으로 지니고 있으며, 이를 해결하기 위한 Attention 메커니즘의 활용 역시 기대만큼 좋은 성능을 보이지는 못했습니다.
-      </p>      
-      <hr>
-
-      <div class="half-spacer"></div>
-      <h3 id="1.3">1.3 &hairsp; SeqGAN for Transformer</h3>
-
-      <p>&nbsp; SeqGAN을 Transformer에 적용하기 위한 다음과 같은 방법론을 제시합니다.
-
-      <hr>
-
-<!-- Code Implementation -->    
-    <h2 id="2">2. &hairsp; Code Implementation</h2>
-
-    <h3 id="2.1">2.1 &hairsp; Model</h3>
-
-    <div class="list-container">
-      <ul>
-        <li>Encoder</li>        
-            <div class="code-container">
-              <div class="code-snippet">
-                <pre><code class="python">class StandardEncoder(nn.Module):
-    def __init__(self, config):
-        super(StandardEncoder, self).__init__()
-        self.embeddings = Embeddings(config)
-        layer = nn.TransformerEncoderLayer(
-            d_model=config.hidden_dim,
-            nhead=config.n_heads,
-            dim_feedforward=config.pff_dim,
-            dropout=config.dropout_ratio,
-            activation='gelu',
-            batch_first=True
-        )
-        self.layers = clones(layer, config.n_layers)
-
-    def forward(self, x, e_mask):
-        x = self.embeddings(x)
-        for layer in self.layers:
-            x = layer(x, src_key_padding_mask=e_mask)
-        return x</code></pre>
-              </div>
-            </div>
-
-      <div class="half-spacer"></div>
-        <li>Decoder</li>        
-            <div class="code-container">
-              <div class="code-snippet">
-                <pre><code class="python">class StandardDecoder(nn.Module):
-    def __init__(self, config):
-        super(StandardDecoder, self).__init__()
-        self.embeddings = Embeddings(config)
-        layer = nn.TransformerDecoderLayer(
-            d_model=config.hidden_dim,
-            nhead=config.n_heads,
-            dim_feedforward=config.pff_dim,
-            dropout=config.dropout_ratio,
-            activation='gelu',
-            batch_first=True
-        )
-        self.layers = clones(layer, config.n_layers)
-
-    def forward(self, x, memory, e_mask, d_mask):
-        x = self.embeddings(x)
-        for layer in self.layers:
-            x = layer(x, memory, memory_key_padding_mask=e_mask, tgt_mask=d_mask)
-        return x</code></pre>
-              </div>
-            </div>
-
-      </ul>
     </div>
-    <hr>
 
 
-    <div class="spacer"></div>
-    <h3 id="2.2">2.2 &hairsp; Trainer</h3>
-    <p>SeqGAN을 구현하기 위해, 우선 일반적인 Train방식으로 선행학습을 하고, 그 다음 GAN Trainer를 통해 SeqGAN 학습을 진행합니다.
-    </p>
-    <div class="list-container">
-      <ul>
-        <li>Encoder</li>        
-            <div class="code-container">
-              <div class="code-snippet">
-                <pre><code class="python">class StandardEncoder(nn.Module):
-    def __init__(self, config):
-        super(StandardEncoder, self).__init__()
-        self.embeddings = Embeddings(config)
-        layer = nn.TransformerEncoderLayer(
-            d_model=config.hidden_dim,
-            nhead=config.n_heads,
-            dim_feedforward=config.pff_dim,
-            dropout=config.dropout_ratio,
-            activation='gelu',
-            batch_first=True
-        )
-        self.layers = clones(layer, config.n_layers)
 
-    def forward(self, x, e_mask):
-        x = self.embeddings(x)
-        for layer in self.layers:
-            x = layer(x, src_key_padding_mask=e_mask)
-        return x</code></pre>
-              </div>
-            </div>
 
-      <div class="half-spacer"></div>
-        <li>Decoder</li>        
-            <div class="code-container">
-              <div class="code-snippet">
-                <pre><code class="python">class StandardDecoder(nn.Module):
-    def __init__(self, config):
-        super(StandardDecoder, self).__init__()
-        self.embeddings = Embeddings(config)
-        layer = nn.TransformerDecoderLayer(
-            d_model=config.hidden_dim,
-            nhead=config.n_heads,
-            dim_feedforward=config.pff_dim,
-            dropout=config.dropout_ratio,
-            activation='gelu',
-            batch_first=True
-        )
-        self.layers = clones(layer, config.n_layers)
+<!-- 2. Training -->    
+    <h2 id="3">3. &hairsp; Training</h2>
+    <div class="chapter-box">
 
-    def forward(self, x, memory, e_mask, d_mask):
-        x = self.embeddings(x)
-        for layer in self.layers:
-            x = layer(x, memory, memory_key_padding_mask=e_mask, tgt_mask=d_mask)
-        return x</code></pre>
-              </div>
-            </div>
+      <div class="list-container">
+        <ul>
+          <li>Train Generator
+            <ul>
+              <li>일반적인 학습 방식으로 Generation Model 학습을 진행</li>
+              <li>학습된 Generation Model을 바탕으로, Discriminator 학습</li>
+              <li>Generation Model과 Discriminator를 활용해 SeqGAN 학습</li>
+            </ul>
+          </li>
 
-      </ul>
+          <div class="half-spacer"></div>
+          <li>Traing Discriminator
+            <p>&nbsp; Auxiliary Training은 Main이 되는 Training Objective에 더불어 추가적인 Training Objective를 두고 학습을 진행하는 방식을 의미합니다.
+              다만, 일반적인 생성방식으로 학습하는 것은 너무 오랜시간이 소요되기 때문에, 효율성을 위해 생성을 위한 디코딩과정에 Cache를 활용하는 모델을 구현하여 사용합니다.
+              코드 구현은 아래와 같습니다.
+            </p>
+          </li>
+
+          <div class="half-spacer"></div>
+          <li>SeqGAN Training
+            <p>&nbsp; Auxiliary Training은 Main이 되는 Training Objective에 더불어 추가적인 Training Objective를 두고 학습을 진행하는 방식을 의미합니다.
+              다만, 일반적인 생성방식으로 학습하는 것은 너무 오랜시간이 소요되기 때문에, 효율성을 위해 생성을 위한 디코딩과정에 Cache를 활용하는 모델을 구현하여 사용합니다.
+              코드 구현은 아래와 같습니다.
+            </p>
+          </li>
+
+        </ul>          
+      </div>
     </div>
-    <hr>
 
 
-<!-- Experimental Setup -->    
-    <h2 id="3">3. Experimental Setup</h2>
-    <div class="small-spacer"></div>
-    <table class="result-table">
-      <thead>
-        <tr>
-          <th>Data Setup</th>
-          <th>Model Setup</th>
-          <th>Training Setup</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
+<!-- 3. Experimental Setup -->
+    <h2 id="3">&hairsp; 3. &hairsp; Experimental Setup</h2>
+    <div class="chapter-box">
 
-          <td>
+      <div class="list-container">
+        <ul>
+          <li>Data Setup
+            <div class="dual-container">
+              <ul>
+                <li>Translation Task: &nbsp; WMT'14 En-De</li>
+                <li>Dialogue Task: &nbsp; Daily Dialogue</li>
+                <li>Tokenizer: &nbsp; BPE Tokenizer</li>
+                <li>Vocab Size: &nbsp; 10,000</li>
+              </ul>
+              <ul>
+                <li>Train Data Volumn: &nbsp; 50,000</li>
+                <li>Train Data Volumn for Augment Training: &nbsp; 50,000</li>
+                <li>Valid Data Volumn: &nbsp; 5,000</li>
+                <li>Test Data Volumn: &nbsp; 100</li>
+                                
+              </ul>
+            </div>
+          </li>
+
+          <div class="half-spacer"></div>
+          <li>Generator Setup
+            <div class="dual-container">
+              <ul>
+                <li>Architecture: &nbsp; Transformer Seq2Seq</li>
+                <li>PLE Name: &nbsp; albert-v2</li>
+                <li>Input Dim: &nbsp; 10,000</li>
+                <li>Output Dim: &nbsp; 10,000</li>
+              </ul>
+              <ul>
+                <li>Embedding Dim: &nbsp; 512</li>
+                <li>Hidden Dim: &nbsp; 512</li>
+                <li>Model Params: &nbsp; 000</li>
+                <li>Model Size: &nbsp; 000</li>                
+              </ul>
+            </div>
+          </li>
+
+          <div class="half-spacer"></div>
+          <li>Discriminator Setup
+            <div class="dual-container">
+              <ul>
+                <li>Architecture: &nbsp; Transformer Binary Classification</li>
+                <li>PLE Name: &nbsp; albert-v2</li>
+                <li>Input Dim: &nbsp; 10,000</li>
+                <li>Output Dim: &nbsp; 10,000</li>
+              </ul>
+              <ul>
+                <li>Embedding Dim: &nbsp; 512</li>
+                <li>Hidden Dim: &nbsp; 512</li>
+                <li>Model Params: &nbsp; 000</li>
+                <li>Model Size: &nbsp; 000</li>                
+              </ul>
+            </div>
+          </li>
+
+
+          <div class="half-spacer"></div>
+          <li>Training Setup
+            <div class="dual-container">
+              <ul>
+                <li>Num Epochs: &nbsp; 10</li>
+                <li>Batch Size: &nbsp; 32</li>
+                <li>Learning Rate: &nbsp; 5e-4</li>
+                <li>LR Scheduler: &nbsp; pleature</li>
+              </ul>
+              <ul>
+                <li>Optimizer: &nbsp; AdamW</li>
+                <li>Gradient Accumulation Steps: &nbsp; 4
+                <li>Teacher Forcing Ratio: &nbsp; 0.5</li>                
+              </ul>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+
+<!-- 4. Result -->
+    <h2 id="4">4. &hairsp; Result</h2>
+    <div class="chapter-box">
+
+      <div class="list-container">
+        <ul>
+          <li>Machine Translation</li>
+
+            <table class="result-table">
+              <thead>
+                <tr>
+                  <th>Training Type</th>
+                  <th>Score</th>
+                  <th>Epoch Time</th>
+                  <th>Avg GPU</th>
+                  <th>Max GPU</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Baseline</td>
+                  <td>3.36</td>
+                  <td>0m 11s</td>
+                  <td>0.20GB</td>
+                  <td>0.85GB</td>
+                </tr>
+                <tr>
+                  <td>SeqGAN</td>
+                  <td>0.00</td>
+                  <td>4m 40s</td>
+                  <td>1.92GB</td>
+                  <td>3.86GB</td>
+                </tr>
+
+              </tbody>
+            </table>
+          
+          <div class="half-spacer"></div>
+          <li>Dialogue Generation</li>
+            <table class="result-table">
+              <thead>
+                <tr>
+                  <th>Training Type</th>
+                  <th>Score</th>
+                  <th>Epoch Time</th>
+                  <th>Avg GPU</th>
+                  <th>Max GPU</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Baseline</td>
+                  <td>0.41</td>
+                  <td>0m 10s</td>
+                  <td>0.20GB</td>
+                  <td>0.83GB</td>
+                </tr>
+                <tr>
+                  <td>SeqGAN</td>
+                  <td>0.00</td>
+                  <td>4m 35s</td>
+                  <td>1.88GB</td>
+                  <td>3.85GB</td>
+                </tr>
+
+              </tbody>
+            </table>
+
+
+          <div class="half-spacer"></div>  
+          <li>Result Analysis</li>
+            <p> &nbsp; 두 가지 과제에서 모두 Generative Training은 성능과 효율성 측면에서 가장 낮은 결과를 보이며, 효용성이 매우 떨어짐을 확인할 수 있습니다.
+              Transformer의 학습에서 Generative Training이 얼마나 비효율적인지 직접 확인할 수 있었습니다.
+            </p>
+        </ul>
+      </div>
+    </div>
+
+
+
+<!-- 5. Conclusion -->
+    <h2 id="5">5. &hairsp; Conclusion</h2>
+    <div class="chapter-box">
+
+      <div class="list-container">
+        <ul>
+          <li>RNN, LSTM, GRU 을 활용한 seq2seq 모델링 방식의 이해</li>
+            <p>&nbsp; 토큰의 벡터 변환을 위한 Embedding Layer와 실제 연산을 위한 순환 신경망 레이어만으로 구성된 단순산 Encoder, Decoder 구조로 이루어져 있으며, 
+            </p>
+
+          <div class="half-spacer"></div>
+          <li>세 가지 순환 신경망의 성능 비교 검증</li>
+            <p>LSTM은 게이트 메커니즘을 통해 장기 의존성 문제를 해결하는 데 강점을 보입니다. 복잡한 문맥을 학습하고 기억하는 데 탁월하며, 긴 시퀀스 데이터에서 뛰어난 성능을 발휘할 수 있습니다. 하지만 LSTM은 더 많은 파라미터를 가지고 있어서 더 많은 데이터와 계산 리소스가 필요할 수 있습니다.
+            </p>
+
+          <div class="half-spacer"></div>
+          <li>가설 검증
             <ul>
-              <li><b>Translation</b>: &nbsp; WMT'14 En-De</li>
-              <li><b>Dialogue</b>: &nbsp; Daily Dialogue</li>
-              <li><b>Summarization</b>: &nbsp; CNN Daily</li>
-              <li><b>Train Data Volumn</b>: &nbsp; 50,000</li>
-              <li><b>Valid Data Volumn</b>: &nbsp; 5,000</li>
-              <li><b>Test Data Volumn</b>: &nbsp; 100</li>
-              <li><b>Tokenizer</b>: &nbsp; BPE Tokenizer</li>
-              <li><b>Vocab Size</b>: &nbsp; 15,000</li>
+              <li>LSTM, GRU, RNN 순으로 높은 성능</li>
+                <p> LSTM의 연산과정이 가장 복잡하고, 다양한 GATE를 사용하기 떄문에, 좋은 성능을 낼 것이라고 예측했으나, 되려 복잡한 연산으로 인해, 학습 시 수렴에 어려움이 생겼습니다.
+                오히려 GATE를 사용하면서도, 연산의 단순화를 도모한 GRU의 학습 성능이 가장 좋은 것을 확인했습니다
+                </p>
+
+              <li>RNN, GRU, LSTM 순으로 빠른 학습
+                <p> 학습 속도 및 GPU 사용량으로 확인해본 효율성은 가설과 마찬가지로 RNN, GRU, LSTM 순으로 나타났습니다.
+                </p>
+              </li>
             </ul>
-          </td>
+          </li>
+            
 
-          <td>
-            <ul>
-              <li><b>Input Dim</b>: &nbsp; 15,000</li>
-              <li><b>Output Dim</b>: &nbsp; 15,000</li>
-              <li><b>Embedding Dim</b>: &nbsp; 512</li>
-              <li><b>Hidden Dim</b>: &nbsp; 512</li>
-              <li><b>Num Layers</b>: &nbsp; 6</li>
-            </ul>
-          </td>
+          <br class="half-spacer">
+          <li>최소 기준치 확립</li>
+            <p>앞서 언급했듯이 순환 신경망을 사용한 Seq2Seq모델은 앞으로 다루게 될 다양한 Seq2Seq 모델들의 시작점입니다. 고도화 된 모델일지라도 하이퍼 파라미터 설정이나, 훈련 방식 등의 이유에서 잘못된 성능이 나올수도 있습니다. 이때, 최소한의 동작은 하는 구나 하는 판단의 근거로 다음과 같은 스코어를 활용할 수 있습니다. <br> 
+              기계번역 BLEU Score: 00.00, 대화 생성 Rouge Score: 00.00, 문서 요약 Rouge Score: 00.00 이하의 성능ㅇ
+            </p>
 
-          <td>
-            <ul>
-              <li><b>Num Epochs</b>: &nbsp; 10</li>
-              <li><b>Batch Size</b>: &nbsp; 32</li>
-              <li><b>Learning Rate</b>: &nbsp; 5e-4</li>
-              <li><b>LR Scheduler</b>: &nbsp; ReduceLROnPlateau</li>
-              <li><b>Optimizer</b>: &nbsp; AdamW</li>
-              <li><b>Gradient Accumulation Steps</b>: &nbsp; 4</li>
-            </ul>
-          </td>          
-        </tr>
-
-      </tbody>
-    </table>
-    <div class="half-spacer"></div>
-    <hr>
-
-
-<!-- Result -->    
-    <h2>3. Result</h2>
-    <div class="small-spacer"></div>
-    <table class="result-table">
-      
-      <thead>
-        <tr>
-          <th>Attention Strategy</th>
-          <th>Machine Translation</th>
-          <th>Dialogue Generation</th>
-          <th>Text Summarization</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr>
-          <td>Vanilla Transformer</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-        </tr>
-      
-        <tr>
-          <td>Simple Model</td>
-          <td>결과2-1</td>
-          <td>결과2-2</td>
-          <td>결과2-3</td>
-        </tr>
-      
-        <tr>
-          <td>Fused Model</td>
-          <td>결과2-1</td>
-          <td>결과2-2</td>
-          <td>결과2-3</td>
-        </tr>
-
-      </tbody>
-    </table>
-
-
-<!-- Conclusion -->    
-    <h2>4. Conclusion</h2>
-    <p>
-    </p>
-    <hr>
+        </ul>
+      </div>
+    </div>
 
 
 <!-- Reference -->    
-    <h2>5. Reference</h2>
-    <a class="reference" href="https://arxiv.org/abs/1706.03762">&nbsp; Attention Is All You Need</a> <br>
-    <a class="reference" href="https://arxiv.org/abs/1406.2661">&nbsp; Generative Adversarial Networks</a> <br> 
-    <a class="reference" href="https://arxiv.org/abs/1609.05473">&nbsp; SeqGAN: Sequence Generative Adversarial Nets with Policy Gradient</a> <br>
+    <h2 id="6">&hairsp; 6. &hairsp; Reference</h2>
+    <div class="chapter-box">
+      <a class="reference" href="https://arxiv.org/abs/1706.03762">&nbsp; Attention Is All You Need</a> <br>
+      <a class="reference" href="https://arxiv.org/abs/1406.2661">&nbsp; Generative Adversarial Networks</a> <br> 
+      <a class="reference" href="https://arxiv.org/abs/1609.05473">&nbsp; SeqGAN: Sequence Generative Adversarial Nets with Policy Gradient</a> <br>
+    </div>
 
   </div>
 </div>
@@ -353,5 +368,5 @@ permalink: /gan_train
 
 <div class="pagination">
   <a href="{{ '/gen_train' | relative_url }}" class="btn-prev"><span>Generative Training</span></a>
-  <a href="{{ '/custom_pretrain' | relative_url }}" class="btn-next"><span>Customized Pretraining</span></a>
+  <a href="{{ '/cpt_train' | relative_url }}" class="btn-next"><span>Customized Pretraining</span></a>
 </div>
