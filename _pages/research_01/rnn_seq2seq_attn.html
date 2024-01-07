@@ -405,25 +405,27 @@ class Seq2Seq(nn.Module):
               </thead>
               <tbody>
                 <tr>
-                  <td>Additive</td>
-                  <td>2.12</td>
-                  <td>3m 58s</td>
-                  <td>0.22GB</td>
-                  <td>0.82GB</td>
-                </tr>
-                <tr>
                   <td>Dot Product</td>
-                  <td>8.35</td>
-                  <td>4m 16s</td>
-                  <td>0.27GB</td>
-                  <td>1.30GB</td>
+                  <td>0.00</td>
+                  <td>-</td>
+                  <td>-</td>
+                  <td>-</td>
                 </tr>
+
                 <tr>
-                  <td>Scaled Dot Product</td>
-                  <td>9.75</td>
-                  <td>4m 6s</td>
-                  <td>0.26GB</td>
-                  <td>1.16GB</td>
+                  <td>General</td>
+                  <td>0.00</td>
+                  <td>-</td>
+                  <td>-</td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td>Concat</td>
+                  <td>0.00</td>
+                  <td>-</td>
+                  <td>-</td>
+                  <td>-</td>
                 </tr>
 
               </tbody>
@@ -443,25 +445,27 @@ class Seq2Seq(nn.Module):
               </thead>
               <tbody>
                 <tr>
-                  <td>Additive</td>
-                  <td>2.12</td>
-                  <td>3m 58s</td>
-                  <td>0.22GB</td>
-                  <td>0.82GB</td>
-                </tr>
-                <tr>
                   <td>Dot Product</td>
-                  <td>8.35</td>
-                  <td>4m 16s</td>
-                  <td>0.27GB</td>
-                  <td>1.30GB</td>
+                  <td>0.00</td>
+                  <td>-</td>
+                  <td>-</td>
+                  <td>-</td>
                 </tr>
+
                 <tr>
-                  <td>Scaled Dot Product</td>
-                  <td>9.75</td>
-                  <td>4m 6s</td>
-                  <td>0.26GB</td>
-                  <td>1.16GB</td>
+                  <td>General</td>
+                  <td>0.00</td>
+                  <td>-</td>
+                  <td>-</td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td>Concat</td>
+                  <td>0.00</td>
+                  <td>-</td>
+                  <td>-</td>
+                  <td>-</td>
                 </tr>
 
               </tbody>
@@ -481,26 +485,29 @@ class Seq2Seq(nn.Module):
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>Additive</td>
-                  <td>2.12</td>
-                  <td>3m 58s</td>
-                  <td>0.22GB</td>
-                  <td>0.82GB</td>
-                </tr>
+
                 <tr>
                   <td>Dot Product</td>
-                  <td>8.35</td>
-                  <td>4m 16s</td>
-                  <td>0.27GB</td>
-                  <td>1.30GB</td>
+                  <td>0.00</td>
+                  <td>-</td>
+                  <td>-</td>
+                  <td>-</td>
                 </tr>
+
                 <tr>
-                  <td>Scaled Dot Product</td>
-                  <td>9.75</td>
-                  <td>4m 6s</td>
-                  <td>0.26GB</td>
-                  <td>1.16GB</td>
+                  <td>General</td>
+                  <td>0.00</td>
+                  <td>-</td>
+                  <td>-</td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td>Concat</td>
+                  <td>0.00</td>
+                  <td>-</td>
+                  <td>-</td>
+                  <td>-</td>
                 </tr>
 
               </tbody>
@@ -508,7 +515,7 @@ class Seq2Seq(nn.Module):
 
           <br class="half-spacer">  
           <li>Result Analysis</li>
-            <p> &nbsp; RNN은 다양한 정보를 함유하기에 지나치게 단순하고, LSTM은 GATE구조가 복잡하기에, 그만큼 영향을 받은 요소가 많아 학습 수렴이 어렵습니다. 때문에 모든 학습 결과에서는 GATE를 사용하면서도 단순화된 연산으로 학습의 이점이 큰 GRU가 가장 뛰어난 성능을 보임을 알 수 있습니다. 
+            <p> &nbsp; TBD
             </p>
         </ul>
       </div>
@@ -520,41 +527,9 @@ class Seq2Seq(nn.Module):
     <h2 id="6">6. &hairsp; Conclusion</h2>
     <div class="chapter-box">
 
-      <div class="list-container">
-        <ul>
-          <li>RNN, LSTM, GRU 을 활용한 seq2seq 모델링 방식의 이해</li>
-            <p>&nbsp; 토큰의 벡터 변환을 위한 Embedding Layer와 실제 연산을 위한 순환 신경망 레이어만으로 구성된 단순산 Encoder, Decoder 구조로 이루어져 있으며, 
-            </p>
-
-          <br class="half-spacer">
-          <li>세 가지 순환 신경망의 성능 비교 검증</li>
-            <p>LSTM은 게이트 메커니즘을 통해 장기 의존성 문제를 해결하는 데 강점을 보입니다. 복잡한 문맥을 학습하고 기억하는 데 탁월하며, 긴 시퀀스 데이터에서 뛰어난 성능을 발휘할 수 있습니다. 하지만 LSTM은 더 많은 파라미터를 가지고 있어서 더 많은 데이터와 계산 리소스가 필요할 수 있습니다.
-            </p>
-
-          <br class="half-spacer">
-          <li>가설 검증
-            <ul>
-              <li>LSTM, GRU, RNN 순으로 높은 성능</li>
-                <p> LSTM의 연산과정이 가장 복잡하고, 다양한 GATE를 사용하기 떄문에, 좋은 성능을 낼 것이라고 예측했으나, 되려 복잡한 연산으로 인해, 학습 시 수렴에 어려움이 생겼습니다.
-                오히려 GATE를 사용하면서도, 연산의 단순화를 도모한 GRU의 학습 성능이 가장 좋은 것을 확인했습니다
-                </p>
-
-              <li>RNN, GRU, LSTM 순으로 빠른 학습</li>
-                <p> 학습 속도 및 GPU 사용량으로 확인해본 효율성은 가설과 마찬가지로 RNN, GRU, LSTM 순으로 나타났습니다.
-                </p>
-              <li></li>
-            </ul>
-          </li>
+      <p> -
+      </p>
             
-
-          <br class="half-spacer">
-          <li>최소 기준치 확립</li>
-            <p>앞서 언급했듯이 순환 신경망을 사용한 Seq2Seq모델은 앞으로 다루게 될 다양한 Seq2Seq 모델들의 시작점입니다. 고도화 된 모델일지라도 하이퍼 파라미터 설정이나, 훈련 방식 등의 이유에서 잘못된 성능이 나올수도 있습니다. 이때, 최소한의 동작은 하는 구나 하는 판단의 근거로 다음과 같은 스코어를 활용할 수 있습니다. <br> 
-              기계번역 BLEU Score: 00.00, 대화 생성 Rouge Score: 00.00, 문서 요약 Rouge Score: 00.00 이하의 성능ㅇ
-            </p>
-
-        </ul>
-      </div>
     </div>
 
 
