@@ -59,7 +59,7 @@ permalink: /sparse_attention
       <div class="list-container">
         <ul>
           <li>Description</li>
-          <p>&nbsp; Transformer의 핵심 연산인 Full Attention의 경우 뛰어난 성능을 보이지만 연산복잡도가 \(O^2\)로 입력값의 길이가 길어질수록 연산 효율성이 매우 떨어지는 문제가 발생합니다.
+          <p>&nbsp; 이 프로젝트에서는 Transformer의 핵심 연산인 Attention을 Sparse Attention으로 대체하며 효율성을 증대시키기 위한 실험을 진행합니다.
 
 
           </p>
@@ -86,18 +86,18 @@ permalink: /sparse_attention
 
           <li>Full Attention
             <ul>
-              <li>대규모 사전학습 언어 모델은 언어 이해의 혁신을 이끌고 있습니다. 이 모델들은 방대한 양의 텍스트 데이터를 학습하여 언어의 다양한 측면을 이해하고, 문맥을 파악하는 데에 뛰어난 성과를 보입니다. 이로써 자연어 처리, 기계 번역, 질문 응답 시스템 등 다양한 언어 관련 작업에서 높은 성능을 보이고 있습니다.</li>
-              <li>대규모 사전학습 언어 모델은 다양한 도메인에서 적용 가능성이 높습니다. 의학, 법률, 공학, 예술 등 다양한 분야에서 특정 전문 용어나 문맥을 이해하고 처리할 수 있어, 효율적인 작업 수행이 가능합니다. 이는 기존의 작은 규모 모델로는 어려웠던 다양한 분야에서의 자연어 이해 능력을 혁신적으로 개선하고 있습니다.</li>
-              <li>대규모 사전학습 언어 모델은 창의적인 활용과 새로운 애플리케이션 개발을 촉진하고 있습니다. 예를 들어, AI 기반의 문학 창작, 음악 작곡, 예술 창작 등에서도 높은 수준의 창의성을 발휘하며 새로운 가능성을 열어가고 있습니다.</li>
+              <li>-</li>
+              <li>-</li>
+              <li>-</li>
             </ul>
           </li>
             
           <div class="spacer"></div>
           <li>Sparse Attention
             <ul>
-              <li>대규모 사전학습 언어 모델은 엄청난 양의 매개변수를 가지고 있어 연산 비용이 상당히 높습니다. 이로 인해 모델을 학습하고 사용하는 데에 많은 컴퓨팅 자원이 필요하며, 이는 비용 측면에서 부담이 될 수 있습니다.</li>
-              <li>대규모 모델의 사용은 주로 대규모 기업이나 연구기관에 제한되어 있는 경우가 많습니다. 작은 기업이나 연구팀은 이러한 모델을 사용하기 어렵거나 비용 문제로 제약을 받을 수 있어, 기술의 불균형적인 접근이 우려되고 있습니다.</li>
-              <li>모델의 경량화, 연산 효율성 증대와 같은 모델 측면의 효율성 제고를 위한 연구뿐만 아니라, 학습과정에서의 효율성 증대를 위한 연구도 필수적</li>
+              <li>-</li>
+              <li>-</li>
+              <li>-</li>
             </ul>
           </li>
 
@@ -114,12 +114,12 @@ permalink: /sparse_attention
       <div class="list-container">
         <ul>
           <li>Standard Transformer</li>
-          <p>&nbsp; 프로젝트의 실험에서는 한국어-영어 번역과제를 선정했습니다. 이를 위한 데이터 셋으로는 Ai Hub의 공개데이터를 사용했습니다. 총 10개의 세부 항목으로 나누어진 데이터 중, 가장 범용적인 언어 표현 도메인으로 이루어진 000 데이터 들을 사용합니다. 총 데이터 개수는 000개이며, 이 중, 학습, 검증, 테스트 데이터 셋으로 각각 000 개씩 사용합니다. 데이터 예시는 아래와 같습니다. 
+          <p>&nbsp; -
           </p>
 
           <div class="spacer"></div>
           <li>Sparse Transformer</li>
-          <p>&nbsp; PLE Fused Model은 "Incorporating BERT into Neural Machine Translation" 논문에서 제시한 모델 구조를 사용합니다. 사전학습된 인코더 모델을 그대로 인코더로만 사용하는것이 아니라, 인코딩과 디코딩 과정에 추가적인 정보전달을 위한 모델로 활용합니다.
+          <p>&nbsp; -
           </p>
 
 
@@ -198,48 +198,13 @@ permalink: /sparse_attention
 
       <div class="list-container">
         <ul>
-          <li>Machine Translation</li>
+          <li>Result Table</li>
 
-            <table class="result-table">
-              <thead>
-                <tr>
-                  <th>Model Type</th>
-                  <th>Eval Score</th>
-                  <th>Epoch Time</th>
-                  <th>Avg GPU</th>
-                  <th>Max GPU</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>RNN Model</td>
-                  <td>2.12</td>
-                  <td>3m 58s</td>
-                  <td>0.22GB</td>
-                  <td>0.82GB</td>
-                </tr>
-                <tr>
-                  <td>LSTM Model</td>
-                  <td>8.35</td>
-                  <td>4m 16s</td>
-                  <td>0.27GB</td>
-                  <td>1.30GB</td>
-                </tr>
-                <tr>
-                  <td>GRU Model</td>
-                  <td>9.75</td>
-                  <td>4m 6s</td>
-                  <td>0.26GB</td>
-                  <td>1.16GB</td>
-                </tr>
-
-              </tbody>
-            </table>
           
 
           <div class="half-spacer"></div>
           <li>Result Analysis</li>
-            <p> &nbsp; RNN은 다양한 정보를 함유하기에 지나치게 단순하고, LSTM은 GATE구조가 복잡하기에, 그만큼 영향을 받은 요소가 많아 학습 수렴이 어렵습니다. 때문에 모든 학습 결과에서는 GATE를 사용하면서도 단순화된 연산으로 학습의 이점이 큰 GRU가 가장 뛰어난 성능을 보임을 알 수 있습니다. 
+            <p> &nbsp; - 
             </p>
         </ul>
       </div>
@@ -252,49 +217,12 @@ permalink: /sparse_attention
     <h2 id="5">&hairsp; 5. &hairsp; Conclusion</h2>
     <div class="chapter-box">
 
-      <div class="list-container">
-        <ul>
-          <li>RNN, LSTM, GRU 을 활용한 seq2seq 모델링 방식의 이해</li>
-            <p>&nbsp; 토큰의 벡터 변환을 위한 Embedding Layer와 실제 연산을 위한 순환 신경망 레이어만으로 구성된 단순산 Encoder, Decoder 구조로 이루어져 있으며, 
-            </p>
-
-          <div class="half-spacer"></div>
-          <li>세 가지 순환 신경망의 성능 비교 검증</li>
-            <p>LSTM은 게이트 메커니즘을 통해 장기 의존성 문제를 해결하는 데 강점을 보입니다. 복잡한 문맥을 학습하고 기억하는 데 탁월하며, 긴 시퀀스 데이터에서 뛰어난 성능을 발휘할 수 있습니다. 하지만 LSTM은 더 많은 파라미터를 가지고 있어서 더 많은 데이터와 계산 리소스가 필요할 수 있습니다.
-            </p>
-
-          <div class="half-spacer"></div>
-          <li>가설 검증
-            <ul>
-              <li>LSTM, GRU, RNN 순으로 높은 성능</li>
-                <p> LSTM의 연산과정이 가장 복잡하고, 다양한 GATE를 사용하기 떄문에, 좋은 성능을 낼 것이라고 예측했으나, 되려 복잡한 연산으로 인해, 학습 시 수렴에 어려움이 생겼습니다.
-                오히려 GATE를 사용하면서도, 연산의 단순화를 도모한 GRU의 학습 성능이 가장 좋은 것을 확인했습니다
-                </p>
-
-              <li>RNN, GRU, LSTM 순으로 빠른 학습</li>
-                <p> 학습 속도 및 GPU 사용량으로 확인해본 효율성은 가설과 마찬가지로 RNN, GRU, LSTM 순으로 나타났습니다.
-                </p>
-              <li></li>
-            </ul>
-          </li>
             
-          <div class="half-spacer"></div>
-          <li>최소 기준치 확립</li>
-            <p>앞서 언급했듯이 순환 신경망을 사용한 Seq2Seq모델은 앞으로 다루게 될 다양한 Seq2Seq 모델들의 시작점입니다. 고도화 된 모델일지라도 하이퍼 파라미터 설정이나, 훈련 방식 등의 이유에서 잘못된 성능이 나올수도 있습니다. 이때, 최소한의 동작은 하는 구나 하는 판단의 근거로 다음과 같은 스코어를 활용할 수 있습니다. <br> 
-              기계번역 BLEU Score: 00.00, 대화 생성 Rouge Score: 00.00, 문서 요약 Rouge Score: 00.00 이하의 성능ㅇ
-            </p>
-
-        </ul>
-      </div>
+      <p>-
+      </p>
     </div>
 
 
-<!-- Reference -->    
-    <h2 id="6">&hairsp; 6. &hairsp; Reference</h2>
-    <div class="chapter-box">
-      <a class="reference" href="https://arxiv.org/abs/1706.03762">&nbsp; Attention Is All You Need</a> <br> 
-      <a class="reference" href="https://aclanthology.org/D18-1045.pdf">&nbsp; Understanding Back-Translation at Scale</a> 
-    </div>
 
 
   </div>
@@ -302,6 +230,6 @@ permalink: /sparse_attention
 
 
 <div class="pagination">
-  <a href="{{ '/gen_train' | relative_url }}" class="btn-prev"><span>Generative Training</span></a>
-  <a href="{{ '/custom_pretrain' | relative_url }}" class="btn-next"><span>Customized Pretraining</span></a>
+  <a href="{{ '/hierarchical' | relative_url }}" class="btn-prev"><span>Hierarchical Encoder</span></a>
+  <a href="{{ '/rnn_seq2seq' | relative_url }}" class="btn-next"><span>RNN Sequence to Sequence</span></a>
 </div>

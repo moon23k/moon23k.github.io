@@ -13,7 +13,7 @@ permalink: /gen_train
       <p class="highlighted-text"><span>Project Objective</span></p>
       <div class="small-spacer"></div>
       <p>&nbsp; 이 프로젝트에서 소규모 데이터 셋에서 Transformer의 Generative Training 방식의 효용성을 검증합니다. <br>
-      일반적으로 Transformer는 Attention을 활용한 병렬 학습의 효율성을 바탕으로, 대규모 데이터셋에서 학습을 진행합니다. 하지만 가용한 데이터가 매우 제한적인 경우, 오히려 생성적 학습이 효과적일 수 있다는 가설을 세우고, 이를 검증하는 일련의 실험을 진행합니다. 생성 과정에서 효율성을 증진시키기 위해 Cache를 활용하는 Transformer를 직접 구현
+      일반적으로 Transformer는 Attention을 활용한 병렬 학습의 효율성을 바탕으로, 대규모 데이터셋에서 학습을 진행합니다. 하지만 가용한 데이터가 매우 제한적인 경우, 오히려 생성적 학습이 효과적일 수 있다는 가설을 세우고, 이를 검증하는 일련의 실험을 진행합니다. 생성 과정에서 효율성을 증진시키기 위해 Cache를 활용하는 Transformer를 직접 구현해 사용합니다.
       </p>
     </div>
 
@@ -60,16 +60,17 @@ permalink: /gen_train
       <div class="list-container">
         <ul>
           <li>Description</li>
-            <p> &nbsp; 일반적으로 Transformer는 <br>
-            본 프로젝트의 주요 목표는 Exposure Bias를 최소화하여 모델이 훈련 시와 테스트 시에 일관된 예측을 수행할 수 있도록 하는 것입니다. 이를 위해 Auxiliary Training을 도입하며, 특히 First Token Prediction을 목적으로 합니다.
+            <p> &nbsp; 일반적으로 Transformer는 Attention 기반의 연산으로 병렬처리를 통해 대규모 데이터를 바탕으로 학습을 진행합니다. 이런 학습 방식을 통해 뛰어난 성능을 자랑하지만, 가용한 데이터가 제한적인 경우 일반적인 학습 방식만으로는 원하는 성능을 기록하기 어렵습니다. 데이터를 더욱 확보하여 해결하는 것이 가장 이상적인 방법이지만, 일반적인 사용자가 충분한 양질의 데이터를 확보하는 것은 현실적으로 매우 어려운 일입니다.<br>
+            때문에 이 프로젝트에서는 데이터가 제한적인 경우, 추론과정과 동일한 Generative Training 방식으로 Transformer의 성능을 향상시킬수 있을것이라는 가설을 세우고, 직접 가설을 검증해봅니다.
+            학습 과정에서 효율적인 생성을 병행하기 위해 디코딩 과정에서 Cache를 사용할 수 있는 Transformer 모델을 구현해 사용합니다. 성능 평가는 기계번역과 대화생성 과제에서 진행하며, 비교군으로는 일반적인 학습방식, 데이터를 증강시킨 경우에서의 학습, 생성적 학습 그리고 일반적인 학습 이후 이어지는 생성적 학습으로 총 네가지 경우의 수를 비교해봅니다.  
             </p>
 
-          <br class="half-spacer">
+          <div class="half-spacer"></div>
           <li>Objective
             <ul>
               <li style="font-weight: normal;">소규모 데이터셋에서 Generative Training의 효용성 검증</li>
               <li style="font-weight: normal;">Cache를 활용해 효울적인 생성이 가능한 Transformer 구현</li>
-              <li style="font-weight: normal;">데이터를 증가시킨 상황에서의 일반적인 훈련 방식에서의 성능과도 비교하며, Transformer 학습 방식 및 상황별 성능 변화 확인</li>
+              <li style="font-weight: normal;">네 가지 학습 경우의 수를 변인으로 두어 다각적인 비교 검증</li>
             </ul>
           </li>
 
@@ -86,7 +87,7 @@ permalink: /gen_train
       <div class="list-container">
         <ul>
           <li>Transformer
-            <p>&nbsp; Transformer Seq2Seq 모델은 언어 생성 작업에서 뛰어난 성과를 보여주며, Attention 메커니즘을 통해 문맥을 파악하는 능력으로 자연어 처리 분야에서 널리 활용되고 있습니다. 그러나, 특히 긴 문장에서 Exposure Bias라는 문제가 나타나기도 합니다.
+            <p>&nbsp; Transformer는 자연어 처리 및 기타 시퀀스 기반 작업에 매우 효과적인 신경망 아키텍처입니다. 이 아키텍처의 중요한 특징 중 하나는 어텐션 메커니즘을 통한 병렬 학습에 대한 뛰어난 지원입니다. 기존의 순환 신경망(RNN)과 비교하여 트랜스포머는 많은 입력 토큰을 동시에 처리할 수 있어 훈련 속도를 크게 향상시킵니다. 
             </p>
           </li>
 
@@ -319,33 +320,25 @@ class Transformer(nn.Module):
       <div class="list-container">
         <ul>
           <li>Standard Training
-            <p>&nbsp; Auxiliary Training은 Main이 되는 Training Objective에 더불어 추가적인 Training Objective를 두고 학습을 진행하는 방식을 의미합니다.
-              다만, 일반적인 생성방식으로 학습하는 것은 너무 오랜시간이 소요되기 때문에, 효율성을 위해 생성을 위한 디코딩과정에 Cache를 활용하는 모델을 구현하여 사용합니다.
-              코드 구현은 아래와 같습니다.
+            <p>&nbsp; 일반적인 MLE Training Objective 기반의 병렬처리 학습 방식입니다. Masking을 활용한 Teacher Forcing을 사용하며, 한번에 많은 배치의 데이터를 처리함으로써 효율적인 학습이 가능한 방식입니다.
             </p>
           </li>
 
           <div class="spacer"></div>
           <li>Data Augment Training
-            <p>&nbsp; Auxiliary Training은 Main이 되는 Training Objective에 더불어 추가적인 Training Objective를 두고 학습을 진행하는 방식을 의미합니다.
-              다만, 일반적인 생성방식으로 학습하는 것은 너무 오랜시간이 소요되기 때문에, 효율성을 위해 생성을 위한 디코딩과정에 Cache를 활용하는 모델을 구현하여 사용합니다.
-              코드 구현은 아래와 같습니다.
+            <p>&nbsp; 이 방식은 위의 Standard Training과 동일한 학습 방식을 사용합니다. 다만 한 가지 다른 것은 데이터의 수가 많은 경우에서의 학습을 변수로써 사용하기 위한 학습 방식입니다.
             </p>
           </li>
 
           <div class="spacer"></div>
           <li>Generative Training
-            <p>&nbsp; Auxiliary Training은 Main이 되는 Training Objective에 더불어 추가적인 Training Objective를 두고 학습을 진행하는 방식을 의미합니다.
-              다만, 일반적인 생성방식으로 학습하는 것은 너무 오랜시간이 소요되기 때문에, 효율성을 위해 생성을 위한 디코딩과정에 Cache를 활용하는 모델을 구현하여 사용합니다.
-              코드 구현은 아래와 같습니다.
+            <p>&nbsp; Generative Training은 학습 방식에서 추론 과정과 동일한 로직을 사용해 보다 빠르고 직관적인 학습의 수렴을 도모하기 위한 학습 방식입니다. 효율성은 떨어지지만, 학습과 추론과정의 일치로 인한 Exposure Bias의 해소도 기대할 수 있는 학습 방식입니다.
             </p>
           </li>
 
           <div class="spacer"></div>
           <li>Consecutive Training
-            <p>&nbsp; Auxiliary Training은 Main이 되는 Training Objective에 더불어 추가적인 Training Objective를 두고 학습을 진행하는 방식을 의미합니다.
-              다만, 일반적인 생성방식으로 학습하는 것은 너무 오랜시간이 소요되기 때문에, 효율성을 위해 생성을 위한 디코딩과정에 Cache를 활용하는 모델을 구현하여 사용합니다.
-              코드 구현은 아래와 같습니다.
+            <p>&nbsp; Consecutive Training은 Standard Training 이후 Generative Training을 진행하면서 학습의 안정성을 더 높이기 위한 학습 방식입니다.
             </p>
           </li>
 
@@ -382,16 +375,15 @@ class Transformer(nn.Module):
           <li>Model Setup
             <div class="dual-container">
               <ul>
-                <li>PLE Architecture: &nbsp; AlBERT</li>
-                <li>PLE Name: &nbsp; albert-v2</li>
-                <li>Input Dim: &nbsp; 10,000</li>
-                <li>Output Dim: &nbsp; 10,000</li>
+                <li>Architecture: &nbsp; Transformer</li>
+                <li>Input Dim: &nbsp; 15,000</li>
+                <li>Output Dim: &nbsp; 15,000</li>
               </ul>
               <ul>
-                <li>Embedding Dim: &nbsp; 512</li>
-                <li>Hidden Dim: &nbsp; 512</li>
-                <li>Model Params: &nbsp; 000</li>
-                <li>Model Size: &nbsp; 000</li>                
+                <li>Hidden Dim: &nbsp; 256</li>
+                <li>Pff Dim: &nbsp; 512</li>
+                <li>Model Params: &nbsp; 15,488,664</li>
+                <li>Model Size: &nbsp; 60.085 MB</li>                
               </ul>
             </div>
           </li>
@@ -403,12 +395,13 @@ class Transformer(nn.Module):
                 <li>Num Epochs: &nbsp; 10</li>
                 <li>Batch Size: &nbsp; 32</li>
                 <li>Learning Rate: &nbsp; 5e-4</li>
-                <li>LR Scheduler: &nbsp; pleature</li>
+                <li>LR Scheduler: &nbsp; ReduceLROnPlateau</li>
               </ul>
               <ul>
                 <li>Optimizer: &nbsp; AdamW</li>
-                <li>Gradient Accumulation Steps: &nbsp; 4
-                <li>Teacher Forcing Ratio: &nbsp; 0.5</li>                
+                <li>Apply Gradient Checkpoint: &nbsp; True</li>
+                <li>Gradient Accumulation Steps: &nbsp; 4</li>
+                <li>Early Stop Patient: &nbsp; 3</li> 
               </ul>
             </div>
           </li>
@@ -517,7 +510,7 @@ class Transformer(nn.Module):
           <div class="half-spacer"></div>  
           <li>Result Analysis</li>
             <p> &nbsp; 두 가지 과제에서 모두 Generative Training은 성능과 효율성 측면에서 가장 낮은 결과를 보이며, 효용성이 매우 떨어짐을 확인할 수 있습니다.
-              Transformer의 학습에서 Generative Training이 얼마나 비효율적인지 직접 확인할 수 있었습니다.
+              Transformer의 학습에서 Generative Training이 얼마나 비효율적인지 직접 확인할 수 있었습니다. 
             </p>
         </ul>
       </div>
@@ -527,27 +520,9 @@ class Transformer(nn.Module):
 <!-- 5. Conclusion -->
     <h2 id="5">&hairsp; 5. &hairsp; Conclusion</h2>
     <div class="chapter-box">
+      <p>&nbsp; 프로젝트의 시작에서 가용한 데이터의 수가 제한적인 경우, Generative Training 방식이 Transformer 성능 증진에 도움이 될 것이라는 가설을 세웠습니다. 결과를 확인해보면, Transformer와 Generative Training은 상성이 매우 좋지 않음을 확인할 수 있었습니다. 이를 통해 가설이 틀렸음을 검증함과 동시에, Transformer의 성능 개선을 위해 Data의 확보가 얼마나 중요한지 다시 한번 확인할 수 있었습니다.
+      </p>
 
-      <div class="list-container">
-        <ul>
-          <li>RNN, LSTM, GRU 을 활용한 seq2seq 모델링 방식의 이해</li>
-            <p>&nbsp; 토큰의 벡터 변환을 위한 Embedding Layer와 실제 연산을 위한 순환 신경망 레이어만으로 구성된 단순산 Encoder, Decoder 구조로 이루어져 있으며, 
-            </p>
-
-          <div class="half-spacer"></div>
-          <li>세 가지 순환 신경망의 성능 비교 검증</li>
-            <p>LSTM은 게이트 메커니즘을 통해 장기 의존성 문제를 해결하는 데 강점을 보입니다. 복잡한 문맥을 학습하고 기억하는 데 탁월하며, 긴 시퀀스 데이터에서 뛰어난 성능을 발휘할 수 있습니다. 하지만 LSTM은 더 많은 파라미터를 가지고 있어서 더 많은 데이터와 계산 리소스가 필요할 수 있습니다.
-            </p>
-            
-
-          <br class="half-spacer">
-          <li>최소 기준치 확립</li>
-            <p>앞서 언급했듯이 순환 신경망을 사용한 Seq2Seq모델은 앞으로 다루게 될 다양한 Seq2Seq 모델들의 시작점입니다. 고도화 된 모델일지라도 하이퍼 파라미터 설정이나, 훈련 방식 등의 이유에서 잘못된 성능이 나올수도 있습니다. 이때, 최소한의 동작은 하는 구나 하는 판단의 근거로 다음과 같은 스코어를 활용할 수 있습니다. <br> 
-              기계번역 BLEU Score: 00.00, 대화 생성 Rouge Score: 00.00, 문서 요약 Rouge Score: 00.00 이하의 성능ㅇ
-            </p>
-
-        </ul>
-      </div>
     </div>
 
 

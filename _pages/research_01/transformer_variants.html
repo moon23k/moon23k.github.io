@@ -12,7 +12,8 @@ permalink: /transformer_variants
     <div class="callout">
       <p class="highlighted-text"><span>Project Objective</span></p>
       <div class="small-spacer"></div>
-      <p>&nbsp; 이 프로젝트에서는 
+      <p>&nbsp; 이 프로젝트에서는 Standard Transformer와 이를 개선시킨 Recurrent & Evolved Transformer를 직접 구현하고 그 성능의 변화를 확인해봅니다.
+
       </p>
     </div>
 
@@ -71,7 +72,6 @@ permalink: /transformer_variants
             <ul>
               <li style="font-weight: normal;">Standard Transformer, Recurrent Transformer, Evolved Trasnformer 구현을 통한, Transformer 모델링 다양화 방식에 대한 깊은 이해</li>
               <li style="font-weight: normal;">Standard Transformer, Recurrent Transformer, Evolved Trasnformer 모델의 자연어 생성 능력 비교 검증</li>
-              <li style="font-weight: normal;">가설에 대한 검증</li>
             </ul>
           </li>
 
@@ -700,7 +700,6 @@ class EvolvedTransformer(nn.Module):
 
 
 
-
 <!-- 4. Experimental Setup -->
     <h2 id="4">4. &hairsp; Experimental Setup</h2>
     <div class="chapter-box">
@@ -719,7 +718,7 @@ class EvolvedTransformer(nn.Module):
                 <li><b>Train Data Volumn</b>: &nbsp; 50,000</li>
                 <li><b>Valid Data Volumn</b>: &nbsp; 5,000</li>
                 <li><b>Test Data Volumn</b>: &nbsp; 100</li>
-                <li><b>Vocab Size</b>: &nbsp; 10,000</li>                
+                <li><b>Vocab Size</b>: &nbsp; 15,000</li>                
               </ul>
             </div>
           </li>
@@ -728,14 +727,14 @@ class EvolvedTransformer(nn.Module):
           <li>Model Setup
             <div class="dual-container">
               <ul>
-                <li><b>Input Dim</b>: &nbsp; 10,000</li>
-                <li><b>Output Dim</b>: &nbsp; 10,000</li>
+                <li><b>Input Dim</b>: &nbsp; 15,000</li>
+                <li><b>Output Dim</b>: &nbsp; 15,000</li>
                 <li><b>Embedding Dim</b>: &nbsp; 512</li>
               </ul>
               <ul>
-                <li><b>Hidden Dim</b>: &nbsp; 512</li>
-                <li><b>Model Params</b>: &nbsp; 000</li>
-                <li><b>Model Size</b>: &nbsp; 000</li>                
+                <li><b>Hidden Dim</b>: &nbsp; 256</li>
+                <li><b>PFF Dim</b>: &nbsp; 512</li>
+                <li><b>N Layers</b>: &nbsp; 3</li>
               </ul>
             </div>
           </li>
@@ -752,7 +751,7 @@ class EvolvedTransformer(nn.Module):
               <ul>
                 <li><b>Optimizer</b>: &nbsp; AdamW</li>
                 <li><b>Gradient Accumulation Steps</b>: &nbsp; 4
-                <li><b>Teacher Forcing Ratio</b>: &nbsp; 0.5</li>                
+                <li><b>Early Stop Patience</b>: &nbsp; 3</li>                
               </ul>
             </div>
           </li>
@@ -782,25 +781,25 @@ class EvolvedTransformer(nn.Module):
               </thead>
               <tbody>
                 <tr>
-                  <td>RNN Model</td>
-                  <td>2.12</td>
-                  <td>3m 58s</td>
-                  <td>0.22GB</td>
-                  <td>0.82GB</td>
+                  <td>Standard Model</td>
+                  <td>14.30</td>
+                  <td>0m 43s</td>
+                  <td>0.20GB</td>
+                  <td>0.95GB</td>
                 </tr>
                 <tr>
-                  <td>LSTM Model</td>
-                  <td>8.35</td>
-                  <td>4m 16s</td>
-                  <td>0.27GB</td>
-                  <td>1.30GB</td>
+                  <td>Recurrent Model</td>
+                  <td>15.27</td>
+                  <td>0m 42s</td>
+                  <td>0.17GB</td>
+                  <td>0.91GB</td>
                 </tr>
                 <tr>
-                  <td>GRU Model</td>
-                  <td>9.75</td>
-                  <td>4m 6s</td>
-                  <td>0.26GB</td>
-                  <td>1.16GB</td>
+                  <td>Evolved Model</td>
+                  <td>0.00</td>
+                  <td>0m 41s</td>
+                  <td>0.19GB</td>
+                  <td>0.87GB</td>
                 </tr>
 
               </tbody>
@@ -820,33 +819,31 @@ class EvolvedTransformer(nn.Module):
               </thead>
               <tbody>
                 <tr>
-                  <td>RNN Model</td>
-                  <td>0.10</td>
-                  <td>3m 40s</td>
-                  <td>0.22GB</td>
-                  <td>0.79GB</td>
+                  <td>Standard Model</td>
+                  <td>2.86</td>
+                  <td>0m 41s</td>
+                  <td>0.20GB</td>
+                  <td>0.85GB</td>
                 </tr>
                 <tr>
-                  <td>LSTM Model</td>
-                  <td>0.37</td>
-                  <td>4m 5s</td>
-                  <td>0.27GB</td>
-                  <td>1.23GB</td>
+                  <td>Recurrent Model</td>
+                  <td>0.52</td>
+                  <td>0m 41s</td>
+                  <td>0.18GB</td>
+                  <td>0.82GB</td>
                 </tr>
                 <tr>
-                  <td>GRU Model</td>
-                  <td>2.16</td>
-                  <td>3m 58s</td>
-                  <td>0.26GB</td>
-                  <td>1.11GB</td>
+                  <td>Evolved Model</td>
+                  <td>0.00</td>
+                  <td>0m 40s</td>
+                  <td>0.19GB</td>
+                  <td>0.78GB</td>
                 </tr>
 
               </tbody>
             </table>
 
-                
-          <div class="half-spacer"></div>
-          <li>Text Summarization</li>
+            <li>Text Summarization</li>    
             <table class="result-table">
               <thead>
                 <tr>
@@ -859,25 +856,25 @@ class EvolvedTransformer(nn.Module):
               </thead>
               <tbody>
                 <tr>
-                  <td>RNN Model</td>
+                  <td>Standard Model</td>
+                  <td>7.91</td>
+                  <td>2m 41s</td>
+                  <td>0.21GB</td>
+                  <td>2.90GB</td>
+                </tr>
+                <tr>
+                  <td>Recurrent Model</td>
+                  <td>0.52</td>
+                  <td>2m 40s</td>
+                  <td>0.19GB</td>
+                  <td>2.77GB</td>
+                </tr>
+                <tr>
+                  <td>Evolved Model</td>
                   <td>0.00</td>
-                  <td>8m 6s</td>
-                  <td>0.23GB</td>
-                  <td>1.20GB</td>
-                </tr>
-                <tr>
-                  <td>LSTM Model</td>
-                  <td>2.23</td>
-                  <td>9m 7s</td>
-                  <td>0.29GB</td>
-                  <td>2.00GB</td>
-                </tr>
-                <tr>
-                  <td>GRU Model</td>
-                  <td>2.19</td>
-                  <td>8m 42s</td>
-                  <td>0.27GB</td>
-                  <td>1.82GB</td>
+                  <td>1m 51s</td>
+                  <td>0.20GB</td>
+                  <td>1.84GB</td>
                 </tr>
 
               </tbody>
@@ -885,7 +882,7 @@ class EvolvedTransformer(nn.Module):
 
           <div class="half-spacer"></div>
           <li>Result Analysis</li>
-            <p> &nbsp; RNN은 다양한 정보를 함유하기에 지나치게 단순하고, LSTM은 GATE구조가 복잡하기에, 그만큼 영향을 받은 요소가 많아 학습 수렴이 어렵습니다. 때문에 모든 학습 결과에서는 GATE를 사용하면서도 단순화된 연산으로 학습의 이점이 큰 GRU가 가장 뛰어난 성능을 보임을 알 수 있습니다. 
+            <p> &nbsp; 위의 결과를 보면, Evolved Transformer의 학습이 제대로 진행되지 않은 것을 확인할 수 있습니다. Training Log를 확인해본 결과, Loss는 과도하게 잘 줄어들고 있지만, 복잡한 구조탓에 하이퍼파라미터에 민감하게 반응한 것으로 판단됩니다. 의외로 Recurrent Transformer가 기계번역에서 가장 좋은 성능을 낸것도 놀랍습니다. 이는 모델적 특성과 데이터의 특성이 잘 맞아 좋은 결과가 반영된 것으로 판단할 수 있습니다. 추가적으로 복잡한 연산탓에 효율성이 낮을것이라고 예상했던 Evolved Transformer가 좋은 효율성을 보여준 점도 놀랍습니다.
             </p>
         </ul>
       </div>
@@ -895,8 +892,8 @@ class EvolvedTransformer(nn.Module):
 <!-- Conclusion -->   
     <h2 id="6">6. &hairsp; Conclusion</h2>
     <div class="chapter-box">
-        <p> &nbsp; 이전의 RNN 계열의 모델들 보다 속도 측면, 그리고 성능 측면에서 굉장히 진일보 했음을 실험을 통해 직접적으로 확인할 수 있었음. 구현과정에서 복잡성이 증가 했다는 단점역시, Pytorch 라이브러리의 Transformer 모델을 통해 간편하게 사용할 수 있는 편의성이 있음.
-
+        <p> &nbsp; 이 프로젝트에서는 세가지 Transformer를 직접 구현하고 세 가지 자연어 생성 과제에서 직접 성능비교까지 해봤습니다.
+            Evoled Transformer가 가장 좋은 성능을 보일 것이라는 초기의 예상과 달리, 복잡한 모델 구조에서 기인한 하이퍼 파라미터에 민감도가 높아 좋지 않은 성능을 보인 것으로 판단되며, Recurrent Transformer는 기계번역이라는 한 가지 과제에서만 좋은 성적을 기록했습니다. 일련의 실험을 통헤 Standard Transformer의 안정성을 다시 한번 확인할 수 있었고, Transformer의 복잡성에 기인한 더 깊은 추가 연구가 필요하다는 것을 느끼게 되었습니다.
         </p>  
     </div>
 

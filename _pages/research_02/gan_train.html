@@ -12,7 +12,7 @@ permalink: /gan_train
     <div class="callout">
       <p class="highlighted-text"><span>Project Objective</span></p>
       <div class="small-spacer"></div>
-      <p>&nbsp; 이 프로젝트에서는 생성 능력을 키우기 위한 좋은 학습 방식인 GAN을 시퀀셜 데이터에서 사용하기 위한 방법론인 SeqGAN을 통해 성능이 얼마나 개선될 수 있을지 직접 확인해봅니다. 아키텍처로는 Transformer를 </p>
+      <p>&nbsp; 이 프로젝트에서는 생성 능력을 키우기 위한 학습 방식인 GAN을 시퀀셜 데이터에서 사용하기 위한 방법론인 SeqGAN을 통해 성능이 얼마나 개선될 수 있을지 직접 확인해봅니다. 실험을 위한 아키텍처로는 Transformer를 사용하며, 검증을 위한 과제로는 기계번역과 대화생성을 사용합니다.</p>
     </div>
 
     <div class="tblContents">
@@ -64,10 +64,8 @@ permalink: /gan_train
           <div class="half-spacer"></div>
           <li>Objective
             <ul>
-              <li style="font-weight: normal;">RNN, LSTM, GRU 을 활용한 seq2seq 모델링 방식의 이해</li>
-              <li style="font-weight: normal;">세 가지 순환 신경망의 성능 비교 검증</li>
-              <li style="font-weight: normal;">가설에 대한 검증</li>
-              <li style="font-weight: normal;">실험 결과를 통해, 이후 자연어 생성을 위한 모델링 성능의 기준점을 확립</li>
+              <li style="font-weight: normal;">Transformer의 SeqGAN을 위한 학습 파이프라인 설계 및 구현</li>
+              <li style="font-weight: normal;">SeqGAN의 효용성을 두 가지 자연어 생성 과제에서 검증</li>
             </ul>
           </li>
 
@@ -85,28 +83,29 @@ permalink: /gan_train
       <div class="list-container">
         <ul>
           <li>GAN
-            <p>&nbsp; GAN은 Generator와 Discriminator가 적대적으로 학습
-        Generator: 실제와 유사한 결과값을 창출하려고, Discriminatofrom r를 속일정도록
-        Discriminator: Generator의 생성 결과와 실제 정답 레이블 간의 차이를 잘 찾아내도록 학습
+            <p>&nbsp; 생성적 적대 신경망(GAN)은 2014년에 Ian Goodfellow에 의해 소개된 혁신적인 딥러닝 아키텍처입니다. GAN은 가짜 데이터를 생성하고 진짜 데이터와 거의 구분할 수 없는 정도로 현실적인 데이터를 생성할 수 있는 능력으로 주목받고 있습니다. 이 모델은 Generator와 Discriminator라는 두 가지 주요 구성 요소로 구성되어 있습니다. <br>
 
-        결과적으로 제너레이터는 더욱 정교한 결과물을 만들어 내도록 학습되고,
-        제너레이터가 정교해질 수록, 그 미묘한 차이 마저도 포착할 수 있도록 Dicriminator역시 덩달아 정교해집니다.
 
-        덕분에 단순한 Loss Function만으로는 다듬기 힘든 부분까지 모델이 학습할 수 있게 유도합니다.
+            <b>Generator:</b> &nbsp; Generator는 무작위 잡음이나 난수를 입력으로 받아 실제 데이터와 유사한 가짜 데이터를 생성하는 역할을 합니다. Generator의 목표는 판별자를 속이는 것으로, 생성된 가짜 데이터가 실제 데이터와 구별하기 어려울 정도로 현실적이어야 합니다. <br>
 
-        여러 방면에서 학습이 매우 효과적임을 입증함.
+            <b>Discriminator:</b> &nbsp; Discriminator는 입력으로 실제 데이터나 생성자가 생성한 가짜 데이터를 받아 그것이 실제 데이터인지, 아니면 생성자에 의해 만들어진 것인지를 판별합니다. Discriminator의 목표는 가짜 데이터와 실제 데이터를 정확히 구분하는 것입니다. <br>
+
+            GAN의 핵심 아이디어는 Generator와 Discriminator가 서로 경쟁하면서 성장하는 것입니다. Generator는 점차적으로 실제 데이터와 더 비슷한 가짜 데이터를 생성하려고 노력하고, Discriminator는 점차적으로 더 정확하게 가짜와 진짜를 구별하도록 학습합니다. 이 경쟁적 학습 과정은 두 네트워크를 모두 개선시키고 결국에는 Generator가 실제와 거의 구분할 수 없는 현실적인 데이터를 생성하게 됩니다.
+
+            GAN은 이미지 생성, 스타일 전이, 이미지 변환, 음악 생성 등 다양한 응용 분야에서 사용되며, 그 창의적이고 혁신적인 성능으로 딥러닝 연구 및 응용 분야에서 활발하게 활용되고 있습니다.
             </p>
           </li>
 
-          <br class="half-spacer">
+          <div class="spacer"></div>
           <li>Sequence GAN
             <div class="dual-container">
                 <img src="{{ 'assets/img/research_02/seqgan.png' | relative_url }}" style="width: 350px; height: 150px;">
                 <p>
-                &nbsp; 앞선 프로젝트에서는 RNN을 기반으로한 Sequence to Sequence 모델 구조의 효용성에 대해 면밀히 살펴봤습니다. 
-                하지만 RNN 네트워크는 장기기억력이라는 관점에서 고질적인 문제점을 태생적으로 지니고 있으며, 이를 해결하기 위한 Attention 메커니즘의 활용 역시 기대만큼 좋은 성능을 보이지는 못했습니다.
+                &nbsp; SeqGAN은 GAN을 연속적인 값이 아닌, 이산적인 시퀀셜 데이터에서 사용하기 위한 기법입니다. 시퀀셜 데이터의 경우, 연속데이터와 다르게 이전 시점의 정보가 현시점의 결과를 만들어 내는데 매우 중요하기에 매 생성 시점마다 이전 생성값을 재참조해야 합니다. 이런 비효율성과 직관적이지 않은 생성과정은 생성을 바탕으로 하는 GAN을 시퀀셜 데이터에 적용하기 어렵게 만드는 요소로 작용합니다. 
                 </p>
             </div>
+            <p>SeqGAN에서는 시퀀셜 데이터에 GAN을 적용하는 과정을 강화학습의 개념을 차용해 설명합니다. Agent는 Generator가 되며, Generator의 생성과정이 Action에 해당하며, 보상을 결정짓는 Reward function에서는 생성한 시퀀스가 생성한 것인지 실제 레이블인지를 판별한 결과를 반영합니다. 그리고 Agent는 이 보상을 최대화 할 수 있도록 Policy를 업데이트 하는 방식으로 학습하게 됩니다.  
+            </p>
           </li>
         <ul>          
       </div>
@@ -121,28 +120,336 @@ permalink: /gan_train
 
       <div class="list-container">
         <ul>
-          <li>Train Generator
-            <ul>
-              <li>일반적인 학습 방식으로 Generation Model 학습을 진행</li>
-              <li>학습된 Generation Model을 바탕으로, Discriminator 학습</li>
-              <li>Generation Model과 Discriminator를 활용해 SeqGAN 학습</li>
-            </ul>
+          <li>Pretrain
+            <p>&nbsp; SeqGAN을 하기 이전, 사전학습이 필요합니다. Generator와 Discriminator 모두 사전학습을 진행하며, 우선 Generator를 일반적인 Transformer의 병렬처리 학습 방식으로 Generation Model을 사전 학습하고, 사전 학습된 Generator를 바탕으로 이후 Discriminator 학습에 활용합니다. 사전학습을 위한 코드 구현은 아래와 같습니다. 
+            </p>
+
+            <div class="code-container">
+              <div class="code-snippet">  
+                <pre><code class="python">class PreTrainer(TrainerBase):
+    def __init__(self, config, generator, discriminator, train_dataloader, valid_dataloader):
+        super(PreTrainer, self).__init__(config, generator, discriminator, train_dataloader, valid_dataloader)
+
+        self.early_stop = config.early_stop
+        self.patience = config.patience
+        
+        self.device_type = config.device_type
+        self.scaler = torch.cuda.amp.GradScaler()
+        self.iters_to_accumulate = config.iters_to_accumulate
+        
+        self.set_training_attrs(generator, 'pre_gen')
+        self.set_training_attrs(discriminator, 'pre_dis')
+
+
+    def load_pt_generator(self):
+        state = torch.load(
+            f'ckpt/{self.task}/pre_gen_model.pt',
+            map_location=self.device
+        )['model_state_dict']
+
+        self.generator.load_state_dict(state)
+        self.generator.eval()
+        print('Pretrained Generator has loaded to pretrain discriminator\n')
+        
+
+    def print_epoch(self, epoch_report, model_type):
+        train_loss = f"{epoch_report['train_loss']:.3f}"
+        valid_loss = f"{epoch_report['valid_loss']:.3f}"
+        gpu_memory = epoch_report['gpu_memory']
+        max_memory = epoch_report['gpu_max_memory']
+
+        max_len = max([len(f"{x:.3f}") if isinstance(x, (float)) else len(str(x)) for x in epoch_report.values()])
+        
+        elapsed_time = epoch_report['epoch_time']
+        elapsed_min = int(elapsed_time / 60)
+        elapsed_sec = int(elapsed_time - (elapsed_min * 60))
+
+        txt = f"""Epoch {epoch_report['epoch']}/{self.n_epochs} | Time: {elapsed_min}m {elapsed_sec}s
+            >> Train Loss: {train_loss:>{max_len}}  |  Valid Loss: {valid_loss:>{max_len}}
+            >> GPU Memory: {gpu_memory:>{max_len}}  |  Max Memory: {max_memory:>{max_len}}\n"""
+        print(f"[ {'Generator' if 'gen' in model_type else 'Discriminator'} ]")
+        print(txt.replace(' '* 11, ''))
+
+    
+    def train(self):
+        self.train_model(self.generator, 'pre_gen')
+        self.load_pt_generator()
+        self.train_model(self.discriminator, 'pre_dis')
+
+
+    def train_model(self, model, model_type):
+        records = []
+        patience = self.patience
+        prev_loss, best_loss = float('inf'), float('inf')
+
+        optimizer = getattr(self, f'{model_type}_optimizer')
+        lr_scheduler = getattr(self, f'{model_type}_lr_scheduler')
+
+        torch.cuda.empty_cache()
+
+        for epoch in range(1, self.n_epochs + 1):
+            start_time, end_time = self.set_times()
+            start_time.record()
+
+            train_epoch_loss = self.train_epoch(model, optimizer, model_type)
+            valid_epoch_loss = self.valid_epoch(model, model_type)
+
+            epoch_gpu_memory, epoch_gpu_max_memory = self.get_gpu_info()
+
+            end_time.record()
+            torch.cuda.synchronize()
+            elapsed_time = start_time.elapsed_time(end_time) // 1000
+
+            epoch_record = {
+                'epoch': epoch,
+                'epoch_time': elapsed_time,
+                'train_loss': train_epoch_loss,
+                'valid_loss': valid_epoch_loss,
+                'learning_rate': optimizer.param_groups[0]['lr'],
+                'gpu_memory': epoch_gpu_memory,
+                'gpu_max_memory': epoch_gpu_max_memory
+            }
+
+            records.append(epoch_record)
+            self.print_epoch(epoch_record, model_type)
+            lr_scheduler.step(valid_epoch_loss)
+
+            if best_loss > valid_epoch_loss:
+                best_loss = valid_epoch_loss
+                torch.save({'epoch': epoch,
+                            'model_state_dict': model.state_dict(),
+                            'optimizer_state_dict': optimizer.state_dict()},
+                            getattr(self, f'{model_type}_ckpt'))
+
+            if self.early_stop:
+                if prev_loss > valid_epoch_loss:
+                    patience = self.patience
+                else:
+                    patience -= 1
+                    if not patience:
+                        print('--- Training Early Stopped ---\n')
+                        break
+
+                prev_loss = valid_epoch_loss
+
+        with open(getattr(self, f'{model_type}_record_path'), 'w') as fp:
+            json.dump(records, fp)
+
+
+    def train_epoch(self, model, optimizer, model_type):
+        model.train()
+        tot_len = len(self.train_dataloader)
+        epoch_loss = 0
+
+        for idx, batch in enumerate(self.train_dataloader):
+            idx += 1
+            inputs = self.batch2inputs(batch, model_type)
+
+            with torch.autocast(device_type=self.device_type, dtype=torch.float16):
+                loss = model(**inputs).loss
+                loss = loss / self.iters_to_accumulate
+
+            #Backward Loss
+            self.scaler.scale(loss).backward()
+
+            if (idx % self.iters_to_accumulate == 0) or (idx == tot_len):
+                #Gradient Clipping
+                self.scaler.unscale_(optimizer)
+                nn.utils.clip_grad_norm_(model.parameters(), max_norm=self.clip)
+
+                #Gradient Update & Scaler Update
+                self.scaler.step(optimizer)
+                self.scaler.update()
+                optimizer.zero_grad()
+
+            epoch_loss += loss.item()
+
+        return round(epoch_loss / tot_len, 3)
+
+
+
+    def valid_epoch(self, model, model_type):
+        model.eval()
+        epoch_loss = 0
+
+        with torch.no_grad():
+            for batch in self.valid_dataloader:
+                inputs = self.batch2inputs(batch, model_type)
+
+                with torch.autocast(device_type=self.device_type, dtype=torch.float16):
+                    loss = model(**inputs).loss
+                    epoch_loss += loss.item()
+
+        return round(epoch_loss / len(self.valid_dataloader), 3)</code></pre>
+              </div>
+            </div>            
           </li>
 
-          <div class="half-spacer"></div>
-          <li>Traing Discriminator
-            <p>&nbsp; Auxiliary Training은 Main이 되는 Training Objective에 더불어 추가적인 Training Objective를 두고 학습을 진행하는 방식을 의미합니다.
-              다만, 일반적인 생성방식으로 학습하는 것은 너무 오랜시간이 소요되기 때문에, 효율성을 위해 생성을 위한 디코딩과정에 Cache를 활용하는 모델을 구현하여 사용합니다.
-              코드 구현은 아래와 같습니다.
-            </p>
-          </li>
 
-          <div class="half-spacer"></div>
-          <li>SeqGAN Training
-            <p>&nbsp; Auxiliary Training은 Main이 되는 Training Objective에 더불어 추가적인 Training Objective를 두고 학습을 진행하는 방식을 의미합니다.
-              다만, 일반적인 생성방식으로 학습하는 것은 너무 오랜시간이 소요되기 때문에, 효율성을 위해 생성을 위한 디코딩과정에 Cache를 활용하는 모델을 구현하여 사용합니다.
-              코드 구현은 아래와 같습니다.
+          <div class="spacer"></div>
+          <li>SeqGAN Train
+            <p>&nbsp; 일반적인 SeqGAN에서는 생성과정을 병행하는 학습을 진행하지만, Transformer의 경우 생성을 병행하게 되면서 병렬처리라는 큰 이점을 잃게 됩니다. 이를 보완하기 위해 일반적인 병렬학습과정과 동일하게 Logit을 생성하고 이 Logit에 대한 GAN을 진행합니다. 자세한 코드 구현은 아래와 같습니다.
             </p>
+            <div class="code-container">
+              <div class="code-snippet">  
+                <pre><code class="python">class Trainer(TrainerBase):
+    def __init__(self, config, generator, discriminator, train_dataloader, valid_dataloader):
+        super(Trainer, self).__init__(config, generator, discriminator, train_dataloader, valid_dataloader)
+
+        self.sigmoid = nn.Sigmoid()
+        self.set_training_attrs(generator, 'gen')
+        self.set_training_attrs(discriminator, 'dis')
+        self.record_path = f"ckpt/{self.task}/gan_repord.json"
+
+
+    def print_epoch(self, epoch_report):
+        gen_train_loss = f"{epoch_report['gen_train_loss']:.3f}"
+        gen_valid_loss = f"{epoch_report['gen_valid_loss']:.3f}"
+
+        dis_train_loss = f"{epoch_report['dis_train_loss']:.3f}"
+        dis_valid_loss = f"{epoch_report['dis_valid_loss']:.3f}"
+
+        gpu_memory = epoch_report['gpu_memory']
+        max_memory = epoch_report['gpu_max_memory']
+
+        max_len = max([len(f"{x:.3f}") if isinstance(x, (float)) else len(str(x)) for x in epoch_report.values()])
+
+        elapsed_time = epoch_report['epoch_time']
+        elapsed_min = int(elapsed_time / 60)
+        elapsed_sec = int(elapsed_time - (elapsed_min * 60))
+
+        txt = f"""Epoch {epoch_report['epoch']}/{self.n_epochs} | Time: {elapsed_min}m {elapsed_sec}s
+            >> Gen Train Loss: {gen_train_loss:>{max_len}}  |  Gen  Valid Loss: {gen_valid_loss:>{max_len}}
+            >> Dis Train Loss: {dis_train_loss:>{max_len}}  |  Dis  Valid Loss: {dis_valid_loss:>{max_len}}            
+            >> GPU Memory:     {gpu_memory:>{max_len}}  |  Max Memory:      {max_memory:>{max_len}}\n"""
+        print(txt.replace(' '* 11, ''))
+
+
+    def get_losses(self, batch):
+        gen_inputs = self.batch2inputs(batch, 'gen')
+        dis_inputs = self.batch2inputs(batch, 'dis')
+
+
+        dis_loss = self.discriminator(**dis_inputs).loss
+        samples = self.generator(**gen_inputs).logit.argmax(-1)
+    
+        logit = self.sigmoid(self.discriminator(samples))
+        prob = (logit > 0.5).sum() / logit.size(0)
+        prob = torch.clamp(prob, 1e-4, 0.999)
+        gen_loss = -torch.log(prob)
+        gen_loss.requires_grad_(True)
+
+        return gen_loss, dis_loss
+
+
+    def train(self):
+        records = []
+
+        torch.cuda.empty_cache()
+        for epoch in range(1, self.n_epochs + 1):
+            start_time, end_time = self.set_times()
+            start_time.record()
+
+            gen_train_epoch_loss, dis_train_epoch_loss = self.train_epoch()
+            gen_valid_epoch_loss, dis_valid_epoch_loss = self.valid_epoch() 
+
+            epoch_gpu_memory, epoch_gpu_max_memory = self.get_gpu_info()
+
+            end_time.record()
+            torch.cuda.synchronize()
+            elapsed_time = start_time.elapsed_time(end_time) // 1000
+
+            epoch_record = {
+                #common
+                'epoch': epoch,
+                'epoch_time': elapsed_time,
+                'gpu_memory': epoch_gpu_memory,
+                'gpu_max_memory': epoch_gpu_max_memory,
+
+                #generator                
+                'gen_train_loss': gen_train_epoch_loss,
+                'gen_valid_loss': gen_valid_epoch_loss,
+                'gen_lr': self.gen_optimizer.param_groups[0]['lr'],
+
+                #discriminator
+                'dis_train_loss': dis_train_epoch_loss,
+                'dis_valid_loss': dis_valid_epoch_loss,                
+                'dis_lr': self.dis_optimizer.param_groups[0]['lr'],
+            }
+
+            records.append(epoch_record)
+            self.print_epoch(epoch_record)
+            
+            #lr scheduler update
+            self.gen_lr_scheduler.step(gen_valid_epoch_loss)
+            self.dis_lr_scheduler.step(dis_valid_epoch_loss)
+
+
+        torch.save({'model_state_dict': self.generator.state_dict(),
+                    'optimizer_state_dict': self.gen_optimizer.state_dict()},
+                    self.gen_ckpt)
+        torch.save({'model_state_dict': self.discriminator.state_dict(),
+                    'optimizer_state_dict': self.dis_optimizer.state_dict()},
+                    self.dis_ckpt)
+
+        with open(self.record_path, 'w') as fp:
+            json.dump(records, fp)
+
+
+
+    def set_model_mode(self, mode):
+        if mode == 'train':
+            self.generator.train()
+            self.discriminator.train()
+        else:
+            self.generator.eval()
+            self.discriminator.eval()
+
+
+    def train_epoch(self):
+        self.set_model_mode('train')
+        tot_len = len(self.train_dataloader)
+        gen_epoch_loss, dis_epoch_loss = 0, 0
+
+        for batch in self.train_dataloader:
+            
+            gen_loss, dis_loss = self.get_losses(batch)
+
+            gen_loss.backward()
+            dis_loss.backward()
+
+            #Gradient Clipping
+            nn.utils.clip_grad_norm_(self.generator.parameters(), max_norm=self.clip)
+            nn.utils.clip_grad_norm_(self.discriminator.parameters(), max_norm=self.clip)
+
+            #Gradient Update & Scaler Update
+            self.gen_optimizer.step()
+            self.dis_optimizer.step()
+
+            self.gen_optimizer.zero_grad()
+            self.dis_optimizer.zero_grad()
+
+            gen_epoch_loss += gen_loss.item()
+            dis_epoch_loss += dis_loss.item()
+
+        return round(gen_epoch_loss / tot_len, 3), round(dis_epoch_loss / tot_len, 3)
+
+
+    def valid_epoch(self):
+        self.set_model_mode('eval')
+        tot_len = len(self.valid_dataloader)
+        gen_epoch_loss, dis_epoch_loss = 0, 0
+
+        with torch.no_grad():
+            for batch in self.valid_dataloader:
+                gen_loss, dis_loss = self.get_losses(batch)
+
+                gen_epoch_loss += gen_loss.item()
+                dis_epoch_loss += dis_loss.item()
+
+        return round(gen_epoch_loss / tot_len, 3), round(dis_epoch_loss / tot_len, 3)</code></pre>
+              </div>
+            </div>            
           </li>
 
         </ul>          
@@ -162,7 +469,7 @@ permalink: /gan_train
                 <li>Translation Task: &nbsp; WMT'14 En-De</li>
                 <li>Dialogue Task: &nbsp; Daily Dialogue</li>
                 <li>Tokenizer: &nbsp; BPE Tokenizer</li>
-                <li>Vocab Size: &nbsp; 10,000</li>
+                <li>Vocab Size: &nbsp; 15,000</li>
               </ul>
               <ul>
                 <li>Train Data Volumn: &nbsp; 50,000</li>
@@ -179,15 +486,12 @@ permalink: /gan_train
             <div class="dual-container">
               <ul>
                 <li>Architecture: &nbsp; Transformer Seq2Seq</li>
-                <li>PLE Name: &nbsp; albert-v2</li>
-                <li>Input Dim: &nbsp; 10,000</li>
-                <li>Output Dim: &nbsp; 10,000</li>
+                <li>Input Dim: &nbsp; 15,000</li>
+                <li>Output Dim: &nbsp; 15,000</li>
               </ul>
               <ul>
-                <li>Embedding Dim: &nbsp; 512</li>
                 <li>Hidden Dim: &nbsp; 512</li>
-                <li>Model Params: &nbsp; 000</li>
-                <li>Model Size: &nbsp; 000</li>                
+                <li>Pff Dim: &nbsp; 512</li>
               </ul>
             </div>
           </li>
@@ -197,15 +501,12 @@ permalink: /gan_train
             <div class="dual-container">
               <ul>
                 <li>Architecture: &nbsp; Transformer Binary Classification</li>
-                <li>PLE Name: &nbsp; albert-v2</li>
-                <li>Input Dim: &nbsp; 10,000</li>
-                <li>Output Dim: &nbsp; 10,000</li>
+                <li>Input Dim: &nbsp; 15,000</li>
+                <li>Output Dim: &nbsp; 1</li>
               </ul>
               <ul>
-                <li>Embedding Dim: &nbsp; 512</li>
                 <li>Hidden Dim: &nbsp; 512</li>
-                <li>Model Params: &nbsp; 000</li>
-                <li>Model Size: &nbsp; 000</li>                
+                <li>PFf Dim: &nbsp; 512</li>
               </ul>
             </div>
           </li>
@@ -303,8 +604,7 @@ permalink: /gan_train
 
           <div class="half-spacer"></div>  
           <li>Result Analysis</li>
-            <p> &nbsp; 두 가지 과제에서 모두 Generative Training은 성능과 효율성 측면에서 가장 낮은 결과를 보이며, 효용성이 매우 떨어짐을 확인할 수 있습니다.
-              Transformer의 학습에서 Generative Training이 얼마나 비효율적인지 직접 확인할 수 있었습니다.
+            <p> &nbsp; 두 가지 과제에서 모두 SeqGAN 방식이 오히려 전체 학습에 악영향을 미쳤음을 확인할 수 있습니다. 다양한 원인이 있겠지만, 가장 추론 가능한 원인 중하나는 SeqGAN의 Loss함수가 지나치게 Robust해서 모델 파라미터 갱신에 따른 변화를 제대로 반영하지 못한 것이라고 판단됩니다. 
             </p>
         </ul>
       </div>
@@ -316,41 +616,9 @@ permalink: /gan_train
     <h2 id="5">5. &hairsp; Conclusion</h2>
     <div class="chapter-box">
 
-      <div class="list-container">
-        <ul>
-          <li>RNN, LSTM, GRU 을 활용한 seq2seq 모델링 방식의 이해</li>
-            <p>&nbsp; 토큰의 벡터 변환을 위한 Embedding Layer와 실제 연산을 위한 순환 신경망 레이어만으로 구성된 단순산 Encoder, Decoder 구조로 이루어져 있으며, 
-            </p>
+      <p>이 프로젝트에서는 SeqGAN의 구현과, 그 결과까지 살펴봤습니다. 실패에 가까운 실험 결과를 통해, GAN이라는 매력적인 학습법을 시퀀셜 데이터에서 성공적으로 사용하기 위해서는 더 많은 연구가 필요하다는 것을 다시 한번 느낄 수 있었습니다. 
+      </p>
 
-          <div class="half-spacer"></div>
-          <li>세 가지 순환 신경망의 성능 비교 검증</li>
-            <p>LSTM은 게이트 메커니즘을 통해 장기 의존성 문제를 해결하는 데 강점을 보입니다. 복잡한 문맥을 학습하고 기억하는 데 탁월하며, 긴 시퀀스 데이터에서 뛰어난 성능을 발휘할 수 있습니다. 하지만 LSTM은 더 많은 파라미터를 가지고 있어서 더 많은 데이터와 계산 리소스가 필요할 수 있습니다.
-            </p>
-
-          <div class="half-spacer"></div>
-          <li>가설 검증
-            <ul>
-              <li>LSTM, GRU, RNN 순으로 높은 성능</li>
-                <p> LSTM의 연산과정이 가장 복잡하고, 다양한 GATE를 사용하기 떄문에, 좋은 성능을 낼 것이라고 예측했으나, 되려 복잡한 연산으로 인해, 학습 시 수렴에 어려움이 생겼습니다.
-                오히려 GATE를 사용하면서도, 연산의 단순화를 도모한 GRU의 학습 성능이 가장 좋은 것을 확인했습니다
-                </p>
-
-              <li>RNN, GRU, LSTM 순으로 빠른 학습
-                <p> 학습 속도 및 GPU 사용량으로 확인해본 효율성은 가설과 마찬가지로 RNN, GRU, LSTM 순으로 나타났습니다.
-                </p>
-              </li>
-            </ul>
-          </li>
-            
-
-          <br class="half-spacer">
-          <li>최소 기준치 확립</li>
-            <p>앞서 언급했듯이 순환 신경망을 사용한 Seq2Seq모델은 앞으로 다루게 될 다양한 Seq2Seq 모델들의 시작점입니다. 고도화 된 모델일지라도 하이퍼 파라미터 설정이나, 훈련 방식 등의 이유에서 잘못된 성능이 나올수도 있습니다. 이때, 최소한의 동작은 하는 구나 하는 판단의 근거로 다음과 같은 스코어를 활용할 수 있습니다. <br> 
-              기계번역 BLEU Score: 00.00, 대화 생성 Rouge Score: 00.00, 문서 요약 Rouge Score: 00.00 이하의 성능ㅇ
-            </p>
-
-        </ul>
-      </div>
     </div>
 
 
