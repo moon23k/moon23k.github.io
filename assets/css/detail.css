@@ -48,7 +48,7 @@
 
 #detail .title {
   margin: 5em 0 2em 0;
-  font-size: 27px;
+  font-size: 29px;
   font-style: italic;
 }
 
@@ -231,13 +231,13 @@
 
 /* spaecr */
 .small-spacer {
-  height: 1em;
+  height: 0.5em;
 }
 .half-spacer {
-  height: 2.5em;
+  height: 2em;
 }
 .spacer {
-  height: 3em;
+  height: 3.5em;
 }
 
 

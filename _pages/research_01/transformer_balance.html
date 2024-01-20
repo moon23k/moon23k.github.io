@@ -74,12 +74,27 @@ permalink: /transformer_balance
 
             실험의 주요 변인은 모델 구조의 균형성이며, Transformer모델을 의도에 따라 불균형하게 설정해, 총 00개의 모델을 구성하고, 이를 기계번역, 대화생성, 문서요약이라는 세가지 자연어 생성과제에서의 성능을 비교 분석해봅니다.
             </p>
+
+
+          <div class="spacer"></div>
+          <li>Hypothesis
+            <div class="small-spacer"></div>
+            <ul>
+              <li style="font-weight: normal;">기계번역에서는 Balance가 유지되는 모델의 성능이 좋을 것이다</li>
+              <li style="font-weight: normal;">대화생성에서는 디코더에 밸런스가 쏠린 모델 구조가 더 좋은 성능을 보일 것이다</li>
+              <li style="font-weight: normal;">문서요약에서는 인코더에 밸러스가 더 쏠린 모델 구조가 좋은 성능을 보일 것이다</li>
+            </ul>
+          </li>
+
+
           <div class="spacer"></div>
           <li>Objective
+            <div class="small-spacer"></div>
             <ul>
               <li style="font-weight: normal;">Transformer Width 불균형에 따른 자연어 생성 능력 변화 확인</li>
               <li style="font-weight: normal;">Transformer Depth 불균형에 따른 자연어 생성 능력 변화 확인</li>
               <li style="font-weight: normal;">Transformer Diversity 불균형에 따른 자연어 생성 능력 변화 확인</li>
+              <li style="font-weight: normal;">자연어 생성 세부 과제별 가설 검증</li>
             </ul>
           </li>
 
@@ -97,10 +112,45 @@ permalink: /transformer_balance
       <div class="list-container">  
         <ul>
           <li>Transformer Balance
-            <p>Transformer Seq2Seq 모델은 Encoder와 Decoder로 구성됩니다. 그리고 인코더와 디코더의 설정은 일반적으로 동일하게 설정됩니다.
-
+            <div class="small-spacer"></div>
+            <p>Standard Transformer는 균형이 잡힌 모델구조를 사용하고 있습니다. 이는 안정성 증진과 다양한 과제에서 범용적으로 사용될 수 있는 설정값이라는 장점을 지닙니다. 
+              하지만, 모델의 구성에 변화를 줌으로써 특정 기능을 더욱 활성화 시킬수도 있습니다. 이런 ...는 Width, Depth, Diverse라고 할 수 있으며, 자세한 내용은 아래와 같습니다.
             </p>
+            <div class="small-spacer"></div>
+
+            <ul>              
+              <div class="small-spacer"></div>
+              <li><b>Width</b></li>
+              <p>&nbsp; 기계 번역은 특정 언어로 표현된 시퀀스를 입력값으로 받아, 동일한 의미의 다른 언어 시퀀스를 반환하는 자연어 생성 과제를 의미합니다.
+              가령 "I am a student"라는 표현을 "나는 학생입니다" 로 변환하는것.
+              이 과제에서는 입력 시퀀스와 출력 시퀀스 간 거의 1:1 대응관계에 있다고 볼 수 있습니다.
+              덕분에 인코딩과 디코딩의 비중이 균형적이라고 볼 수 있습니다.
+              </p>              
+
+              <div class="small-spacer"></div>
+              <div class="small-spacer"></div>
+              <li><b>Depth</b></li>
+              <p>&nbsp; 대화 생성은 입력 시퀀스의 의미를 파악해, 적절한 답변을 출력하는 자연어 생성 과제입니다.
+               이때 "Hi"라는 입력값에 대해, 다양한 출력 시퀀스가 모두 맞는 경우가 될 수 있으며, 
+               1:1 대응이라기 보단, 자연스럽고 다양한 시퀀스 생성이 더욱 중요한 과제라고 볼 수 있습니다.
+
+               때문에 인코딩과 디코딩 부분에서 디코딩이 더욱 중요하게 작용하는 과제라고 볼 수 있습니다.
+               대표적으로 대화 생성에 특화된 GPT 계열 모델들역시 Decoder를 적극활용하고 있다는 점도 강력한 근거로 작용할 수 있습니다. 
+              </p>
+
+              <div class="small-spacer"></div>
+              <div class="small-spacer"></div>              
+              <li><b>Diverse</b></li>
+              <p>&nbsp; 문서 요약은 긴 입력시퀀스에서 중요한 내용만을 파악하고, 이를 다시 새롭게 요약된 시퀀스로 반환하는 자연어 생성 과제입니다.
+              입력 시퀀스의 길이가 출력 시퀀스에 비해 매우 길다는 특징이 있습니다.
+              때문에 입력 시퀀스에서 파악해야하는 정보의 양이 매우 많습니다.
+              자연스럽게 이는 인코딩과 디코딩의 비중중에서 인코딩의 비중이 매우 크다는 것을 시사합니다.
+              실제 문서요약의 성능 개선을 위해, 인코더 방면에서의 연구들이 더 활발하게 이루어지고 있습니다.
+              </p>              
+            </ul>
+
           </li>
+
 
           <div class="spacer"></div>
           <li>Task Balance
@@ -144,90 +194,120 @@ permalink: /transformer_balance
 
       <div class="list-container">
         <ul>
-          <li>Transformer</li>
+          <li>Balanced Model
+            <ul>
+              <div class="small-spacer"></div>
+              <li><b>Baseline Model</b></li>
+              <p>일반적인 트랜스포머의 설정값과 같이, 인코더와 디코더의 하이퍼 파리미터의 균형을 일치시킨 모델입니다. Depth, Width, Diversity 모두 동일하며, 전체 실험의 Baseline 모델로 작용합니다.
+              </p>
 
-          <div class="dual-container">
-            <img src="{{ 'assets/img/research_01/standard_transformer.png' | relative_url }}" style="width: 30%; height: 30%;">
-
-            <p> &nbsp; 실험을 위한 BackBone Architecture로는 Standard Transformer Seq2Seq 모델 구조를 사용합니다. 모델은 Encoder와 Decoder로 구성되며, 일반적으로는 주요 구성 하이퍼 파라미터인 Hidden Dimension, PFF Dimension, Num of Layers, Num of Attention Heads이 모두 동일하게 설정된 모델을 의미합니다. <br>
-
-            Transformer의 균형적인 측면에 영향을 줄 수 있는 변인으로는 크게 차원의 크기, 레이어의 개수, 어텐션 헤드의 개수가 있습니다. 아래의 글에서는 앞서 언급한 변인에 따라 달라지는 모델과 그 의미에 대해 서술합니다.
-            </p>
-          </div>
-
-      <div class="spacer"></div>
-      <li>Width Unbalanced Model</li>
-      <p>Width 측면에서 밸런스를 의도적으로 붕괴시킨 모델입니다. Encoder의 무게중심을 더 크게 준 모델을 Encoder_Width Model이라고, 디코더에 무게중심을 더 준 모델을 Decoder Width_Model이라고 명명하고, Back-bone 모델에서 공유되는 Hidden Dimension차원을 2배만큼 증가 시킴으로써, 인코더 혹은 디코더의 은닉차원에서 함유할수 있는 정보의 양을 늘린 모델입니다. <br>
-        차원의 크기. 모든 차원의 크기를 동일하게 늘리는 것이 아니라, Encoder에서 혹은 Decoder에서 공통적으로 적용되는 Hidden Dimension과 PFF 차원의 사이즈를 조절합니다. 이 차원의 크기가 커질수록 담을수 있는 정보의 양도 많아집니다.
-              
-        차원의 크기를 조절하는 Encoder_Wide Model과 Decoder Wide Model을 사용하는 경우, Encoder의 차원과 Decoder에서 사용하는 차원이 달라 발생하는 문제를 Connection Layer를 둠으로써 해결합니다.
-      </p>
+              <div class="small-spacer"></div>
+              <div class="small-spacer"></div>
+              <li><b>Large Model</b></li>
+              <p>Baseline 모델과 같이, 인코더와 디코더의 Depth, Width, Diversity 모두 동일합니다. 하지만 Depth, Width, Diversity 관련 설정값이 모두 2배인 모델입니다. 이 모델은 균형성이 아닌, 모델 사이즈가 성능에 미치는 영향력을 파악하기 위해 사용합니다.
+              </p>
+             
+            </ul>
+          </li>
 
 
-      <div class="spacer"></div>
-      <li>Depth Unbalanced Model</li>
-      <p>        
-        Transformer의 인코더와 디코더는 각각 복수개의 인코더 레이어와 디코더 레이어로 구성됩니다. 이때 레이어의 개수에 따라 레이어가 많을수록 더 많은 연산 과정 속에서 주어진 시퀀스에 대한 보다 깊은 이해능력이 배양됩니다.
-        Width 측면에서 밸런스를 의도적으로 붕괴시킨 모델입니다. Encoder의 무게중심을 더 크게 준 모델을 Encoder_Width Model이라고, 디코더에 무게중심을 더 준 모델을 Decoder Width_Model이라고 명명하고, Back-bone 모델에서 공유되는 Hidden Dimension차원을 2배만큼 증가 시킴으로써, 인코더 혹은 디코더의 은닉차원에서 함유할수 있는 정보의 양을 늘린 모델입니다. 
-      </p>      
+
+          <div class="spacer"></div>          
+          <li>Width Unbalanced Model
+          <p>Width 측면에서 밸런스를 의도적으로 붕괴시킨 모델입니다. Encoder의 무게중심을 더 크게 준 모델을 Encoder_Width Model이라고, 디코더에 무게중심을 더 준 모델을 Decoder Width_Model이라고 명명하고, Back-bone 모델에서 공유되는 Hidden Dimension차원을 2배만큼 증가 시킴으로써, 인코더 혹은 디코더의 은닉차원에서 함유할수 있는 정보의 양을 늘린 모델입니다. <br>
+            차원의 크기. 모든 차원의 크기를 동일하게 늘리는 것이 아니라, Encoder에서 혹은 Decoder에서 공통적으로 적용되는 Hidden Dimension과 PFF 차원의 사이즈를 조절합니다. 이 차원의 크기가 커질수록 담을수 있는 정보의 양도 많아집니다.
+                  
+            차원의 크기를 조절하는 Encoder_Wide Model과 Decoder Wide Model을 사용하는 경우, Encoder의 차원과 Decoder에서 사용하는 차원이 달라 발생하는 문제를 Connection Layer를 둠으로써 해결합니다.
+          </p>
+            <ul>
+              <div class="small-spacer"></div>
+              <li><b>Encoder Wide Model</b></li>
+              <p>일반적인 트랜스포머의 설정값과 같이, 인코더와 디코더의 하이퍼 파리미터의 균형을 일치시킨 모델입니다. Depth, Width, Diversity 모두 동일하며, 전체 실험의 Baseline 모델로 작용합니다.
+              </p>
+
+              <div class="small-spacer"></div>
+              <div class="small-spacer"></div>
+              <li><b>Decoder Wide Model</b></li>
+              <p>Baseline 모델과 같이, 인코더와 디코더의 Depth, Width, Diversity 모두 동일합니다. 하지만 Depth, Width, Diversity 관련 설정값이 모두 2배인 모델입니다. 이 모델은 균형성이 아닌, 모델 사이즈가 성능에 미치는 영향력을 파악하기 위해 사용합니다.
+              </p>
+             
+            </ul>
+
+          </li>
+
+          <div class="spacer"></div>
+          <li>Depth Unbalanced Model</li>
+          <p>        
+            Transformer의 인코더와 디코더는 각각 복수개의 인코더 레이어와 디코더 레이어로 구성됩니다. 이때 레이어의 개수에 따라 레이어가 많을수록 더 많은 연산 과정 속에서 주어진 시퀀스에 대한 보다 깊은 이해능력이 배양됩니다.
+            Width 측면에서 밸런스를 의도적으로 붕괴시킨 모델입니다. Encoder의 무게중심을 더 크게 준 모델을 Encoder_Width Model이라고, 디코더에 무게중심을 더 준 모델을 Decoder Width_Model이라고 명명하고, Back-bone 모델에서 공유되는 Hidden Dimension차원을 2배만큼 증가 시킴으로써, 인코더 혹은 디코더의 은닉차원에서 함유할수 있는 정보의 양을 늘린 모델입니다. 
+          </p>      
 
 
-      <div class="spacer"></div>
-      <li>Diversity Unbalanced Model</li>
-      <p>Transformer의 핵심 연산 부라고 할 수 있는 Multi Head Attention 구현부에서 Attention Head는 몇개의 쪼개진 조각으로 주어진 벡터를 파악할 것인지를 결정하는 계수입니다. 이 Attention Head의 개수가 많을 수록, 다양한 관점에서 다각적인 의미 해석 및 추출이 가능하게 됩니다. <br>
-        Width 측면에서 밸런스를 의도적으로 붕괴시킨 모델입니다. Encoder의 무게중심을 더 크게 준 모델을 Encoder_Width Model이라고, 디코더에 무게중심을 더 준 모델을 Decoder Width_Model이라고 명명하고, Back-bone 모델에서 공유되는 Hidden Dimension차원을 2배만큼 증가 시킴으로써, 인코더 혹은 디코더의 은닉차원에서 함유할수 있는 정보의 양을 늘린 모델입니다.        
-      </p>
+          <div class="spacer"></div>
+          <li>Diversity Unbalanced Model</li>
+          <p>Transformer의 핵심 연산 부라고 할 수 있는 Multi Head Attention 구현부에서 Attention Head는 몇개의 쪼개진 조각으로 주어진 벡터를 파악할 것인지를 결정하는 계수입니다. 이 Attention Head의 개수가 많을 수록, 다양한 관점에서 다각적인 의미 해석 및 추출이 가능하게 됩니다. <br>
+            Width 측면에서 밸런스를 의도적으로 붕괴시킨 모델입니다. Encoder의 무게중심을 더 크게 준 모델을 Encoder_Width Model이라고, 디코더에 무게중심을 더 준 모델을 Decoder Width_Model이라고 명명하고, Back-bone 모델에서 공유되는 Hidden Dimension차원을 2배만큼 증가 시킴으로써, 인코더 혹은 디코더의 은닉차원에서 함유할수 있는 정보의 양을 늘린 모델입니다.        
+          </p>
 
-      <div class="spacer"></div>
-      <li>Comparison Table</li>      
-      <table class="result-table">
-        <thead>
-          <tr>
-            <th>Model Type</th>
-            <th>Dimension</th>
-            <th>Connect Layer</th>
-            <th>Num of Layers</th>
-            <th>Num of Attn Heads</th>
-          </tr>
-        </thead>
+          <div class="spacer"></div>
+          <li>Comparison Table</li> 
+          <div class="small-spacer"></div>     
+          <table class="result-table">
+            <thead>
+              <tr>
+                <th>Model Type</th>
+                <th>Dimension</th>
+                <th>Connect Layer</th>
+                <th>Num of Layers</th>
+                <th>Num of Attn Heads</th>
+              </tr>
+            </thead>
 
-        <tbody>
-          <tr>
-            <td><b>Base</b></td>
-            <td>Dimension</td>
-            <td>No</td>
-            <td>N Layers</td>
-            <td>N Heads</td>
-          </tr>
+            <tbody>
+              <tr>
+                <td><b>Base</b></td>
+                <td>Dimension</td>
+                <td>No</td>
+                <td>N Layers</td>
+                <td>N Heads</td>
+              </tr>
 
-          <tr>
-            <td><b>Wide</b></td>
-            <td>Dimension * 2</td>
-            <td>Yes</td>
-            <td>N Layers</td>
-            <td>N Heads</td>
-          </tr>
+              <tr>
+                <td><b>Wide</b></td>
+                <td>Dimension * 2</td>
+                <td>Yes</td>
+                <td>N Layers</td>
+                <td>N Heads</td>
+              </tr>
 
-          <tr>
-            <td><b>Deep</b></td>
-            <td>Dimension</td>
-            <td>No</td>
-            <td>N Layers * 2</td>
-            <td>N Heads</td>
-          </tr>
+              <tr>
+                <td><b>Deep</b></td>
+                <td>Dimension</td>
+                <td>No</td>
+                <td>N Layers * 2</td>
+                <td>N Heads</td>
+              </tr>
 
-          <tr>
-            <td><b>Diverse</b></td>
-            <td>Dimension</td>
-            <td>No</td>
-            <td>N Layers</td>
-            <td>N Heads * 2</td>
-          </tr>
+              <tr>
+                <td><b>Diverse</b></td>
+                <td>Dimension</td>
+                <td>No</td>
+                <td>N Layers</td>
+                <td>N Heads * 2</td>
+              </tr>
 
-        </tbody>
-      </table>
+              <tr>
+                <td><b>Large</b></td>
+                <td>Dimension * 2</td>
+                <td>No</td>
+                <td>N Layers * 2</td>
+                <td>N Heads * 2</td>
+              </tr>
+
+            </tbody>
+          </table>
+      </div>
     </div>
-  </div>
 
 
 
@@ -314,53 +394,60 @@ permalink: /transformer_balance
               <tbody>
                 <tr>
                   <td>Baseline Model</td>
-                  <td>12.76</td>
+                  <td>13.20</td>
                   <td>0m 44s</td>
                   <td>0.20 GB</td>
                   <td>0.95 GB</td>
                 </tr>
                 <tr>
                   <td>Encoder-Wide Model</td>
-                  <td>3.09</td>
+                  <td>14.20</td>
                   <td>0m 48s</td>
                   <td>0.26GB</td>
                   <td>1.12GB</td>
                 </tr>
                 <tr>
                   <td>Decoder-Wide Model</td>
-                  <td>17.43</td>
+                  <td>14.09</td>
                   <td>0m 51s</td>
                   <td>0.29GB</td>
                   <td>1.20GB</td>
                 </tr>
                 <tr>
                   <td>Encoder-Deep Model</td>
-                  <td>0.92</td>
+                  <td>12.61</td>
                   <td>0m 53s</td>
                   <td>0.22GB</td>
                   <td>1.06GB</td>
                 </tr>
                 <tr>
                   <td>Decoder-Deep Model</td>
-                  <td>0.00</td>
+                  <td>11.47</td>
                   <td>0m 59s</td>
                   <td>0.23GB</td>
                   <td>1.12GB</td>
                 </tr>
                 <tr>
                   <td>Encoder-Diverse Model</td>
-                  <td>13.37</td>
+                  <td>13.23</td>
                   <td>0m 40s</td>
                   <td>0.20GB</td>
                   <td>0.95GB</td>
                 </tr>                
                 <tr>
                   <td>Decoder-Diverse Model</td>
-                  <td>12.80</td>
+                  <td>12.96</td>
                   <td>0m 41s</td>
                   <td>0.20GB</td>
                   <td>0.95GB</td>
                 </tr>
+                <tr>
+                  <td>Large Model</td>
+                  <td>14.49</td>
+                  <td>0m 41s</td>
+                  <td>0.20GB</td>
+                  <td>0.95GB</td>
+                </tr>                
 
               </tbody>
             </table>
