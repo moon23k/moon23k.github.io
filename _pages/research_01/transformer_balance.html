@@ -323,32 +323,17 @@ permalink: /transformer_balance
                 <li><b>Translation Task</b>: &nbsp; WMT'14 En-De</li>
                 <li><b>Dialogue Task</b>: &nbsp; Daily Dialogue</li>
                 <li><b>Summarization Task</b>: &nbsp; CNN Daily</li>
-                <li><b>Tokenizer</b>: &nbsp; Word-Level Tokenizer</li>
+                <li><b>Tokenizer</b>: &nbsp; BPE Tokenizer</li>
               </ul>
               <ul>
                 <li><b>Train Data Volumn</b>: &nbsp; 50,000</li>
                 <li><b>Valid Data Volumn</b>: &nbsp; 5,000</li>
                 <li><b>Test Data Volumn</b>: &nbsp; 100</li>
-                <li><b>Vocab Size</b>: &nbsp; 10,000</li>                
+                <li><b>Vocab Size</b>: &nbsp; 15,000</li>                
               </ul>
             </div>
           </li>
 
-          <div class="spacer"></div>
-          <li>Model Setup
-            <div class="dual-container">
-              <ul>
-                <li><b>Input Dim</b>: &nbsp; 10,000</li>
-                <li><b>Output Dim</b>: &nbsp; 10,000</li>
-                <li><b>Embedding Dim</b>: &nbsp; 512</li>
-              </ul>
-              <ul>
-                <li><b>Hidden Dim</b>: &nbsp; 512</li>
-                <li><b>Model Params</b>: &nbsp; 000</li>
-                <li><b>Model Size</b>: &nbsp; 000</li>                
-              </ul>
-            </div>
-          </li>
 
           <div class="spacer"></div>
           <li>Training Setup
@@ -362,10 +347,68 @@ permalink: /transformer_balance
               <ul>
                 <li><b>Optimizer</b>: &nbsp; AdamW</li>
                 <li><b>Gradient Accumulation Steps</b>: &nbsp; 4
-                <li><b>Teacher Forcing Ratio</b>: &nbsp; 0.5</li>                
+                <li><b>Apply Mixed Precision Training</b>: &nbsp; True</li>
+                <li><b>Early Stop Patience</b>: &nbsp; 3</li>                
               </ul>
             </div>
           </li>
+
+
+          <div class="spacer"></div>
+          <li>Model Size</li>
+            <table class="result-table">
+              <thead>
+                <tr>
+                  <th>Model Type</th>
+                  <th>Params</th>
+                  <th>Size</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Baseline Model</td>
+                  <td>15,488,664</td>
+                  <td>60.085 MB</td>
+                </tr>
+                <tr>
+                  <td>Encoder-Wide Model</td>
+                  <td>20,478,616</td>
+                  <td>79.120 MB</td>
+                </tr>
+                <tr>
+                  <td>Decoder-Wide Model</td>
+                  <td>22,974,104</td>
+                  <td>88.639 MB</td>
+                </tr>
+                <tr>
+                  <td>Encoder-Deep Model</td>
+                  <td>17,069,976</td>
+                  <td>66.117 MB</td>
+                </tr>
+                <tr>
+                  <td>Decoder-Deep Model</td>
+                  <td>17,861,016</td>
+                  <td>69.134 MB</td>
+                </tr>
+                <tr>
+                  <td>Encoder-Diverse Model</td>
+                  <td>15,488,664</td>
+                  <td>60.085 MB</td>
+                </tr>                
+                <tr>
+                  <td>Decoder-Diverse Model</td>
+                  <td>15,488,664</td>
+                  <td>60.085 MB</td>
+                </tr>
+                <tr>
+                  <td>Large Model</td>
+                  <td>43,735,448</td>
+                  <td>167.837 MB</td>
+                </tr>                
+
+              </tbody>
+            </table>
+
         </ul>
       </div>
     </div>
@@ -395,7 +438,7 @@ permalink: /transformer_balance
                 <tr>
                   <td>Baseline Model</td>
                   <td>13.20</td>
-                  <td>0m 44s</td>
+                  <td>0m 42s</td>
                   <td>0.20 GB</td>
                   <td>0.95 GB</td>
                 </tr>
@@ -409,44 +452,44 @@ permalink: /transformer_balance
                 <tr>
                   <td>Decoder-Wide Model</td>
                   <td>14.09</td>
-                  <td>0m 51s</td>
+                  <td>0m 52s</td>
                   <td>0.29GB</td>
                   <td>1.20GB</td>
                 </tr>
                 <tr>
                   <td>Encoder-Deep Model</td>
                   <td>12.61</td>
-                  <td>0m 53s</td>
+                  <td>0m 55s</td>
                   <td>0.22GB</td>
                   <td>1.06GB</td>
                 </tr>
                 <tr>
                   <td>Decoder-Deep Model</td>
                   <td>11.47</td>
-                  <td>0m 59s</td>
+                  <td>1m 03s</td>
                   <td>0.23GB</td>
                   <td>1.12GB</td>
                 </tr>
                 <tr>
                   <td>Encoder-Diverse Model</td>
                   <td>13.23</td>
-                  <td>0m 40s</td>
+                  <td>0m 42s</td>
                   <td>0.20GB</td>
                   <td>0.95GB</td>
                 </tr>                
                 <tr>
                   <td>Decoder-Diverse Model</td>
                   <td>12.96</td>
-                  <td>0m 41s</td>
+                  <td>0m 42s</td>
                   <td>0.20GB</td>
                   <td>0.95GB</td>
                 </tr>
                 <tr>
                   <td>Large Model</td>
                   <td>14.49</td>
-                  <td>0m 41s</td>
-                  <td>0.20GB</td>
-                  <td>0.95GB</td>
+                  <td>1m 41s</td>
+                  <td>0.52GB</td>
+                  <td>2.02GB</td>
                 </tr>                
 
               </tbody>
@@ -468,52 +511,59 @@ permalink: /transformer_balance
               <tbody>
                 <tr>
                   <td>Baseline Model</td>
-                  <td>2.84</td>
-                  <td>0m 40s</td>
+                  <td>1.74</td>
+                  <td>0m 41s</td>
                   <td>0.20 GB</td>
                   <td>0.85 GB</td>
                 </tr>
                 <tr>
                   <td>Encoder-Wide Model</td>
-                  <td>0.74</td>
-                  <td>0m 44s</td>
+                  <td>2.38</td>
+                  <td>0m 45s</td>
                   <td>0.26GB</td>
-                  <td>1.00GB</td>
+                  <td>1.01GB</td>
                 </tr>
                 <tr>
                   <td>Decoder-Wide Model</td>
-                  <td>1.91</td>
-                  <td>0m 46s</td>
+                  <td>1.82</td>
+                  <td>0m 47s</td>
                   <td>0.29GB</td>
                   <td>1.07GB</td>
                 </tr>
                 <tr>
                   <td>Encoder-Deep Model</td>
-                  <td>0.46</td>
+                  <td>2.20</td>
                   <td>0m 51s</td>
                   <td>0.22GB</td>
                   <td>0.95GB</td>
                 </tr>
                 <tr>
                   <td>Decoder-Deep Model</td>
-                  <td>0.00</td>
-                  <td>1m 0s</td>
+                  <td>3.61</td>
+                  <td>1m 03s</td>
                   <td>0.23GB</td>
                   <td>1.00GB</td>
                 </tr>
                 <tr>
                   <td>Encoder-Diverse Model</td>
-                  <td>2.72</td>
+                  <td>1.12</td>
                   <td>0m 41s</td>
                   <td>0.20GB</td>
                   <td>0.85GB</td>
                 </tr>                
                 <tr>
                   <td>Decoder-Diverse Model</td>
-                  <td>2.86</td>
-                  <td>0m 42s</td>
+                  <td>1.12</td>
+                  <td>0m 41s</td>
                   <td>0.20GB</td>
                   <td>0.85GB</td>
+                </tr>
+                <tr>
+                  <td>Large Model</td>
+                  <td>1.12</td>
+                  <td>3m 01s</td>
+                  <td>0.53GB</td>
+                  <td>1.81GB</td>
                 </tr>
 
               </tbody>
@@ -535,52 +585,59 @@ permalink: /transformer_balance
               <tbody>
                 <tr>
                   <td>Baseline Model</td>
-                  <td>8.53</td>
+                  <td>7.84</td>
                   <td>2m 40s</td>
                   <td>0.21 GB</td>
                   <td>2.90 GB</td>
                 </tr>
                 <tr>
                   <td>Encoder-Wide Model</td>
-                  <td>0.70</td>
-                  <td>4m 3s</td>
+                  <td>7.50</td>
+                  <td>4m 08s</td>
                   <td>0.27GB</td>
                   <td>3.65GB</td>
                 </tr>
                 <tr>
                   <td>Decoder-Wide Model</td>
-                  <td>5.32</td>
+                  <td>9.68</td>
                   <td>3m 25s</td>
                   <td>0.30GB</td>
                   <td>3.14GB</td>
                 </tr>
                 <tr>
                   <td>Encoder-Deep Model</td>
-                  <td>0.02</td>
-                  <td>4m 27s</td>
+                  <td>6.90</td>
+                  <td>4m 31s</td>
                   <td>0.23GB</td>
                   <td>4.49GB</td>
                 </tr>
                 <tr>
                   <td>Decoder-Deep Model</td>
-                  <td>0.00</td>
-                  <td>3m 29s</td>
+                  <td>7.80</td>
+                  <td>3m 30s</td>
                   <td>0.24GB</td>
                   <td>3.33GB</td>
                 </tr>
                 <tr>
                   <td>Encoder-Diverse Model</td>
-                  <td>6.60</td>
-                  <td>2m 46s</td>
+                  <td>6.86</td>
+                  <td>2m 47s</td>
                   <td>0.21GB</td>
-                  <td>2.90GB</td>
+                  <td>2.89GB</td>
                 </tr>                
                 <tr>
                   <td>Decoder-Diverse Model</td>
-                  <td>8.20</td>
-                  <td>2m 48s</td>
+                  <td>7.74</td>
+                  <td>2m 47s</td>
                   <td>0.21GB</td>
-                  <td>2.90GB</td>
+                  <td>2.89GB</td>
+                </tr>
+                <tr>
+                  <td>Large Model</td>
+                  <td>8.45</td>
+                  <td>9m 10s</td>
+                  <td>0.54GB</td>
+                  <td>7.04GB</td>
                 </tr>
 
               </tbody>
@@ -590,16 +647,14 @@ permalink: /transformer_balance
           <li>Result Analyis
             <ul>
               <div class="small-spacer"></div>
-              <li>Machine Translation 괴제에서 Deocder-Wide 모델이 가장 큰 성능 향상을 견인했으며, Diversity를 증가시키는 것 역시 긍정적인 효과를 보임을 확인할 수 있습니다. Deocder-Width가 가장 큰 영향을 미친 것은, Translation 이라는 과제의 특성이라기 보다는 인코딩보다 디코딩의 난이도가 높은 자연어 생성이라는 상위 개념의 특성에서 기인한 결과로 판단됩니다.</li>
+              <li>Machine Translation 괴제에서는 Large Model이 가장 좋은 성능을 보였습니다. Encoder-Wide Model과 Decoder Wide Model 역시 Baseline Model보다 성능 개선이 이루어진 것으로 볼때, 과제 해결을 위해 더 많은 파라미터가 필요하다는 것을 보인다고 판단할 수 있습니다. 파라미터 크기 증가외의 변인들은 그다지 긍정적인 성능개선을 견인하지는 못했습니다. 충분한 깊이와 다양성을 충분히 담고 있다고 판단할 수 있습니다.</li>
 
               <div class="small-spacer"></div>
-              <li>Dialogue Generation에서는 Decoder-Diverse Model을 제외한 모든 모델이 기준 모델보다 저조한 성능을 기록했습니다. 대화 생성이라는 과제의 난이도가 높아, 모델의 수렴이 어려운 상황에서 안정적이지 않은 모델 구조에서 기인한 부정적인 영향이 부정적인 요소로 작용한 것으로 판단됩니다.</li>
+              <li>Dialogue Generation에서는 Decoder Deep Model이 가장 좋은 성능을 보였습니다.</li>
               
               <div class="small-spacer"></div>
-              <li>Text Summarization에서는 모든 변인 모델들이 기준 모델 성능에 미치지 못함을 확인했습니다. 인코딩에 집중한 모델들이 좋은 성능을 보일 것이라는 예측과 달리, Wide 모델에서 조차 오히려 Decoder-Wide 모델이 Encoder-Wide 모델보다 좋은 성능을 보입니다. 이 역시 자연어 생성에서 시퀀스를 해석하는 것보다 생성하는 것의 난이도가 높아 발생한 현상으로 판단됩니다.</li>
+              <li>Text Summarization에서는 Decoder Wide Model이 가장 좋은 성능을 보였습니다. 더불어 Large Model에서도 성능 개선이 이루어진 것으로 보건데, 디코더의 파라미터 개수가 많아지는 것이 성능개선에 도움이 된 다는 것을 알 수 있습니다.</li>
               
-              <div class="small-spacer"></div>
-              <li>전체적으로 Diversity를 증가 시키는 것이 소폭이나마 긍정적으로 작용할 여지가 있음을 확인했으며, 세부 Task의 성격에 따라 인코딩-디코딩의 중요도가 나뉘기 보다는, 자연어 생성 자체에서 인코딩보다는 디코딩이 어려우며, 때문에 전반적으로 디코더를 강조한 모델에서 조금 더 나은 성능이 보이는 경향성이 유지되는 것으로 보입니다.</li>
             </ul>
           </li>
 

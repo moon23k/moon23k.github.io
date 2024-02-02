@@ -418,7 +418,7 @@ class FusionModel(nn.Module):
                 <li>Train Data Volumn: &nbsp; 50,000</li>
                 <li>Valid Data Volumn: &nbsp; 5,000</li>
                 <li>Test Data Volumn: &nbsp; 100</li>
-                <li>Vocab Size: &nbsp; 10,000</li>                
+                <li>Vocab Size: &nbsp; 15,000</li>                
               </ul>
             </div>
           </li>
@@ -429,14 +429,14 @@ class FusionModel(nn.Module):
               <ul>
                 <li>PLE Architecture: &nbsp; AlBERT</li>
                 <li>PLE Name: &nbsp; albert-v2</li>
-                <li>Input Dim: &nbsp; 10,000</li>
-                <li>Output Dim: &nbsp; 10,000</li>
+                <li>Input Dim: &nbsp; 15,000</li>
+                <li>Output Dim: &nbsp; 15,000</li>
               </ul>
               <ul>
-                <li>Embedding Dim: &nbsp; 512</li>
-                <li>Hidden Dim: &nbsp; 512</li>
+                <li>Hidden Dim: &nbsp; 256</li>
+                <li>Pff Dim: &nbsp; 512</li>
                 <li>Model Params: &nbsp; 000</li>
-                <li>Model Size: &nbsp; 000</li>                
+                <li>Model Size: &nbsp; 000</li>              
               </ul>
             </div>
           </li>
@@ -454,7 +454,7 @@ class FusionModel(nn.Module):
                 <li>LR Scheduler: &nbsp; ReduceLROnPlateau</li>                
                 <li>Optimizer: &nbsp; AdamW</li>
                 <li>Gradient Accumulation Steps: &nbsp; 4
-                <li>Teacher Forcing Ratio: &nbsp; 0.5</li>                
+                <li>Early Stop Patience: &nbsp; 3</li>                
               </ul>
             </div>
           </li>
@@ -500,7 +500,7 @@ class FusionModel(nn.Module):
               </tbody>
             </table>
           
-          <div class="half-spacer"></div>
+          <div class="spacer"></div>
           <li>Dialogue Generation</li>
             <table class="result-table">
               <thead>
@@ -532,7 +532,7 @@ class FusionModel(nn.Module):
             </table>
 
                 
-          <div class="half-spacer"></div>
+          <div class="spacer"></div>
           <li>Text Summarization</li>
             <table class="result-table">
               <thead>
@@ -562,6 +562,7 @@ class FusionModel(nn.Module):
 
               </tbody>
             </table>
+
 
           <div class="half-spacer"></div>
           <li>Result Analysis</li>
