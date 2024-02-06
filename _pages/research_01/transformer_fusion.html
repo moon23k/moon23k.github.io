@@ -96,8 +96,11 @@ permalink: /sample
             <div class="code-container">
               <div class="code-snippet">
                 <pre><code class="python">class Decoder(nn.Module):
-    def __init__(self, config):
+    def __init__(self, config, ple_embeddings):
         super(Decoder, self).__init__()
+
+        self.embeddings = ple_embeddings
+        self.mapping = Mapping(config.emb_dim, config.hidden_dim)
 
         layer = nn.TransformerDecoderLayer(
             d_model=config.hidden_dim,
@@ -105,17 +108,14 @@ permalink: /sample
             dim_feedforward=config.pff_dim,
             dropout=config.dropout_ratio,
             activation='gelu',
-            batch_first=True
+            batch_first=True,
+            norm_first=True
         )
-
-        self.embeddings = Embeddings(config)
         self.layers = clones(layer, config.n_layers)
 
 
-    def forward(self, x, memory, e_mask=None, d_mask=None):
-        
-        x = self.embeddings(x)
-        
+    def forward(self, x, memory, e_mask=None, d_mask=None):   
+        x = self.mapping(self.embeddings(x))
         for layer in self.layers:
             x = layer(
                 x, memory, 
@@ -127,82 +127,66 @@ permalink: /sample
 
 
 
-
 class SimpleModel(nn.Module):
     def __init__(self, config):
         super(SimpleModel, self).__init__()
-        
+
         self.pad_id = config.pad_id
         self.device = config.device
-        self.max_len = config.max_len
         self.vocab_size = config.vocab_size
 
-        self.encoder = BertModel.from_pretrained(config.plm_mname)
-        self.decoder = Decoder(config)
-        self.generator = nn.Linear(config.hidden_dim, config.vocab_size)
+        self.ple = load_ple(config)
+        self.mapping = Mapping(self.ple.config.hidden_size, config.hidden_dim)
+
+        self.decoder = Decoder(config, self.ple.embeddings)
+        self.generator = nn.Linear(config.hidden_dim, self.vocab_size)
 
         self.criterion = nn.CrossEntropyLoss()
-        self.outputs = namedtuple('outputs', ('logits', 'loss'))
+        self.out = namedtuple('Out', 'logit loss')
 
 
-    def pad_mask(self, x):
-        return (x != self.pad_id).unsqueeze(1).unsqueeze(2)
+    @staticmethod    
+    def shift_y(x):
+        return x[:, :-1], x[:, 1:]    
 
 
-    def dec_mask(self, x):
-        seq_len = x.size(-1)
-        attn_shape = (1, seq_len, seq_len)
-        subsequent_mask = torch.triu(torch.ones(attn_shape), diagonal=1).type(torch.uint8) == 0
-        return self.pad_mask(x) & subsequent_mask.to(self.device)
+    def mask(self, x, y=None):
+        x_mask = x == self.pad_id
+
+        if y is None:
+            return x_mask
+
+        sz = y.size(1)
+        y_mask = torch.triu(torch.full((sz, sz), float('-inf')), diagonal=1).to(self.device)
+
+        return x_mask, y_mask
 
 
-    def shift_right(self, labels):
-        shifted = labels.new_zeros(labels.size(0), labels.size(1)-1)
-        shifted = labels[:, :-1].clone()
-        #shifted[:, 0] = self.pad_id #or self.decoder_start_token_id
-        return shifted
-
-
-    def generate(self, input_ids, attention_mask):
-        batch_size = input_ids.size(0)
+    def encode(self, x, ple_mask):
+        x = self.ple(input_ids=x, attention_mask=ple_mask).last_hidden_state
+        return self.mapping(x)
         
-        e_mask = self.pad_mask(input_ids)
-        
-        memory = self.encoder(
-            input_ids=input_ids, 
-            attention_mask=attention_mask
-        ).last_hidden_state
 
-        preds = torch.zeros(batch_size, self.max_len, dtype=torch.long)
-        preds = preds.fill_(self.pad_id).to(self.device)
-        
-        for i in range(1, self.max_len):
-            d_mask = self.dec_mask(preds)
-            dec_out = self.decoder(preds, memory, e_mask, d_mask)
-            logits = self.generator(dec_out).argmax(-1)
-            
-            if logits.sum() == 0:
-                break
-
-            preds[i] = logits
-
-        return preds.tolist()
+    def decode(self, x, memory, e_mask, d_mask):
+        return self.decoder(x, memory, e_mask, d_mask)
 
 
     def forward(self, input_ids, attention_mask, labels):
-        shifted_labels = self.shift_right(labels)
-        e_mask = self.pad_mask(input_ids)
-        d_mask = self.dec_mask(shifted_labels)
-        
-        memory = self.encoder(input_ids=input_ids, 
-                              attention_mask=attention_mask).last_hidden_state
-        d_out = self.decoder(shifted_labels, memory, e_mask, d_mask)
-        
-        logits = self.generator(d_out)
-        loss = self.criterion(logits.view(-1, self.vocab_size), 
-                              labels[:, 1:].contiguous().view(-1))
+        x = input_ids
+        y, label = self.shift_y(labels)
+        e_mask, d_mask = self.mask(x, y)
 
-        return self.outputs(logits, loss)</code></pre>
+        memory = self.encode(x, attention_mask)
+        dec_out = self.decode(y, memory, e_mask, d_mask)
+        logit = self.generator(dec_out)
+
+        self.out.logit = logit
+        self.out.loss = self.criterion(
+            logit.contiguous().view(-1, self.vocab_size), 
+            label.contiguous().view(-1)
+        )
+
+        return self.out</code></pre>
               </div>
             </div>
 
@@ -220,29 +204,19 @@ class SimpleModel(nn.Module):
               <pre><code class="python">class EncoderLayer(nn.Module):
     def __init__(self, config):
         super(EncoderLayer, self).__init__()
-        
+
         self.self_attn = MultiHeadAttention(config)
-        self.bert_attn = MultiHeadAttention(config)
+        self.ple_attn = MultiHeadAttention(config)
         self.pff = PositionwiseFeedForward(config)
 
-        self.s_sublayer = SublayerConnection(config) #self attn
-        self.b_sublayer = SublayerConnection(config) #bert attn
-        self.p_sublayer = SublayerConnection(config) #pff
 
+    def forward(self, x, ple_out, e_mask):
 
-    def forward(self, x, mask, bert_out):
-        b = bert_out
+        s_out = self.self_attn(x, key_padding_mask=e_mask)
+        p_out = self.ple_attn(x, ple_out, key_padding_mask=e_mask)
+        out = x + s_out * 0.5 + p_out * 0.5
 
-        #BERT Attn & Self Attn
-        residual = x
-        b = self.b_sublayer(x, lambda x: self.bert_attn(x, b, b, mask))
-        s = self.s_sublayer(x, lambda x: self.self_attn(x, x, x, mask))
-        x = residual + s * 0.5 + b * 0.5  #residual conn
-
-        #Position wise FFN
-        residual = x
-        x = self.p_sublayer(x, self.pff)
-        return residual + x  #residual conn
+        return out + self.pff(out)
 
 
 
@@ -252,67 +226,60 @@ class DecoderLayer(nn.Module):
         super(DecoderLayer, self).__init__()
 
         self.self_attn = MultiHeadAttention(config)
-        self.bert_attn = MultiHeadAttention(config)
-        self.enc_dec_attn = MultiHeadAttention(config)
+        self.ple_attn = MultiHeadAttention(config)
+        self.enc_attn = MultiHeadAttention(config)
         self.pff = PositionwiseFeedForward(config)
 
-        self.s_sublayer = SublayerConnection(config) #self
-        self.b_sublayer = SublayerConnection(config) #bert
-        self.e_sublayer = SublayerConnection(config) #encoder
-        self.p_sublayer = SublayerConnection(config) #pff
 
-
-    def forward(self, x, memory, e_mask, d_mask, bert_out):
-        m = memory
-        b = bert_out
-
-        #Self Attn
-        residual = x
-        s = self.s_sublayer(x, lambda x: self.self_attn(x, x, x, d_mask))
-        x = residual + s  #residual conn
+    def forward(self, x, memory, ple_out, e_mask=None, d_mask=None):
         
+        m, p = memory, ple_out
 
-        #BERT Attn & Enc-Dec Attn
-        residual = x
-        b = self.b_sublayer(x, lambda x: self.bert_attn(x, b, b, e_mask))
-        e = self.b_sublayer(x, lambda x: self.bert_attn(x, m, m, e_mask))
-        x = residual + b * 0.5 + e * 0.5  #residual conn
-        
+        s_out = self.self_attn(x, attn_mask=d_mask)
+        x = x + s_out
 
-        #Position wise FFN
-        residual = x
-        x = self.p_sublayer(x, self.pff)
-        return residual + x  #residual conn
+        p_out = self.ple_attn(x, p, key_padding_mask=e_mask)
+        e_out = self.enc_attn(x, m, key_padding_mask=e_mask)
+        out = x + p_out * 0.5 + e_out * 0.5
+
+        return out + self.pff(out)
 
 
 
 class Encoder(nn.Module):
-    def __init__(self, config):
+    def __init__(self, config, ple_embeddings):
         super(Encoder, self).__init__()
-        self.emb = Embeddings(config)
-        self.norm = nn.LayerNorm(config.hidden_dim)
-        self.layers = clones(EncoderLayer(config), config.n_layers)
 
-    def forward(self, x, mask, bert_out):
-        x = self.emb(x)
+        self.embeddings = ple_embeddings
+        self.mapping = Mapping(config.emb_dim, config.hidden_dim)
+
+        self.layers = clones(EncoderLayer(config), config.n_layers)
+        self.norm = nn.LayerNorm(config.hidden_dim)
+
+
+    def forward(self, x, ple_out, e_mask):
+        x = self.mapping(self.embeddings(x))
         for layer in self.layers:
-            x = layer(x, mask, bert_out)
+            x = layer(x, ple_out, e_mask)
         return self.norm(x)
 
 
 
 class Decoder(nn.Module):
-    def __init__(self, config):
+    def __init__(self, config, ple_embeddings):
         super(Decoder, self).__init__()
-        self.emb = Embeddings(config)
-        self.norm = nn.LayerNorm(config.hidden_dim)
+
+        self.embeddings = ple_embeddings
+        self.mapping = Mapping(config.emb_dim, config.hidden_dim)
+        
         self.layers = clones(DecoderLayer(config), config.n_layers)
+        self.norm = nn.LayerNorm(config.hidden_dim)
         
 
-    def forward(self, x, memory, e_mask, d_mask, bert_out):
-        x = self.emb(x)
+    def forward(self, x, memory, ple_out, e_mask=None, d_mask=None):
+        x = self.mapping(self.embeddings(x))
         for layer in self.layers:
-            x = layer(x, memory, e_mask, d_mask, bert_out)
+            x = layer(x, memory, ple_out, e_mask, d_mask)
         return self.norm(x)
 
 
@@ -320,76 +287,66 @@ class Decoder(nn.Module):
 class FusionModel(nn.Module):
     def __init__(self, config):
         super(FusionModel, self).__init__()
-        
+
         self.device = config.device
         self.pad_id = config.pad_id
-        self.max_len = config.max_len
         self.vocab_size = config.vocab_size
 
-        self.ple = AutoModel.from_pretrained(config.mname)
-        self.encoder = Encoder(config)
-        self.decoder = Decoder(config)
-        self.generator = nn.Linear(config.hidden_dim, config.vocab_size)
+        self.ple = load_ple(config)
+        self.mapping = Mapping(self.ple.config.hidden_size, config.hidden_dim)
+        
+        self.encoder = Encoder(config, self.ple.embeddings)
+        self.decoder = Decoder(config, self.ple.embeddings)
+        self.generator = nn.Linear(config.hidden_dim, self.vocab_size)
 
         self.criterion = nn.CrossEntropyLoss()
-        self.outputs = namedtuple('outputs', ('logits', 'loss'))
+        self.out = namedtuple('Out', 'logit loss')
 
 
-    def pad_mask(self, x):
-        return (x != self.pad_id).unsqueeze(1).unsqueeze(2)
+    @staticmethod    
+    def shift_y(x):
+        return x[:, :-1], x[:, 1:]    
 
 
-    def dec_mask(self, x):
-        seq_len = x.size(-1)
-        attn_shape = (1, seq_len, seq_len)
-        subsequent_mask = torch.triu(torch.ones(attn_shape), diagonal=1).type(torch.uint8) == 0
-        return self.pad_mask(x) & subsequent_mask.to(self.device)
+    def mask(self, x, y=None):
+        x_mask = x == self.pad_id
+
+        if y is None:
+            return x_mask
+
+        sz = y.size(1)
+        y_mask = torch.triu(torch.full((sz, sz), float('-inf')), diagonal=1).to(self.device)
+
+        return x_mask, y_mask
 
 
-    def shift_right(self, labels):
-        shifted = labels.new_zeros(labels.size(0), labels.size(1)-1)
-        shifted = labels[:, :-1].clone()
-        #shifted[:, 0] = self.pad_id #or self.decoder_start_token_id
-        return shifted
+    def encode(self, x, ple_out, e_mask):        
+        return self.encoder(x, ple_out, e_mask)
+    
+
+    def decode(self, x, m, ple_out, e_mask, d_mask=None):
+        return self.decoder(x, m, ple_out, e_mask, d_mask)
 
 
-    def generate(self, input_ids, attention_mask):
-        batch_size = input_ids.size(0)
+    def forward(self, input_ids, attention_mask, labels):        
+        x = input_ids
+        y, label = self.shift_y(labels)
+        e_mask, d_mask = self.mask(x, y)
+
+        ple_out = self.ple(input_ids=x, attention_mask=attention_mask).last_hidden_state
+        ple_out = self.mapping(ple_out)
+
+        memory = self.encode(x, ple_out, e_mask)
+        d_out = self.decode(y, memory, ple_out, e_mask, d_mask)
         
-        e_mask = self.pad_mask(input_ids)
-        ple_out = self.ple(input_ids, attention_mask).last_hidden_state
-        memory = self.encoder(input_ids, e_mask, ple_out)
+        logit = self.generator(d_out)
+        self.out.logit = logit
+        self.out.loss = self.criterion(
+            logit.contiguous().view(-1, self.vocab_size), 
+            label.contiguous().view(-1)
+        )
 
-        preds = torch.zeros(batch_size, self.max_len).to(self.device)
-        for i in range(1, self.max_len):
-            d_mask = self.dec_mask(preds)
-            dec_out = self.decoder(preds, memory, e_mask, d_mask)
-            logits = self.generator(dec_out).argmax(-1)
-
-            if logits.sum() == 0:
-                break
-
-            preds[i] = logits
-
-        return preds.tolist()
-
-
-    def forward(self, input_ids, attention_mask, labels):
-        y = self.shift_right(labels)
-
-        e_mask = self.pad_mask(input_ids)
-        d_mask = self.dec_mask(y)
-        
-        ple_out = self.ple(input_ids, attention_mask).last_hidden_state
-
-        memory = self.encoder(input_ids, e_mask, ple_out)
-        d_out = self.decoder(y, memory, e_mask, d_mask, ple_out)
-        
-        logits = self.generator(d_out)
-        loss = self.criterion(logits.view(-1, self.vocab_size), 
-                              labels[:, 1:].contiguous().view(-1))
-
-        return self.outputs(logits, loss)</code></pre>
+        return self.out</code></pre>
             </div>
           </div>
           
@@ -409,16 +366,16 @@ class FusionModel(nn.Module):
           <li>Data Setup
             <div class="dual-container">
               <ul>
-                <li>Translation Task: &nbsp; WMT'14 En-De</li>
-                <li>Dialogue Task: &nbsp; Daily Dialogue</li>
-                <li>Summarization Task: &nbsp; CNN Daily</li>
-                <li>Tokenizer: &nbsp; AlBERT Tokenizer</li>
+                <li><b>Translation Task:</b> &nbsp; WMT'14 En-De</li>
+                <li><b>Dialogue Task:</b> &nbsp; Daily Dialogue</li>
+                <li><b>Summarization Task:</b> &nbsp; CNN Daily</li>
+                <li><b>Tokenizer:</b> &nbsp; AlBERT Tokenizer</li>
               </ul>
               <ul>
-                <li>Train Data Volumn: &nbsp; 50,000</li>
-                <li>Valid Data Volumn: &nbsp; 5,000</li>
-                <li>Test Data Volumn: &nbsp; 100</li>
-                <li>Vocab Size: &nbsp; 15,000</li>                
+                <li><b>Train Data Volumn:</b> &nbsp; 50,000</li>
+                <li><b>Valid Data Volumn:</b> &nbsp; 5,000</li>
+                <li><b>Test Data Volumn:</b> &nbsp; 100</li>
+                <li><b>Vocab Size:</b> &nbsp; 15,000</li>                
               </ul>
             </div>
           </li>
@@ -427,16 +384,20 @@ class FusionModel(nn.Module):
           <li>Model Setup
             <div class="dual-container">
               <ul>
-                <li>PLE Architecture: &nbsp; AlBERT</li>
-                <li>PLE Name: &nbsp; albert-v2</li>
-                <li>Input Dim: &nbsp; 15,000</li>
-                <li>Output Dim: &nbsp; 15,000</li>
+                <li><b>PLE Architecture:</b> &nbsp; AlBERT</li>
+                <li><b>Input & Output Dim:</b> &nbsp; 15,000</li>
+                <li><b>Hidden Dim:</b> &nbsp; 256</li>
+                <li><b>Pff Dim:</b> &nbsp; 512</li>
+                <li><b>Num Layers:</b> &nbsp; 3</li>
+                <li><b>Num Heads:</b> &nbsp; 8</li>
               </ul>
               <ul>
-                <li>Hidden Dim: &nbsp; 256</li>
-                <li>Pff Dim: &nbsp; 512</li>
-                <li>Model Params: &nbsp; 000</li>
-                <li>Model Size: &nbsp; 000</li>              
+                <li><b>Simple Model Total Params:</b> &nbsp; 21,995,824</li>
+                <li><b>Simple Model Trainable Params:</b> &nbsp; 10,312,240</li>
+                <li><b>Simple Model Size:</b> &nbsp; 83.915 MB</li>              
+                <li><b>Fusion Model Total Params:</b> &nbsp; 25,193,264</li>
+                <li><b>Fusion Model Trainable Params:</b> &nbsp; 13,509,680</li>
+                <li><b>Fusion Model Size:</b> &nbsp; 96.112 MB</li>                              
               </ul>
             </div>
           </li>
@@ -445,16 +406,16 @@ class FusionModel(nn.Module):
           <li>Training Setup
             <div class="dual-container">
               <ul>
-                <li>Num Epochs: &nbsp; 10</li>
-                <li>Batch Size: &nbsp; 32</li>
-                <li>Learning Rate: &nbsp; 5e-4</li>
-                <li>Learning Rate for PLE: &nbsp; 5e-5</li>                
+                <li><b>Num Epochs:</b> &nbsp; 10</li>
+                <li><b>Batch Size:</b> &nbsp; 32</li>
+                <li><b>Learning Rate:</b> &nbsp; 5e-4</li>
+                <li><b>Learning Rate for PLE:</b> &nbsp; 5e-5</li>                
               </ul>
               <ul>
-                <li>LR Scheduler: &nbsp; ReduceLROnPlateau</li>                
-                <li>Optimizer: &nbsp; AdamW</li>
-                <li>Gradient Accumulation Steps: &nbsp; 4
-                <li>Early Stop Patience: &nbsp; 3</li>                
+                <li><b>LR Scheduler:</b> &nbsp; ReduceLROnPlateau</li>                
+                <li><b>Optimizer:</b> &nbsp; AdamW</li>
+                <li><b>Gradient Accumulation Steps:</b> &nbsp; 4
+                <li><b>Early Stop Patience:</b> &nbsp; 3</li>
               </ul>
             </div>
           </li>
@@ -483,18 +444,25 @@ class FusionModel(nn.Module):
               </thead>
               <tbody>
                 <tr>
+                  <td>Transformer</td>
+                  <td>13.72</td>
+                  <td>53s</td>
+                  <td>0.20GB</td>
+                  <td>0.95GB</td>
+                </tr>
+                <tr>
                   <td>Simple</td>
-                  <td>-</td>
-                  <td>-</td>
-                  <td>-</td>
-                  <td>-</td>
+                  <td>9.62</td>
+                  <td>2m 13s</td>
+                  <td>0.22GB</td>
+                  <td>1.75GB</td>
                 </tr>
                 <tr>
                   <td>Fusion</td>
-                  <td>-</td>
-                  <td>-</td>
-                  <td>-</td>
-                  <td>-</td>
+                  <td>9.99</td>
+                  <td>2m 18s</td>
+                  <td>0.22GB</td>
+                  <td>1.64GB</td>
                 </tr>
 
               </tbody>
@@ -514,18 +482,25 @@ class FusionModel(nn.Module):
               </thead>
               <tbody>
                 <tr>
+                  <td>Transformer</td>
+                  <td>1.34</td>
+                  <td>42s</td>
+                  <td>0.20GB</td>
+                  <td>0.85GB</td>
+                </tr>                
+                <tr>
                   <td>Simple</td>
-                  <td>-</td>
-                  <td>-</td>
-                  <td>-</td>
-                  <td>-</td>
+                  <td>6.56</td>
+                  <td>1m 36s</td>
+                  <td>0.20GB</td>
+                  <td>1.27GB</td>
                 </tr>
                 <tr>
                   <td>Fusion</td>
-                  <td>-</td>
-                  <td>-</td>
-                  <td>-</td>
-                  <td>-</td>
+                  <td>6.44</td>
+                  <td>1m 40s</td>
+                  <td>0.20GB</td>
+                  <td>1.19GB</td>
                 </tr>
 
               </tbody>
@@ -546,28 +521,34 @@ class FusionModel(nn.Module):
               </thead>
               <tbody>
                 <tr>
+                  <td>Transformer</td>
+                  <td>7.68</td>
+                  <td>2m 41s</td>
+                  <td>0.21GB</td>
+                  <td>2.89GB</td>
+                </tr>                
+                <tr>
                   <td>Simple</td>
-                  <td>-</td>
-                  <td>-</td>
-                  <td>-</td>
-                  <td>-</td>
+                  <td>13.80</td>
+                  <td>16m 29s</td>
+                  <td>0.22GB</td>
+                  <td>2.30GB</td>
                 </tr>
                 <tr>
                   <td>Fusion</td>
-                  <td>-</td>
-                  <td>-</td>
-                  <td>-</td>
-                  <td>-</td>
+                  <td>12.42</td>
+                  <td>18m 23s</td>
+                  <td>0.22GB</td>
+                  <td>2.08GB</td>
                 </tr>
 
               </tbody>
             </table>
 
 
-          <div class="half-spacer"></div>
+          <div class="spacer"></div>
           <li>Result Analysis</li>
-            <p style="color: red;"> &nbsp; 사전 학습된 모델과 초기화 된 Transformer의 부분 요소들을 한번에 학습하다보니, 정상적인 학습이 이루어지지 않았습니다.
-              이를 해결하기 위해, 사전학습 모델에 별도의 Learning Rate와 Optimizer를 두는 방식을 사용했으나, 이 역시 효과적이지는 않습니다. 추후 학습 실패의 원인을 찾아 보완할 예정입니다.
+            <p>&nbsp; Simple Model이 Fusion Model에 비해 좋은 성능을 보입니다. 하나 특이한 결과는 최대 GPU 사용량에서 더 크고, 연산과정이 복잡한 Fusion모델의 효율성이 더 높게 나온다는 점입니다. 이를 이전 실험에서 Transformer의 성능과 비교해보
             </p>
         </ul>
       </div>
@@ -600,8 +581,7 @@ class FusionModel(nn.Module):
     <h2 id="6">&hairsp; 6. Reference</h2>
     <div class="chapter-box">
       <a class="reference" href="https://arxiv.org/abs/1706.03762">&nbsp; Attention Is All You Need</a> <br> 
-      <a class="reference" href="https://arxiv.org/abs/2002.06823">&nbsp; Incorporating BERT into Neural Machine Translation</a> <br> 
-      <a class="reference" href="https://arxiv.org/abs/1907.12461">&nbsp; Leveraging Pre-trained Checkpoints for Sequence Generation Tasks</a>
+      <a class="reference" href="https://arxiv.org/abs/2002.06823">&nbsp; Incorporating BERT into Neural Machine Translation</a> <br>
     </div>
 
 

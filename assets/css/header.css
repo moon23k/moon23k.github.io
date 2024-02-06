@@ -15,8 +15,9 @@ header {
 }
 header h1,
 header h1 a {
-  font-size: 23px;
+  font-size: 26px;
   list-style: 20px;
+  letter-spacing: 2px;
 }
 header h1 {
   display: flex;

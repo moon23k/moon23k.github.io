@@ -23,11 +23,11 @@
 .contents .info p {
   color: #666666;
   font-size: 1.15em;
-  line-height: 1.7;
+  line-height: 2;
   width: 60%;
   text-align: left;
   font-family: "Open Sans", sans-serif;
-  padding: 2.7em 0 2em 0;
+  padding: 2.2em 0 2.1em 0;
   margin: auto;
 }
 .contents .info .btn-block a {
@@ -40,6 +40,7 @@
   border: solid 1px #d5e0e7;
   border-radius: 4px;
   margin: 0 0.5em;
+  letter-spacing: 1.3px;
 }
 
 
@@ -65,11 +66,12 @@
   font-family: "Arial", serif;
   font-weight: 700;  
   font-stretch: expanded;
+  letter-spacing: 1.5px;
 }
 .contents .container .full-width h3::after {
   content: '';
   position: absolute;
-  top: 1.4em;
+  top: 1.6em;
   left: 0;
   width: 100%;
   height: 5px;
@@ -77,9 +79,11 @@
 }
 .contents .container .full-width p {
   padding: 0.5em;
+  width: 99%;
+  margin: 1em auto;
   color: #666666;
-  font-size: 1.15em;
-  line-height: 1.7;
+  font-size: 1.14em;
+  line-height: 1.9;
   font-family: "Open Sans", sans-serif;
 }
 
@@ -95,12 +99,13 @@
 .contents .container .parallel h3 {
   position: relative;
   color: #4c4c4c;
-  font-size: 18px;
+  font-size: 19px;
   line-height: 1.8;
   margin-bottom: 0.5em;
   font-family: "Arial", serif;
   background-color: #ECEFF1;
   text-align: center;
+  letter-spacing: 1.5px;
 }
 
 .contents .container .parallel h3::after {
@@ -115,12 +120,14 @@
 
 .contents .container .parallel .parallel-item {
   width: 48%;
-  margin: 2em 1em;
+  margin: 1.5em 1em;
   box-sizing: border-box;
 }
 
 .contents .container .parallel .parallel-item p {
-  margin: 0.1em 0.3em 1em 0.3em;
+  margin: 0.3em 0.5em 1.2em 0.5em;
+  font-size: 1em;
+  line-height: 2;
 }
 .contents .container ul {
   display: flex;
@@ -131,7 +138,6 @@
   flex: 1 1 50%;
   box-sizing: border-box;
   color: #4c4c4c;
-  line-height: 1.8;
 }
 .contents .container ul li span.txt {
   display: block;
@@ -142,13 +148,14 @@
   align-items: center;
   justify-content: flex-start;
   padding: 0 1em;
+  margin: 1em auto;
 }
 .contents .container ul li .btn-list a {
   flex: 1 1 50%;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 15px;
+  font-size: 16px;
   line-height: 0.8;
   padding: 10px 0;
   border-radius: 4px;

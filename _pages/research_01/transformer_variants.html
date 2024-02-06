@@ -61,8 +61,7 @@ permalink: /transformer_variants
       <div class="list-container">
         <ul>
           <li>Description</li>
-            <p> &nbsp; 
-            Transformer는 Attention을 활용한 뛰어난 성능을 바탕으로 다양한 분야의 딥러닝 모델의 표준이 되었습니다. 하지만 Standard Transformer는 여전히 개선될 여지가 많이 남아 있습니다. Transformer 모델 자체의 개선을 위한 연구는 상대적으로 부족하며, Transformer 변주 모델들에 대한 자연어 생성과제에서의 비교연구는 부재합니다.
+            <p> &nbsp; Transformer는 Attention을 활용한 뛰어난 성능을 바탕으로 다양한 분야의 딥러닝 모델의 표준이 되었습니다. 하지만 Standard Transformer는 여전히 개선될 여지가 많이 남아 있습니다. Transformer 모델 자체의 개선을 위한 연구는 상대적으로 부족하며, Transformer 변주 모델들에 대한 자연어 생성과제에서의 비교연구는 부재합니다.
             이 프로젝트에서는 앞서 언급한 문제를 직접 해결하고, Transformer의 모델 디자인적인 변주를 통해 어떠한 성능 변화를 이끌어낼수 있는지 직접 확인해봅니다.
             </p>
 
@@ -755,6 +754,38 @@ class EvolvedTransformer(nn.Module):
               </ul>
             </div>
           </li>
+
+          <div class="half-spacer"></div>
+          <li>Model Comparison</li>    
+          <table class="result-table">
+            <thead>
+                <tr>
+                  <th>Model Type</th>
+                  <th>Model Params</th>
+                  <th>Model Size</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Standard Model</td>
+                  <td>7.91</td>
+                  <td>2m 41s</td>
+                </tr>
+                <tr>
+                  <td>Recurrent Model</td>
+                  <td>0.52</td>
+                  <td>2m 40s</td>
+                </tr>
+                <tr>
+                  <td>Evolved Model</td>
+                  <td>0.00</td>
+                  <td>1m 51s</td>
+                </tr>
+
+            </tbody>
+          </table>
+        
+
         </ul>
       </div>
     </div>
@@ -789,7 +820,7 @@ class EvolvedTransformer(nn.Module):
                 </tr>
                 <tr>
                   <td>Recurrent Model</td>
-                  <td>15.27</td>
+                  <td>12.26</td>
                   <td>0m 42s</td>
                   <td>0.17GB</td>
                   <td>0.91GB</td>
@@ -827,7 +858,7 @@ class EvolvedTransformer(nn.Module):
                 </tr>
                 <tr>
                   <td>Recurrent Model</td>
-                  <td>0.52</td>
+                  <td>1.81</td>
                   <td>0m 41s</td>
                   <td>0.18GB</td>
                   <td>0.82GB</td>
