@@ -53,12 +53,11 @@
   <h2 style="color: #303030; letter-spacing: 2px;">Hi, there!</h2>
   <p>
     &nbsp; 안녕하세요 :) &hairsp;   
-    인공지능에 매료되어, 인공지능 기술을 통한 현실의 문제 해결에 집중하고 있는  
-    Machine Learning Engineer, 송문기입니다.
-    다양한 인공지능 활용 분야들 중에서도, 자연어 처리에 초점을 맞추고 있습니다. 
-    사람과 자연스럽게 의사소통 가능한 인공지능 모델 개발을 목표로 삼고 있습니다. 
-    목표 달성을 위해 다양한 연구 주제를 직접 선정하고 구현하며, 
-    끊임없이 한 발짝씩 목표에 다가가는 중입니다.
+    인공지능 기술을 활용한 현실 문제의 해결을 위해 항상 연구하는  
+    머신러닝 엔지니어, 송문기입니다.
+    다양한 인공지능 활용 분야들 중에서 자연어 처리에 초점을 맞추고 있으며, 
+    사람과 자연스럽게 의사소통 가능한 인공지능 모델 개발을 목표로 삼고 있습니다. <br>
+    목표 달성을 위해 다양한 연구 주제를 직접 선정하고 구현하며, 끊임없이 한 발짝씩 목표에 다가가는 중입니다. 이 페이지에서는 목표 달성을 위한 연구 프로젝트들을 주제별로 아래와 같이 정리해두었으며, 각 프로젝트 마다의 상세 및 코드 구현을 확인하실 수 있습니다.
   </p>
   <div class="btn-block">
     <a href="/resume" class="btn-type-1">Resume</a>
@@ -73,8 +72,7 @@
   
   <div class="full-width">
     <h3>&hairsp; Model&hairsp; Structure</h3>
-    <p>
-      &nbsp; 머신러닝 엔지니어링에서 모델의 구조적 디자인은 성능에 결정적인 영향을 미치는 주요 요소입니다. 특히 Encoder와 Decoder가 모두 필요한 Sequence to Sequence 구조에서, 모델 디자인의 중요성은 더욱 강조됩니다. 아래의 프로젝트들은 학습 방법 및 데이터 처리 등 다른 변수를 일정하게 유지하면서 모델 구조에 중점을 두어, 각 구조의 특징을 파악하는데 집중합니다.
+    <p>머신러닝 엔지니어링에서 모델의 구조적 디자인은 성능에 결정적인 영향을 미치는 주요 요소입니다. 특히 인코더와 디코더를 모두 필요로 하는 Sequence to Sequence 구조에서, 모델 디자인의 중요성은 더더욱 강조됩니다. 이 장에서는 RNN Seq2Seq, Transformer등 주요 모델 디자인을 깊이 이해하고, 추후 연구에 도움이 될 만한 6가지 프로젝트를 소개합니다. 각 프로젝트는 데이터 및 학습 방식을 고정시킨채, 모델 디자인적인 변화에 따른 성능변화를 파악하는데 집중합니다.
     </p>
   </div>
 
@@ -83,8 +81,7 @@
       <h3>RNN&hairsp; Seq2Seq</h3>
       <ul>
         <li>
-          <p> &nbsp;
-            세 가지 순환 신경망(RNN, LSTM, GRU)을 활용한 Seq2Seq 모델을 구현하고, 각 네트워크 모델 별 자연어 생성 과제 성능 비교 검증
+          <p>세 가지 순환 신경망(<b>RNN, LSTM, GRU</b>)을 활용해 <b>Sequence to Sequence</b> 모델 구조를 구현하고, 각 네트워크 모델 별 자연어 생성 과제 성능 비교 검증
           </p>
           <div class="btn-list">
             <a href="/rnn_seq2seq" class="btn-type-1">Detail</a>
@@ -99,8 +96,7 @@
       <h3>RNN Seq2Seq with Attention</h3>
       <ul>
         <li>
-          <p> &nbsp;
-            GRU Seq2Seq 모델에서 Additive, Dot Product, Scaled Dot Product 어텐션 메커니즘 사용에 따른 자연어 생성 성능 비교 검증
+          <p>대표적인 어텐션 방법론인 <b>Bahdanau & Luong</b> 어텐션을 GRU Seq2Seq 모델 구조안에서 구현하고, 각 방법론 적용에 따른 자연어 생성 능력 비교 분석
           </p>
           <div class="btn-list">
             <a href="/rnn_seq2seq_attn" class="btn-type-1">Detail</a>
@@ -118,8 +114,7 @@
       <h3>Transformer</h3>
       <ul>
         <li>
-          <p> &nbsp;
-            Transformer의 모든 구성 요소를 처음부터 직접 구현하고, Pytorch 라이브러리에서 제공하는 Transformer 모델과 자연어 생성 성능 비교 검증
+          <p>현재 딥러닝 모델링의 가장 중요한 모델 구조인 트랜스포머를 직접 구현하고, Pytorch 라이브러리에서 제공하는 트랜스포머 모델과 자연어 생성 능력 비교
           </p>
           <div class="btn-list">
             <a href="/transformer" class="btn-type-1">Detail</a>
@@ -134,8 +129,7 @@
       <h3>Transformer&hairsp; Balance</h3>
       <ul>
         <li>
-          <p> &nbsp;
-            Transformer의 Encoder와 Decoder를 Depth, Width, Diversity라는 세 가지 측면에서 불균형하게 디자인하고, 각 디자인 별 성능 검증
+          <p>균형잡힌 표준 트랜스포머 모델 디자인을 깊이 &middot; 너비 &middot; 다양성 측면에서 의도적 불균형을 가함으로써 초래하는 긍정 밎 부정적인 효과를 세 가지 자연어 생성 과제에서 검증 
           </p>
           <div class="btn-list">
             <a href="/transformer_balance" class="btn-type-1">Detail</a>
@@ -153,8 +147,7 @@
       <h3>Transformer&hairsp; Variants</h3>
       <ul>
         <li>
-          <p> &nbsp;
-            두 가지 Transformer 변형 모델인 <b>Recurrent & Evolved Transformer</b>를 구현하고, <b>Standard Transformer</b>와 자연어 생성 능력 비교 검증
+          <p><b>Recurrent Transformer, Evolved Transformer</b>라는 두 가지 트랜스포머 변형 모델을 직접 구현하고, 표준 트랜스포머와 자연어 생성 능력 비교 검증
           </p>
           <div class="btn-list">
             <a href="/transformer_variants" class="btn-type-1">Detail</a>
@@ -169,11 +162,10 @@
       <h3>Transformer&hairsp; Fusion</h3>
       <ul>
         <li>
-          <p> &nbsp;
-            사전 학습 인코더 모델을 Transformer Seq2Seq 모델 구조에서 활용하기 위한 두 가지 방법론을 구현하고, 각 방법론에 따른 자연어 생성 과제 성능을 검토
+          <p>사전 학습 인코더 모델을 트랜스포머 Seq2Seq 모델 구조에서 활용하기 위한 두 가지 방법론을 직접 구현하고, 각 방법론에 따른 자연어 생성 능력 비교 검증
           </p>
           <div class="btn-list">
-            <a href="/sample" class="btn-type-1">Detail</a>
+            <a href="/transformer_fusion" class="btn-type-1">Detail</a>
             <a href="https://github.com/moon23k/Transformer_Fusion" class="btn-type-1">Code</a>
           </div>
 
@@ -202,8 +194,7 @@
       <h3>Auxiliary&hairsp; Training</h3>
       <ul>
         <li>
-          <p> &nbsp; 
-            자연어 생성 모델의 고질적인 문제인 Exposure Bias를 해결하기 위해 보조 학습 목표를 활용한 학습 전략을 적용하며, 그 실효성을 검증
+          <p>자연어 생성 모델의 고질적인 문제인 Exposure Bias를 해결하기 위해 보조 학습 목표를 활용한 학습 전략을 적용하며, 그 실효성을 검증
           </p>
           <div class="btn-list">
             <a href="/aux_train" class="btn-type-1">Detail</a>
@@ -218,8 +209,7 @@
       <h3>Scheduled&hairsp; Sampling</h3>
       <ul>
         <li>
-          <p> &nbsp; 
-            RNN Seq2Seq 모델에서 주로 활용되는 Scheduled Sampling을 Transformer에 적용하며 자연어 생성 과제에서 실효성을 검증
+          <p>RNN Seq2Seq 모델에서 주로 활용되는 Scheduled Sampling을 Transformer에 적용하며 자연어 생성 과제에서 실효성을 검증
           </p>
           <div class="btn-list">
             <a href="/scheduled_sampling" class="btn-type-1">Detail</a>
@@ -237,8 +227,7 @@
       <h3>Generative&hairsp; Training</h3>
       <ul>
         <li>
-          <p> &nbsp; 
-            가용한 데이터가 매우 한정적인 경우, 생성적 학습이 효과적일 수 있다는 가설을 검증하고, 데이터 증강을 통한 일반적 학습법과 비교
+          <p>가용한 데이터가 매우 한정적인 경우, 생성적 학습이 효과적일 수 있다는 가설을 검증하고, 데이터 증강을 통한 일반적 학습법과 비교
           </p>
           <div class="btn-list">
             <a href="/gen_train" class="btn-type-1">Detail</a>
@@ -253,8 +242,7 @@
       <h3>SeqGAN&hairsp; Training</h3>
       <ul>
         <li>
-          <p> &nbsp; 
-            CV 분야에서 활발하게 사용되는 적대적 생성 학습을 자연어 생성 과제에서도 사용하기 위한 SeqGAN기법을 구현하고, 그 효용성을 검증
+          <p>CV 분야에서 활발하게 사용되는 적대적 생성 학습을 자연어 생성 과제에서도 사용하기 위한 SeqGAN기법을 구현하고, 그 효용성을 검증
           </p>
           <div class="btn-list">
             <a href="/gan_train" class="btn-type-1">Detail</a>
@@ -272,7 +260,7 @@
       <h3>Customized&hairsp; Pretraining</h3>
       <ul>
         <li>
-          <p> &nbsp; 목표로하는 Down Stream Task에만 초점을 맞춘 커스텀 사전학습을 통해 모델 성능의 향상성 검증
+          <p>목표로하는 Down Stream Task에만 초점을 맞춘 커스텀 사전학습을 통해 모델 성능의 향상성 검증
           </p>
           <div class="btn-list">
             <a href="/cpt_train" class="btn-type-1">Detail</a>
@@ -305,7 +293,7 @@
       <h3>Efficient&hairsp; Training</h3>
       <ul>
         <li>
-          <p> &nbsp; 대규모 사전학습 모델은 그대로 유지한채, 학습과정에서의 효율성을 증대시키기 위한 다양한 방법론의 성능 및 효율성 검증
+          <p>대규모 사전학습 모델은 그대로 유지한채, 학습과정에서의 효율성을 증대시키기 위한 다양한 방법론의 성능 및 효율성 검증
           </p>
           <div class="btn-list">
             <a href="/eff_train" class="btn-type-1">Detail</a>
@@ -320,7 +308,7 @@
       <h3>Efficient&hairsp; Pretrained&hairsp; Models</h3>
       <ul>
         <li>
-          <p> &nbsp; 모델 경량화와 어텐션 메커니즘의 고도화로 효율성을 증진시킨 사전학습 모델들의 실제 효용성 비교 검증
+          <p>모델 경량화와 어텐션 메커니즘의 고도화로 효율성을 증진시킨 사전학습 모델들의 실제 효용성 비교 검증
           </p>
           <div class="btn-list">
             <a href="/eff_model" class="btn-type-1">Detail</a>
@@ -338,7 +326,7 @@
       <h3>Param&hairsp; Efficient&hairsp; Fine-Tuning</h3>
       <ul>
         <li>
-          <p> &nbsp; 한정된 자원에서 대규모 사전학습 모델을 효과적으로 미세조정하기 위한 PEFT 방식 마다의 실효성 비교 검증
+          <p>한정된 자원에서 대규모 사전학습 모델을 효과적으로 미세조정하기 위한 PEFT 방식 마다의 실효성 비교 검증
           </p>
           <div class="btn-list">
             <a href="/peft" class="btn-type-1">Detail</a>
@@ -358,8 +346,7 @@
   
   <div class="full-width">
     <h3>&hairsp; Task&hairsp; Specific&hairsp; Projects</h3>
-    <p>
-      &nbsp; 기계 번역은 딥러닝 모델을 활용해 Source Language 시퀀스를 동일한 의미의 Target Language 시퀀스로 변환하는 대표적인 자연어 생성 과제입니다. 최근 다양한 모델들이 좋은 기계번역 성과를 보여주고는 있지만, 더욱 향상된 기계번역 모델을 만들어 내기 위한 다양한 주제별 실험을 진행하고, 인사이트를 공유합니다.
+    <p>기계 번역은 딥러닝 모델을 활용해 Source Language 시퀀스를 동일한 의미의 Target Language 시퀀스로 변환하는 대표적인 자연어 생성 과제입니다. 최근 다양한 모델들이 좋은 기계번역 성과를 보여주고는 있지만, 더욱 향상된 기계번역 모델을 만들어 내기 위한 다양한 주제별 실험을 진행하고, 인사이트를 공유합니다.
     </p>
   </div>
 
@@ -384,8 +371,7 @@
       <h3>Code&hairsp; Translation</h3>
       <ul>
         <li>
-          <p> &nbsp; 
-            사람의 자연어와 컴퓨터 프로그래밍 언어 간의 번역을 위한 일련의 실험 및 결과를 통한 인사이트를 공유
+          <p>사람의 자연어와 컴퓨터 프로그래밍 언어 간의 번역을 위한 일련의 실험 및 결과를 통한 인사이트를 공유
           </p>
           <div class="btn-list">
             <a href="/code_translation" class="btn-type-1">Detail</a>
@@ -402,8 +388,7 @@
       <h3>Characteristic&hairsp; Generation</h3>
       <ul>
         <li>
-          <p> &nbsp; 
-            SeqGAN의 기법을 활용해, Pretrained GPT 모델에게 특정 개성을 부여하고, 개성의 학습을 검증
+          <p>SeqGAN의 기법을 활용해, Pretrained GPT 모델에게 특정 개성을 부여하고, 개성의 학습을 검증
           </p>
           <div class="btn-list">
             <a href="/character" class="btn-type-1">Detail</a>
@@ -418,8 +403,7 @@
       <h3>Diverse&hairsp; Dialogue</h3>
       <ul>
         <li>
-          <p> &nbsp; 
-            대화 다양성을 증진시키기 위한 SemEnt 기법을 직접 구현하고, 실제 대화의 다양성 개선 여부를 검증
+          <p>대화 다양성을 증진시키기 위한 SemEnt 기법을 직접 구현하고, 실제 대화의 다양성 개선 여부를 검증
           </p>
           <div class="btn-list">
             <a href="/siment" class="btn-type-1">Detail</a>
@@ -433,8 +417,7 @@
       <h3>Hierarchical&hairsp; Encoder</h3>
       <ul>
         <li>
-          <p> &nbsp; 
-            긴 입력시퀀스를 잘 이해할 수 있도록 계층적 인코더 모델을 구현하고, 기존 방식의 모델과 요약 성능을 비교
+          <p>긴 입력시퀀스를 잘 이해할 수 있도록 계층적 인코더 모델을 구현하고, 기존 방식의 모델과 요약 성능을 비교
           </p>
           <div class="btn-list">
             <a href="/hierarchical" class="btn-type-1">Detail</a>
@@ -449,8 +432,7 @@
       <h3>Sparse&hairsp; Attention</h3>
       <ul>
         <li>
-          <p> &nbsp; 
-            Full Attention 연산의 복잡도를 개선시킨 Sparse Attention 기반의 모델을 구현하고, 기존 방식의 모델과 요약 성능을 비교 
+          <p>Full Attention 연산의 복잡도를 개선시킨 Sparse Attention 기반의 모델을 구현하고, 기존 방식의 모델과 요약 성능을 비교 
           </p>
           <div class="btn-list">
             <a href="/sparse_attention" class="btn-type-1">Detail</a>

@@ -1,17 +1,13 @@
 ---
 layout: default
-permalink: /sample
+permalink: /transformer_fusion
 ---
 
 
 <div id="detail">
-  <h1 class="title">Transformer Fusion</h1>
+  <h1 class="title">Transformer&hairsp; Fusion</h1>
     
   <div class="post">
-
-
-
-
     <hr>
     <div class="callout">
       <p class="highlighted-text"><span>Project Objective</span></p>
@@ -53,7 +49,7 @@ permalink: /sample
 
 
 <!-- 1. Introduction -->    
-    <h2 id="1">&hairsp; 1. &hairsp; Introduction</h2>
+    <h2 id="1">&hairsp; 1. Introduction</h2>
     <div class="chapter-box">
 
       <div class="list-container">
@@ -80,22 +76,61 @@ permalink: /sample
 
 
 
-
-<!-- 2. Architecture -->    
-    <h2 id="2">&hairsp; 2. &hairsp; Architecture</h2>
+<!-- 2. Background -->    
+    <h2 id="2">&hairsp; 2.&hairsp; Background</h2>
     <div class="chapter-box">
 
       <div class="list-container">
         <ul>
-          <li>Simple Model</li>
+
+          <li>Transformer Sequence to Sequence Model</li>
             <div class="dual-container">
               <img src="{{ 'assets/img/research_01/standard_transformer.png' | relative_url }}" style="width: 27%; height: 25%;">
               <p>&nbsp; Transformer Seq2Seq 모델 구조에서, Encoder를 Pretrained Language Encoder Model로 대체한 모델입니다. 연산은 기존 Transformer Seq2Seq의 연산 과정과 동일하게 적용됩니다. Encoder는 Context Vector를 생성하고, Decoder는 Context Vector와 Teacher Forcing을 활용해 예측값을 생성하는 방식으로 학습이 진행됩니다..
               </p>
-            </div>      
-            <div class="code-container">
-              <div class="code-snippet">
-                <pre><code class="python">class Decoder(nn.Module):
+            </div>
+
+            
+          <div class="spacer"></div>
+          <li>Pretrained Encoder Model
+            <ul>
+              <li>트랜스포머의 인코더는 입력 시퀀스의 단어들을 임베딩하고, 다중 헤드 어텐션과 피드포워드 신경망을 통해 정보를 추상화. 각 인코더 레이어는 잔여 연결과 층 정규화를 활용하여 안정성을 유지하며, 입력 문장의 특징을 계층적으로 추출</li>
+              <li>디코더는 인코더의 출력을 기반으로 출력 시퀀스를 생성. 각 디코더 레이어는 다중 헤드 어텐션을 사용하여 인코더의 출력과 현재까지의 디코더 입력에 대한 어텐션을 계산하고, 피드포워드 신경망을 통해 출력을 생성. 잔여 연결과 층 정규화는 안정성을 제공하며 디코딩 과정을 안정화.</li>
+              <li>인코더와 디코더는 각각의 레이어를 통해 상호작용하며, 어텐션 메커니즘을 활용해 입력 문장의 문맥 정보를 고려하고 출력 문장을 생성. 트랜스포머의 인코더-디코더 구조는 기존의 번역 모델보다 효과적인 학습과 예측을 가능케 함.</li>
+            </ul>
+          </li>
+
+          <div class="spacer"></div>
+          <li>Incorporate BERT into Machine Translation Model</li>
+          <div class="dual-container">
+            <img src="{{ 'assets/img/research_01/fusion.png' | relative_url }}" style="width: 43%; height: 50%;">
+            <p>&nbsp; PLE Fused Model은 "Incorporating BERT into Neural Machine Translation" 논문에서 제시한 모델 구조를 사용합니다. 사전학습된 인코더 모델을 그대로 인코더로만 사용하는것이 아니라, 인코딩과 디코딩 과정에 추가적인 정보전달을 위한 모델로 활용합니다.
+            </p>
+
+        </ul>
+      </div>
+    </div>
+
+
+
+<!-- 3. Architecture -->    
+    <h2 id="3">&hairsp; 3.&hairsp; Architecture</h2>
+    <div class="chapter-box">
+
+      <div class="list-container">
+        <ul>
+          <li>Simple Model
+            <ul>
+              <li>트랜스포머의 핵심 구성 요소로, 여러 어텐션 헤드를 병렬로 활용하여 다양한 어텐션 가중치를 학습</li>
+              <li>각 헤드는 서로 다른 관점에서 정보를 추출하며, 그 결과를 결합하여 모델이 다양한 특징을 효과적으로 학습하도록 유도</li>
+              <li>Attention Score 산출을 위해 Scaled Dot Attention 방식을 사용</li>
+            </ul>
+          </li>
+
+
+          <div class="code-container">
+            <div class="code-snippet">
+              <pre><code class="python">class Decoder(nn.Module):
     def __init__(self, config, ple_embeddings):
         super(Decoder, self).__init__()
 
@@ -187,17 +222,18 @@ class SimpleModel(nn.Module):
         )
 
         return self.out</code></pre>
-              </div>
             </div>
+          </div>
 
 
           <div class="spacer"></div>
-          <li>Fusion Model</li>
-          <div class="dual-container">
-            <img src="{{ 'assets/img/research_01/fusion.png' | relative_url }}" style="width: 40%; height: 40%;">
-            <p>&nbsp; PLE Fused Model은 "Incorporating BERT into Neural Machine Translation" 논문에서 제시한 모델 구조를 사용합니다. 사전학습된 인코더 모델을 그대로 인코더로만 사용하는것이 아니라, 인코딩과 디코딩 과정에 추가적인 정보전달을 위한 모델로 활용합니다.
-            </p>
-          </div>
+          <li>Fusion Model
+            <ul>
+              <li>트랜스포머의 핵심 구성 요소로, 여러 어텐션 헤드를 병렬로 활용하여 다양한 어텐션 가중치를 학습</li>
+              <li>각 헤드는 서로 다른 관점에서 정보를 추출하며, 그 결과를 결합하여 모델이 다양한 특징을 효과적으로 학습하도록 유도</li>
+              <li>Attention Score 산출을 위해 Scaled Dot Attention 방식을 사용</li>
+            </ul>
+          </li>
 
           <div class="code-container">
             <div class="code-snippet">
@@ -357,8 +393,8 @@ class FusionModel(nn.Module):
 
 
 
-<!-- 3. Experimental Setup -->
-    <h2 id="3">&hairsp; 3. &hairsp; Experimental Setup</h2>
+<!-- 4. Experimental Setup -->
+    <h2 id="4">&hairsp; 4.&hairsp; Experimental Setup</h2>
     <div class="chapter-box">
 
       <div class="list-container">
@@ -381,28 +417,6 @@ class FusionModel(nn.Module):
           </li>
 
           <div class="half-spacer"></div>
-          <li>Model Setup
-            <div class="dual-container">
-              <ul>
-                <li><b>PLE Architecture:</b> &nbsp; AlBERT</li>
-                <li><b>Input & Output Dim:</b> &nbsp; 15,000</li>
-                <li><b>Hidden Dim:</b> &nbsp; 256</li>
-                <li><b>Pff Dim:</b> &nbsp; 512</li>
-                <li><b>Num Layers:</b> &nbsp; 3</li>
-                <li><b>Num Heads:</b> &nbsp; 8</li>
-              </ul>
-              <ul>
-                <li><b>Simple Model Total Params:</b> &nbsp; 21,995,824</li>
-                <li><b>Simple Model Trainable Params:</b> &nbsp; 10,312,240</li>
-                <li><b>Simple Model Size:</b> &nbsp; 83.915 MB</li>              
-                <li><b>Fusion Model Total Params:</b> &nbsp; 25,193,264</li>
-                <li><b>Fusion Model Trainable Params:</b> &nbsp; 13,509,680</li>
-                <li><b>Fusion Model Size:</b> &nbsp; 96.112 MB</li>                              
-              </ul>
-            </div>
-          </li>
-
-          <div class="half-spacer"></div>
           <li>Training Setup
             <div class="dual-container">
               <ul>
@@ -419,13 +433,57 @@ class FusionModel(nn.Module):
               </ul>
             </div>
           </li>
+        
+
+          <div class="half-spacer"></div>
+          <li>Model Setup
+            <div class="dual-container">
+              <ul>
+                <li><b>PLE Architecture:</b> &nbsp; AlBERT</li>
+                <li><b>Input & Output Dim:</b> &nbsp; 15,000</li>
+                <li><b>Hidden Dim:</b> &nbsp; 256</li>
+              </ul>
+              <ul>
+                <li><b>Pff Dim:</b> &nbsp; 512</li>
+                <li><b>Num Layers:</b> &nbsp; 3</li>
+                <li><b>Num Heads:</b> &nbsp; 8</li>                              
+              </ul>
+            </div>
+          </li>
+
+          <table class="result-table">
+            <thead>
+              <tr>
+                <th>Model Type</th>
+                <th>Total Params</th>
+                <th>Trainable Params</th>
+                <th>Model Size</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Simple Model</td>
+                <td>21,995,824</td>
+                <td>10,312,240</td>
+                <td>83.915 MB</td>
+              </tr>
+              <tr>
+                <td>Fusion Model</td>
+                <td>25,193,264</td>
+                <td>13,509,680</td>
+                <td>96.112 MB</td>
+              </tr>
+
+            </tbody>
+          </table>
+
         </ul>
       </div>
     </div>
 
 
-<!-- 4. Result -->
-    <h2 id="4">&hairsp; 4. &hairsp; Result</h2>
+<!-- 5. Result -->
+    <h2 id="5">&hairsp; 5.&hairsp; Result</h2>
     <div class="chapter-box">
 
       <div class="list-container">
@@ -556,8 +614,8 @@ class FusionModel(nn.Module):
 
 
 
-<!-- 5. Conclusion -->
-    <h2 id="5">&hairsp; 5. &hairsp; Conclusion</h2>
+<!-- 6. Conclusion -->
+    <h2 id="6">&hairsp; 6.&hairsp; Conclusion</h2>
     <div class="chapter-box">
 
       <div class="list-container">
@@ -578,7 +636,7 @@ class FusionModel(nn.Module):
 
 
 <!-- Reference -->    
-    <h2 id="6">&hairsp; 6. Reference</h2>
+    <h2 id="7">&hairsp; 7.&hairsp; Reference</h2>
     <div class="chapter-box">
       <a class="reference" href="https://arxiv.org/abs/1706.03762">&nbsp; Attention Is All You Need</a> <br> 
       <a class="reference" href="https://arxiv.org/abs/2002.06823">&nbsp; Incorporating BERT into Neural Machine Translation</a> <br>

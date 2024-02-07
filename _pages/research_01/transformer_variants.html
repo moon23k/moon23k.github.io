@@ -55,7 +55,7 @@ permalink: /transformer_variants
 
 
 <!-- 1. Introduction -->    
-    <h2 id="1">1. &hairsp; Introduction</h2>
+    <h2 id="1">&hairsp; 1.&hairsp; Introduction</h2>
     <div class="chapter-box">
 
       <div class="list-container">
@@ -81,7 +81,7 @@ permalink: /transformer_variants
 
 
 <!-- 2. Background -->    
-    <h2 id="2">2. &hairsp; Background</h2>
+    <h2 id="2">&hairsp; 2.&hairsp; Background</h2>
     <div class="chapter-box">
 
       <div class="list-container">
@@ -120,7 +120,7 @@ permalink: /transformer_variants
 
 
 <!-- Code Implementation -->
-    <h2 id="3">3. &hairsp; Code Implementation</h2>
+    <h2 id="3">&hairsp; 3.&hairsp; Code Implementation</h2>
     <div class="chapter-box">
       <div class="list-container">
         <ul>
@@ -700,7 +700,7 @@ class EvolvedTransformer(nn.Module):
 
 
 <!-- 4. Experimental Setup -->
-    <h2 id="4">4. &hairsp; Experimental Setup</h2>
+    <h2 id="4">&hairsp; 4.&hairsp; Experimental Setup</h2>
     <div class="chapter-box">
 
       <div class="list-container">
@@ -722,23 +722,8 @@ class EvolvedTransformer(nn.Module):
             </div>
           </li>
 
-          <div class="half-spacer"></div>
-          <li>Model Setup
-            <div class="dual-container">
-              <ul>
-                <li><b>Input Dim</b>: &nbsp; 15,000</li>
-                <li><b>Output Dim</b>: &nbsp; 15,000</li>
-                <li><b>Embedding Dim</b>: &nbsp; 512</li>
-              </ul>
-              <ul>
-                <li><b>Hidden Dim</b>: &nbsp; 256</li>
-                <li><b>PFF Dim</b>: &nbsp; 512</li>
-                <li><b>N Layers</b>: &nbsp; 3</li>
-              </ul>
-            </div>
-          </li>
 
-          <div class="half-spacer"></div>
+          <div class="spacer"></div>
           <li>Training Setup
             <div class="dual-container">
               <ul>
@@ -755,8 +740,22 @@ class EvolvedTransformer(nn.Module):
             </div>
           </li>
 
-          <div class="half-spacer"></div>
-          <li>Model Comparison</li>    
+
+          <div class="spacer"></div>
+          <li>Model Setup
+            <div class="dual-container">
+              <ul>
+                <li><b>Input Dim</b>: &nbsp; 15,000</li>
+                <li><b>Output Dim</b>: &nbsp; 15,000</li>
+                <li><b>Embedding Dim</b>: &nbsp; 512</li>
+              </ul>
+              <ul>
+                <li><b>Hidden Dim</b>: &nbsp; 256</li>
+                <li><b>PFF Dim</b>: &nbsp; 512</li>
+                <li><b>N Layers</b>: &nbsp; 3</li>
+              </ul>
+            </div>
+          </li>
           <table class="result-table">
             <thead>
                 <tr>
@@ -783,7 +782,7 @@ class EvolvedTransformer(nn.Module):
                 </tr>
 
             </tbody>
-          </table>
+          </table>          
         
 
         </ul>
@@ -793,7 +792,7 @@ class EvolvedTransformer(nn.Module):
 
 
 <!-- 5. Result -->
-    <h2 id="5">5. &hairsp; Result</h2>
+    <h2 id="5">&hairsp; 5.&hairsp; Result</h2>
     <div class="chapter-box">
 
       <div class="list-container">
@@ -836,7 +835,7 @@ class EvolvedTransformer(nn.Module):
               </tbody>
             </table>
           
-          <div class="half-spacer"></div>
+          <div class="spacer"></div>
           <li>Dialogue Generation</li>
             <table class="result-table">
               <thead>
@@ -874,6 +873,8 @@ class EvolvedTransformer(nn.Module):
               </tbody>
             </table>
 
+
+            <div class="spacer"></div>
             <li>Text Summarization</li>    
             <table class="result-table">
               <thead>
@@ -911,8 +912,9 @@ class EvolvedTransformer(nn.Module):
               </tbody>
             </table>
 
-          <div class="half-spacer"></div>
+          <div class="spacer"></div>
           <li>Result Analysis</li>
+          <img src="{{ 'assets/img/research_01/variants_report.png' | relative_url }}" style="width: 80%; height: 50%; margin: 0 auto; padding-bottom: 1em;">
             <p> &nbsp; 위의 결과를 보면, Evolved Transformer의 학습이 제대로 진행되지 않은 것을 확인할 수 있습니다. Training Log를 확인해본 결과, Loss는 과도하게 잘 줄어들고 있지만, 복잡한 구조탓에 하이퍼파라미터에 민감하게 반응한 것으로 판단됩니다. 의외로 Recurrent Transformer가 기계번역에서 가장 좋은 성능을 낸것도 놀랍습니다. 이는 모델적 특성과 데이터의 특성이 잘 맞아 좋은 결과가 반영된 것으로 판단할 수 있습니다. 추가적으로 복잡한 연산탓에 효율성이 낮을것이라고 예상했던 Evolved Transformer가 좋은 효율성을 보여준 점도 놀랍습니다.
             </p>
         </ul>
@@ -921,7 +923,7 @@ class EvolvedTransformer(nn.Module):
 
 
 <!-- Conclusion -->   
-    <h2 id="6">6. &hairsp; Conclusion</h2>
+    <h2 id="6">&hairsp; 6.&hairsp; Conclusion</h2>
     <div class="chapter-box">
         <p> &nbsp; 이 프로젝트에서는 세가지 Transformer를 직접 구현하고 세 가지 자연어 생성 과제에서 직접 성능비교까지 해봤습니다.
             Evoled Transformer가 가장 좋은 성능을 보일 것이라는 초기의 예상과 달리, 복잡한 모델 구조에서 기인한 하이퍼 파라미터에 민감도가 높아 좋지 않은 성능을 보인 것으로 판단되며, Recurrent Transformer는 기계번역이라는 한 가지 과제에서만 좋은 성적을 기록했습니다. 일련의 실험을 통헤 Standard Transformer의 안정성을 다시 한번 확인할 수 있었고, Transformer의 복잡성에 기인한 더 깊은 추가 연구가 필요하다는 것을 느끼게 되었습니다.
@@ -930,7 +932,7 @@ class EvolvedTransformer(nn.Module):
 
 
 <!-- Reference -->   
-    <h2 id="7">5. &hairsp; Reference</h2>
+    <h2 id="7">&hairsp; 7.&hairsp; Reference</h2>
     <div class="chapter-box">
         <a class="reference" href="https://arxiv.org/abs/1706.03762">&nbsp; Attention Is All You Need</a> <br> 
         <a class="reference" href="https://arxiv.org/abs/1807.03819/">&nbsp; Universal Transformers</a> <br> 
