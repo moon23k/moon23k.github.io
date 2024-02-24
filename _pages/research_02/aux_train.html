@@ -12,10 +12,9 @@ permalink: /aux_train
     <div class="callout">
       <p class="highlighted-text"><span>Project Objective</span></p>
       <div class="small-spacer"></div>
-      <p>&nbsp; 이 프로젝트에서 Exposure Bias의 완화를 위한 보조적인 Training Objective를 활용하는 Auxiliary Training을 수행하고, 모델의 생성 능력에 긍정적인 효과를 견인하는지 직접 확인합니다. <br>
-      모델 아키텍처는 Standard Transformer를 사용했으며, 
-      Auxiliary Training Objective는 First Token Prediction을 선정했습니다. 보조 함수 목표의 반영 비율은 최소 0.1부터 최대 0.5까지 달리하며 적용해가며, 성능 변화를 확인합니다. 
-      결과는 성능 개선은 전혀 없었고, 이유는 이미 MLE 방식의 학습에서 First Token Prediction을 반영하고 있으며, 되려 전체적인 학습의 수렴을 방해한다는 것으로 판단됩니다.
+      <p>&nbsp; 이 프로젝트에서 자연어 생성 모델의 고질적인 문제점인 <b>Exposure Bias</b>의 완화를 위해, 주요 학습 목표인 <b>MLE</b>와 더불어 <b>First Token Prediction</b>이라는 보조적인 학습 목표를 활용한 학습 방법론을 제시하고, 그 실효성을 직접 검증합니다. 
+      모델 아키텍처는 표준 트랜스포머를 사용하며, 전체 학습 과정에서 보조 함수 목표의 반영 비율은 최소 0.1부터 최대 0.5까지 적용해가며, 성능 변화를 면밀히 조사합니다.  <br> 
+      결과는 성능 개선은 전혀 없었고, 이유는 이미 MLE 방식의 학습에서 First Token Prediction을 반영하고 있으며, 오히려 추가적인 보조 학습 목표 설정으로 인해 전체적인 학습의 수렴을 방해한다는 것으로 판단됩니다. 이 프로젝트의 구현 코드는 github.com/moon23k/Aux_Training에서 확인 하실 수 있습니다
       </p>
     </div>
 
@@ -61,13 +60,15 @@ permalink: /aux_train
 
       <div class="list-container">
         <ul>
-          <li>Description</li>
+          <li>Project&hairsp; Description</li>
             <p> &nbsp; 자연어 생성 과정에서 Transformer Seq2Seq 모델은 많은 성과를 이뤘지만, 여전히 특정 토큰에 노출되는 Bias 현상인 Exposure Bias에 대한 도전이 남아있습니다. 이러한 문제를 극복하고자, 본 프로젝트는 Auxiliary Training을 활용하여 Exposure Bias를 최소화하고자 합니다. 특히, Auxiliary Training의 목적은 First Token Prediction에 주목하며 이를 통해 모델이 첫 토큰을 더 정확하게 예측하도록 하는 것입니다.<br>
             본 프로젝트의 주요 목표는 Exposure Bias를 최소화하여 모델이 훈련 시와 테스트 시에 일관된 예측을 수행할 수 있도록 하는 것입니다. 이를 위해 Auxiliary Training을 도입하며, 특히 First Token Prediction을 목적으로 합니다.
             </p>
 
-          <br class="half-spacer">
-          <li>Objective
+          <br class="spacer">
+          <br class="spacer">
+          
+          <li>Project&hairsp; Objective
             <ul>
               <li style="font-weight: normal;">Auxiliary Training을 통한 Exposure Bias 개선 여부 확인</li>
               <li style="font-weight: normal;">Auxiliary Training Objective로 First Token Prediction의 적절성 검증</li>
