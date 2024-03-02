@@ -1,20 +1,20 @@
 ---
 layout: default
-permalink: /aux_train
+permalink: /ease
 ---
 
 
 <div id="detail">
-  <h1 class="title">Auxiliary&hairsp; Training</h1>  
+  <h1 class="title">Exposure bias&hairsp; Alleviation&hairsp; Strategy&hairsp; Exploration</h1>  
   <div class="post">
 
     <hr>
     <div class="callout">
       <p class="highlighted-text"><span>Project Objective</span></p>
       <div class="small-spacer"></div>
-      <p>&nbsp; 이 프로젝트에서 자연어 생성 모델의 고질적인 문제점인 <b>Exposure Bias</b>의 완화를 위해, 주요 학습 목표인 <b>MLE</b>와 더불어 <b>First Token Prediction</b>이라는 보조적인 학습 목표를 활용한 학습 방법론을 제시하고, 그 실효성을 직접 검증합니다. 
-      모델 아키텍처는 표준 트랜스포머를 사용하며, 전체 학습 과정에서 보조 함수 목표의 반영 비율은 최소 0.1부터 최대 0.5까지 적용해가며, 성능 변화를 면밀히 조사합니다.  <br> 
-      결과는 성능 개선은 전혀 없었고, 이유는 이미 MLE 방식의 학습에서 First Token Prediction을 반영하고 있으며, 오히려 추가적인 보조 학습 목표 설정으로 인해 전체적인 학습의 수렴을 방해한다는 것으로 판단됩니다. 이 프로젝트의 구현 코드는 github.com/moon23k/Aux_Training에서 확인 하실 수 있습니다
+      <p>&nbsp; 이 프로젝트에서 자연어 생성 모델의 고질적인 문제점인 <b>Exposure Bias</b>의 완화를 위한 세 가지 방법론을 제시하고, 그 실효성을 직접 검증합니다. 각 방법론 Auxiliary, Recurrent Decoding, Generative 학습법입니다. 
+      모델 아키텍처는 효율적인 생성을 위해 캐싱 기능을 추가한 표준 트랜스포머를 사용하며, 대표적인 자연어 생성 과제인 기계 번역과제를 통해 생성 능력의 향상 여부를 면밀히 조사합니다.  <br> 
+      프로젝트의 결과, 세가지 방법론에서 모두 기본적인 미세조정보다 우수한 생성 능력을 학습 시킬 수 있음을 확인했습니다. 자세한 내용은 아래의 글에서 다루며, 프로젝트의 구현 코드는 github.com/moon23k/EASE에서 확인 하실 수 있습니다
       </p>
     </div>
 
@@ -61,8 +61,7 @@ permalink: /aux_train
       <div class="list-container">
         <ul>
           <li>Project&hairsp; Description</li>
-            <p> &nbsp; 자연어 생성 과정에서 Transformer Seq2Seq 모델은 많은 성과를 이뤘지만, 여전히 특정 토큰에 노출되는 Bias 현상인 Exposure Bias에 대한 도전이 남아있습니다. 이러한 문제를 극복하고자, 본 프로젝트는 Auxiliary Training을 활용하여 Exposure Bias를 최소화하고자 합니다. 특히, Auxiliary Training의 목적은 First Token Prediction에 주목하며 이를 통해 모델이 첫 토큰을 더 정확하게 예측하도록 하는 것입니다.<br>
-            본 프로젝트의 주요 목표는 Exposure Bias를 최소화하여 모델이 훈련 시와 테스트 시에 일관된 예측을 수행할 수 있도록 하는 것입니다. 이를 위해 Auxiliary Training을 도입하며, 특히 First Token Prediction을 목적으로 합니다.
+            <p> &nbsp; 트랜스포머 모델은 자연어 생성 과정에서 많은 성과를 이뤘지만, 생성 과정에서 잘못된 토큰의 예측으로 전체적인 문장의 생성과정이 잘못된 방향으로 편향되는 현상인 <b>Exposure Bias</b>에 대한 도전이 남아있습니다. 이 프로젝트는 세 가지 방법론을 활용하여 트랜스포머 모델을 미세조정함으로써, Exposure Bias를 완화시키는 것을 목표로 합니다. 이때 사용하는 세가지 방법론은 <b>Auxiliary Training, Recurrent Decode Training, Generative Training</b>입니다. Auxiliary Training은 MLE라는 주요 학습 목표와 더불어 첫번째 토큰을 예측하는 보조 학습 목표를 활용하며, Recurrent Decode Training은 Scheduled Sampling에서 영감을 받아, 디코더의 출력값을 다시금 디코더의 입력값으로 사용합니다. 그리고 Generative Training은 실제 생성 과정과 동일한 방식으로 학습을 진행하되, 캐싱을 활용해 학습의 일부분에서만 수행해 학습 효율성을 크게 저하시키지 않는 선에서 활용합니다. 이 모든 방법론의 성능 평가는 대표적인 자연어 생성 과제인 기계번역 과제에서 수행하며, 이를 위한 데이터로는 WMT14 En-De 데이터셋을 선정했습니다.
             </p>
 
           <br class="spacer">
@@ -88,84 +87,64 @@ permalink: /aux_train
 
       <div class="list-container">
         <ul>
-          <li>Transformer
-            <p>&nbsp; Transformer Seq2Seq 모델은 언어 생성 작업에서 뛰어난 성과를 보여주며, Attention 메커니즘을 통해 문맥을 파악하는 능력으로 자연어 처리 분야에서 널리 활용되고 있습니다. 그러나, 특히 긴 문장에서 Exposure Bias라는 문제가 나타나기도 합니다.
+          <li>Exposure Bias
+            <p>&nbsp; Exposure Bias는 모델이 훈련할 때와 테스트할 때 서로 다른 토큰의 분포에 노출되어 발생하는 차이에서 기인하는 자연어 생성 모델의 고질적인 문제점입니다. 특히 트랜스포머는 어텐션 기법을 활용한 병렬학습 과정에서 이전 시점의 정답 토큰이 주어지는 Teacher Forcing 방식을 사용합니다. 이는 안정적이고 효율적인 학습을 가능케 하지만, 실제 추론과정에서는 정답 토큰이 주어지지 않고, 오로지 모델의 이전 예측 토큰에만 의존하므로, Exposure Bias라는 문제점이 크게 부각됩니다. 
             </p>
           </li>
 
           <br class="half-spacer">
-          <li>Exposure Bias
+          <li>Fine Tuning
             <p>&nbsp; Exposure Bias는 모델이 훈련할 때와 테스트할 때 서로 다른 토큰의 분포에 노출되어 발생하는 차이를 나타냅니다. 이는 모델이 훈련 단계에서는 실제로 관측된 토큰을 보고 예측을 수행하면서 발생하며, 이로 인해 생성된 문장의 일관성과 품질에 영향을 미칠 수 있습니다.
             </p>
           </li>
+
+
         <ul>          
       </div>
     </div>
 
 
-<!-- 2. Training -->    
-    <h2 id="3">&hairsp; 3.&hairsp; Training</h2>
+<!-- 3. Training Strategy -->    
+    <h2 id="3">&hairsp; 3.&hairsp; Fine Tuning Strategy</h2>
     <div class="chapter-box">
 
       <div class="list-container">
         <ul>
-          <li>Auxiliary Training
+          <li>Standard Fine Tuning
             <p>&nbsp; Auxiliary Training은 Main이 되는 Training Objective에 더불어 추가적인 Training Objective를 두고 학습을 진행하는 방식을 의미합니다.
             </p>
           </li>
 
-          <br class="half-spacer">
-          <li>First Token Prediction
-            <p>&nbsp; Auxiliary Training Objective로는 First Token Prediction를 선정합니다. 첫번쨰 토큰을 잘 예측하는 것이 가장 중요할 것이라는 가설
+
+          <br class="spacer">
+          <br class="spacer">
+          <li>Auxiliary Fine Tuning
+            <p>&nbsp; Auxiliary Training은 Main이 되는 Training Objective에 더불어 추가적인 Training Objective를 두고 학습을 진행하는 방식을 의미합니다.
             </p>
-            <div class="code-container">
-              <div class="code-snippet">
-                <pre><code class="python">class MultiHeadAttention(nn.Module):
-    def __init__(self, config):
-        super().__init__()
-
-        hidden_dim = config.hidden_dim
-        self.n_heads = config.n_heads
-
-        assert hidden_dim // self.n_heads
-        self.head_dim = hidden_dim // self.n_heads
-        
-        self.dropout = nn.Dropout(config.dropout_ratio)
-        self.linears = clones(nn.Linear(hidden_dim, hidden_dim), 4)
-        self.scale = torch.sqrt(torch.FloatTensor([self.head_dim])).to(config.device)
-
-
-    def forward(self, query, key, value, mask = None):
-        orig_shape = list(query.shape)
-        split_shape = [query.size(0), -1, self.n_heads, self.head_dim]
-
-        Q, K, V = [lin(x).view(split_shape).transpose(1, 2) \
-                   for lin, x in zip(self.linears, (query, key, value))]   
-
-        score = torch.matmul(Q, K.permute(0, 1, 3, 2)) / self.scale
-
-        if mask is not None:
-            score = score.masked_fill(mask==0, -1e10)
-
-        attention = torch.softmax(score, dim=-1)
-
-        x = torch.matmul(self.dropout(attention), V)
-        
-        x = x.permute(0, 2, 1, 3).contiguous()
-        x = x.view(orig_shape)
-
-        del Q, K, V
-
-        return self.linears[-1](x)</code></pre>
-              </div>
-            </div>
           </li>
+
+
+          <br class="spacer">
+          <br class="spacer">
+          <li>Recurrent Decode Fine Tuning
+            <p>&nbsp; Auxiliary Training은 Main이 되는 Training Objective에 더불어 추가적인 Training Objective를 두고 학습을 진행하는 방식을 의미합니다.
+            </p>
+          </li>
+
+
+          <br class="spacer">
+          <br class="spacer">
+          <li>Generative Fine Tuning
+            <p>&nbsp; Auxiliary Training은 Main이 되는 Training Objective에 더불어 추가적인 Training Objective를 두고 학습을 진행하는 방식을 의미합니다.
+            </p>
+          </li>
+
         <ul>          
       </div>
     </div>
 
 
-<!-- 3. Experimental Setup -->
+<!-- 4. Experimental Setup -->
     <h2 id="5">&hairsp; 4.&hairsp; Experimental Setup</h2>
     <div class="chapter-box">
 
@@ -234,12 +213,12 @@ permalink: /aux_train
 
       <div class="list-container">
         <ul>
-          <li>Machine Translation</li>
+          <li>Result Table</li>
 
             <table class="result-table">
               <thead>
                 <tr>
-                  <th>Aux Ratio</th>
+                  <th>Strategy</th>
                   <th>Score</th>
                   <th>Epoch Time</th>
                   <th>Avg GPU</th>
@@ -248,128 +227,47 @@ permalink: /aux_train
               </thead>
               <tbody>
                 <tr>
-                  <td>0.0</td>
+                  <td>Baseline</td>
                   <td>12.99</td>
                   <td>0m 44s</td>
                   <td>0.20GB</td>
                   <td>0.95GB</td>
                 </tr>
                 <tr>
-                  <td>0.1</td>
+                  <td>Vanilla FineTuning</td>
                   <td>2.11</td>
                   <td>1m 00s</td>
                   <td>0.20GB</td>
                   <td>0.95GB</td>
                 </tr>
                 <tr>
-                  <td>0.3</td>
+                  <td>Auxiliary FineTuning</td>
                   <td>7.34</td>
                   <td>1m 00s</td>
                   <td>0.20GB</td>
                   <td>0.95GB</td>
                 </tr>
                 <tr>
-                  <td>0.5</td>
+                  <td>Recurrent Decode FineTuning</td>
                   <td>6.94</td>
                   <td>1m 00s</td>
                   <td>0.20GB</td>
                   <td>0.95GB</td>
                 </tr>
 
+                <tr>
+                  <td>Generative FineTuning</td>
+                  <td>6.94</td>
+                  <td>1m 00s</td>
+                  <td>0.20GB</td>
+                  <td>0.95GB</td>
+                </tr>                
+
               </tbody>
             </table>
           
-          <div class="spacer"></div>
-          <li>Dialogue Generation</li>
-            <table class="result-table">
-              <thead>
-                <tr>
-                  <th>Aux Ratio</th>
-                  <th>Score</th>
-                  <th>Epoch Time</th>
-                  <th>Avg GPU</th>
-                  <th>Max GPU</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>0.0</td>
-                  <td>2.03</td>
-                  <td>0m 43s</td>
-                  <td>0.20GB</td>
-                  <td>0.95GB</td>
-                </tr>
-                <tr>
-                  <td>0.1</td>
-                  <td>2.31</td>
-                  <td>0m 59s</td>
-                  <td>0.20GB</td>
-                  <td>0.95GB</td>
-                </tr>
-                <tr>
-                  <td>0.3</td>
-                  <td>2.34</td>
-                  <td>0m 59s</td>
-                  <td>0.20GB</td>
-                  <td>0.95GB</td>
-                </tr>
-                <tr>
-                  <td>0.5</td>
-                  <td>0.82</td>
-                  <td>0m 59s</td>
-                  <td>0.20GB</td>
-                  <td>0.95GB</td>
-                </tr>
 
-              </tbody>
-            </table>
-
-                
-          <div class="spacer"></div>
-          <li>Text Summarization</li>
-            <table class="result-table">
-              <thead>
-                <tr>
-                  <th>Aux Ratio</th>
-                  <th>Score</th>
-                  <th>Epoch Time</th>
-                  <th>Avg GPU</th>
-                  <th>Max GPU</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>0.0</td>
-                  <td>7.60</td>
-                  <td>2m 44s</td>
-                  <td>0.21GB</td>
-                  <td>2.98GB</td>
-                </tr>
-                <tr>
-                  <td>0.1</td>
-                  <td>2.95</td>
-                  <td>3m 8s</td>
-                  <td>0.21GB</td>
-                  <td>2.98GB</td>
-                </tr>
-                <tr>
-                  <td>0.3</td>
-                  <td>4.10</td>
-                  <td>3m 8s</td>
-                  <td>0.21GB</td>
-                  <td>2.98GB</td>
-                </tr>
-                <tr>
-                  <td>0.5</td>
-                  <td>5.39</td>
-                  <td>3m 8s</td>
-                  <td>0.21GB</td>
-                  <td>2.98GB</td>
-                </tr>
-
-              </tbody>
-            </table>
-
+          <br class="spacer">
           <br class="spacer">  
           <li>Result Analysis</li>
             <p> &nbsp; RNN은 다양한 정보를 함유하기에 지나치게 단순하고, LSTM은 GATE구조가 복잡하기에, 그만큼 영향을 받은 요소가 많아 학습 수렴이 어렵습니다. 때문에 모든 학습 결과에서는 GATE를 사용하면서도 단순화된 연산으로 학습의 이점이 큰 GRU가 가장 뛰어난 성능을 보임을 알 수 있습니다. 
@@ -385,17 +283,13 @@ permalink: /aux_train
 
       <div class="list-container">
         <ul>
-          <li>RNN, LSTM, GRU 을 활용한 seq2seq 모델링 방식의 이해</li>
+          <li>보조 학습 목표의 효용성 검증</li>
             <p>&nbsp; 토큰의 벡터 변환을 위한 Embedding Layer와 실제 연산을 위한 순환 신경망 레이어만으로 구성된 단순산 Encoder, Decoder 구조로 이루어져 있으며, 
             </p>
 
-          <br class="half-spacer">
-          <li>세 가지 순환 신경망의 성능 비교 검증</li>
-            <p>LSTM은 게이트 메커니즘을 통해 장기 의존성 문제를 해결하는 데 강점을 보입니다. 복잡한 문맥을 학습하고 기억하는 데 탁월하며, 긴 시퀀스 데이터에서 뛰어난 성능을 발휘할 수 있습니다. 하지만 LSTM은 더 많은 파라미터를 가지고 있어서 더 많은 데이터와 계산 리소스가 필요할 수 있습니다.
-            </p>
 
           <br class="half-spacer">
-          <li>가설 검증
+          <li>자기 회귀적 디코딩 방식의 효용성 검증
             <ul>
               <li>LSTM, GRU, RNN 순으로 높은 성능</li>
                 <p> LSTM의 연산과정이 가장 복잡하고, 다양한 GATE를 사용하기 떄문에, 좋은 성능을 낼 것이라고 예측했으나, 되려 복잡한 연산으로 인해, 학습 시 수렴에 어려움이 생겼습니다.
@@ -411,9 +305,8 @@ permalink: /aux_train
             
 
           <br class="half-spacer">
-          <li>최소 기준치 확립</li>
-            <p>앞서 언급했듯이 순환 신경망을 사용한 Seq2Seq모델은 앞으로 다루게 될 다양한 Seq2Seq 모델들의 시작점입니다. 고도화 된 모델일지라도 하이퍼 파라미터 설정이나, 훈련 방식 등의 이유에서 잘못된 성능이 나올수도 있습니다. 이때, 최소한의 동작은 하는 구나 하는 판단의 근거로 다음과 같은 스코어를 활용할 수 있습니다. <br> 
-              기계번역 BLEU Score: 00.00, 대화 생성 Rouge Score: 00.00, 문서 요약 Rouge Score: 00.00 이하의 성능ㅇ
+          <li>생성적 학습 방식의 사용법 제시</li>
+            <p>트랜스포머 모델을 사용한 생성적 학습은 효율성과 효용성 모든 측면에서 좋지 않은 모습을 보입니다. 트랜스포머라는 모델자체가 대규모데이터를 기반으로 다량학습에 용이한 모델 구조를 띄고 있기 때문에. 
             </p>
 
         </ul>
