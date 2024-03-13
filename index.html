@@ -2,13 +2,12 @@
 layout: default
 ---
 
+
 <!-- Information -->
 <div class="info">
   <h2 style="color: #303030; letter-spacing: 2px;">Hi, there!</h2>
   <p>
-    &nbsp; 안녕하세요 :) &hairsp;   
-    인공지능 기술을 활용한 현실 문제의 해결을 위해 항상 연구하는  
-    머신러닝 엔지니어, 송문기입니다.
+    &nbsp; 인공지능 기술을 활용한 현실 문제의 해결을 위해 항상 연구하는 머신러닝 엔지니어, 송문기입니다.
     다양한 인공지능 활용 분야들 중에서 자연어 처리에 초점을 맞추고 있으며, 
     사람과 자연스럽게 의사소통 가능한 인공지능 모델 개발을 목표로 삼고 있습니다. <br>
     목표 달성을 위해 다양한 연구 주제를 직접 선정하고 구현하며, 끊임없이 한 발짝씩 목표에 다가가는 중입니다. 이 페이지에서는 목표 달성을 위한 연구 프로젝트들을 주제별로 아래와 같이 정리해두었으며, 각 프로젝트 마다의 상세 및 코드 구현을 확인하실 수 있습니다.
@@ -26,20 +25,21 @@ layout: default
   
   <div class="full-width">
     <h3>&hairsp; Model&hairsp; Structure</h3>
-    <p>머신러닝 엔지니어링에서 모델의 구조적 디자인은 성능에 결정적인 영향을 미치는 주요 요소입니다. 특히 인코더와 디코더를 모두 필요로 하는 Sequence to Sequence 구조에서, 모델 디자인의 중요성은 더더욱 강조됩니다. 이 장에서는 RNN Seq2Seq, Transformer등 주요 모델 디자인을 깊이 이해하고, 추후 연구에 도움이 될 만한 6가지 프로젝트를 소개합니다. 각 프로젝트는 데이터 및 학습 방식을 고정시킨채, 모델 디자인적인 변화에 따른 성능변화를 파악하는데 집중합니다.
+    <p>&nbsp; 머신러닝 엔지니어링에서 모델의 구조적 디자인은 성능에 결정적인 영향을 미치는 주요 요소입니다. 특히 인코더와 디코더를 모두 필요로 하는 Sequence to Sequence 구조에서, 모델 디자인의 중요성은 더더욱 강조됩니다. 이 장에서는 가장 기초적인 모델 구조를 통한 자연어 생성 모델의 성능 기준 확립과, 성능 개선을 위한 다양한 모델 디자인에 집중한 프로젝트를 소개합니다. 모든 프로젝트에서는 데이터 및 학습 방식을 고정시킨채, 모델 디자인적인 변화에 따른 성능변화를 파악하는데 집중합니다.
     </p>
   </div>
 
   <div class="parallel">
+
     <div class='parallel-item'>
-      <h3>Baseline&hairsp; Architectures</h3>
+      <h3>The Baselines</h3>
       <ul>
         <li>
-          <p>자연어 생성을 위한 기본적 세 가지 모델 구조 (<b>RNN Seq2Seq,&hairsp; RNN Seq2Seq with Attention,&hairsp; Transformer</b>)를 구현하고, 각 모델 별 자연어 생성 능력을 측정함으로써, 자연어 생성 모델의 최소 성능 기준 확립
+          <p>자연어 생성을 위한 가장 기본적인 모델 구조의 자연어 능력을 직접 확인함으로써, 추후 연구 성능 평가의 BaseLine으로 삼기 위한 기준 연구. 모델 구조로는 RNN Seq2Seq, RNN Seq2Seq with Attention, Transformer을 사용.
           </p>
           <div class="btn-list">
-            <a href="{{ '/rnn_seq2seq' | relative_url }}" class="btn-type-1">Detail</a>
-            <a href="https://github.com/moon23k/Base_Archs" class="btn-type-1">Code</a>
+            <a href="{{ '/baselines' | relative_url }}" class="btn-type-1">Detail</a>
+            <a href="https://github.com/moon23k/NLG_Baselines" class="btn-type-1">Code</a>
           </div>
 
         </li>
@@ -62,6 +62,7 @@ layout: default
     </div>
 
   </div>
+
 
   <div class="parallel">
     <div class='parallel-item'>
@@ -93,7 +94,6 @@ layout: default
         </li>
       </ul>
     </div>
-
   </div>
 
 </div>
@@ -112,14 +112,14 @@ layout: default
 
   <div class="parallel">
     <div class='parallel-item'>
-      <h3 style="letter-spacing: 1.2px;">Exposure Bias&hairsp; Alleviation Strategy Exploration</h3>
+      <h3>G.I.F.T.</h3>
       <ul>
         <li>
-          <p>자연어 생성 모델의 고질적인 문제인 Exposure Bias를 해결하기 위한 학습 측면에서의 다양한 방법론 탐색
+          <p><b>GIFT, Generation Improving Fine-Tuning</b>에서는 네 가지 미세조정 방법론 적용에 따른 자연어 생성 모델의 생성 능력 향상 여부 비교 분석
           </p>
           <div class="btn-list">
-            <a href="{{ '/ease' | relative_url }}" class="btn-type-1">Detail</a>
-            <a href="https://github.com/moon23k/EASE" class="btn-type-1">Code</a>
+            <a href="{{ '/gift' | relative_url }}" class="btn-type-1">Detail</a>
+            <a href="https://github.com/moon23k/GIFT" class="btn-type-1">Code</a>
           </div>
 
         </li>
@@ -127,61 +127,44 @@ layout: default
     </div>
 
     <div class='parallel-item'>
+      <h3>SlowGAN</h3>
+      <ul>
+        <li>
+          <p>느리지만 안정적인 SeqGAN의 적용을 통한 자연어 생성 능력 향상 여부 검증
+          </p>
+          <div class="btn-list">
+            <a href="{{ '/slow_gan' | relative_url }}" class="btn-type-1">Detail</a>
+            <a href="https://github.com/moon23k/SlowGAN" class="btn-type-1">Code</a>
+          </div>
+
+        </li>
+      </ul>
+    </div>
+
+  </div>
+
+
+  <div class="parallel">
+    <div class='parallel-item'>
       <h3>Customized&hairsp; Pretraining</h3>
       <ul>
         <li>
-          <p>목표로하는 Down Stream Task에만 초점을 맞춘 커스텀 사전학습을 통해 모델 성능의 향상성 검증
+          <p>자나치게 크고 무거운 대규모 사전학습 모델을 사용하는대신, 목표로하는 Down Stream Task에만 초점을 맞춘 맞춤형 사전학습의 효용성 검증
           </p>
           <div class="btn-list">
-            <a href="{{ '/gan_train' | relative_url }}" class="btn-type-1">Detail</a>
+            <a href="{{ '/cpt_train' | relative_url }}" class="btn-type-1">Detail</a>
             <a href="https://github.com/moon23k/CPT" class="btn-type-1">Code</a>
           </div>
 
         </li>
       </ul>
     </div>
-  </div>
 
-
-  <div class="parallel">
-    <div class='parallel-item' style="width: 47%">
-      <h3>Sequence&hairsp; GAN</h3>
-      <ul>
-        <li>
-          <p>자연어 생성 모델의 학습 과정에서 적대적 생성 학습을 사용하기 위한 SeqGAN 방법론을 구현하고, 그 효용성을 검증
-          </p>
-          <div class="btn-list">
-            <a href="{{ '/cpt_train' | relative_url }}" class="btn-type-1">Detail</a>
-            <a href="https://github.com/moon23k/SeqGAN" class="btn-type-1">Code</a>
-          </div>
-
-        </li>
-      </ul>
-    </div>
-
-
-
-  </div>
-</div>
-
-
-
-<!-- Efficiency -->
-<div class="container">
-  
-  <div class="full-width">
-    <h3>&hairsp; Efficiency Focused</h3>
-    <p>
-      &nbsp; 다량의 파라미터로 이루어진 대규모 딥러닝 모델일수록 좋은 성능을 보여주는 경향성이 있습니다. 하지만 대규모 모델을 다루기 위해서는 많은 컴퓨팅 자원이 필요하며, 일반적으로 이러한 조건을 충족시키기 매우 어렵다는 한계점이 존재합니다. 한정적인 컴퓨팅 자원에서도 대규모 모델을 활용하기 위해 효율성에 초점을 맞춘 프로젝트를 진행하고, 인사이트를 공유합니다.
-    </p>
-  </div>
-
-  <div class="parallel">
     <div class='parallel-item'>
       <h3>Efficient&hairsp; Training</h3>
       <ul>
         <li>
-          <p>대규모 사전학습 모델은 그대로 유지한채, 학습과정에서의 효율성을 증대시키기 위한 다양한 방법론의 성능 및 효율성 검증
+          <p>대규모 사전학습 모델을 효율적으로 사용하기 위한 학습 방법론의 제시 및 검증
           </p>
           <div class="btn-list">
             <a href="{{ '/eff_train' | relative_url }}" class="btn-type-1">Detail</a>
@@ -191,45 +174,15 @@ layout: default
         </li>
       </ul>
     </div>
-
-    <div class='parallel-item'>
-      <h3>Efficient&hairsp; Models</h3>
-      <ul>
-        <li>
-          <p>모델 경량화와 어텐션 메커니즘의 고도화로 효율성을 증진시킨 사전학습 모델들의 실제 효용성 비교 검증
-          </p>
-          <div class="btn-list">
-            <a href="{{ '/eff_model' | relative_url }}" class="btn-type-1">Detail</a>
-            <a href="https://github.com/moon23k/Efficient_PLMs" class="btn-type-1">Code</a>
-          </div>
-
-        </li>
-      </ul>
-    </div>
-
   </div>
 
-  <div class="parallel">
-    <div class='parallel-item' style="width: 47%">
-      <h3>Param&hairsp; Efficient&hairsp; Fine-Tuning</h3>
-      <ul>
-        <li>
-          <p>한정된 자원에서 대규모 사전학습 모델을 효과적으로 미세조정하기 위한 PEFT 방식 마다의 실효성 비교 검증
-          </p>
-          <div class="btn-list">
-            <a href="{{ '/peft' | relative_url }}" class="btn-type-1">Detail</a>
-            <a href="https://github.com/moon23k/PEFT" class="btn-type-1">Code</a>
-          </div>
 
-        </li>
-      </ul>
-    </div>
-
-  </div>
 </div>
 
 
-<!-- Fourth Research -->
+
+
+<!-- Task Specific Projects -->
 <div class="container">
   
   <div class="full-width">

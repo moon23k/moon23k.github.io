@@ -1,11 +1,11 @@
 ---
 layout: default
-permalink: /ease
+permalink: /gift
 ---
 
 
 <div id="detail">
-  <h1 class="title">Exposure bias&hairsp; Alleviation&hairsp; Strategy&hairsp; Exploration</h1>  
+  <h1 class="title">Generation&hairsp; Improving&hairsp; Fine-Tuning</h1>  
   <div class="post">
 
     <hr>
@@ -30,7 +30,7 @@ permalink: /ease
         </li>
 
         <li>
-          <a href="#3">3. &hairsp; Training</a>
+          <a href="#3">3. &hairsp; Fine-Tuning Strategy</a>
         </li>
 
         <li>
@@ -87,15 +87,22 @@ permalink: /ease
 
       <div class="list-container">
         <ul>
-          <li>Exposure Bias
-            <p>&nbsp; Exposure Bias는 모델이 훈련할 때와 테스트할 때 서로 다른 토큰의 분포에 노출되어 발생하는 차이에서 기인하는 자연어 생성 모델의 고질적인 문제점입니다. 특히 트랜스포머는 어텐션 기법을 활용한 병렬학습 과정에서 이전 시점의 정답 토큰이 주어지는 Teacher Forcing 방식을 사용합니다. 이는 안정적이고 효율적인 학습을 가능케 하지만, 실제 추론과정에서는 정답 토큰이 주어지지 않고, 오로지 모델의 이전 예측 토큰에만 의존하므로, Exposure Bias라는 문제점이 크게 부각됩니다. 
-            </p>
+
+          <li>Challenges in Natural Language Generation
+            <ul>
+              <li>자연어 생성의 어려움점 토로</li>
+              <li>Exposure Bias</li>
+              <li>그렇다고 학습과정에 Generation을 포함시킬수도 없음.</li>
+            </ul>
           </li>
 
-          <br class="half-spacer">
-          <li>Fine Tuning
-            <p>&nbsp; Exposure Bias는 모델이 훈련할 때와 테스트할 때 서로 다른 토큰의 분포에 노출되어 발생하는 차이를 나타냅니다. 이는 모델이 훈련 단계에서는 실제로 관측된 토큰을 보고 예측을 수행하면서 발생하며, 이로 인해 생성된 문장의 일관성과 품질에 영향을 미칠 수 있습니다.
-            </p>
+          <div class="spacer"></div>
+          <li>Need for Advanced Training Strategies in Fine-Tuning
+            <ul>
+              <li>Fine Tuning...</li>
+              <li>표준적인 방식의 제한</li>
+              <li>고도화된 학습 전략이 필요</li>
+            </ul>
           </li>
 
 
@@ -104,39 +111,48 @@ permalink: /ease
     </div>
 
 
-<!-- 3. Training Strategy -->    
-    <h2 id="3">&hairsp; 3.&hairsp; Fine Tuning Strategy</h2>
+<!-- 3. Fine-Tuning Strategy -->    
+    <h2 id="3">&hairsp; 3.&hairsp; Fine-Tuning Strategy</h2>
     <div class="chapter-box">
 
       <div class="list-container">
         <ul>
-          <li>Standard Fine Tuning
-            <p>&nbsp; Auxiliary Training은 Main이 되는 Training Objective에 더불어 추가적인 Training Objective를 두고 학습을 진행하는 방식을 의미합니다.
-            </p>
+          <li>Standard&hairsp; Fine-Tuning
+            <ul>
+              <li></li>
+              <li></li>
+              <li></li>
+            </ul>
           </li>
 
 
-          <br class="spacer">
-          <br class="spacer">
-          <li>Auxiliary Fine Tuning
-            <p>&nbsp; Auxiliary Training은 Main이 되는 Training Objective에 더불어 추가적인 Training Objective를 두고 학습을 진행하는 방식을 의미합니다.
-            </p>
+          <div class="spacer"></div>
+          <li>Auxiliary&hairsp; Fine-Tuning
+            <ul>
+              <li></li>
+              <li></li>
+              <li></li>
+            </ul>
           </li>
 
 
-          <br class="spacer">
-          <br class="spacer">
-          <li>Recurrent Decode Fine Tuning
-            <p>&nbsp; Auxiliary Training은 Main이 되는 Training Objective에 더불어 추가적인 Training Objective를 두고 학습을 진행하는 방식을 의미합니다.
-            </p>
+          <div class="spacer"></div>
+          <li>Recurrent&hairsp; Fine-Tuning
+            <ul>
+              <li></li>
+              <li></li>
+              <li></li>
+            </ul>
           </li>
 
 
-          <br class="spacer">
-          <br class="spacer">
-          <li>Generative Fine Tuning
-            <p>&nbsp; Auxiliary Training은 Main이 되는 Training Objective에 더불어 추가적인 Training Objective를 두고 학습을 진행하는 방식을 의미합니다.
-            </p>
+          <div class="spacer"></div>
+          <li>Generative&hairsp; Fine-Tuning
+            <ul>
+              <li></li>
+              <li></li>
+              <li></li>
+            </ul>
           </li>
 
         <ul>          
@@ -234,21 +250,21 @@ permalink: /ease
                   <td>0.95GB</td>
                 </tr>
                 <tr>
-                  <td>Vanilla FineTuning</td>
+                  <td>Standard&hairsp; Fine-Tuning</td>
                   <td>2.11</td>
                   <td>1m 00s</td>
                   <td>0.20GB</td>
                   <td>0.95GB</td>
                 </tr>
                 <tr>
-                  <td>Auxiliary FineTuning</td>
+                  <td>Auxiliary&hairsp; Fine-Tuning</td>
                   <td>7.34</td>
                   <td>1m 00s</td>
                   <td>0.20GB</td>
                   <td>0.95GB</td>
                 </tr>
                 <tr>
-                  <td>Recurrent Decode FineTuning</td>
+                  <td>Recurrent&hairsp; Fine-Tuning</td>
                   <td>6.94</td>
                   <td>1m 00s</td>
                   <td>0.20GB</td>
@@ -256,7 +272,7 @@ permalink: /ease
                 </tr>
 
                 <tr>
-                  <td>Generative FineTuning</td>
+                  <td>Generative&hairsp; Fine-Tuning</td>
                   <td>6.94</td>
                   <td>1m 00s</td>
                   <td>0.20GB</td>
@@ -267,8 +283,7 @@ permalink: /ease
             </table>
           
 
-          <br class="spacer">
-          <br class="spacer">  
+          <div class="spacer"></div>
           <li>Result Analysis</li>
             <p> &nbsp; RNN은 다양한 정보를 함유하기에 지나치게 단순하고, LSTM은 GATE구조가 복잡하기에, 그만큼 영향을 받은 요소가 많아 학습 수렴이 어렵습니다. 때문에 모든 학습 결과에서는 GATE를 사용하면서도 단순화된 연산으로 학습의 이점이 큰 GRU가 가장 뛰어난 성능을 보임을 알 수 있습니다. 
             </p>
@@ -288,7 +303,7 @@ permalink: /ease
             </p>
 
 
-          <br class="half-spacer">
+          <div class="spacer"></div>
           <li>자기 회귀적 디코딩 방식의 효용성 검증
             <ul>
               <li>LSTM, GRU, RNN 순으로 높은 성능</li>
@@ -304,7 +319,7 @@ permalink: /ease
           </li>
             
 
-          <br class="half-spacer">
+          <div class="spacer"></div>
           <li>생성적 학습 방식의 사용법 제시</li>
             <p>트랜스포머 모델을 사용한 생성적 학습은 효율성과 효용성 모든 측면에서 좋지 않은 모습을 보입니다. 트랜스포머라는 모델자체가 대규모데이터를 기반으로 다량학습에 용이한 모델 구조를 띄고 있기 때문에. 
             </p>

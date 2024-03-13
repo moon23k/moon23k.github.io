@@ -87,31 +87,23 @@ permalink: /transformer_variants
       <div class="list-container">
         <ul>
 
-          <li>Standard Transformer
+          <li>Transformer
             <ul>
-              <li>트랜스포머는 어텐션 메커니즘을 활용한 신경망 구조로, 장거리 종속성을 효과적으로 다루고 병렬 처리를 가능케 함</li>
-              <li>인코더와 디코더로 이루어져 텍스트 처리에 적합하며, 특히 self-attention과 포지션 임베딩을 통해 문장의 의미와 순서 정보를 효과적으로 학습해 자연어 처리에서 혁신적인 성과를 보임</li>
+              <li>트랜스포머는 매우 효율적인 연산과정을 제시하며, 대규모 학습에 특화된 강력한 성능을 자랑함</li>
+              <li>트랜스포머의 도래 이후, 대부분의 연구들은 트랜스포머를 기반으로한 사전학습 방식에 집중하고 있음</li>
               <li>기존 순환 신경망 대비 훨씬 높은 성능과 학습 효율성을 제공하며, 대규모 데이터셋에서 활용되는 강력한 모델</li>
             </ul>
           </li>
             
           <div class="spacer"></div>
-          <li>Recurrent Transformer
+          <li>Biased Research
             <ul>
-              <li>트랜스포머의 인코더는 입력 시퀀스의 단어들을 임베딩하고, 다중 헤드 어텐션과 피드포워드 신경망을 통해 정보를 추상화. 각 인코더 레이어는 잔여 연결과 층 정규화를 활용하여 안정성을 유지하며, 입력 문장의 특징을 계층적으로 추출</li>
+              <li>트랜스포머의 도래 이후, 대부분의 연구들은 트랜스포머 구조를 기반으로한 사전학습 방법론에 집중하고 있음</li>
               <li>디코더는 인코더의 출력을 기반으로 출력 시퀀스를 생성. 각 디코더 레이어는 다중 헤드 어텐션을 사용하여 인코더의 출력과 현재까지의 디코더 입력에 대한 어텐션을 계산하고, 피드포워드 신경망을 통해 출력을 생성. 잔여 연결과 층 정규화는 안정성을 제공하며 디코딩 과정을 안정화.</li>
               <li>인코더와 디코더는 각각의 레이어를 통해 상호작용하며, 어텐션 메커니즘을 활용해 입력 문장의 문맥 정보를 고려하고 출력 문장을 생성. 트랜스포머의 인코더-디코더 구조는 기존의 번역 모델보다 효과적인 학습과 예측을 가능케 함.</li>
             </ul>
           </li>
 
-          <div class="spacer"></div>
-          <li>Evolved Transformer
-            <ul>
-              <li>트랜스포머의 핵심 구성 요소로, 여러 어텐션 헤드를 병렬로 활용하여 다양한 어텐션 가중치를 학습</li>
-              <li>각 헤드는 서로 다른 관점에서 정보를 추출하며, 그 결과를 결합하여 모델이 다양한 특징을 효과적으로 학습하도록 유도</li>
-              <li>Attention Score 산출을 위해 Scaled Dot Attention 방식을 사용</li>
-            </ul>
-          </li>
 
         </ul>
       </div>
@@ -124,7 +116,13 @@ permalink: /transformer_variants
     <div class="chapter-box">
       <div class="list-container">
         <ul>
-          <li>Standard Transformer</li>
+          <li>Standard&haisp; Transformer
+            <ul>
+              <li>트랜스포머는 어텐션 메커니즘을 활용한 신경망 구조로, 장거리 종속성을 효과적으로 다루고 병렬 처리를 가능케 함</li>
+              <li>인코더와 디코더로 이루어져 텍스트 처리에 적합하며, 특히 self-attention과 포지션 임베딩을 통해 문장의 의미와 순서 정보를 효과적으로 학습해 자연어 처리에서 혁신적인 성과를 보임</li>
+              <li>기존 순환 신경망 대비 훨씬 높은 성능과 학습 효율성을 제공하며, 대규모 데이터셋에서 활용되는 강력한 모델</li>
+            </ul>
+          </li>
             <div class="code-container">
               <div class="code-snippet">
                 <pre><code class="python">class StandardEncoder(nn.Module):
@@ -220,7 +218,13 @@ class StandardTransformer(nn.Module):
             </div>
 
           <div class="spacer"></div>
-          <li>Recurrent Transformer
+          <li>Recurrent&haisp; Transformer
+            <ul>
+              <li>트랜스포머의 인코더는 입력 시퀀스의 단어들을 임베딩하고, 다중 헤드 어텐션과 피드포워드 신경망을 통해 정보를 추상화. 각 인코더 레이어는 잔여 연결과 층 정규화를 활용하여 안정성을 유지하며, 입력 문장의 특징을 계층적으로 추출</li>
+              <li>디코더는 인코더의 출력을 기반으로 출력 시퀀스를 생성. 각 디코더 레이어는 다중 헤드 어텐션을 사용하여 인코더의 출력과 현재까지의 디코더 입력에 대한 어텐션을 계산하고, 피드포워드 신경망을 통해 출력을 생성. 잔여 연결과 층 정규화는 안정성을 제공하며 디코딩 과정을 안정화.</li>
+              <li>인코더와 디코더는 각각의 레이어를 통해 상호작용하며, 어텐션 메커니즘을 활용해 입력 문장의 문맥 정보를 고려하고 출력 문장을 생성. 트랜스포머의 인코더-디코더 구조는 기존의 번역 모델보다 효과적인 학습과 예측을 가능케 함.</li>
+            </ul>
+          </li>
             <div class="code-container">
               <div class="code-snippet">
                 <pre><code class="python">def generate_signal(length, channels, min_timescale=1.0, max_timescale=1.0e4):
@@ -354,10 +358,16 @@ class RecurrentTransformer(nn.Module):
         return self.generator(dec_out)</code></pre>
               </div>
             </div>
-          </li>         
+
 
           <div class="spacer"></div>
-          <li>Evolved Transformer
+          <li>Evolved&haisp; Transformer
+            <ul>
+              <li>트랜스포머의 핵심 구성 요소로, 여러 어텐션 헤드를 병렬로 활용하여 다양한 어텐션 가중치를 학습</li>
+              <li>각 헤드는 서로 다른 관점에서 정보를 추출하며, 그 결과를 결합하여 모델이 다양한 특징을 효과적으로 학습하도록 유도</li>
+              <li>Attention Score 산출을 위해 Scaled Dot Attention 방식을 사용</li>
+            </ul>
+          </li>
             <div class="code-container">
               <div class="code-snippet">
                 <pre><code class="python">class GatedConvolution(nn.Module):
@@ -691,7 +701,6 @@ class EvolvedTransformer(nn.Module):
         return self.generator(dec_out)</code></pre>
               </div>
             </div>          
-          </li>
         </ul>    
       </div>                
     </div>

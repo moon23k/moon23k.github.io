@@ -5,7 +5,7 @@ permalink: /translation_multilingual
 
 
 <div id="detail">
-  <h1 class="title">Multi-Lingual Translation Model</h1>  
+  <h1 class="title">Multi-Lingual&hairsp; Machine Translation</h1>  
   <div class="post">
 
     <hr>
@@ -28,11 +28,11 @@ permalink: /translation_multilingual
         </li>
 
         <li>
-          <a href="#2">2. &hairsp; Model</a>
+          <a href="#2">2. &hairsp; Background</a>
         </li>
 
         <li>
-          <a href="#3">3. &hairsp; Training</a>
+          <a href="#3">3. &hairsp; Architecture</a>
         </li>
 
         <li>
@@ -55,6 +55,7 @@ permalink: /translation_multilingual
     </div>
     <hr>
 
+
 <!-- 1. Introduction -->    
     <h2 id="1">&hairsp; 1. &hairsp; Introduction</h2>
     <div class="chapter-box">
@@ -68,7 +69,7 @@ permalink: /translation_multilingual
 
           </p>
 
-          <div class="half-spacer"></div>
+          <div class="spacer"></div>
           <li>Objective
             <ul>
               <li style="font-weight: normal;">다언어 번역을 위한 깊은 이해 증진</li>
@@ -84,7 +85,7 @@ permalink: /translation_multilingual
 
 
 
-<!-- 2. Model -->    
+<!-- 2. Background -->    
     <h2 id="2">&hairsp; 2. &hairsp; Background</h2>
     <div class="chapter-box">
 
@@ -107,6 +108,56 @@ permalink: /translation_multilingual
         </ul>
       </div>
     </div>
+
+
+
+<!-- 3. Architecture -->    
+    <h2 id="3">&hairsp; 3.&hairsp; Architecture</h2>
+    <div class="chapter-box">      
+      <div class="list-container">
+        <ul>
+
+          <li>Hierarchical Linear Encoder Model
+            <ul>
+              <li></li>
+              <li></li>
+              <li></li>
+            </ul>
+          </li>   
+
+
+          <div class="spacer"></div>
+          <li>Hierarchical RNN Encoder Model
+            <ul>
+              <li></li>
+              <li></li>
+              <li></li>
+            </ul>
+          </li>           
+
+
+          <div class="spacer"></div>
+          <li>Hierarchical Attention Encoder Model
+            <ul>
+              <li></li>
+              <li></li>
+              <li></li>
+            </ul>
+          </li>           
+
+
+          <div class="spacer"></div>
+          <li>Hierarchical Fusion Encoder Model
+            <ul>
+              <li></li>
+              <li></li>
+              <li></li>
+            </ul>
+          </li>           
+
+        </ul>
+      </div>      
+    </div>         
 
 
 <!-- 4. Experimental Setup -->
@@ -178,7 +229,7 @@ permalink: /translation_multilingual
 
       <div class="list-container">
         <ul>
-          <li>Machine Translation</li>
+          <li>Result Table</li>
 
             <table class="result-table">
               <thead>
@@ -216,84 +267,8 @@ permalink: /translation_multilingual
               </tbody>
             </table>
           
-          <div class="half-spacer"></div>
-          <li>Dialogue Generation</li>
-            <table class="result-table">
-              <thead>
-                <tr>
-                  <th>Model Type</th>
-                  <th>Eval Score</th>
-                  <th>Epoch Time</th>
-                  <th>Avg GPU</th>
-                  <th>Max GPU</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>RNN Model</td>
-                  <td>0.10</td>
-                  <td>3m 40s</td>
-                  <td>0.22GB</td>
-                  <td>0.79GB</td>
-                </tr>
-                <tr>
-                  <td>LSTM Model</td>
-                  <td>0.37</td>
-                  <td>4m 5s</td>
-                  <td>0.27GB</td>
-                  <td>1.23GB</td>
-                </tr>
-                <tr>
-                  <td>GRU Model</td>
-                  <td>2.16</td>
-                  <td>3m 58s</td>
-                  <td>0.26GB</td>
-                  <td>1.11GB</td>
-                </tr>
 
-              </tbody>
-            </table>
-
-                
-          <div class="half-spacer"></div>
-          <li>Text Summarization</li>
-            <table class="result-table">
-              <thead>
-                <tr>
-                  <th>Model Type</th>
-                  <th>Eval Score</th>
-                  <th>Epoch Time</th>
-                  <th>Avg GPU</th>
-                  <th>Max GPU</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>RNN Model</td>
-                  <td>0.00</td>
-                  <td>8m 6s</td>
-                  <td>0.23GB</td>
-                  <td>1.20GB</td>
-                </tr>
-                <tr>
-                  <td>LSTM Model</td>
-                  <td>2.23</td>
-                  <td>9m 7s</td>
-                  <td>0.29GB</td>
-                  <td>2.00GB</td>
-                </tr>
-                <tr>
-                  <td>GRU Model</td>
-                  <td>2.19</td>
-                  <td>8m 42s</td>
-                  <td>0.27GB</td>
-                  <td>1.82GB</td>
-                </tr>
-
-              </tbody>
-            </table>
-
-          <div class="half-spacer"></div>
+          <div class="spacer"></div>
           <li>Result Analysis</li>
             <p> &nbsp; RNN은 다양한 정보를 함유하기에 지나치게 단순하고, LSTM은 GATE구조가 복잡하기에, 그만큼 영향을 받은 요소가 많아 학습 수렴이 어렵습니다. 때문에 모든 학습 결과에서는 GATE를 사용하면서도 단순화된 연산으로 학습의 이점이 큰 GRU가 가장 뛰어난 성능을 보임을 알 수 있습니다. 
             </p>
@@ -312,30 +287,9 @@ permalink: /translation_multilingual
             <p>&nbsp; 토큰의 벡터 변환을 위한 Embedding Layer와 실제 연산을 위한 순환 신경망 레이어만으로 구성된 단순산 Encoder, Decoder 구조로 이루어져 있으며, 
             </p>
 
-          <div class="half-spacer"></div>
+          <div class="spacer"></div>
           <li>세 가지 순환 신경망의 성능 비교 검증</li>
             <p>LSTM은 게이트 메커니즘을 통해 장기 의존성 문제를 해결하는 데 강점을 보입니다. 복잡한 문맥을 학습하고 기억하는 데 탁월하며, 긴 시퀀스 데이터에서 뛰어난 성능을 발휘할 수 있습니다. 하지만 LSTM은 더 많은 파라미터를 가지고 있어서 더 많은 데이터와 계산 리소스가 필요할 수 있습니다.
-            </p>
-
-          <div class="half-spacer"></div>
-          <li>가설 검증
-            <ul>
-              <li>LSTM, GRU, RNN 순으로 높은 성능</li>
-                <p> LSTM의 연산과정이 가장 복잡하고, 다양한 GATE를 사용하기 떄문에, 좋은 성능을 낼 것이라고 예측했으나, 되려 복잡한 연산으로 인해, 학습 시 수렴에 어려움이 생겼습니다.
-                오히려 GATE를 사용하면서도, 연산의 단순화를 도모한 GRU의 학습 성능이 가장 좋은 것을 확인했습니다
-                </p>
-
-              <li>RNN, GRU, LSTM 순으로 빠른 학습</li>
-                <p> 학습 속도 및 GPU 사용량으로 확인해본 효율성은 가설과 마찬가지로 RNN, GRU, LSTM 순으로 나타났습니다.
-                </p>
-              <li></li>
-            </ul>
-          </li>
-            
-          <div class="half-spacer"></div>
-          <li>최소 기준치 확립</li>
-            <p>앞서 언급했듯이 순환 신경망을 사용한 Seq2Seq모델은 앞으로 다루게 될 다양한 Seq2Seq 모델들의 시작점입니다. 고도화 된 모델일지라도 하이퍼 파라미터 설정이나, 훈련 방식 등의 이유에서 잘못된 성능이 나올수도 있습니다. 이때, 최소한의 동작은 하는 구나 하는 판단의 근거로 다음과 같은 스코어를 활용할 수 있습니다. <br> 
-              기계번역 BLEU Score: 00.00, 대화 생성 Rouge Score: 00.00, 문서 요약 Rouge Score: 00.00 이하의 성능ㅇ
             </p>
 
         </ul>
@@ -350,11 +304,11 @@ permalink: /translation_multilingual
       <a class="reference" href="https://aclanthology.org/D18-1045.pdf">&nbsp; Understanding Back-Translation at Scale</a> 
     </div>
 
-
   </div>
 </div>
 
+
 <div class="pagination">
-  <a href="{{ '/eff_model' | relative_url }}" class="btn-prev"></a>
-  <a href="{{ '/aux_train' | relative_url }}" class="btn-next"></a>
+  <a href="{{ '/eff_train' | relative_url }}" class="btn-prev"><span>Efficient Training</span></a>
+  <a href="{{ '/translation_code' | relative_url }}" class="btn-next"><span>Code Translaion</span></a>
 </div>

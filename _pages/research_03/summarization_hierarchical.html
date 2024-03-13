@@ -1,18 +1,18 @@
 ---
 layout: default
-permalink: /dialogue_diverse
+permalink: /summarization_hierarchical
 ---
 
 
 <div id="detail">
-  <h1 class="title">Diverse Dialogue Generation via SEMENT</h1>  
+  <h1 class="title">Hierarchical Text Summarizer</h1>  
   <div class="post">
 
     <hr>
     <div class="callout">
       <p class="highlighted-text"><span>Project Objective</span></p>
       <div class="small-spacer"></div>
-      <p>&nbsp; 이 프로젝트에서는 다양한 발화가능성 증진을 위한 SEMENT 기법을 구현하고, 그 성능을 직접 확인합니다.</p>
+      <p>&nbsp; 이 프로젝트에서는 계층적 인코더를 사용해 문서 요약 과제에서의 모델 성능을 향상시키기 위한 일련의 실험을 진행합니다</p>
     </div>
 
     <div class="tblContents">
@@ -27,7 +27,7 @@ permalink: /dialogue_diverse
         </li>
 
         <li>
-          <a href="#3">3. &hairsp; SEMENT</a>
+          <a href="#3">3. &hairsp; Architecture</a>
         </li>
 
         <li>
@@ -53,13 +53,13 @@ permalink: /dialogue_diverse
 
 
 <!-- 1. Introduction -->    
-    <h2 id="1">&hairsp; 1. &hairsp; Introduction</h2>
+    <h2 id="1">&hairsp; 1.&hairsp; Introduction</h2>
     <div class="chapter-box">
 
       <div class="list-container">
         <ul>
           <li>Description</li>
-            <p> &nbsp; -
+            <p> &nbsp; 이 프로젝트에서는 긴 입력 시퀀스의 의미적 내용을 잘 포착하기 위한 다양한 계층적 인코더를 구현하고, 그 효용성을 직접 검증해봅니다.
 
             </p>
 
@@ -79,23 +79,90 @@ permalink: /dialogue_diverse
 
 
 
-<!-- 2. Parameter-wise Efficient Models -->    
+<!-- 2. Background -->    
     <h2 id="2">&hairsp; 2. &hairsp; Background</h2>
     <div class="chapter-box">      
+      <div class="list-container">
+        <ul>
+
+          <li>Text Summarization
+            <ul>
+              <li>긴 입력 시퀀스를 다루는데, long term dependency문제가 발생</li>
+              <li></li>
+              <li></li>
+            </ul>
+          </li>
+
+
+          <div class="spacer"></div>
+          <li>Hierarchical Encoder
+            <ul>
+              <li>이전에도 계층적 인코더를 사용하려는 연구들은 있었음</li>
+              <li>대표적으로 Hier Transformer</li>
+              <li></li>
+            </ul>
+          </li>
+
+
+        </ul>
+      </div>
     </div>         
 
 
 
-<!-- 3. Attention-wise Efficient Models -->    
-    <h2 id="3">&hairsp; 3. &hairsp; SEMENT</h2>
+<!-- 3. Architecture -->    
+    <h2 id="3">&hairsp; 3.&hairsp; Architecture</h2>
     <div class="chapter-box">      
+      <div class="list-container">
+        <ul>
+
+          <li>Hierarchical Linear Encoder Model
+            <ul>
+              <li></li>
+              <li></li>
+              <li></li>
+            </ul>
+          </li>   
+
+
+          <div class="spacer"></div>
+          <li>Hierarchical RNN Encoder Model
+            <ul>
+              <li></li>
+              <li></li>
+              <li></li>
+            </ul>
+          </li>           
+
+
+          <div class="spacer"></div>
+          <li>Hierarchical Attention Encoder Model
+            <ul>
+              <li></li>
+              <li></li>
+              <li></li>
+            </ul>
+          </li>           
+
+
+          <div class="spacer"></div>
+          <li>Hierarchical Fusion Encoder Model
+            <ul>
+              <li></li>
+              <li></li>
+              <li></li>
+            </ul>
+          </li>           
+
+        </ul>
+      </div>      
     </div>         
 
 
 
 
 <!-- 4. Experimental Setup -->
-    <h2 id="4">&hairsp; 4. Experimental Setup</h2>
+    <h2 id="4">&hairsp; 4.&hairsp; Experimental Setup</h2>
     <div class="chapter-box">
 
       <div class="list-container">
@@ -114,7 +181,7 @@ permalink: /dialogue_diverse
           </li>
 
 
-          <div class="half-spacer"></div>
+          <div class="spacer"></div>
           <li>Training Setup
             <div class="dual-container">
               <ul>
@@ -137,7 +204,7 @@ permalink: /dialogue_diverse
 
 
 <!-- 5. Result -->
-    <h2 id="5">&hairsp; 5. &hairsp; Result</h2>
+    <h2 id="5">&hairsp; 5.&hairsp; Result</h2>
     <div class="chapter-box">
 
     </div>
@@ -145,7 +212,7 @@ permalink: /dialogue_diverse
 
 
 <!-- 6. Conclusion -->
-    <h2 id="6">&hairsp; 6. &hairsp; Conclusion</h2>
+    <h2 id="6">&hairsp; 6.&hairsp; Conclusion</h2>
     <div class="chapter-box">
 
       <p>-
@@ -163,6 +230,6 @@ permalink: /dialogue_diverse
 
 
 <div class="pagination">
-  <a href="{{ '/siment' | relative_url }}" class="btn-prev"><span>Diverse Dialogue Generation</span></a>
-  <a href="{{ '/sparse_attention' | relative_url }}" class="btn-next"><span>Sparse Attention</span></a>
+  <a href="{{ '/dialogue_diverse' | relative_url }}" class="btn-prev"><span>Diverse Dialogue Generation</span></a>
+  <a href="{{ '/summarization_sparse' | relative_url }}" class="btn-next"><span>Sparse Attention</span></a>
 </div>

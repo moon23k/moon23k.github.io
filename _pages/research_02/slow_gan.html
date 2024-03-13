@@ -1,11 +1,11 @@
 ---
 layout: default
-permalink: /gen_train
+permalink: /slow_gan
 ---
 
 
 <div id="detail">
-  <h1 class="title">Generative Training Research</h1>  
+  <h1 class="title">SlowGAN</h1>  
   <div class="post">
 
     <hr>
@@ -21,31 +21,31 @@ permalink: /gen_train
       <ul>
 
         <li>
-          <a href="#1">1. &hairsp; Introduction</a>
+          <a href="#1">1.&hairsp; Introduction</a>
         </li>
 
         <li>
-          <a href="#2">2. &hairsp; Background</a>
+          <a href="#2">2.&hairsp; Background</a>
         </li>
 
         <li>
-          <a href="#3">3. &hairsp; Training</a>
+          <a href="#3">3.&hairsp; Training Strategy</a>
         </li>
 
         <li>
-          <a href="#4">4. &hairsp; Experimental Setup</a>
+          <a href="#4">4.&hairsp; Experimental Setup</a>
         </li>
 
         <li>
-          <a href="#5">5. &hairsp; Result</a>
+          <a href="#5">5.&hairsp; Result</a>
         </li>
 
         <li>
-          <a href="#6">6. &hairsp; Conclusion</a>
+          <a href="#6">6.&hairsp; Conclusion</a>
         </li>
 
         <li>
-          <a href="#7">7. &hairsp; Reference</a>
+          <a href="#7">7.&hairsp; Reference</a>
         </li>
 
       </ul>
@@ -54,7 +54,7 @@ permalink: /gen_train
 
 
 <!-- 1. Introduction -->    
-    <h2 id="1">&hairsp; 1. &hairsp; Introduction</h2>
+    <h2 id="1">&hairsp; 1.&hairsp; Introduction</h2>
     <div class="chapter-box">
 
       <div class="list-container">
@@ -65,7 +65,7 @@ permalink: /gen_train
             학습 과정에서 효율적인 생성을 병행하기 위해 디코딩 과정에서 Cache를 사용할 수 있는 Transformer 모델을 구현해 사용합니다. 성능 평가는 기계번역과 대화생성 과제에서 진행하며, 비교군으로는 일반적인 학습방식, 데이터를 증강시킨 경우에서의 학습, 생성적 학습 그리고 일반적인 학습 이후 이어지는 생성적 학습으로 총 네가지 경우의 수를 비교해봅니다.  
             </p>
 
-          <div class="half-spacer"></div>
+          <div class="spacer"></div>
           <li>Objective
             <ul>
               <li style="font-weight: normal;">소규모 데이터셋에서 Generative Training의 효용성 검증</li>
@@ -313,33 +313,45 @@ class Transformer(nn.Module):
     </div>
 
 
-<!-- 2. Training -->    
-    <h2 id="3">3. &hairsp; Training</h2>
+<!-- 3. Training Strategy -->    
+    <h2 id="3">3.&hairsp; Training Strategy</h2>
     <div class="chapter-box">
 
       <div class="list-container">
         <ul>
-          <li>Standard Training
-            <p>&nbsp; 일반적인 MLE Training Objective 기반의 병렬처리 학습 방식입니다. Masking을 활용한 Teacher Forcing을 사용하며, 한번에 많은 배치의 데이터를 처리함으로써 효율적인 학습이 가능한 방식입니다.
-            </p>
+          <li>Standard&hairsp; Training
+            <ul>
+              <li></li>
+              <li></li>
+              <li></li>
+            </ul>
           </li>
 
           <div class="spacer"></div>
-          <li>Data Augment Training
-            <p>&nbsp; 이 방식은 위의 Standard Training과 동일한 학습 방식을 사용합니다. 다만 한 가지 다른 것은 데이터의 수가 많은 경우에서의 학습을 변수로써 사용하기 위한 학습 방식입니다.
-            </p>
+          <li>Generative&hairsp; Fine-Tuning
+            <ul>
+              <li></li>
+              <li></li>
+              <li></li>
+            </ul>
           </li>
 
           <div class="spacer"></div>
-          <li>Generative Training
-            <p>&nbsp; Generative Training은 학습 방식에서 추론 과정과 동일한 로직을 사용해 보다 빠르고 직관적인 학습의 수렴을 도모하기 위한 학습 방식입니다. 효율성은 떨어지지만, 학습과 추론과정의 일치로 인한 Exposure Bias의 해소도 기대할 수 있는 학습 방식입니다.
-            </p>
+          <li>SlowGAN&hairsp; Fine-Tuning
+            <ul>
+              <li></li>
+              <li></li>
+              <li></li>
+            </ul>
           </li>
 
           <div class="spacer"></div>
-          <li>Consecutive Training
-            <p>&nbsp; Consecutive Training은 Standard Training 이후 Generative Training을 진행하면서 학습의 안정성을 더 높이기 위한 학습 방식입니다.
-            </p>
+          <li>Overall&hairsp; Process
+            <ul>
+              <li>1. Standard Training으로 일반화 능력 배양</li>
+              <li>2. Generative Fine-Tuning으로 생성 능력 향상</li>
+              <li>3. SlowGAN Fine-Tuning으로 보다 자연스러운 생성 능력 향상</li>
+            </ul>
           </li>
 
         </ul>          
@@ -416,7 +428,7 @@ class Transformer(nn.Module):
 
       <div class="list-container">
         <ul>
-          <li>Machine Translation</li>
+          <li>Result&hairsp; Table</li>
 
             <table class="result-table">
               <thead>
@@ -461,54 +473,11 @@ class Transformer(nn.Module):
               </tbody>
             </table>
           
-          <div class="half-spacer"></div>
-          <li>Dialogue Generation</li>
-            <table class="result-table">
-              <thead>
-                <tr>
-                  <th>Training Type</th>
-                  <th>Score</th>
-                  <th>Epoch Time</th>
-                  <th>Avg GPU</th>
-                  <th>Max GPU</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Standard</td>
-                  <td>0.41</td>
-                  <td>0m 10s</td>
-                  <td>0.20GB</td>
-                  <td>0.83GB</td>
-                </tr>
-                <tr>
-                  <td>Generative</td>
-                  <td>0.00</td>
-                  <td>4m 35s</td>
-                  <td>1.88GB</td>
-                  <td>3.85GB</td>
-                </tr>
-                <tr>
-                  <td>Consecutive</td>
-                  <td>0.10</td>
-                  <td>4m 40s</td>
-                  <td>1.88GB</td>
-                  <td>3.85GB</td>
-                </tr>
-                <tr>
-                  <td>Augement</td>
-                  <td>2.67</td>
-                  <td>0m 45s</td>
-                  <td>0.20GB</td>
-                  <td>0.85GB</td>
-                </tr>
 
-              </tbody>
-            </table>
 
 
           <div class="half-spacer"></div>  
-          <li>Result Analysis</li>
+          <li>Result&hairsp; Analysis</li>
             <p> &nbsp; 두 가지 과제에서 모두 Generative Training은 성능과 효율성 측면에서 가장 낮은 결과를 보이며, 효용성이 매우 떨어짐을 확인할 수 있습니다.
               Transformer의 학습에서 Generative Training이 얼마나 비효율적인지 직접 확인할 수 있었습니다. 
             </p>
