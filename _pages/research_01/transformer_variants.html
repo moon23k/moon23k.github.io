@@ -111,596 +111,61 @@ permalink: /transformer_variants
 
 
 
-<!-- Code Implementation -->
-    <h2 id="3">&hairsp; 3.&hairsp; Code Implementation</h2>
+<!-- Architecture -->
+    <h2 id="3">&hairsp; 3.&hairsp; Architecture</h2>
     <div class="chapter-box">
       <div class="list-container">
         <ul>
-          <li>Standard&haisp; Transformer
+          <li>Standard Transformer
             <ul>
               <li>트랜스포머는 어텐션 메커니즘을 활용한 신경망 구조로, 장거리 종속성을 효과적으로 다루고 병렬 처리를 가능케 함</li>
               <li>인코더와 디코더로 이루어져 텍스트 처리에 적합하며, 특히 self-attention과 포지션 임베딩을 통해 문장의 의미와 순서 정보를 효과적으로 학습해 자연어 처리에서 혁신적인 성과를 보임</li>
               <li>기존 순환 신경망 대비 훨씬 높은 성능과 학습 효율성을 제공하며, 대규모 데이터셋에서 활용되는 강력한 모델</li>
             </ul>
           </li>
-            <div class="code-container">
-              <div class="code-snippet">
-                <pre><code class="python">class StandardEncoder(nn.Module):
-    def __init__(self, config):
-        super(StandardEncoder, self).__init__()
 
-        layer = nn.TransformerEncoderLayer(
-            d_model=config.hidden_dim,
-            nhead=config.n_heads,
-            dim_feedforward=config.pff_dim,
-            dropout=config.dropout_ratio,
-            activation='gelu',
-            batch_first=True
-        )
-
-        self.embeddings = Embeddings(config)
-        self.layers = clones(layer, config.n_layers)
-
-
-    def forward(self, x, e_mask):
-        x = self.embeddings(x)
-        for layer in self.layers:
-            x = layer(x, src_key_padding_mask=e_mask)
-        return x
-
-
-
-class StandardDecoder(nn.Module):
-    def __init__(self, config):
-        super(StandardDecoder, self).__init__()
-
-        layer = nn.TransformerDecoderLayer(
-            d_model=config.hidden_dim,
-            nhead=config.n_heads,
-            dim_feedforward=config.pff_dim,
-            dropout=config.dropout_ratio,
-            activation='gelu',
-            batch_first=True
-        )
-
-        self.embeddings = Embeddings(config)
-        self.layers = clones(layer, config.n_layers)
-
-
-    def forward(self, x, memory, e_mask, d_mask):
-
-        x = self.embeddings(x)
-        for layer in self.layers:
-            x = layer(
-                x, memory, 
-                memory_key_padding_mask=e_mask,
-                tgt_mask=d_mask,
-            )
-
-        return x
-
-
-
-class StandardTransformer(nn.Module):
-    def __init__(self, config):
-        super(StandardTransformer, self).__init__()
-        
-        self.pad_id = config.pad_id
-        self.device = config.device
-        self.vocab_size = config.vocab_size
-        
-        self.encoder = StandardEncoder(config)
-        self.decoder = StandardDecoder(config)
-        self.generator = nn.Linear(config.hidden_dim, config.vocab_size)
-        
-
-    def pad_mask(self, x):
-        return x == self.pad_id
-
-    def dec_mask(self, x):
-        sz = x.size(1)
-        mask = None
-        return mask.to(self.device)
-        
-        
-    def forward(self, x, y):
-
-        #Masking
-        e_mask = self.pad_mask(x)
-        d_mask = self.dec_mask(y)
-        
-        #Actual Processing
-        memory = self.encoder(x, e_mask)
-        dec_out = self.decoder(y, memory, e_mask, d_mask)
-        
-        return self.generator(dec_out)</code></pre>
-              </div>
-            </div>
 
           <div class="spacer"></div>
-          <li>Recurrent&haisp; Transformer
+          <li>Recurrent Transformer
             <ul>
               <li>트랜스포머의 인코더는 입력 시퀀스의 단어들을 임베딩하고, 다중 헤드 어텐션과 피드포워드 신경망을 통해 정보를 추상화. 각 인코더 레이어는 잔여 연결과 층 정규화를 활용하여 안정성을 유지하며, 입력 문장의 특징을 계층적으로 추출</li>
               <li>디코더는 인코더의 출력을 기반으로 출력 시퀀스를 생성. 각 디코더 레이어는 다중 헤드 어텐션을 사용하여 인코더의 출력과 현재까지의 디코더 입력에 대한 어텐션을 계산하고, 피드포워드 신경망을 통해 출력을 생성. 잔여 연결과 층 정규화는 안정성을 제공하며 디코딩 과정을 안정화.</li>
               <li>인코더와 디코더는 각각의 레이어를 통해 상호작용하며, 어텐션 메커니즘을 활용해 입력 문장의 문맥 정보를 고려하고 출력 문장을 생성. 트랜스포머의 인코더-디코더 구조는 기존의 번역 모델보다 효과적인 학습과 예측을 가능케 함.</li>
             </ul>
           </li>
-            <div class="code-container">
-              <div class="code-snippet">
-                <pre><code class="python">def generate_signal(length, channels, min_timescale=1.0, max_timescale=1.0e4):
-    position = np.arange(length)
-    num_timescales = channels // 2
-    log_timescale_increment = ( math.log(float(max_timescale) / float(min_timescale)) / (float(num_timescales) - 1))
-    inv_timescales = min_timescale * np.exp(np.arange(num_timescales).astype(np.float) * -log_timescale_increment)
-    scaled_time = np.expand_dims(position, 1) * np.expand_dims(inv_timescales, 0)
-
-    signal = np.concatenate([np.sin(scaled_time), np.cos(scaled_time)], axis=1)
-    signal = np.pad(signal, [[0, 0], [0, channels % 2]], 'constant', constant_values=[0.0, 0.0])
-    signal =  signal.reshape([1, length, channels])
-
-    return torch.from_numpy(signal).type(torch.FloatTensor)
-
-
-
-
-class RecurrentEncoder(nn.Module):
-    def __init__(self, config):
-        super(RecurrentEncoder, self).__init__()    
-
-        self.n_layers = config.n_layers
-        self.norm = nn.LayerNorm(config.hidden_dim)
-        self.embedding = nn.Embedding(config.emb_dim)
-        
-        self.time_signal = generate_signal(
-            512, config.hidden_dim
-        ).to(config.device)
-
-        self.pos_signal = generate_signal(
-            config.n_layers, config.hidden_dim
-        ).to(config.device)
-        
-
-        self.layer = nn.TransformerEncoderLayer(
-            d_model=config.hidden_dim,
-            nhead=config.n_heads,
-            dim_feedforward=config.pff_dim,
-            dropout=config.dropout_ratio,
-            batch_first=True
-        )
-        
-
-    def forward(self, x, e_mask):
-        x = self.embedding(x)
-        seq_len = x.size(1)
-
-        for l in range(self.n_layers):
-            x += self.time_signal[:, :seq_len, :]
-            x += self.pos_signal[:, l, :].unsqueeze(1).repeat(1, seq_len, 1)
-            x = self.layer(x, src_key_padding_mask=e_mask)
-        
-        return self.norm(x)
-
-
-
-
-class RecurrentDecoder(nn.Module):
-    def __init__(self, config):
-        super(RecurrentDecoder, self).__init__()    
-
-        self.n_layers = config.n_layers
-        self.norm = nn.LayerNorm(config.hidden_dim)
-        self.embedding = nn.Embedding(config.emb_dim)
-        
-        self.time_signal = generate_signal(
-            512, config.hidden_dim
-        ).to(config.device)
-        
-        self.pos_signal = generate_signal(
-            config.n_layers, config.hidden_dim
-        ).to(config.device)
-
-        self.layer = nn.TransformerDecoderLayer(
-            d_model=config.hidden_dim,
-            nhead=config.n_heads,
-            dim_feedforward=config.pff_dim,
-            dropout=config.dropout_ratio,
-            batch_first=True
-        )
-
-
-
-    def forward(self, x, m, e_mask, d_mask):
-        x = self.embedding(x)
-        seq_len = x.size(1)
-
-        for l in range(self.n_layers):
-            x += self.time_signal[:, :seq_len, :]
-            x += self.pos_signal[:, l, :].unsqueeze(1).repeat(1, seq_len, 1)
-            x = self.layer(
-                tgt=x, memory=m,
-                memory_key_padding_mask=e_mask, 
-                tgt_mask=d_mask
-            )
-
-        return self.norm(x)
-
-
-
-
-class RecurrentTransformer(nn.Module):
-    def __init__(self, config):
-        super(RecurrentTransformer, self).__init__()
-        
-        self.pad_id = config.pad_id
-        self.device = config.device
-        self.vocab_size = config.vocab_size
-        
-        self.encoder = RecurrentEncoder(config)
-        self.decoder = RecurrentDecoder(config)
-        self.generator = nn.Linear(config.hidden_dim, config.vocab_size)
-
-
-    def pad_mask(self, x):
-        return x == self.pad_mask
-
-
-    def dec_mask(self, x):
-        return
-
-        
-    def forward(self, x, y):
-        e_mask = self.pad_mask(x)
-        d_mask = self.dec_mask(y)
-        
-        memory = self.encoder(x, e_mask)
-        dec_out = self.decoder(y, memory, e_mask, d_mask)
-        
-        return self.generator(dec_out)</code></pre>
-              </div>
-            </div>
 
 
           <div class="spacer"></div>
-          <li>Evolved&haisp; Transformer
+          <li>Evolved Transformer
+            <ul>
+              <li>트랜스포머의 핵심 구성 요소로, 여러 어텐션 헤드를 병렬로 활용하여 다양한 어텐션 가중치를 학습</li>
+              <li>각 헤드는 서로 다른 관점에서 정보를 추출하며, 그 결과를 결합하여 모델이 다양한 특징을 효과적으로 학습하도록 유도</li>
+              <li>Attention Score 산출을 위해 Scaled Dot Attention 방식을 사용</li>
+              <li>모델의 복잡성으로 인해, 과적합 문제가 발생</li>
+              <li>과적합 방지를 위해 데이터 증강, 하이퍼 파라미터 조정을 했으나, 과적합 방지 실패</li>
+            </ul>
+          </li>
+
+          <div class="spacer"></div>
+          <li>Recurrent Hybrid Transformer
+            <ul>
+              <li>트랜스포머의 인코더는 입력 시퀀스의 단어들을 임베딩하고, 다중 헤드 어텐션과 피드포워드 신경망을 통해 정보를 추상화. 각 인코더 레이어는 잔여 연결과 층 정규화를 활용하여 안정성을 유지하며, 입력 문장의 특징을 계층적으로 추출</li>
+              <li>디코더는 인코더의 출력을 기반으로 출력 시퀀스를 생성. 각 디코더 레이어는 다중 헤드 어텐션을 사용하여 인코더의 출력과 현재까지의 디코더 입력에 대한 어텐션을 계산하고, 피드포워드 신경망을 통해 출력을 생성. 잔여 연결과 층 정규화는 안정성을 제공하며 디코딩 과정을 안정화.</li>
+              <li>인코더와 디코더는 각각의 레이어를 통해 상호작용하며, 어텐션 메커니즘을 활용해 입력 문장의 문맥 정보를 고려하고 출력 문장을 생성. 트랜스포머의 인코더-디코더 구조는 기존의 번역 모델보다 효과적인 학습과 예측을 가능케 함.</li>
+            </ul>
+          </li>
+
+
+          <div class="spacer"></div>
+          <li>Evolved Hybrid Transformer
             <ul>
               <li>트랜스포머의 핵심 구성 요소로, 여러 어텐션 헤드를 병렬로 활용하여 다양한 어텐션 가중치를 학습</li>
               <li>각 헤드는 서로 다른 관점에서 정보를 추출하며, 그 결과를 결합하여 모델이 다양한 특징을 효과적으로 학습하도록 유도</li>
               <li>Attention Score 산출을 위해 Scaled Dot Attention 방식을 사용</li>
             </ul>
           </li>
-            <div class="code-container">
-              <div class="code-snippet">
-                <pre><code class="python">class GatedConvolution(nn.Module):
-    def __init__(self, hidden_dim, kernel_size=3, padding=1):
-        super(GatedConvolution,self).__init__()
-        
-        self.conv = nn.Conv1d(
-            in_channels=hidden_dim, 
-            out_channels=hidden_dim * 2,
-            kernel_size=kernel_size, 
-            padding=padding, bias=True
-        )
 
-        init.xavier_uniform_(self.conv.weight, gain=1)
-
-    def forward(self,x):
-        convoluted = self.conv(x.transpose(1,2)).transpose(1,2)
-        out, gate = convoluted.split(int(convoluted.size(-1) / 2), -1)
-        out = out * torch.sigmoid(gate)
-        return out
-
-
-
-class SeparableConv1D(nn.Module):
-    def __init__(self, in_channels, out_channels, kernel_size):
-        super(SeparableConv1D, self).__init__()
-
-        self.depth_wise = nn.Conv1d(
-            in_channels=in_channels,
-            out_channels=in_channels,
-            kernel_size=kernel_size,
-            padding="same",
-            groups=in_channels
-        )
-        
-        self.point_wise = nn.Conv1d(
-            in_channels=in_channels,
-            out_channels=out_channels,
-            kernel_size=1
-        )
-
-    def forward(self, x):
-        out = self.depth_wise(x)
-        out = self.point_wise(out)
-        return out
-
-
-
-
-class EncoderCell(nn.Module):
-    def __init__(self, config):
-        super(EncoderCell, self).__init__()
-
-        self.pad_id = config.pad_id
-        self.glu = GatedConvolution(config.hidden_dim)
-        
-        self.attention = nn.MultiheadAttention(
-            config.hidden_dim, config.n_heads, batch_first=True
-        )
-
-        self.mid_layer_norm = nn.LayerNorm(config.pff_dim)
-        self.layer_norms = nn.ModuleList([nn.LayerNorm(config.hidden_dim) for _ in range(4)])
-
-        self.left_net = nn.Sequential(
-            nn.Linear(config.hidden_dim, config.pff_dim),
-            nn.ReLU(),
-            nn.Dropout(config.dropout_ratio)
-        )
-
-        self.right_net = nn.Sequential(
-            nn.Conv1d(in_channels=config.hidden_dim, 
-                      out_channels=config.hidden_dim//2, 
-                      kernel_size=3, padding=1),
-            nn.ReLU(),
-            nn.Dropout(config.dropout_ratio)
-        )
-
-        self.sep_conv = SeparableConv1D(
-            config.pff_dim, config.hidden_dim // 2, 9
-        )
-
-        self.pff = nn.Sequential(
-            nn.Linear(config.hidden_dim, config.pff_dim),
-            nn.SiLU(),
-            nn.Linear(config.pff_dim, config.hidden_dim)
-        )
-
-
-    def forward(self, x, e_mask):
-        ### Block_01
-        B01_out = self.glu(self.layer_norms[0](x)) #Dim:512
-
-
-        ### Block_02
-        B02_normed = self.layer_norms[1](B01_out)        
-
-        left_out = self.left_net(B02_normed)
-        right_out = self.right_net(B02_normed.transpose(1, 2)).transpose(1, 2)
-
-        right_out = F.pad(
-            input=right_out, 
-            pad=(0, left_out.size(-1) - right_out.size(-1), 0,0,0,0), 
-            mode='constant', value=self.pad_id
-        ) #Dim:2048          
-
-        B02_out = left_out + right_out
-
-
-        ### Block_03
-        B03_out = self.mid_layer_norm(B02_out)
-        
-        B03_out = self.sep_conv(
-            B03_out.transpose(1, 2)
-        ).transpose(1, 2) #Dim:256
-        
-        B03_out = F.pad(
-            input=B03_out,
-            pad=(0, B01_out.size(-1) - B03_out.size(-1), 0, 0, 0, 0),
-            mode='constant', value=self.pad_id
-        )
-        
-        B03_out += B01_out #Dim:512
-
-
-        ### Block_04
-        B04_out = self.layer_norms[2](B03_out)
-        
-        attention_out = self.attention(
-            B04_out, B04_out, B04_out,
-            key_padding_mask = e_mask,
-            need_weights=False
-        )[0]
-        
-        B04_out += attention_out #Dim:512
-
-
-        ### Block_05 & 06
-        out = self.layer_norms[3](B04_out)
-        out = self.pff(out) + B04_out #Dim:512
-        return out 
-
-
-
-class DecoderCell(nn.Module):
-    def __init__(self, config):
-        super(DecoderCell, self).__init__()
-        
-        self.pad_id = config.pad_id
-        self.dropout = nn.Dropout(config.dropout_ratio)
-
-        self.attention = nn.MultiheadAttention(
-            config.hidden_dim, config.n_heads
-        )
-
-        self.mid_layer_norm = nn.LayerNorm(config.hidden_dim * 2)
-        
-        self.layer_norms = nn.ModuleList(
-            [nn.LayerNorm(config.hidden_dim) for _ in range(5)]
-        )        
-
-        self.left_attn = nn.MultiheadAttention(
-            config.hidden_dim, config.n_heads * 2, batch_first=True
-        )
-
-        self.right_attn = nn.MultiheadAttention(
-            config.hidden_dim, config.n_heads, batch_first=True
-        )
-
-        self.left_net = nn.Sequential(
-            SeparableConv1D(config.hidden_dim, config.hidden_dim * 2, 11), 
-            nn.ReLU()
-        )
-        
-        self.right_net = SeparableConv1D(
-            config.hidden_dim, config.hidden_dim // 2, 7
-        )
-        
-        self.sep_conv = SeparableConv1D(
-            config.hidden_dim * 2, config.hidden_dim, 7
-        )
-
-
-        self.self_attn = nn.MultiheadAttention(
-            config.hidden_dim, config.n_heads * 2, batch_first=True
-        )
-
-        self.src_attn = nn.MultiheadAttention(
-            config.hidden_dim, config.n_heads, batch_first=True
-        )
-
-        self.pff = nn.Sequential(
-            nn.Linear(config.hidden_dim, config.pff_dim),
-            nn.ReLU(),
-            nn.Linear(config.pff_dim, config.hidden_dim)
-        )
-
-
-    def forward(self, x, memory, e_mask, d_mask):
-
-        ### Block_01
-        B01_out = self.layer_norms[0](x)
-
-        left_out = self.left_attn(
-            B01_out, B01_out, B01_out,
-            attn_mask=d_mask,
-            need_weights=False
-        )[0]
-
-        right_out = self.right_attn(
-            B01_out, B01_out, B01_out,
-            attn_mask=d_mask,
-            need_weights=False
-        )[0]
-
-        B01_out = left_out + right_out
-
-
-        ### Block_02
-        B02_out = self.layer_norms[1](B01_out)
-        left_out = self.left_net(B02_out.transpose(1, 2)).transpose(1, 2)
-        right_out = self.right_net(B02_out.transpose(1, 2)).transpose(1, 2)
-
-        right_out = F.pad(
-            input=right_out, 
-            pad=(0, left_out.size(-1) - right_out.size(-1), 0,0,0,0), 
-            mode='constant', value=self.pad_id
-        ) #Dim:1024
-                             
-        B02_out = left_out + right_out #Dim: 1024
-
-        ### Block_03
-        B03_out = self.mid_layer_norm(B02_out)
-        B03_out = self.sep_conv(B03_out.transpose(1, 2)).transpose(1, 2)
-        B03_out += B01_out
-
-
-        ### Block_04
-        B04_out = self.layer_norms[2](B03_out)
-        
-        B04_out = self.self_attn(
-            B04_out, B04_out, B04_out,
-            attn_mask=d_mask,
-            need_weights=False
-        )[0]
-
-        B04_out += B03_out
-
-
-        ### Block_05
-        B05_out = self.layer_norms[3](B04_out)
-        
-        B05_out = self.src_attn(
-            B05_out, memory, memory,
-            key_padding_mask=e_mask,
-            need_weights=False
-        )[0]
-
-        B05_out += B04_out        
-
-
-        ### Block_06 & Block_07
-        out = self.layer_norms[4](B05_out)
-        out = self.pff(out) + B05_out #Dim:512
-
-        return out
-
-
-
-class EvolvedEncoder(nn.Module):
-    def __init__(self, config):
-        super(EvolvedEncoder, self).__init__()
-
-        self.embeddings = Embeddings(config)
-        self.cells = clones(EncoderCell(config), config.n_layers//2)
-
-
-    def forward(self, x, e_mask):
-        x = self.embeddings(x)
-        for cell in self.cells:
-            x = cell(x, src_key_padding_mask=e_mask)
-        return x
-
-
-
-class EvolvedDecoder(nn.Module):
-    def __init__(self, config):
-        super(EvolvedDecoder, self).__init__()
-
-        self.embeddings = Embeddings(config)
-        self.cells = clones(DecoderCell(config), config.n_layers//2)
-
-
-    def forward(self, x, memory, e_mask, d_mask):
-        x = self.embeddings(x)
-        for cell in self.cells:
-            x = cell(x, memory, e_mask, d_mask)
-
-        return x
-
-
-class EvolvedTransformer(nn.Module):
-    def __init__(self, config):
-        super(EvolvedTransformer, self).__init__()
-        
-        self.pad_id = config.pad_id
-        self.device = config.device
-        self.vocab_size = config.vocab_size
-
-        self.encoder = EvolvedEncoder(config) 
-        self.decoder = EvolvedDecoder(config)
-        self.generator = nn.Linear(config.hidden_dim, config.vocab_size)
-
-
-    def pad_mask(self, x):
-        return x == self.pad_mask        
-
-
-    def dec_mask(self, x):
-        sz = x.size(1)
-        mask = None
-        return mask.to(self.device)
-
-
-    def forward(self, x, y):
-        e_mask = self.pad_mask(x)
-        d_mask = self.dec_mask(y)
-
-        memory = self.encoder(x, e_mask)
-        dec_out = self.decoder(y, memory, e_mask, d_mask)
-
-        return self.generator(dec_out)</code></pre>
-              </div>
-            </div>          
+          
         </ul>    
       </div>                
     </div>
@@ -743,6 +208,7 @@ class EvolvedTransformer(nn.Module):
               </ul>
               <ul>
                 <li><b>Optimizer</b>: &nbsp; AdamW</li>
+                <li><b>Apply AMD</b>: &nbsp; True</li>
                 <li><b>Gradient Accumulation Steps</b>: &nbsp; 4
                 <li><b>Early Stop Patience</b>: &nbsp; 3</li>                
               </ul>
@@ -756,7 +222,7 @@ class EvolvedTransformer(nn.Module):
               <ul>
                 <li><b>Input Dim</b>: &nbsp; 15,000</li>
                 <li><b>Output Dim</b>: &nbsp; 15,000</li>
-                <li><b>Embedding Dim</b>: &nbsp; 512</li>
+                <li><b>Embedding Dim</b>: &nbsp; 256</li>
               </ul>
               <ul>
                 <li><b>Hidden Dim</b>: &nbsp; 256</li>
@@ -775,21 +241,30 @@ class EvolvedTransformer(nn.Module):
               </thead>
               <tbody>
                 <tr>
-                  <td>Standard Model</td>
+                  <td><b>Standard Model</b></td>
                   <td>7.91</td>
                   <td>2m 41s</td>
                 </tr>
                 <tr>
-                  <td>Recurrent Model</td>
+                  <td><b>Recurrent Model</b></td>
                   <td>0.52</td>
                   <td>2m 40s</td>
                 </tr>
                 <tr>
-                  <td>Evolved Model</td>
+                  <td><b>Evolved Model</b></td>
                   <td>0.00</td>
                   <td>1m 51s</td>
                 </tr>
-
+                <tr>
+                  <td><b>Recurrent Hybrid Model</b></td>
+                  <td>0.52</td>
+                  <td>2m 40s</td>
+                </tr>
+                <tr>
+                  <td><b>Evolved Hybrid Model</b></td>
+                  <td>0.00</td>
+                  <td>1m 51s</td>
+                </tr>
             </tbody>
           </table>          
         

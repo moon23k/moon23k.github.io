@@ -5,16 +5,14 @@ permalink: /baselines
 
 
 <div id="detail">
-  <h1 class="title">NLG&hairsp; Baseline&hairsp; Architectures</h1>  
+  <h1 class="title">The&hairsp; Baselines</h1>  
   <div class="post">
 
     <hr>
     <div class="callout">
       <p class="highlighted-text"><span>Project Objective</span></p>
       <div class="small-spacer"></div>
-      <p>&nbsp; 이 프로젝트에서는 현재 딥러닝 모델링의 가장 유명한 모델인 Transformer를 처음부터 끝까지 구현하고, 직접 구현한 Scratch Model을 Pytorch 라이브러리에서 제공하는 Transformer 모델과 성능 처리를 비교하며, 코드 구현의 이해도 증진을 목표로 합니다. 뿐만 아니라, 자연어 생성 과제에서 Transformer Seq2Seq 모델의 성능을 직접 확인하며 Transformer의 성능 기준을 확립합니다. 
-      성능 검증을 위해 기계번역, 대화생성, 문서요약이라는 세가지 과제를 선정했으며, 실험 결과 Torch Model이 Scratch Model 대비 효율성과 성능 측면 모두에서 더 나은 성과를 보였습니다. 
-      이는 Multi Head Attention을 구현하는 과정에서 고도화의 문제에서 기인한 차이점으로 판단되며, 실제 Scratch Model에 Pytorch의 MultiHead Attention 클래스를 사용하면, Torch모델과 거의 동일한 성능및 효율성이 나온다는 사실에서 유추 가능합니다.
+      <p>&nbsp; 이 프로젝트는 세 가지 기초 자연어 생성 딥러닝 모델 아키텍처인 <b>RNN Seq2Seq</b>, <b>RNN Seq2Seq with Attention</b>, 그리고 <b>Transformer</b>의 자연어 생성 능력을 <b>기계 번역</b>, <b>대화 생성</b>, <b>문서 요약</b>이라는 세 가지 주요 과제에서 면밀하게 비교 분석합니다. 이 프로젝트를 통해 순환신경망, 어텐션, 트랜스포머로 이어지는 딥러닝 모델 아키텍처의 발전 과정이 자연어 생성 능력에 미치는 영향력을 확인하고, 추후 고도화된 모델 및 학습 방법론에 따른 성능 개선 여부를 판단하기 위한 기준점을 확립합니다. 전체 실험의 구현 코드는 <a class="linked-text" href="https://github.com/moon23k/Baselines.git">https://github.com/moon23k/Baselines.git</a>에서 확인할 수 있습니다
       </p>
     </div>
 
@@ -30,7 +28,7 @@ permalink: /baselines
         </li>
 
         <li>
-          <a href="#3">3. &hairsp; Architectures</a>
+          <a href="#3">3. &hairsp; Architecture</a>
         </li>
 
         <li>
@@ -60,35 +58,22 @@ permalink: /baselines
 
       <div class="list-container">
         <ul>
-          <li>Description</li>
-            <p> &nbsp; 앞선 프로젝트에서는 RNN을 기반으로한 Sequence to Sequence 모델 구조의 효용성에 대해 면밀히 살펴봤습니다. 하지만 RNN 네트워크는 장기기억력이라는 관점에서 고질적인 문제점을 태생적으로 지니고 있으며, 이를 해결하기 위한 Attention 메커니즘의 활용 역시 기대만큼 좋은 성능을 보이지는 못했습니다. Transformer는 어텐션 메커니즘 만으로 문맥 전체적인 내용을 포착하는 뛰어난 성능과 더불어 병렬처리로 인한 학습의 효율성까지 제고시킨 뛰어난 모델 구조입니다. <br>
-
-            Transformer는 Attention Mechanism만으로 획기적인 성능 향상과 더불어 효율성 역시 증진시킨 모델입니다.
-            현재 활용되는 대부분의 좋은 성능의 모델들은 Transformer를 바탕으로 하고 있으며, 특히 NLP에서는 더욱 그러합니다.
-            <br>
-            이 프로젝트에서는 Transformer라는 우수한 모델에 대한 이해도를 증진시키기 위해 직접 Transformer를 구현하고, 이를 Pytorch에서 제공하는 Transformer 모델과 비교하며, 구현이 제대로 되었는지, 그리고 어떠한 차이가 있는지를 확인합니다. <br>
-
-
-            Transformer는 이전의 모델들과 달리 다양한 모듈의 조합으로 이루어진 복잡한 형태로 설계되었습니다.
-            그리고 너무나도 기본적인 모델구조로 자리매김하면서, 코드 레퍼런스들은 매우 많지만, 각 구현방식에 따른 성능적 차이점에 대한 연구는 부재합니다.
-            때문에 이 프로젝트에서는 총 네가지 코드적 구현방식에 집중
-
-            </p>
+          <li>배경</li>
+          <p>자연어 생성을 위한 가장 기초적인 모델 구조인 RNN Seq2Seq, RNN Seq2Seq with Attention, Transformer를 기반으로 한 다양한 연구들이 존재하지만, 세 가지 모델의 자연어 생성 능력 발전을 다양한 자연어 생성 과제에서 비교 분석한 연구는 상대적으로 부족합니다. 특히 일반적인 컴퓨팅 환경과, 접근 가능한 양의 데이터를 기반으로 한 비교 분석은 더더욱 부족합니다. 이 프로젝트에서는 이러한 문제점을 직접 모델을 구현하고, 실험하고, 정리하며 해결합니다.
+          </p>
 
           <div class="spacer"></div>
-          <li>Objective
-            <div class="small-spacer"></div>
-            <ul>
-              <li style="font-weight: normal;">Transformer의 모든 모듈을 직접 구현하며, Transformer 모델에 대한 코드적 이해도 증진</li>
-              <li style="font-weight: normal;">다양한 구현 방식에 따른 Transformer의 성능 차이 직접 확인</li>
-              <li style="font-weight: normal;">Transformer의 자연어 생성 능력 측정을 통해 Transformer BaseLine 확립</li>
-              <li style="font-weight: normal;">코드 구현시 성능 변화를 야기하는 변인 탐색</li>
-            </ul>
-          </li>
+          <li>목적</li>
+          <p>RNN Seq2Seq, RNN Seq2Seq with Attention, Transformer 모델의 자연어 생성 능력을 기반으로 한 장단점 및 특성을 파악할 수 있습니다.
+          </p>
+
+          <div class="spacer"></div>
+          <li>기여 및 기대 효과</li>
+          <p>RNN Seq2Seq, RNN Seq2Seq with Attention, Transformer 모델의 자연어 생성 능력을 기반으로 한 장단점 및 특성을 파악할 수 있습니다.
+          </p>
 
         </ul>
       </div>
-
     </div>
 
 
@@ -99,7 +84,7 @@ permalink: /baselines
       <div class="list-container">
         <ul>
 
-          <li>Natural Language Generation
+          <li>Natural Language Generation Deep Learning Model
             <ul>
               <li>자연어 생성 기술의 중요성: 자연어 처리 분야에서 자연어 생성 기술은 매우 중요한 역할을 합니다. 이는 챗봇, 기계 번역, 자동 요약, 문서 생성 등 다양한 응용 분야에 활용됩니다.</li>
               <li>업무 및 학문적인 영역에서의 활용: 자연어 생성 기술은 비즈니스 커뮤니케이션, 교육, 의료, 기계 학습 등의 분야에서 다양한 영역에 적용되고 있습니다.</li>
@@ -108,7 +93,7 @@ permalink: /baselines
           </li>
 
           <div class="spacer"></div>
-          <li>Need for Performance Benchmarks
+          <li>Need for Benchmarks
             <ul>
               <li>대부분의 연구 논문에서는 가능한 큰 자원을 사용한, 최선의 결과를 보여주곤합니다. 하지만 일반적인 이용자의 경우, 한정된 자원에서 다양한 과제에 활용하길 원합니다.</li>
               <li>성능 기준점의 필요성: 자연어 생성 모델의 성능을 평가하기 위해서는 표준적인 벤치마크 및 성능 지표가 필요합니다. 이를 통해 다양한 모델을 비교하고, 연구의 진전을 추적할 수 있습니다.</li>
@@ -133,461 +118,21 @@ permalink: /baselines
           <li>RNN Sequence to Sequence</li>
           <p> &nbsp; 가장 기본적인 구현 모델로, 코드 구현 역시 연산 과정을 직관적으로 반영하고 있는 방식으로 구현된 모델입니다. MultiHeadAttention을 포함한 대부분의 Transformer 컴포넌트를 구현한 모델입니다.
           </p>
-          <div class="small-spacer"></div>
-            <div class="code-container">
-              <div class="code-snippet">
-                <pre><code class="python">class MultiHeadAttention(nn.Module):
-    def __init__(self, config):
-        super().__init__()
-
-        hidden_dim = config.hidden_dim
-        self.n_heads = config.n_heads
-
-        assert hidden_dim // self.n_heads
-        self.head_dim = hidden_dim // self.n_heads
-        
-        self.dropout = nn.Dropout(config.dropout_ratio)
-        self.linears = clones(nn.Linear(hidden_dim, hidden_dim), 4)
-        self.scale = torch.sqrt(torch.FloatTensor([self.head_dim])).to(config.device)
-
-
-    def forward(self, query, key, value, mask = None):
-
-        orig_shape = list(query.shape)
-        split_shape = [query.size(0), -1, self.n_heads, self.head_dim]
-
-        Q, K, V = [lin(x).view(split_shape).transpose(1, 2) \
-                   for lin, x in zip(self.linears, (query, key, value))]   
-
-        score = torch.matmul(Q, K.permute(0, 1, 3, 2)) / self.scale
-
-        if mask is not None:
-            score = score.masked_fill(mask==0, -1e10)
-
-        attention = torch.softmax(score, dim=-1)
-
-        x = torch.matmul(self.dropout(attention), V)
-        
-        x = x.permute(0, 2, 1, 3).contiguous()
-        x = x.view(orig_shape)
-
-        del Q, K, V
-
-        return self.linears[-1](x)
-
-
-
-class PositionwiseFeedForward(nn.Module):
-    def __init__(self, config):
-        super().__init__()
-
-        self.fc_1 = nn.Linear(config.hidden_dim, config.pff_dim)
-        self.fc_2 = nn.Linear(config.pff_dim, config.hidden_dim)
-        self.dropout = nn.Dropout(config.dropout_ratio)
-
-
-    def forward(self, x):
-        x = self.dropout(F.gelu(self.fc_1(x)))
-        return self.fc_2(x)        
-
-
-
-class EncoderLayer(nn.Module):
-    def __init__(self, config):
-        super().__init__()
-
-        self.self_attn = MultiHeadAttention(config)
-        self.pff = PositionwiseFeedForward(config)
-
-        hidden_dim = config.hidden_dim
-        self.self_attn_norm = nn.LayerNorm(hidden_dim)
-        self.pff_norm = nn.LayerNorm(hidden_dim)
-        
-        self.dropout = nn.Dropout(config.dropout_ratio)
-
-
-    def forward(self, x, e_mask):
-        _x = self.self_attn(x, x, x, e_mask)
-        x = self.self_attn_norm(x + self.dropout(_x))
-        _x = self.pff(x)
-        x = self.pff_norm(x + self.dropout(_x))
-
-        return x
-
-
-
-class DecoderLayer(nn.Module):
-    def __init__(self, config):
-        super().__init__()
-
-        self.self_attn = MultiHeadAttention(config)
-        self.enc_attn = MultiHeadAttention(config)
-        self.pff = PositionwiseFeedForward(config)
-
-        hidden_dim = config.hidden_dim
-        self.self_attn_norm = nn.LayerNorm(hidden_dim)
-        self.enc_attn_norm = nn.LayerNorm(hidden_dim)
-        self.pff_norm = nn.LayerNorm(hidden_dim)
-
-        self.dropout = nn.Dropout(config.dropout_ratio)
-
-
-    def forward(self, x, m, e_mask, d_mask):
-
-        _x = self.self_attn(x, x, x, d_mask)
-        x = self.self_attn_norm(x + self.dropout(_x))
-
-        _x = self.enc_attn(x, m, m, e_mask)
-        x = self.enc_attn_norm(x + self.dropout(_x))
-
-        _x = self.pff(x)
-        x = self.pff_norm(x + self.dropout(_x))
-
-        return x
-
-
-
-class Encoder(nn.Module):
-    def __init__(self, config):
-        super().__init__()
-
-        self.device = config.device
-        self.emb = Embeddings(config)
-        self.dropout = nn.Dropout(config.dropout_ratio)
-
-        self.layers = nn.ModuleList(
-            [EncoderLayer(config) for _ in range(config.n_layers)]
-        )
-
-
-    def forward(self, x, e_mask):
-        x = self.emb(x)
-        for layer in self.layers:
-            x = layer(x, e_mask)
-        return x
-
-
-
-class Decoder(nn.Module):
-    def __init__(self, config):
-        super().__init__()
-
-        self.device = config.device
-        self.emb = Embeddings(config)
-        self.dropout = nn.Dropout(config.dropout_ratio)
-
-        self.layers = nn.ModuleList(
-            [DecoderLayer(config) for _ in range(config.n_layers)]
-        )
-
-
-    def forward(self, x, memory, e_mask, d_mask):
-        x = self.emb(x)
-        for layer in self.layers:
-            x = layer(x, memory, e_mask, d_mask)
-        return x
-     
-
-
-class ScratchModel(nn.Module):
-    def __init__(self, config):
-        super(ScratchModel, self).__init__()
-
-        self.pad_id = config.pad_id
-        self.device = config.device
-        self.vocab_size = config.vocab_size
-
-        self.encoder = Encoder(config)
-        self.decoder = Decoder(config)
-        self.generator = nn.Linear(config.hidden_dim, self.vocab_size)
-
-        self.criterion = nn.CrossEntropyLoss()
-        self.out = namedtuple('Out', 'logit loss')
-
-
-    def pad_mask(self, x):
-        return (x != self.pad_id).unsqueeze(1).unsqueeze(2)
-
-
-    def dec_mask(self, x):
-        sz = x.size(1)
-        pad_mask = self.pad_mask(x)
-        sub_mask = torch.tril(torch.ones((sz, sz), device=self.device)).bool()
-        return pad_mask & sub_mask
-
-
-    @staticmethod
-    def shift_y(x):
-        return x[:, :-1], x[:, 1:]
-
-
-    def forward(self, x, y):
-        y, label = self.shift_y(y)
-
-        e_mask = self.pad_mask(x) 
-        d_mask = self.dec_mask(y)
-
-        memory = self.encoder(x, e_mask)
-        dec_out = self.decoder(y, memory, e_mask, d_mask)
-        logit = self.generator(dec_out)
-
-        #Getting Outputs
-        self.out.logit = logit
-        self.out.loss = self.criterion(
-            logit.contiguous().view(-1, self.vocab_size), 
-            label.contiguous().view(-1)
-        )
-        
-        return self.out</code></pre>
-            </div>
-          </div>
 
 
           <div class="spacer"></div>
           <li>RNN Seq2Seq with Attention</li>
           <p> &nbsp; Pytorch 라이브러리에서 제공하는 내부 클래스를 활용해 구현한 모델입니다. Scratch Model과 유사한 모델 구조를 설정하기 위해 nn.Transformer 클래스를 그대로 사용하지 않고, nn.TransformerEncoderLayer와 nn.TransformerDecoderLayer만을 활용해 Scratch Model과 동일한 연산과정을 구현했습니다. 
           </p>
-          <div class="small-spacer"></div>
-            <div class="code-container">
-              <div class="code-snippet">
-                <pre><code class="python">class Encoder(nn.Module):
-    def __init__(self, config):
-        super(Encoder, self).__init__()
-        
-        layer = nn.TransformerEncoderLayer(
-            d_model=config.hidden_dim,
-            nhead=config.n_heads,
-            dim_feedforward=config.pff_dim,
-            dropout=config.dropout_ratio,
-            activation='gelu',
-            batch_first=True
-        )
-
-        self.embeddings = Embeddings(config)
-        self.layers = clones(layer, config.n_layers)
-
-
-    def forward(self, x, e_mask):
-
-        x = self.embeddings(x)
-        
-        for layer in self.layers:
-            x = layer(x, src_key_padding_mask=e_mask)
-        
-        return x
-
-
-
-class Decoder(nn.Module):
-    def __init__(self, config):
-        super(Decoder, self).__init__()
-
-        layer = nn.TransformerDecoderLayer(
-            d_model=config.hidden_dim,
-            nhead=config.n_heads,
-            dim_feedforward=config.pff_dim,
-            dropout=config.dropout_ratio,
-            activation='gelu',
-            batch_first=True
-        )
-
-        self.embeddings = Embeddings(config)
-        self.layers = clones(layer, config.n_layers)
-
-
-    def forward(self, x, memory, e_mask=None, d_mask=None):
-        
-        x = self.embeddings(x)
-        
-        for layer in self.layers:
-            x = layer(
-                x, memory, 
-                memory_key_padding_mask=e_mask,
-                tgt_mask=d_mask,
-            )
-
-        return x
-
-
-
-class TorchModel(nn.Module):
-    def __init__(self, config):
-        super(TorchModel, self).__init__()
-        
-        self.device = config.device
-        self.pad_id = config.pad_id
-        self.vocab_size = config.vocab_size
-
-        self.encoder = Encoder(config)
-        self.decoder = Decoder(config)
-        self.generator = nn.Linear(config.hidden_dim, self.vocab_size)
-
-        self.criterion = nn.CrossEntropyLoss()
-        self.out = namedtuple('Out', 'logit loss')
-
-    
-    def pad_mask(self, x):
-        return x == self.pad_id
-
-
-    @staticmethod    
-    def shift_y(x):
-        return x[:, :-1], x[:, 1:]    
-
-
-    def dec_mask(self, x):
-        sz = x.size(1)
-        return torch.triu(torch.full((sz, sz), float('-inf')), diagonal=1).to(self.device)
-
-
-    def forward(self, x, y):
-        y, label = self.shift_y(y)
-
-        #Masking
-        e_mask = self.pad_mask(x)
-        d_mask = self.dec_mask(y)
-        
-        #Actual Processing
-        memory = self.encoder(x, e_mask)
-        dec_out = self.decoder(y, memory, e_mask, d_mask)
-        logit = self.generator(dec_out)
-        
-        #Getting Outputs
-        self.out.logit = logit
-        self.out.loss = self.criterion(
-            logit.contiguous().view(-1, self.vocab_size), 
-            label.contiguous().view(-1)
-        )
-        
-        return self.out</code></pre>
-            </div>
-          </div>
-
 
           <div class="spacer"></div>
           <li>Transformer</li>
           <p> &nbsp; 앞서 소개한 Scratch Model과 Torch Model의 성능 차이를 주요하게 견인하는 MultiHeadAttention에 집중하여 Scratch Model의 틀안에서 MultiHeadAttention 클래스 만을 Pytorch에서 제공하는 클래스를 사용한 모델입니다. 이와 같이 필요한 부분만을 상속받으며, 
           </p>
-          <div class="small-spacer"></div>
-            <div class="code-container">
-              <div class="code-snippet">
-                <pre><code class="python">class Encoder(nn.Module):
-    def __init__(self, config):
-        super(Encoder, self).__init__()
-        
-        layer = nn.TransformerEncoderLayer(
-            d_model=config.hidden_dim,
-            nhead=config.n_heads,
-            dim_feedforward=config.pff_dim,
-            dropout=config.dropout_ratio,
-            activation='gelu',
-            batch_first=True
-        )
-
-        self.embeddings = Embeddings(config)
-        self.layers = clones(layer, config.n_layers)
-
-
-    def forward(self, x, e_mask):
-
-        x = self.embeddings(x)
-        
-        for layer in self.layers:
-            x = layer(x, src_key_padding_mask=e_mask)
-        
-        return x
-
-
-
-class Decoder(nn.Module):
-    def __init__(self, config):
-        super(Decoder, self).__init__()
-
-        layer = nn.TransformerDecoderLayer(
-            d_model=config.hidden_dim,
-            nhead=config.n_heads,
-            dim_feedforward=config.pff_dim,
-            dropout=config.dropout_ratio,
-            activation='gelu',
-            batch_first=True
-        )
-
-        self.embeddings = Embeddings(config)
-        self.layers = clones(layer, config.n_layers)
-
-
-    def forward(self, x, memory, e_mask=None, d_mask=None):
-        
-        x = self.embeddings(x)
-        
-        for layer in self.layers:
-            x = layer(
-                x, memory, 
-                memory_key_padding_mask=e_mask,
-                tgt_mask=d_mask,
-            )
-
-        return x
-
-
-
-class TorchModel(nn.Module):
-    def __init__(self, config):
-        super(TorchModel, self).__init__()
-        
-        self.device = config.device
-        self.pad_id = config.pad_id
-        self.vocab_size = config.vocab_size
-
-        self.encoder = Encoder(config)
-        self.decoder = Decoder(config)
-        self.generator = nn.Linear(config.hidden_dim, self.vocab_size)
-
-        self.criterion = nn.CrossEntropyLoss()
-        self.out = namedtuple('Out', 'logit loss')
-
-    
-    def pad_mask(self, x):
-        return x == self.pad_id
-
-
-    @staticmethod    
-    def shift_y(x):
-        return x[:, :-1], x[:, 1:]    
-
-
-    def dec_mask(self, x):
-        sz = x.size(1)
-        return torch.triu(torch.full((sz, sz), float('-inf')), diagonal=1).to(self.device)
-
-
-    def forward(self, x, y):
-        y, label = self.shift_y(y)
-
-        #Masking
-        e_mask = self.pad_mask(x)
-        d_mask = self.dec_mask(y)
-        
-        #Actual Processing
-        memory = self.encoder(x, e_mask)
-        dec_out = self.decoder(y, memory, e_mask, d_mask)
-        logit = self.generator(dec_out)
-        
-        #Getting Outputs
-        self.out.logit = logit
-        self.out.loss = self.criterion(
-            logit.contiguous().view(-1, self.vocab_size), 
-            label.contiguous().view(-1)
-        )
-        
-        return self.out</code></pre>
-            </div>
-          </div>
-
 
 
         </div>
-      </div>
+    </div>
 
 
 
@@ -869,10 +414,9 @@ class TorchModel(nn.Module):
 
     <h2 id="7">&hairsp; 7. &hairsp; Reference</h2>
     <div class="chapter-box">
+      <a class="reference" href="https://arxiv.org/abs/1706.03762">&nbsp; Attention Is All You Need</a> <br>         
       <a class="reference" href="https://arxiv.org/abs/1706.03762">&nbsp; Attention Is All You Need</a> <br> 
-      <a class="reference" href="http://nlp.seas.harvard.edu/annotated-transformer/">&nbsp; The Annotated Transformer</a> <br> 
-      <a class="reference" href="https://pytorch.org/docs/stable/generated/torch.nn.Transformer.html">&nbsp; Pytorch Transformer Official Reference</a>
-
+      <a class="reference" href="https://arxiv.org/abs/1706.03762">&nbsp; Attention Is All You Need</a>
     </div>
 
   </div>
@@ -880,6 +424,6 @@ class TorchModel(nn.Module):
 
 
 <div class="pagination">
-  <a href="{{ '/rnn_seq2seq_attn' | relative_url }}" class="btn-prev"><span>RNN Seq2sSeq with Attention</span></a>
+  <a href="{{ '/summarization_sparse' | relative_url }}" class="btn-prev"><span>Sparse Summarization</span></a>
   <a href="{{ '/transformer_balance' | relative_url }}" class="btn-next"><span>Transformer Balance</span></a>
 </div>
