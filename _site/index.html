@@ -53,9 +53,9 @@
   <h2 style="color: #303030; letter-spacing: 2px;">Hi, there!</h2>
   <p>
     &nbsp; 인공지능 기술을 활용한 현실 문제의 해결을 위해 항상 연구하는 머신러닝 엔지니어, 송문기입니다.
-    다양한 인공지능 활용 분야들 중에서 자연어 처리에 초점을 맞추고 있으며, 
-    사람과 자연스럽게 의사소통 가능한 인공지능 모델 개발을 목표로 삼고 있습니다. <br>
-    목표 달성을 위해 다양한 연구 주제를 직접 선정하고 구현하며, 끊임없이 한 발짝씩 목표에 다가가는 중입니다. 이 페이지에서는 목표 달성을 위한 연구 프로젝트들을 주제별로 아래와 같이 정리해두었으며, 각 프로젝트 마다의 상세 및 코드 구현을 확인하실 수 있습니다.
+    다양한 인공지능 활용 분야들 중에서 자연어 처리에 초점을 맞추고 있으며, 실제 사람의 생활속에 도움이 될 수 있는 인공지능 모델 개발을 목표로 삼고 있습니다.<br>
+    목표 달성을 위해 다양한 연구 주제를 직접 선정하고 구현하며, 끊임없이 한 발짝씩 목표에 다가가는 중입니다. 
+    이 페이지에서는 목표 달성을 위한 연구 프로젝트들을 주제별로 아래와 같이 정리해두었으며, 각 프로젝트 마다의 상세 및 코드 구현을 확인하실 수 있습니다.
   </p>
   <div class="btn-block">
     <a href="/resume" class="btn-type-1">Resume</a>
@@ -65,12 +65,12 @@
 </div>
 
 
-<!-- Model Structure -->
+<!-- Model Architecture -->
 <div class="container">
   
   <div class="full-width">
-    <h3>&hairsp; Model&hairsp; Structure</h3>
-    <p>&nbsp; 머신러닝 엔지니어링에서 모델의 구조적 디자인은 성능에 결정적인 영향을 미치는 주요 요소입니다. 특히 인코더와 디코더를 모두 필요로 하는 Sequence to Sequence 구조에서, 모델 디자인의 중요성은 더더욱 강조됩니다. 이 장에서는 가장 기초적인 모델 구조를 통한 자연어 생성 모델의 성능 기준 확립과, 성능 개선을 위한 다양한 모델 디자인에 집중한 프로젝트를 소개합니다. 모든 프로젝트에서는 데이터 및 학습 방식을 고정시킨채, 모델 디자인적인 변화에 따른 성능변화를 파악하는데 집중합니다.
+    <h3>&hairsp; Model&hairsp; Architecture</h3>
+    <p>&nbsp; 머신러닝 엔지니어링에서 모델의 구조적 디자인은 성능에 결정적인 영향을 미치는 주요 요소이며, 특히 인코더와 디코더를 모두 필요로 하는 Sequence to Sequence 구조에서, 모델 디자인의 중요성은 더더욱 강조됩니다. 이 장에서는 다양한 모델 디자인에 집중한 프로젝트를 소개합니다. 모든 프로젝트에서는 데이터 및 학습 방식을 고정한 채, 모델 디자인적인 변화에 따른 성능변화를 파악하는데 집중합니다.
     </p>
   </div>
 
@@ -151,7 +151,7 @@
   <div class="full-width">
     <h3>&hairsp; Training&hairsp; Strategy</h3>
     <p>
-      &nbsp; 앞선 프로젝트들은 모델 디자인을 집중적으로 탐구했습니다. 하지만 동일한 디자인의 딥러닝 모델을 사용할지라도, 학습 방식에 따라 모델의 성능을 제대로 이끌어 낼수도, 그렇지 못할 수도 있습니다. 이번 장에서는 다양한 딥러닝 모델의 학습 방법론을 직접 구현해보고, 각 방법론 마다의 실효성을 비교 검증합니다.
+      &nbsp; 이번 장에서는 모델 구조와 더불어, 머신러닝 엔지니어링의 주요 요소인 학습 방법론에 대해 다룹니다. 동일한 디자인의 모델일지라도, 학습 방식에 따라 성능은 천차만별로 변할 수 있습니다. 특히 자연어 생성과 같이 난이도가 높은 과제의 경우, 일반적인 학습 방식만으로는 원하는 결과를 얻기 어렵습니다. 때문에 이번 장에서는 자연어 생성 능력 향상을 위한 다양한 학습 방법론과 그 결과에 대해 집중적으로 탐구합니다.
     </p>
   </div>
 
@@ -220,33 +220,32 @@
       </ul>
     </div>
   </div>
-
-
 </div>
 
 
 
 
-<!-- Task Specific Projects -->
+
+<!-- Task Specific Experiment -->
 <div class="container">
   
   <div class="full-width">
-    <h3>&hairsp; Task&hairsp; Specific&hairsp; Projects</h3>
-    <p>아래의 프로젝트들은 기계번역, 대화생성, 문서요약이라는 세 가지 대표적 자연어 생성 과제 자체에 초점을 맞추며, 각 과제를 더욱 잘 해결하기 위한 심층 연구를 다룹니다. 아래의 프로젝트들은 새롭게 중요성이 대두되는 과제에 대한 분석 실험과 기존 모델들의 아쉬운 점을 보완하기 위한 연구, 그리고 성능 뿐만 아니라 효율성을 제고 시키기 위한 연구 등 다양한 주제를 포함하고 있습니다.
+    <h3>&hairsp;Task Specific Experiment</h3>
+    <p>
+      &nbsp; 위의 <b>Model Architecture</b> 및 <b>Training Strategy</b>에서는 자연어 생성이라는 전역적인 과제 해결을 위한 모델링 및 학습 방법론에 대해 살펴봤습니다. 이번 장에서는 기계 번역, 대화 생성, 문서 요약이라는 자연어 생성의 세부 과제를 효과적으로 해결하기 위한 과제 집중적 연구 프로젝트를 제시합니다. 
     </p>
   </div>
 
   <div class="parallel">
     <div class='parallel-item'>
-      <h3>Multi-Lingual&hairsp; Translation</h3>
+      <h3>&hairsp;Multi Modal Translation</h3>
       <ul>
         <li>
-          <p> &nbsp; 
-            다언어-단일언어, 단일언어-다언어, 다언어-다언어 번역 모델을 학습 및 평가하며, 세 가지 단언어 번역에 대한 학습 결과를 직접 확인 및 개선 여부 파악
+          <p>&nbsp; 멀티 모달 모델에 대한 수요가 증가하고 있습니다. 대규모 언어 모델의 경우, 이미 멀티 모달을 제공하고 있지만, 좀 더 근원적인 Foundation Model 단에서 Multi Modality 향상을 위한 모델 구조에 대한 연구는 부족합니다. 이를 직접 해결하기 위해 표준 트랜스포머 구조에서 멀티 모달에 효과적인 모델 디자인을 탐구합니다.
           </p>
           <div class="btn-list">
-            <a href="/translation_multilingual" class="btn-type-1">Detail</a>
-            <a href="https://github.com/moon23k/NMT_MultiLingual" class="btn-type-1">Code</a>
+            <a href="/multomodal_translation" class="btn-type-1">Detail</a>
+            <a href="https://github.com/moon23k/GIFT" class="btn-type-1">Code</a>
           </div>
 
         </li>
@@ -254,75 +253,33 @@
     </div>
 
     <div class='parallel-item'>
-      <h3>Code&hairsp; Translation</h3>
+      <h3>Multi Turn Dialogue Generation</h3>
       <ul>
         <li>
-          <p>사람의 자연어와 컴퓨터 프로그래밍 언어 간의 번역을 위한 일련의 실험 및 결과를 통한 인사이트를 공유
+          <p>&nbsp; 일반적으로 사람의 대화는 단발성이 아니라, 여러 발화를 통해 이루어집니다. 이 과정에서 이전 대화 기록에 대한 내용을 반영하는 것이 중요합니다. 이를 위한 모델 구조를 만들고, 그 효용성에 대해 탐구합니다.
           </p>
           <div class="btn-list">
-            <a href="/translation_code" class="btn-type-1">Detail</a>
-            <a href="https://github.com/moon23k/NMT_Code" class="btn-type-1">Code</a>
+            <a href="/multiturn_dialogue" class="btn-type-1">Detail</a>
+            <a href="https://github.com/moon23k/intelligen" class="btn-type-1">Code</a>
           </div>
+
         </li>
       </ul>
     </div>
   </div>
 
 
-  <div class="parallel">
-    <div class='parallel-item'>
-      <h3 style="letter-spacing: 1.2px;">Characteristic&hairsp; Dialogue</h3>
-      <ul>
-        <li>
-          <p>SeqGAN의 기법을 활용해, Pretrained GPT 모델에게 특정 개성을 부여하고, 개성의 학습을 검증
-          </p>
-          <div class="btn-list">
-            <a href="/dialogue_characteristic" class="btn-type-1">Detail</a>
-            <a href="https://github.com/moon23k/Dialog_Char" class="btn-type-1">Code</a>
-          </div>
-
-        </li>
-      </ul>
-    </div>
-
-    <div class='parallel-item'>
-      <h3 style="letter-spacing: 1.2px;">Diverse&hairsp; Dialogue</h3>
-      <ul>
-        <li>
-          <p>대화 다양성을 증진시키기 위한 SemEnt 기법을 직접 구현하고, 실제 대화의 다양성 개선 여부를 검증
-          </p>
-          <div class="btn-list">
-            <a href="/dialogue_diverse" class="btn-type-1">Detail</a>
-            <a href="https://github.com/moon23k/Dialog_SemEnt" class="btn-type-1">Code</a>
-          </div>
-    </div>
-  </div>
 
   <div class="parallel">
-    <div class='parallel-item'>
-      <h3>Hierarchical&hairsp; Summarization</h3>
+    <div class='parallel-item' style="width: 47%">
+      <h3>Efficient&hairsp; Text Summarization</h3>
       <ul>
         <li>
-          <p>긴 입력시퀀스를 잘 이해할 수 있도록 계층적 인코더 모델을 구현하고, 기존 방식의 모델과 요약 성능을 비교
+          <p>&nbsp; 일반적인 Self Attention을 사용하는 표준 트랜스포머 모델에서는 연산 복잡도 O2의 비효율 적인 연산에서 기인한 많은 연산 비용이 발생합니다. 이는 입력 시퀀스의 길이가 긴 문서요약 과제에서 효율성이 매우 떨어지는 문제점을 야기 합니다. 이를 해결하기 위해 Efficient Attention, Block Sparse Attention을 활용한 모델링으로, 효율성 증진을 직접 실험 및 확인해봅니다.
           </p>
           <div class="btn-list">
-            <a href="/summarization_hierarchical" class="btn-type-1">Detail</a>
-            <a href="https://github.com/moon23k/Sum_HierEncoder" class="btn-type-1">Code</a>
-          </div>
-
-        </li>
-      </ul>
-    </div>
-
-    <div class='parallel-item'>
-      <h3 style="letter-spacing: 1.2px;">Sparse&hairsp; Summarization</h3>
-      <ul>
-        <li>
-          <p>Full Attention 연산의 복잡도를 개선시킨 Sparse Attention 기반의 모델을 구현하고, 기존 방식의 모델과 요약 성능을 비교 
-          </p>
-          <div class="btn-list">
-            <a href="/summarization_sparse" class="btn-type-1">Detail</a>
-            <a href="https://github.com/moon23k/Sum_Sparse" class="btn-type-1">Code</a>
+            <a href="/efficient_summarization" class="btn-type-1">Detail</a>
+            <a href="https://github.com/moon23k/CPT" class="btn-type-1">Code</a>
           </div>
 
         </li>
@@ -331,6 +288,74 @@
 
   </div>
 </div>
+
+
+
+
+
+<!-- LLM Framework -->
+<div class="container">
+  
+  <div class="full-width">
+    <h3>&hairsp; LLM&hairsp; Framework</h3>
+    <p>
+      &nbsp; <b>Large Language Model, LLM</b>은 다양한 분야에서 뛰어난 효용성을 보여주고 있습니다. LLM을 있는 그대로 사용하는 것도 충분히 좋은 성능을 보이지만, 이를 더욱 효과적으로 사용할 수 있는 방법론이 존재합니다. 아래의 프로젝트에서는 특정 목적에 맞게 LLM을 효과적으로 사용하기 위한 프레임워크를 제시합니다 
+    </p>
+  </div>
+
+  <div class="parallel">
+    <div class='parallel-item'>
+      <h3>Context-Aware&hairsp; Translation&hairsp; Framework</h3>
+      <ul>
+        <li>
+          <p>&nbsp; 번역에서는 원문의 문맥적 카테고리를 파악하는 것이 중요합니다. 객관적인 사실이 중요한 문맥의 경우, 다소 자연스러움이 부족하더라도 정확한 의미의 전달에 집중해야 하며,
+            일상생활 속 가벼운 대화의 경우, 정확도 보다는 자연스러운 표현으로 번역하는 것이 권장됩니다. 이 프로젝트에서는 이러한 기본적인 번역 전략을 LLM에 적용시키기 위한 프레임워크를 제시합니다.
+          </p>
+          <div class="btn-list">
+            <a href="/context_framework" class="btn-type-1">Detail</a>
+            <a href="https://github.com/moon23k/context_framework" class="btn-type-1">Code</a>
+          </div>
+
+        </li>
+      </ul>
+    </div>
+
+    <div class='parallel-item'>
+      <h3>Characteristic&hairsp; Conv&hairsp; Framework</h3>
+      <ul>
+        <li>
+          <p>사람과의 대화가 흥미로운 주된 이유중 하나는, 사람마다의 대화 스타일이 다르기 때문입니다. 하지만 LLM을 통한 대화 생성 모델의 경우, 대게 일반적으로 통일된 스타일의 대화만을 제공합니다.
+          이런 기존의 한계점을 타계하고, 보다 흥미로운 대화 서비스 제공을 위한 프레임워크를 제시합니다. 
+          </p>
+          <div class="btn-list">
+            <a href="/character_framework" class="btn-type-1">Detail</a>
+            <a href="https://github.com/moon23k/char_framework" class="btn-type-1">Code</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+
+  <div class="parallel">
+    <div class='parallel-item' style="width: 47%">
+      <h3>Trustworthy&hairsp; Conv&hairsp; Framework</h3>
+      <ul>
+        <li>
+          <p>LLM의 실제 서비스 제공시 최우선 적으로 고려되어야 할 사항은, 모델 발화의 안전성입니다. 아무리 뛰어난 답변일지라도, 혐오 발언이나, 민감성 발언은 서비스 사용자로 하여금 불편함을 자아낼수 있기 때문입니다.
+          이 프로젝트에서는 보다 안전한 LLM 사용이 가능하도록, Detector 모델을 활용하는 프레임워크를 제시합니다 
+          </p>
+          <div class="btn-list">
+            <a href="/trust_framework" class="btn-type-1">Detail</a>
+            <a href="https://github.com/moon23k/trust_framework" class="btn-type-1">Code</a>
+          </div>
+
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
 
 
 
