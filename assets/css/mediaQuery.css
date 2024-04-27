@@ -21,7 +21,7 @@
 }
 @media only screen and (max-width: 992px) {
   header {
-    padding: 1em 2em calc((100% - 900px) / 2);
+    padding: 2em calc((100% - 900px) / 2);
   }
   .contents {
     width: 100%;

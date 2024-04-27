@@ -7,10 +7,8 @@ layout: default
 <div class="info">
   <h2 style="color: #303030; letter-spacing: 2px;">Hi, there!</h2>
   <p>
-    &nbsp; 인공지능 기술을 활용한 현실 문제의 해결을 위해 항상 연구하는 머신러닝 엔지니어, 송문기입니다.
-    다양한 인공지능 활용 분야들 중에서 자연어 처리에 초점을 맞추고 있으며, 실제 사람의 생활속에 도움이 될 수 있는 인공지능 모델 개발을 목표로 삼고 있습니다.<br>
-    목표 달성을 위해 다양한 연구 주제를 직접 선정하고 구현하며, 끊임없이 한 발짝씩 목표에 다가가는 중입니다. 
-    이 페이지에서는 목표 달성을 위한 연구 프로젝트들을 주제별로 아래와 같이 정리해두었으며, 각 프로젝트 마다의 상세 및 코드 구현을 확인하실 수 있습니다.
+    &ensp; 인공지능 모델을 통한 창의적 가치 실현을 목표로 하는 머신러닝 엔지니어 송문기입니다. 목표 달성을 위해 다양한 연구 주제를 직접 선정&sdot; 구현&sdot; 검증하는 과정을 즐깁니다. 총 12개의 주요 프로젝트를 주제 별로 정리해 그 과정 및 결과를 본문에서 공유합니다. 저에 대한 정보가 궁금하시다면 아래의 링크를 참조해주세요 :) 
+
   </p>
   <div class="btn-block">
     <a href="{{ '/resume' | relative_url }}" class="btn-type-1">Resume</a>
@@ -25,7 +23,7 @@ layout: default
   
   <div class="full-width">
     <h3>&hairsp; Model&hairsp; Architecture</h3>
-    <p>&nbsp; 머신러닝 엔지니어링에서 모델의 구조적 디자인은 성능에 결정적인 영향을 미치는 주요 요소이며, 특히 인코더와 디코더를 모두 필요로 하는 Sequence to Sequence 구조에서, 모델 디자인의 중요성은 더더욱 강조됩니다. 이 장에서는 다양한 모델 디자인에 집중한 프로젝트를 소개합니다. 모든 프로젝트에서는 데이터 및 학습 방식을 고정한 채, 모델 디자인적인 변화에 따른 성능변화를 파악하는데 집중합니다.
+    <p>&nbsp; 머신러닝 엔지니어링에서 모델의 구조적 디자인은 성능에 결정적인 영향을 미치는 주요 요소입니다. 특히 인코더와 디코더를 모두 필요로 하는 Sequence to Sequence 구조에서, 모델 디자인은 더더욱 중요합니다. 이 장에서는 데이터 처리 및 학습 방식은 고정하고, 자연어 생성을 위한 모델의 디자인 변화에 따른 성능 변화를 파악하는데 집중합니다.
     </p>
   </div>
 
@@ -35,7 +33,7 @@ layout: default
       <h3>Transformer&hairsp; Balance</h3>
       <ul>
         <li>
-          <p>표준 트랜스포머의 균형잡힌 모델 디자인을 의도적으로 탈피해, <b>깊이 &middot; 너비 &middot; 다양성</b> 측면에서 다양한 불균형성이 야기하는 성능 변화를 탐색하고, 과제 별 특성에 따른 균형 조정 기준을 설립 
+          <p>표준 트랜스포머의 균형잡힌 모델 디자인을 의도적으로 탈피해, <b>깊이 &middot; 너비 &middot; 다양성</b> 측면의 디자인 불균형에 따른 성능 변화를 탐색하고, 과제 특성에 따른 균형 조정 기준 설립 
           </p>
           <div class="btn-list">
             <a href="{{ '/transformer_balance' | relative_url }}" class="btn-type-1">Detail</a>
@@ -91,35 +89,36 @@ layout: default
   <div class="full-width">
     <h3>&hairsp; Training&hairsp; Strategy</h3>
     <p>
-      &nbsp; 이번 장에서는 모델 구조와 더불어, 머신러닝 엔지니어링의 주요 요소인 학습 방법론에 대해 다룹니다. 동일한 디자인의 모델일지라도, 학습 방식에 따라 성능은 천차만별로 변할 수 있습니다. 특히 자연어 생성과 같이 난이도가 높은 과제의 경우, 일반적인 학습 방식만으로는 원하는 결과를 얻기 어렵습니다. 때문에 이번 장에서는 자연어 생성 능력 향상을 위한 다양한 학습 방법론과 그 결과에 대해 집중적으로 탐구합니다.
+      &nbsp; 모델 학습은 모델 디자인과 더불어, 머신러닝 엔지니어링의 주요 요소입니다. 동일한 모델이라도, 학습 방식에 따라 성능은 크게 달라질 수 있습니다. 특히나 자연어 생성과 같이 고난이도 과제의 경우, 일반적인 학습 방식만으로 원하는 결과를 얻기 어렵습니다. 아래 프로젝트에서는 자연어 생성 능력 향상을 위한 고도화 된 학습 방법론을 제시하고, 그 효용성을 검증합니다.
     </p>
   </div>
 
   <div class="parallel">
     <div class='parallel-item'>
-      <h3>G&hairsp; I&hairsp; F&hairsp; T</h3>
+      <h3>Customized&hairsp; Pre-Training</h3>
       <ul>
         <li>
-          <p><b>Generation Improving Fine-Tuning, GIFT</b> 프로젝트에서는 네 가지 미세조정 방법론 적용에 따른 자연어 생성 모델의 생성 능력 향상 여부 비교 분석
+          <p>지나치게 크고 무거운 대규모 사전학습 모델을 사용하는대신, 목표로하는 Down Stream Task에 집중한 맞춤형 사전 학습 방법론의 효용성 검증
           </p>
           <div class="btn-list">
-            <a href="{{ '/gift' | relative_url }}" class="btn-type-1">Detail</a>
-            <a href="https://github.com/moon23k/GIFT" class="btn-type-1">Code</a>
+            <a href="{{ '/cpt_train' | relative_url }}" class="btn-type-1">Detail</a>
+            <a href="https://github.com/moon23k/CPT" class="btn-type-1">Code</a>
           </div>
 
         </li>
       </ul>
     </div>
 
+
     <div class='parallel-item'>
-      <h3>IntelliGEN</h3>
+      <h3>G&hairsp; I&hairsp; F&hairsp; T</h3>
       <ul>
         <li>
-          <p>자연어 생성 능력 향상을 위해 Standard Training, Generative Training, 그리고 Slow SeqGAN 세 단계에 걸친 똑똑한 생성적 학습 방법론을 제시하고, 그 효용성을 검증
+          <p><b>Generation Improving Fine-Tuning, GIFT</b> 프로젝트에서는, 자연어 생성 능력 향상을 위한 네 가지 미세조정 방법론을 제시하고, 각 방법론의 효용성을 검증
           </p>
           <div class="btn-list">
-            <a href="{{ '/slow_gan' | relative_url }}" class="btn-type-1">Detail</a>
-            <a href="https://github.com/moon23k/intelligen" class="btn-type-1">Code</a>
+            <a href="{{ '/gift' | relative_url }}" class="btn-type-1">Detail</a>
+            <a href="https://github.com/moon23k/GIFT" class="btn-type-1">Code</a>
           </div>
 
         </li>
@@ -131,14 +130,14 @@ layout: default
 
   <div class="parallel">
     <div class='parallel-item' style="width: 47%">
-      <h3>Customized&hairsp; Pretraining</h3>
+      <h3>IntelliGEN</h3>
       <ul>
         <li>
-          <p>&nbsp; 자나치게 크고 무거운 대규모 사전학습 모델을 사용하는대신, 목표로하는 Down Stream Task에만 초점을 맞춘 맞춤형 사전학습의 효용성 검증
+          <p>자연어 생성 능력 향상을 위해 Standard Training, <b>Generative &sdot; SeqGAN Fine tuning</b>, 총 세 단계에 걸친 똑똑한 생성적 학습 방법론을 제시하고, 그 효용성 검증
           </p>
           <div class="btn-list">
-            <a href="{{ '/cpt_train' | relative_url }}" class="btn-type-1">Detail</a>
-            <a href="https://github.com/moon23k/CPT" class="btn-type-1">Code</a>
+            <a href="{{ '/slow_gan' | relative_url }}" class="btn-type-1">Detail</a>
+            <a href="https://github.com/moon23k/intelligen" class="btn-type-1">Code</a>
           </div>
 
         </li>
@@ -151,14 +150,13 @@ layout: default
 
 
 
-
 <!-- Task Specific Experiment -->
 <div class="container">
   
   <div class="full-width">
-    <h3>&hairsp;Task Specific Experiment</h3>
+    <h3>&hairsp; Task&hairsp; Specific</h3>
     <p>
-      &nbsp; 위의 <b>Model Architecture</b> 및 <b>Training Strategy</b>에서는 자연어 생성이라는 전역적인 과제 해결을 위한 모델링 및 학습 방법론에 대해 살펴봤습니다. 이번 장에서는 기계 번역, 대화 생성, 문서 요약이라는 자연어 생성의 세부 과제를 효과적으로 해결하기 위한 과제 집중적 연구 프로젝트를 제시합니다. 
+      &nbsp; 위의 <b>Model Architecture</b> 및 <b>Training Strategy</b>에서는 자연어 생성이라는 전역적인 과제 해결을 위한 모델링 및 학습 방법론에 대해 살펴봤습니다. 이번 장에서는 <b>기계 번역, 대화 생성, 문서 요약</b>이라는 자연어 생성의 세부 과제를 효과적으로 해결하기 위한 과제 집중적 연구 프로젝트를 제시합니다. 
     </p>
   </div>
 
@@ -167,11 +165,11 @@ layout: default
       <h3>&hairsp;Multi-Lingual Translation</h3>
       <ul>
         <li>
-          <p>&nbsp; 멀티 모달 모델에 대한 수요가 증가하고 있습니다. 대규모 언어 모델의 경우, 이미 멀티 모달을 제공하고 있지만, 좀 더 근원적인 Foundation Model 단에서 Multi Modality 향상을 위한 모델 구조에 대한 연구는 부족합니다. 이를 직접 해결하기 위해 표준 트랜스포머 구조에서 멀티 모달에 효과적인 모델 디자인을 탐구합니다.
+          <p>&nbsp; 단일 언어 기계 번역에서 한 걸음 나아가, 다언어 기계 번역 성능 향상을 위한 트랜스포머 기반 Foundation Modeling 연구를 진행하고, 각 방법론 별 성능 변화를 검증
           </p>
           <div class="btn-list">
             <a href="{{ '/multomodal_translation' | relative_url }}" class="btn-type-1">Detail</a>
-            <a href="https://github.com/moon23k/GIFT" class="btn-type-1">Code</a>
+            <a href="https://github.com/moon23k/MultiLingual_Translation" class="btn-type-1">Code</a>
           </div>
 
         </li>
@@ -182,7 +180,7 @@ layout: default
       <h3>Multi-Turn Dialogue</h3>
       <ul>
         <li>
-          <p>&nbsp; 일반적으로 사람의 대화는 단발성이 아니라, 여러 발화를 통해 이루어집니다. 이 과정에서 이전 대화 기록에 대한 내용을 반영하는 것이 중요합니다. 이를 위한 모델 구조를 만들고, 그 효용성에 대해 탐구합니다.
+          <p>&nbsp; 대화의 흐름을 이해하며 자연스럽고, 일관된 대화가 가능한 멀티턴 대화 모델 구축을 위한 대화 기록 활용 방법론을 제시하고, 그 효용성을 검증
           </p>
           <div class="btn-list">
             <a href="{{ '/multiturn_dialogue' | relative_url }}" class="btn-type-1">Detail</a>
@@ -201,7 +199,7 @@ layout: default
       <h3>Efficient&hairsp; Summarization</h3>
       <ul>
         <li>
-          <p>&nbsp; 일반적인 Self Attention을 사용하는 표준 트랜스포머 모델에서는 연산 복잡도 O2의 비효율 적인 연산에서 기인한 많은 연산 비용이 발생합니다. 이는 입력 시퀀스의 길이가 긴 문서요약 과제에서 효율성이 매우 떨어지는 문제점을 야기 합니다. 이를 해결하기 위해 Efficient Attention, Block Sparse Attention을 활용한 모델링으로, 효율성 증진을 직접 실험 및 확인해봅니다.
+          <p>&nbsp; Efficient Attention, Block Sparse Attention을 활용함으로써, 긴 시퀀스를 다루는 문서 요약 과제에서의 효율성을 제고시키고, 성능과의 Cross Over 검토
           </p>
           <div class="btn-list">
             <a href="{{ '/efficient_summarization' | relative_url }}" class="btn-type-1">Detail</a>
@@ -224,8 +222,7 @@ layout: default
   
   <div class="full-width">
     <h3>&hairsp; LLM&hairsp; Framework</h3>
-    <p>
-      &nbsp; <b>Large Language Model, LLM</b>은 다양한 분야에서 뛰어난 효용성을 보여주고 있습니다. LLM을 있는 그대로 사용하는 것도 충분히 좋은 성능을 보이지만, 이를 더욱 효과적으로 사용할 수 있는 방법론이 존재합니다. 아래의 프로젝트에서는 특정 목적에 맞게 LLM을 효과적으로 사용하기 위한 프레임워크를 제시합니다 
+    <p>&nbsp; <b>Large Language Model, LLM</b>은 다양한 분야에서 뛰어난 효용성을 보여주고 있습니다. LLM을 있는 그대로 사용하는 것도 충분히 좋은 성능을 보이지만, 이를 더욱 효과적으로 사용할 수 있는 방법론이 존재합니다. 아래의 프로젝트에서는 특정 목적에 맞게 LLM을 효과적으로 사용하기 위한 프레임워크를 제시합니다. 
     </p>
   </div>
 
@@ -234,8 +231,7 @@ layout: default
       <h3>Context&hairsp; Framework</h3>
       <ul>
         <li>
-          <p>&nbsp; 번역에서는 원문의 문맥적 카테고리를 파악하는 것이 중요합니다. 객관적인 사실이 중요한 문맥의 경우, 다소 자연스러움이 부족하더라도 정확한 의미의 전달에 집중해야 하며,
-            일상생활 속 가벼운 대화의 경우, 정확도 보다는 자연스러운 표현으로 번역하는 것이 권장됩니다. 이 프로젝트에서는 이러한 기본적인 번역 전략을 LLM에 적용시키기 위한 프레임워크를 제시합니다.
+          <p>&nbsp; 번역 과제에서 원문의 문맥을 파악하고, 문맥의 정보를 LLM에 전달함으로써 고품질의 번역을 가능토록 하는 프레임워크를 제시하고, 효용성 검증 
           </p>
           <div class="btn-list">
             <a href="{{ '/context_framework' | relative_url }}" class="btn-type-1">Detail</a>
@@ -250,8 +246,7 @@ layout: default
       <h3>Character&hairsp; Framework</h3>
       <ul>
         <li>
-          <p>사람과의 대화가 흥미로운 주된 이유중 하나는, 사람마다의 대화 스타일이 다르기 때문입니다. 하지만 LLM을 통한 대화 생성 모델의 경우, 대게 일반적으로 통일된 스타일의 대화만을 제공합니다.
-          이런 기존의 한계점을 타계하고, 보다 흥미로운 대화 서비스 제공을 위한 프레임워크를 제시합니다. 
+          <p>&nbsp; LLM으로 하여금 사람처럼 개성있는 대화 스타일 학습시킴으로써, 흥미로운 대화 서비스를 제공하기 위한 프레임워크를 제시하고, 그 효용성을 검증
           </p>
           <div class="btn-list">
             <a href="{{ '/character_framework' | relative_url }}" class="btn-type-1">Detail</a>
@@ -268,8 +263,7 @@ layout: default
       <h3>Trustworthy&hairsp; Framework</h3>
       <ul>
         <li>
-          <p>LLM의 실제 서비스 제공시 최우선 적으로 고려되어야 할 사항은, 모델 발화의 안전성입니다. 아무리 뛰어난 답변일지라도, 혐오 발언이나, 민감성 발언은 서비스 사용자로 하여금 불편함을 자아낼수 있기 때문입니다.
-          이 프로젝트에서는 보다 안전한 LLM 사용이 가능하도록, Detector 모델을 활용하는 프레임워크를 제시합니다 
+          <p>혐오 발언, 정치 사회적 민감 발언 등 서비스 사용자로 하여금 불편함을 자아낼수 있는 시퀀스의 반환으로부터 소비자를 보호할수 있는 프레임워크를 제시하고, 그 효용성을 검증 
           </p>
           <div class="btn-list">
             <a href="{{ '/trust_framework' | relative_url }}" class="btn-type-1">Detail</a>

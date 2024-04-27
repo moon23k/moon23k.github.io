@@ -5,18 +5,18 @@ permalink: /transformer_balance
 
 
 <div id="detail">
-  <h1 class="title">Transformer&hairsp; Balance&hairsp; Research</h1>  
+  <h1 class="title">Transformer&hairsp; Balance</h1>  
   <div class="post">
 
     <hr>
     <div class="callout">
       <p class="highlighted-text"><span>Project Overview</span></p>
       <div class="small-spacer"></div>
-      <p>&nbsp; 이 프로젝트에서는 Transformer Seq2Seq 모델의 Encoder와 Decoder 사이 균형성에 따른 성능 변화를 다각적으로 검증합니다.
+      <p>&nbsp; 이 프로젝트에서는 트랜스포머 구조에서 인코더와 디코더의 디자인 균형성에 따른 성능 변화를 다각적으로 검증합니다.
 
-        균형성의 변인으로는 주요 연산 레이어 차원, 인코더 및 디코더 레이어의 개수, 어텐션 헤드의 개수를 설정했으며, 각 변인을 적용한 모델을 Wide, Deep, Diverse 모델이라고 명명하고, 변인이 적용된 모델간 성능을 비교합니다.
+      균형성의 변인으로는 주요 연산 레이어 차원, 인코더 및 디코더 레이어의 개수, 어텐션 헤드의 개수를 설정했으며, 각 변인을 적용한 모델을 Wide, Deep, Diverse 모델이라고 명명합니다. 
 
-        성능의 측정에는 인코딩과 디코딩 중요도가 상이한 세 가지 자연어 생성 과제를 선택했으며, ~~ 하다는 결과를 확인했습니다.
+      각각의 변인이 적용된 모델의 성능 측정에는 인코딩 및 디코딩 중요도가 상이한 세 가지 자연어 생성 과제(기계번역, 대화생성, 문서요약)를 활용해 성능을 비교했습니다.
 
       </p>
     </div>
@@ -66,13 +66,12 @@ permalink: /transformer_balance
       <div class="list-container">
         <ul>
           <li>Description</li>
-            <p> &nbsp; Transformer는 다양한 딥러닝 처리 과제에서 널리 사용되는 뛰어난 모델입니다. 일반적으로 Transformer Seq2Seq 모델의 활용 시, Encoder와 Decoder의 설정을 대부분 일치시킵니다. 
-            일치 시키는 가장 주된 이유는 모델의 안정성을 위함입니다. 서로 다른 설정값에서 모델의 학습이 더 어려워지며, 결과적으로 성능 하락을 야기하기 쉽습니다.
-            하지만 해결하려는 과제 마다의 특성을 면밀히 살펴보면, 특정 과제는 Encoder가 Decoder보다 중요하게 작용해야하는 과제가 존재하기도, 반대로 Decoder가 Encoder보다 중요하게 역할을 해줘야 하는 경우 역시도 존재합니다.
-            대대수의 경우에서, 해결하고자 하는 과제의 성격과는 무관하게 균형잡힌 Transformer 모델을 사용하기 때문에 Encoder와 Decoder 균형성에 대한 연구가 상대적으로 부족합니다.
+            <p> &nbsp; 트랜스포머는 다양한 딥러닝 처리 과제에서 널리 사용되는 뛰어난 모델 구조입니다. 일반적으로 트랜스포머 Seq2Seq 모델의 활용 시, 모델의 안정성을 위해 인코더와 디코더의 설정값 대부분을 균일하게 일치시킵니다. 불균형하고 상이한 설정은 모델의 학습 저하 및 성능 하락을 야기하기 쉽기 때문입니다.
+            하지만 해결하려는 과제 마다의 특성을 면밀히 살펴보면, 특정 과제는 인코딩이 디코딩보다 중요한 과제가 존재하기도, 반대로 디코딩이 인코딩보다 중요한 경우 역시 존재합니다.
+            대부분 경우에서, 해결하고자 하는 과제의 성격과는 무관하게 균형잡힌 트랜스포머 모델을 사용하기 때문에 인코더와 디코더 간 균형성에 대한 연구가 상대적으로 부족합니다.
             이 프로젝트에서는 앞서 언급한 연구 부족의 문제점을 직접 해결하고, 모델 디자인에 있어 균형성에 대한 중요성, 혹은 의도적인 불균형성의 효과 등을 실험적으로 확인합니다.
 
-            실험의 주요 변인은 모델 구조의 균형성이며, Transformer모델을 의도에 따라 불균형하게 설정해, 총 00개의 모델을 구성하고, 이를 기계번역, 대화생성, 문서요약이라는 세가지 자연어 생성과제에서의 성능을 비교 분석해봅니다.
+            실험의 주요 변인은 모델 구조의 균형성이며, 트랜스포머 모델을 의도에 따라 불균형하게 설정해, 총 6개의 실험군을 구성하고, 이를 기계번역, 대화생성, 문서요약이라는 세가지 자연어 생성과제에서의 성능을 비교 분석해봅니다.
             </p>
 
 
@@ -80,7 +79,7 @@ permalink: /transformer_balance
           <li>Hypothesis
             <div class="small-spacer"></div>
             <ul>
-              <li style="font-weight: normal;">기계번역에서는 Balance가 유지되는 모델의 성능이 좋을 것이다</li>
+              <li style="font-weight: normal;">기계 번역에서는 Balance가 유지되는 모델의 성능이 좋을 것이다</li>
               <li style="font-weight: normal;">대화생성에서는 디코더에 밸런스가 쏠린 모델 구조가 더 좋은 성능을 보일 것이다</li>
               <li style="font-weight: normal;">문서요약에서는 인코더에 밸러스가 더 쏠린 모델 구조가 좋은 성능을 보일 것이다</li>
             </ul>
@@ -688,6 +687,6 @@ permalink: /transformer_balance
 
 
 <div class="pagination">
-  <a href="{{ '/transformer' | relative_url }}" class="btn-prev"><span>Transformer</span></a>
+  <a href="{{ '/trust_framework' | relative_url }}" class="btn-prev"><span>Trustworthy LLM Framework</span></a>
   <a href="{{ '/transformer_variants' | relative_url }}" class="btn-next"><span>Transformer Variants</span></a>
 </div>

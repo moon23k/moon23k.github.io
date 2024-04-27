@@ -102,9 +102,9 @@ const adjustStyles = () => {
       container.style.paddingLeft = '0';
       container.style.paddingRight = '0';
     });
-    // Set width to 100% for all paragraphs
+    // Set width to **% for all paragraphs
     paragraphs.forEach(paragraph => {
-      paragraph.style.width = '100%';
+      paragraph.style.width = '90%';
     });
   } else {
     // If window width is greater than 992px, reset padding to its original value for all containers
