@@ -87,6 +87,41 @@ const TEXT_POS_RESIZE = () => {
   }
 };
 
+
+
+const adjustStyles = () => {
+  const containers = document.querySelectorAll('.contents .container');
+  const paragraphs = document.querySelectorAll('.contents .info p');
+  
+  // Check window width
+  const windowWidth = window.innerWidth;
+
+  // If window width is 992px or less, adjust padding for all containers
+  if (windowWidth <= 992) {
+    containers.forEach(container => {
+      container.style.paddingLeft = '0';
+      container.style.paddingRight = '0';
+    });
+    // Set width to 100% for all paragraphs
+    paragraphs.forEach(paragraph => {
+      paragraph.style.width = '100%';
+    });
+  } else {
+    // If window width is greater than 992px, reset padding to its original value for all containers
+    containers.forEach(container => {
+      container.style.paddingLeft = '';
+      container.style.paddingRight = '';
+    });
+    // Reset width to its original value for all paragraphs
+    paragraphs.forEach(paragraph => {
+      paragraph.style.width = '';
+    });
+  }
+};
+
+
+
+
 /* E : FUNCTIONS ========================================================== */
 
 /**
@@ -110,3 +145,10 @@ document.onreadystatechange = readyComn;
 window.addEventListener("resize", () => {
   TEXT_POS_RESIZE();
 });
+
+
+// Call the function initially
+adjustStyles();
+
+// Add event listener to adjust styles when window is resized
+window.addEventListener('resize', adjustStyles);

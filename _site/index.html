@@ -77,21 +77,6 @@
   <div class="parallel">
 
     <div class='parallel-item'>
-      <h3>The Baselines</h3>
-      <ul>
-        <li>
-          <p>자연어 생성을 위한 가장 기본적인 모델 구조의 자연어 능력을 직접 확인함으로써, 추후 연구 성능 평가의 BaseLine으로 삼기 위한 기준 연구. 모델 구조로는 RNN Seq2Seq, RNN Seq2Seq with Attention, Transformer을 사용.
-          </p>
-          <div class="btn-list">
-            <a href="/baselines" class="btn-type-1">Detail</a>
-            <a href="https://github.com/moon23k/NLG_Baselines" class="btn-type-1">Code</a>
-          </div>
-
-        </li>
-      </ul>
-    </div>
-
-    <div class='parallel-item'>
       <h3>Transformer&hairsp; Balance</h3>
       <ul>
         <li>
@@ -106,10 +91,6 @@
       </ul>
     </div>
 
-  </div>
-
-
-  <div class="parallel">
     <div class='parallel-item'>
       <h3>Transformer&hairsp; Variants</h3>
       <ul>
@@ -125,6 +106,10 @@
       </ul>
     </div>
 
+  </div>
+
+
+  <div class="parallel">
     <div class='parallel-item'>
       <h3>Transformer&hairsp; Fusion</h3>
       <ul>
@@ -139,8 +124,8 @@
         </li>
       </ul>
     </div>
-  </div>
 
+  </div>
 </div>
 
 
@@ -190,11 +175,11 @@
 
 
   <div class="parallel">
-    <div class='parallel-item'>
+    <div class='parallel-item' style="width: 47%">
       <h3>Customized&hairsp; Pretraining</h3>
       <ul>
         <li>
-          <p>자나치게 크고 무거운 대규모 사전학습 모델을 사용하는대신, 목표로하는 Down Stream Task에만 초점을 맞춘 맞춤형 사전학습의 효용성 검증
+          <p>&nbsp; 자나치게 크고 무거운 대규모 사전학습 모델을 사용하는대신, 목표로하는 Down Stream Task에만 초점을 맞춘 맞춤형 사전학습의 효용성 검증
           </p>
           <div class="btn-list">
             <a href="/cpt_train" class="btn-type-1">Detail</a>
@@ -205,20 +190,6 @@
       </ul>
     </div>
 
-    <div class='parallel-item'>
-      <h3>L&hairsp; E&hairsp; F&hairsp; T</h3>
-      <ul>
-        <li>
-          <p><b>Llm Efficient Fine-Tuning, LEFT</b> 프로젝트에서는 대규모 사전학습 언어 모델의 효율적인 미세조정을 위한 다양한 방법론의 통합적 고찰
-          </p>
-          <div class="btn-list">
-            <a href="/eff_train" class="btn-type-1">Detail</a>
-            <a href="https://github.com/moon23k/left" class="btn-type-1">Code</a>
-          </div>
-
-        </li>
-      </ul>
-    </div>
   </div>
 </div>
 
@@ -238,7 +209,7 @@
 
   <div class="parallel">
     <div class='parallel-item'>
-      <h3>&hairsp;Multi Modal Translation</h3>
+      <h3>&hairsp;Multi-Lingual Translation</h3>
       <ul>
         <li>
           <p>&nbsp; 멀티 모달 모델에 대한 수요가 증가하고 있습니다. 대규모 언어 모델의 경우, 이미 멀티 모달을 제공하고 있지만, 좀 더 근원적인 Foundation Model 단에서 Multi Modality 향상을 위한 모델 구조에 대한 연구는 부족합니다. 이를 직접 해결하기 위해 표준 트랜스포머 구조에서 멀티 모달에 효과적인 모델 디자인을 탐구합니다.
@@ -253,7 +224,7 @@
     </div>
 
     <div class='parallel-item'>
-      <h3>Multi Turn Dialogue Generation</h3>
+      <h3>Multi-Turn Dialogue</h3>
       <ul>
         <li>
           <p>&nbsp; 일반적으로 사람의 대화는 단발성이 아니라, 여러 발화를 통해 이루어집니다. 이 과정에서 이전 대화 기록에 대한 내용을 반영하는 것이 중요합니다. 이를 위한 모델 구조를 만들고, 그 효용성에 대해 탐구합니다.
@@ -272,7 +243,7 @@
 
   <div class="parallel">
     <div class='parallel-item' style="width: 47%">
-      <h3>Efficient&hairsp; Text Summarization</h3>
+      <h3>Efficient&hairsp; Summarization</h3>
       <ul>
         <li>
           <p>&nbsp; 일반적인 Self Attention을 사용하는 표준 트랜스포머 모델에서는 연산 복잡도 O2의 비효율 적인 연산에서 기인한 많은 연산 비용이 발생합니다. 이는 입력 시퀀스의 길이가 긴 문서요약 과제에서 효율성이 매우 떨어지는 문제점을 야기 합니다. 이를 해결하기 위해 Efficient Attention, Block Sparse Attention을 활용한 모델링으로, 효율성 증진을 직접 실험 및 확인해봅니다.
@@ -305,7 +276,7 @@
 
   <div class="parallel">
     <div class='parallel-item'>
-      <h3>Context-Aware&hairsp; Translation&hairsp; Framework</h3>
+      <h3>Context&hairsp; Framework</h3>
       <ul>
         <li>
           <p>&nbsp; 번역에서는 원문의 문맥적 카테고리를 파악하는 것이 중요합니다. 객관적인 사실이 중요한 문맥의 경우, 다소 자연스러움이 부족하더라도 정확한 의미의 전달에 집중해야 하며,
@@ -321,7 +292,7 @@
     </div>
 
     <div class='parallel-item'>
-      <h3>Characteristic&hairsp; Conv&hairsp; Framework</h3>
+      <h3>Character&hairsp; Framework</h3>
       <ul>
         <li>
           <p>사람과의 대화가 흥미로운 주된 이유중 하나는, 사람마다의 대화 스타일이 다르기 때문입니다. 하지만 LLM을 통한 대화 생성 모델의 경우, 대게 일반적으로 통일된 스타일의 대화만을 제공합니다.
@@ -339,7 +310,7 @@
 
   <div class="parallel">
     <div class='parallel-item' style="width: 47%">
-      <h3>Trustworthy&hairsp; Conv&hairsp; Framework</h3>
+      <h3>Trustworthy&hairsp; Framework</h3>
       <ul>
         <li>
           <p>LLM의 실제 서비스 제공시 최우선 적으로 고려되어야 할 사항은, 모델 발화의 안전성입니다. 아무리 뛰어난 답변일지라도, 혐오 발언이나, 민감성 발언은 서비스 사용자로 하여금 불편함을 자아낼수 있기 때문입니다.
