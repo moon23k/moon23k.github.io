@@ -13,8 +13,8 @@ permalink: /gift
       <p class="highlighted-text"><span>Project Objective</span></p>
       <div class="small-spacer"></div>
       <p>&nbsp; 이 프로젝트에서 자연어 생성 모델의 고질적인 문제점인 <b>Exposure Bias</b>의 완화를 위한 세 가지 방법론을 제시하고, 그 실효성을 직접 검증합니다. 각 방법론 Auxiliary, Recurrent Decoding, Generative 학습법입니다. 
-      모델 아키텍처는 효율적인 생성을 위해 캐싱 기능을 추가한 표준 트랜스포머를 사용하며, 대표적인 자연어 생성 과제인 기계 번역과제를 통해 생성 능력의 향상 여부를 면밀히 조사합니다.  <br> 
-      프로젝트의 결과, 세가지 방법론에서 모두 기본적인 미세조정보다 우수한 생성 능력을 학습 시킬 수 있음을 확인했습니다. 자세한 내용은 아래의 글에서 다루며, 프로젝트의 구현 코드는 github.com/moon23k/EASE에서 확인 하실 수 있습니다
+      모델 아키텍처는 효율적인 생성을 위해 캐싱 기능을 추가한 표준 트랜스포머를 사용하며, 대표적인 자연어 생성 과제인 기계 번역과제를 통해 생성 능력의 향상 여부를 면밀히 조사합니다.
+      프로젝트의 결과, 세가지 방법론에서 모두 기본적인 미세조정보다 우수한 생성 능력을 학습 시킬 수 있음을 확인했습니다.
       </p>
     </div>
 
@@ -55,7 +55,7 @@ permalink: /gift
 
 
 <!-- 1. Introduction -->    
-    <h2 id="1">&hairsp; 1.&hairsp; Introduction</h2>
+    <h2 id="1">&hairsp; 1. &hairsp; Introduction</h2>
     <div class="chapter-box">
 
       <div class="list-container">
@@ -82,7 +82,7 @@ permalink: /gift
 
 
 <!-- 2. Background -->    
-    <h2 id="2">2. &hairsp; Background</h2>
+    <h2 id="2">&hairsp; 2. &hairsp; Background</h2>
     <div class="chapter-box">
 
       <div class="list-container">
@@ -119,8 +119,8 @@ permalink: /gift
         <ul>
           <li>Standard&hairsp; Fine-Tuning
             <ul>
-              <li></li>
-              <li></li>
+              <li>Training Process와 동일하게, MLE 기반의 다량 배치 병렬학습을 사용</li>
+              <li>학습률을 줄임으로써, 미리 학습된 모델의 파라미터를 크게 갱신하지 않고, 약간의 조정</li>
               <li></li>
             </ul>
           </li>
@@ -129,7 +129,7 @@ permalink: /gift
           <div class="spacer"></div>
           <li>Auxiliary&hairsp; Fine-Tuning
             <ul>
-              <li></li>
+              <li>Main Training Objective인 MLE와 더불어 보조 학습 목표인 First Token Prediction을 활용한 미세조정</li>
               <li></li>
               <li></li>
             </ul>
@@ -139,9 +139,9 @@ permalink: /gift
           <div class="spacer"></div>
           <li>Recurrent&hairsp; Fine-Tuning
             <ul>
-              <li></li>
-              <li></li>
-              <li></li>
+              <li>Scheduled Sampling for Transformers에서 제시된 방법론을 차용</li>
+              <li>Sampling Ratio를 1.0으로 설정함으로써, 불완전한 데이터가 학습과정에서 사용됨을 방지</li>
+              <li>Recurrent Ratio역시 0.1 ~ 1.0까지 조정하며, 적용</li>
             </ul>
           </li>
 
@@ -149,7 +149,7 @@ permalink: /gift
           <div class="spacer"></div>
           <li>Generative&hairsp; Fine-Tuning
             <ul>
-              <li></li>
+              <li>0.1 ~ 0.5까지 비율을 조정해가며, 미세조정과정에 생성 결과를 통합적으로 사용</li>
               <li></li>
               <li></li>
             </ul>
@@ -161,7 +161,7 @@ permalink: /gift
 
 
 <!-- 4. Experimental Setup -->
-    <h2 id="5">&hairsp; 4.&hairsp; Experimental Setup</h2>
+    <h2 id="4">&hairsp; 4.&hairsp; Experimental Setup</h2>
     <div class="chapter-box">
 
       <div class="list-container">
@@ -171,14 +171,13 @@ permalink: /gift
               <ul>
                 <li>Translation Task: &nbsp; WMT'14 En-De</li>
                 <li>Dialogue Task: &nbsp; Daily Dialogue</li>
-                <li>Summarization Task: &nbsp; CNN Daily</li>
-                <li>Tokenizer: &nbsp; AlBERT Tokenizer</li>
+                <li>Tokenizer: &nbsp; BPE Tokenizer</li>
               </ul>
               <ul>
+                <li>Vocab Size: &nbsp; 15,000</li>
                 <li>Train Data Volumn: &nbsp; 50,000</li>
                 <li>Valid Data Volumn: &nbsp; 5,000</li>
                 <li>Test Data Volumn: &nbsp; 100</li>
-                <li>Vocab Size: &nbsp; 10,000</li>                
               </ul>
             </div>
           </li>
@@ -205,16 +204,16 @@ permalink: /gift
           <li>Training Setup
             <div class="dual-container">
               <ul>
+                <li><b>Hardware</b>: &nbsp; Google Colab A100 GPU</li>
                 <li>Num Epochs: &nbsp; 10</li>
                 <li>Batch Size: &nbsp; 32</li>
                 <li>Learning Rate: &nbsp; 5e-4</li>
-                <li>LR Scheduler: &nbsp; ReduceLROnPlateau</li>
               </ul>
               <ul>
                 <li>Optimizer: &nbsp; AdamW</li>
                 <li>Apply Mixed Precision: &nbsp; True</li>
-                <li>Gradient Accumulation Steps: &nbsp; 4
-                <li>Teacher Forcing Ratio: &nbsp; 0.5</li>                
+                <li>Gradient Accumulation Steps: &nbsp; 4</li>
+                <li>LR Scheduler: &nbsp; ReduceLROnPlateau</li>
               </ul>
             </div>
           </li>
@@ -223,8 +222,8 @@ permalink: /gift
     </div>
 
 
-<!-- 4. Result -->
-    <h2 id="4">&hairsp; 4.&hairsp; Result</h2>
+<!-- 5. Result -->
+    <h2 id="5">&hairsp; 5.&hairsp; Result</h2>
     <div class="chapter-box">
 
       <div class="list-container">
@@ -292,8 +291,8 @@ permalink: /gift
     </div>
 
 
-<!-- 5. Conclusion -->
-    <h2 id="5">&hairsp; 5.&hairsp; Conclusion</h2>
+<!-- 6. Conclusion -->
+    <h2 id="6">&hairsp; 6.&hairsp; Conclusion</h2>
     <div class="chapter-box">
 
       <div class="list-container">
@@ -329,11 +328,12 @@ permalink: /gift
     </div>
 
 
-<!-- 6. Reference -->
-    <h2 id="6">&hairsp; 6.&hairsp; Reference</h2>
+<!-- 7. Reference -->
+    <h2 id="7">&hairsp; 7.&hairsp; Reference</h2>
     <div class="chapter-box">
       <a class="reference" href="https://arxiv.org/abs/1706.03762">&nbsp; Attention Is All You Need</a><br>
-      <a class="reference" href="https://arxiv.org/abs/2204.01171">&nbsp; Why Exposure Bias Matters</a> 
+      <a class="reference" href="https://arxiv.org/abs/2204.01171">&nbsp; Why Exposure Bias Matters</a><br> 
+      <a class="reference" href="https://arxiv.org/abs/1906.07651">&nbsp; Scheduled Sampling for Transformers</a> 
       
     </div>
 

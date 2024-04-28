@@ -12,8 +12,7 @@ permalink: /intelligen
     <div class="callout">
       <p class="highlighted-text"><span>Project Objective</span></p>
       <div class="small-spacer"></div>
-      <p>&nbsp; 이 프로젝트에서 소규모 데이터 셋에서 Transformer의 Generative Training 방식의 효용성을 검증합니다. <br>
-      일반적으로 Transformer는 Attention을 활용한 병렬 학습의 효율성을 바탕으로, 대규모 데이터셋에서 학습을 진행합니다. 하지만 가용한 데이터가 매우 제한적인 경우, 오히려 생성적 학습이 효과적일 수 있다는 가설을 세우고, 이를 검증하는 일련의 실험을 진행합니다. 생성 과정에서 효율성을 증진시키기 위해 Cache를 활용하는 Transformer를 직접 구현해 사용합니다.
+      <p>&nbsp; 이 프로젝트에서 학습 효율성과 성능의 저하 없이, 진보된 방식으로 트랜스포머 모델의 생성 능력을 향상 시키기 위한 IntelliGEN이라는 학습 방법론을 제시합니다. 그리고 이 학습 방법론의 효용성을 기계 번역과제에서 검증했으며, 각 단계별 00%, 00%의 성능 개선이 이루어졌음을 확인했습니다.
       </p>
     </div>
 
@@ -54,15 +53,13 @@ permalink: /intelligen
 
 
 <!-- 1. Introduction -->    
-    <h2 id="1">&hairsp; 1.&hairsp; Introduction</h2>
+    <h2 id="1">&hairsp; 1. &hairsp; Introduction</h2>
     <div class="chapter-box">
 
       <div class="list-container">
         <ul>
           <li>Description</li>
-            <p> &nbsp; 일반적으로 Transformer는 Attention 기반의 연산으로 병렬처리를 통해 대규모 데이터를 바탕으로 학습을 진행합니다. 이런 학습 방식을 통해 뛰어난 성능을 자랑하지만, 가용한 데이터가 제한적인 경우 일반적인 학습 방식만으로는 원하는 성능을 기록하기 어렵습니다. 데이터를 더욱 확보하여 해결하는 것이 가장 이상적인 방법이지만, 일반적인 사용자가 충분한 양질의 데이터를 확보하는 것은 현실적으로 매우 어려운 일입니다.<br>
-            때문에 이 프로젝트에서는 데이터가 제한적인 경우, 추론과정과 동일한 Generative Training 방식으로 Transformer의 성능을 향상시킬수 있을것이라는 가설을 세우고, 직접 가설을 검증해봅니다.
-            학습 과정에서 효율적인 생성을 병행하기 위해 디코딩 과정에서 Cache를 사용할 수 있는 Transformer 모델을 구현해 사용합니다. 성능 평가는 기계번역과 대화생성 과제에서 진행하며, 비교군으로는 일반적인 학습방식, 데이터를 증강시킨 경우에서의 학습, 생성적 학습 그리고 일반적인 학습 이후 이어지는 생성적 학습으로 총 네가지 경우의 수를 비교해봅니다.  
+            <p> &nbsp; 일반적으로 트랜스포머는 어텐션 연산 기반을 통한 병렬적 학습을 진행하며, 덕분에 대규모 데이터를 바탕으로 학습하기에 용이합니다. 덕분에 트랜스포머는 훈련 과정에서 전례없던 효율성과 뛰어난 성능을 자랑하지만, 실제 문장을 생성하는 추론과정과 학습 방식에서의 괴리때문에 생성능력이 상대적으로 아쉽다는 단점이 존재합니다. 그렇다고 학습과정과 추론과정을 통일시키는 생성적 학습법은 효율성과 성능 측면 모두에서 매우 비효율적인 선택지입니다. 때문에, 트랜스포머 본연의 학습 효율성을 지키며, 추론과 학습의 괴리를 줄이기 위한 보다 똑똑한 생성적 학습 방법론이 필요합니다. 이 프로젝트에서는 일반 병렬학습, 일부 생성 미세조정, SeqGAN 미세조정이라는 세가지 스텝으로 이어지는 진보된 학습방법론을 제시하고, 그 결과를 검증합니다.
             </p>
 
           <div class="spacer"></div>
@@ -86,226 +83,17 @@ permalink: /intelligen
 
       <div class="list-container">
         <ul>
-          <li>Transformer
+          <li>Discrepency between Training & Inference
             <p>&nbsp; Transformer는 자연어 처리 및 기타 시퀀스 기반 작업에 매우 효과적인 신경망 아키텍처입니다. 이 아키텍처의 중요한 특징 중 하나는 어텐션 메커니즘을 통한 병렬 학습에 대한 뛰어난 지원입니다. 기존의 순환 신경망(RNN)과 비교하여 트랜스포머는 많은 입력 토큰을 동시에 처리할 수 있어 훈련 속도를 크게 향상시킵니다. 
             </p>
           </li>
 
-
           <div class="spacer"></div>
-          <li>Cache Usable Transformer
-            <div class="code-container">
-              <div class="code-snippet">
-                <pre><code class="python">class DecoderLayer(nn.TransformerDecoderLayer):
-    def forward(
-        self,
-        x,
-        memory=None,
-        e_mask=None,
-        d_mask=None,
-        use_cache=False
-    ):
-
-        if not use_cache:
-            return super().forward(
-                x,
-                memory,
-                memory_key_padding_mask=e_mask,
-                tgt_mask=d_mask
-            )
-
-
-        last_token = x[:, -1:, :]
-
-        # self attention part
-        _x = self.self_attn(last_token, x, x)[0]
-
-        last_token = last_token + self.dropout1(_x)
-        last_token = self.norm1(last_token)
-
-
-        # encoder-decoder attention
-        _x = self.multihead_attn(
-            last_token, memory, memory,
-            key_padding_mask=e_mask,
-        )[0]
-
-        last_token = last_token + self.dropout2(_x)
-        last_token = self.norm2(last_token)
-
-        # final feed-forward network
-        _x = self.activation(self.linear1(last_token))
-        _x = self.linear2(self.dropout(_x))
-        last_token = last_token + self.dropout3(_x)
-        last_token = self.norm3(last_token)
-        
-        return last_token
-
-
-
-class Decoder(nn.TransformerDecoder):
-
-    def forward(
-        self,
-        x,
-        memory=None,
-        cache=None,
-        e_mask=None,
-        d_mask=None,
-        use_cache=True
-    ):
-
-        output = x
-
-        #In case of not using Cache
-        if not use_cache:
-            for layer in self.layers:
-                output = layer(output, memory, e_mask, d_mask, False)
-            return output, None
-
-        #In case of using Cache
-        new_token_cache = []
-        for idx, layer in enumerate(self.layers):
-            output = layer(output, memory, use_cache=True)
-            new_token_cache.append(output)
-            
-            if cache is not None:  
-                output = torch.cat([cache[idx], output], dim=1)
-
-        new_cache = torch.stack(new_token_cache, dim=0)
-
-        if cache is not None:
-            new_cache = torch.cat([cache, new_cache], dim=2)
-
-        return output, new_cache
-
-
-
-
-class Transformer(nn.Module):
-    def __init__(self, config):
-        super(Transformer, self).__init__()
-
-        self.bos_id = config.bos_id
-        self.eos_id = config.eos_id
-        self.pad_id = config.pad_id
-
-        self.device = config.device
-        self.max_len = config.max_len
-        self.model_type = config.model_type
-        self.vocab_size = config.vocab_size
-
-        self.enc_emb = Embeddings(config)
-        self.encoder = Encoder(config)
-
-        self.dec_emb = Embeddings(config)
-        self.decoder = Decoder(
-            DecoderLayer(
-                d_model=config.hidden_dim, 
-                nhead=config.n_heads, 
-                dim_feedforward=config.pff_dim,
-                batch_first=True
-            ),
-            num_layers=config.n_layers,
-        )
-
-        self.generator = nn.Linear(config.hidden_dim, self.vocab_size)
-
-        self.out = namedtuple('Out', 'logit loss')
-        self.criterion = nn.CrossEntropyLoss()
-
-
-    @staticmethod
-    def shift_y(y):
-        return y[:, :-1], y[:, 1:]
-
-
-    def pad_mask(self, x):
-        return x == self.pad_id
-
-
-    def dec_mask(self, x):
-        sz = x.size(1)
-        return torch.triu(torch.full((sz, sz), float('-inf')), diagonal=1).to(self.device)
-
-
-    def encode(self, x, x_mask):
-        x = self.enc_emb(x)
-        x = self.encoder(x, x_mask)
-        return x
-
-
-    def decode(
-        self, x, memory, cache=None, 
-        e_mask=None, d_mask=None, use_cache=False
-        ):
-        
-        x = self.dec_emb(x)
-        x, cache = self.decoder(x, memory, cache, e_mask, d_mask, use_cache)
-        return x, cache        
-        
-
-    def teacher_forcing_forward(self, x, y):
-        y, label = self.shift_y(y)
-        
-        e_mask = self.pad_mask(x)
-        d_mask = self.dec_mask(y)
-
-        memory = self.encode(x, e_mask)
-
-        dec_out, _ = self.decode(y, memory, None, e_mask, d_mask, use_cache=False)
-        logit = self.generator(dec_out)
-
-        self.out.logit = logit
-        self.out.loss = self.criterion(
-            logit.contiguous().view(-1, self.vocab_size), 
-            label.contiguous().view(-1)
-        )
-
-        return self.out
-    
-
-    def generative_forward(self, x, y):
-
-        _, label = self.shift_y(y)
-        batch_size, output_len = label.shape
-        logit = torch.empty(batch_size, output_len, self.vocab_size).to(self.device)
-        
-
-        pred = torch.zeros((batch_size, 1), dtype=torch.long)
-        pred = pred.fill_(self.bos_id).to(self.device)
-
-        cache=None
-        e_mask = self.pad_mask(x)
-        memory = self.encode(x, e_mask)
-
-        for idx in range(1, output_len+1):
-            y = pred[:, :idx]
-            d_out, cache = self.decode(y, memory, cache, e_mask, use_cache=True)
-
-            curr_logit = self.generator(d_out[:, -1:, :])
-            curr_pred = curr_logit.argmax(dim=-1)
-
-            logit[:, idx-1:idx, :] = curr_logit
-            pred = torch.cat([pred, curr_pred], dim=1)
-        
-        self.out.logit = logit
-        self.out.loss = self.criterion(
-            logit.contiguous().view(-1, self.vocab_size), 
-            label.contiguous().view(-1)
-        )        
-
-        return self.out
-        
-
-
-    def forward(self, x, y):
-        if self.model_type == 'generative':
-            return self.generative_forward(x, y)
-        return self.teacher_forcing_forward(x, y)</code></pre>
-              </div>
-            </div>
-          </li>
+            <li>Generative Training
+              <p>&nbsp; ...
+                
+              </p>
+            </li>
 
 
         <ul>          
@@ -314,7 +102,7 @@ class Transformer(nn.Module):
 
 
 <!-- 3. Training Strategy -->    
-    <h2 id="3">3.&hairsp; Training Strategy</h2>
+    <h2 id="3">&hairsp;  3. &hairsp; Training Strategy</h2>
     <div class="chapter-box">
 
       <div class="list-container">
@@ -498,7 +286,8 @@ class Transformer(nn.Module):
 <!-- 6. Reference -->
     <h2 id="6">&hairsp; 6. &hairsp; Reference</h2>
     <div class="chapter-box">
-      <a class="reference" href="https://arxiv.org/abs/1706.03762">&nbsp; Attention Is All You Need</a> 
+      <a class="reference" href="https://arxiv.org/abs/1706.03762">&nbsp; Attention Is All You Need</a><br>
+      <a class="reference" href="notion.so/Hello-I-m-Moon-e1ecc2e40b32405e997713cfb44e4f3c">&nbsp; Generative Training Experiment</a>
     </div>
 
   </div>

@@ -398,7 +398,7 @@ class FusionModel(nn.Module):
                 <li><b>Translation Task:</b> &nbsp; WMT'14 En-De</li>
                 <li><b>Dialogue Task:</b> &nbsp; Daily Dialogue</li>
                 <li><b>Summarization Task:</b> &nbsp; CNN Daily</li>
-                <li><b>Tokenizer:</b> &nbsp; AlBERT Tokenizer</li>
+                <li><b>Tokenizer:</b> &nbsp; AlBERT Pretrained Tokenizer</li>
               </ul>
               <ul>
                 <li><b>Train Data Volumn:</b> &nbsp; 50,000</li>
@@ -413,16 +413,16 @@ class FusionModel(nn.Module):
           <li>Training Setup
             <div class="dual-container">
               <ul>
+                <li><b>Hardware</b>: &nbsp; Google Colab A100 GPU</li>
                 <li><b>Num Epochs:</b> &nbsp; 10</li>
                 <li><b>Batch Size:</b> &nbsp; 32</li>
-                <li><b>Learning Rate:</b> &nbsp; 5e-4</li>
-                <li><b>Learning Rate for PLE:</b> &nbsp; 5e-5</li>                
+                <li><b>Optimizer:</b> &nbsp; AdamW</li>
               </ul>
               <ul>
+                <li><b>Learning Rate:</b> &nbsp; 5e-4</li>
+                <li><b>Learning Rate for PLE:</b> &nbsp; 5e-5</li>                            
                 <li><b>LR Scheduler:</b> &nbsp; ReduceLROnPlateau</li>                
-                <li><b>Optimizer:</b> &nbsp; AdamW</li>
                 <li><b>Gradient Accumulation Steps:</b> &nbsp; 4
-                <li><b>Early Stop Patience:</b> &nbsp; 3</li>
               </ul>
             </div>
           </li>

@@ -5,15 +5,14 @@ permalink: /multilingual_translation
 
 
 <div id="detail">
-  <h1 class="title">Multi-Lingual&hairsp; Machine Translation</h1>  
+  <h1 class="title">Multi-Lingual&hairsp; Translation</h1>  
   <div class="post">
 
     <hr>
     <div class="callout">
       <p class="highlighted-text"><span>Project Objective</span></p>
       <div class="small-spacer"></div>
-      <p>&nbsp; 이 프로젝트에서는 Multi Modality 증진을 위해, 효과적인 모델 디자인을 탐구합니다.
-        데이터로는 AI HUB의 한국어-영어 번역 데이터셋을 사용했으며, 표준 트랜스포머에서 깊이, 너비, 다양성을 변인으로 하여, 각 모델 디자인 별 Multi Modality에서의 효용성을 탐구합니다. 
+      <p>&nbsp; 이 프로젝트에서는 다언어 번역 과제 해결에 효과적인 모델 디자인을 탐구합니다. 모델 디자인의 변인으로는 <b>Unbalanced, Evolved Hybrid, KoBERT Fusion</b> 모델들을 사용해 AI HUB의 한국어 번역 데이터셋에서의 성능을 통해 각 모델 별 효용성을 검증합니다. 
       </p>
     </div>
 
@@ -63,7 +62,6 @@ permalink: /multilingual_translation
           <p>&nbsp; 기계 번역은 가장 유명한 자연어 생성과제중 하나입니다. 덕분에 단일 언어 번역 과제에서의 성능을 향상시키기 위한 모델 관점에서의, 학습법 관점에서의 다양한 연구들이 있습니다. 하지만, 다언어 번역을 위한 모델링 및 학습 방식에 대한 연구는 상대적으로 부족합니다. 이 프로젝트에서는 다언어 번역 모델에 대한 연구가 부족하다는 문제점을 직접 해결하려 합니다.
           다언어 번역도 크게 세 가지로 나누어볼수 있습니다. 다언어를 이해하고, 하나의 언어로 변환하는 모델. 하나의 언어를 이해하고, 다언어로 표현할 수 있는 모델. 다언어를 이해하고, 다언어로 변환할 수 있는 모델.
           각 모델은 인코더 혹은 디코더의 무게중심이 상이합니다. 첫번째는 인코더의 성능이, 두번째는 디코더의 성능이, 마지막은 인코더와 디코더가 모두 중요하게 작용합니다.
-
           </p>
 
           <div class="spacer"></div>
@@ -88,18 +86,13 @@ permalink: /multilingual_translation
 
       <div class="list-container">
         <ul>
-          <li>Multi Encoding Single Decoding</li>
-          <p>&nbsp; 프로젝트의 실험에서는 한국어-영어 번역과제를 선정했습니다. 이를 위한 데이터 셋으로는 Ai Hub의 공개데이터를 사용했습니다. 총 10개의 세부 항목으로 나누어진 데이터 중, 가장 범용적인 언어 표현 도메인으로 이루어진 000 데이터 들을 사용합니다. 총 데이터 개수는 000개이며, 이 중, 학습, 검증, 테스트 데이터 셋으로 각각 000 개씩 사용합니다. 데이터 예시는 아래와 같습니다. 
+          <li>Multi Lingual Machine Translation</li>
+          <p>&nbsp; 최근 다양한 LLM에서 다언어 번역 기능을 지원하며, 딥러닝 모델을 통한 다양한 번역 모델링의 성공적 가능성을 보여주고 있습니다. 하지만, Foundation 모델 단에서 다언어 기계 번역을 위한 연구는 상대적으로 부족합니다. 이 프로젝트에서는 ...
           </p>
 
           <div class="spacer"></div>
-          <li>Single Encoding Multi Decoding</li>
-          <p>&nbsp; PLE Fused Model은 "Incorporating BERT into Neural Machine Translation" 논문에서 제시한 모델 구조를 사용합니다. 사전학습된 인코더 모델을 그대로 인코더로만 사용하는것이 아니라, 인코딩과 디코딩 과정에 추가적인 정보전달을 위한 모델로 활용합니다.
-          </p>
-
-          <div class="spacer"></div>
-          <li>Multi Encoding Multi Decoding</li>
-          <p>&nbsp; PLE Fused Model은 "Incorporating BERT into Neural Machine Translation" 논문에서 제시한 모델 구조를 사용합니다. 사전학습된 인코더 모델을 그대로 인코더로만 사용하는것이 아니라, 인코딩과 디코딩 과정에 추가적인 정보전달을 위한 모델로 활용합니다.
+          <li>Prompt Training</li>
+          <p>&nbsp; 학습 방법론에서는 T5에서의 Prompting 방식을 활용해서, 번역을 원하는 언어쌍에 따라 다른 시그널을 모델이 인식할 수 있도록 합니다.
           </p>
 
         </ul>
@@ -114,19 +107,9 @@ permalink: /multilingual_translation
       <div class="list-container">
         <ul>
 
-          <li>Hierarchical Linear Encoder Model
+          <li>Unbalanced Transformer
             <ul>
-              <li></li>
-              <li></li>
-              <li></li>
-            </ul>
-          </li>   
-
-
-          <div class="spacer"></div>
-          <li>Hierarchical RNN Encoder Model
-            <ul>
-              <li></li>
+              <li>Encoder-Wide, </li>
               <li></li>
               <li></li>
             </ul>
@@ -134,9 +117,9 @@ permalink: /multilingual_translation
 
 
           <div class="spacer"></div>
-          <li>Hierarchical Attention Encoder Model
+          <li>Evolved Hybrid Transformer
             <ul>
-              <li></li>
+              <li>이전 Transformer Variants에서 좋은 성능을 보였던, Evolved Hybrid Transformer 모델 구조</li>
               <li></li>
               <li></li>
             </ul>
@@ -144,9 +127,9 @@ permalink: /multilingual_translation
 
 
           <div class="spacer"></div>
-          <li>Hierarchical Fusion Encoder Model
+          <li>KoBERT Fusion Transformer
             <ul>
-              <li></li>
+              <li>한국어와 더불어 영어에 대한 사전학습이 되어있는 KoBERT라는 사전학습 인코더를 활용한 모델 구조</li>
               <li></li>
               <li></li>
             </ul>
@@ -226,7 +209,7 @@ permalink: /multilingual_translation
 
       <div class="list-container">
         <ul>
-          <li>Result Table</li>
+          <li>En-Ko Translation</li>
 
             <table class="result-table">
               <thead>
@@ -240,25 +223,77 @@ permalink: /multilingual_translation
               </thead>
               <tbody>
                 <tr>
-                  <td>RNN Model</td>
-                  <td>2.12</td>
-                  <td>3m 58s</td>
-                  <td>0.22GB</td>
+                  <td>Standard Transformer</td>
+                  <td>2.86</td>
+                  <td>0m 41s</td>
+                  <td>0.20GB</td>
+                  <td>0.85GB</td>
+                </tr>
+                <tr>
+                  <td>Unbalanced Transformer</td>
+                  <td>1.81</td>
+                  <td>0m 41s</td>
+                  <td>0.18GB</td>
                   <td>0.82GB</td>
                 </tr>
                 <tr>
-                  <td>LSTM Model</td>
-                  <td>8.35</td>
-                  <td>4m 16s</td>
-                  <td>0.27GB</td>
-                  <td>1.30GB</td>
+                  <td>Evolved Hybrid Transformer</td>
+                  <td>0.00</td>
+                  <td>0m 40s</td>
+                  <td>0.19GB</td>
+                  <td>0.78GB</td>
                 </tr>
                 <tr>
-                  <td>GRU Model</td>
-                  <td>9.75</td>
-                  <td>4m 6s</td>
-                  <td>0.26GB</td>
-                  <td>1.16GB</td>
+                  <td>KoBERT Fusion Transformer</td>
+                  <td>0.00</td>
+                  <td>0m 40s</td>
+                  <td>0.19GB</td>
+                  <td>0.78GB</td>
+                </tr>
+
+              </tbody>
+            </table>
+          
+          <div class="spacer"></div>
+          <li>Ko-En Translation</li>
+            <table class="result-table">
+              <thead>
+                <tr>
+                  <th>Model Type</th>
+                  <th>Eval Score</th>
+                  <th>Epoch Time</th>
+                  <th>Avg GPU</th>
+                  <th>Max GPU</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Standard Transformer</td>
+                  <td>2.86</td>
+                  <td>0m 41s</td>
+                  <td>0.20GB</td>
+                  <td>0.85GB</td>
+                </tr>
+                <tr>
+                  <td>Unbalanced Transformer</td>
+                  <td>1.81</td>
+                  <td>0m 41s</td>
+                  <td>0.18GB</td>
+                  <td>0.82GB</td>
+                </tr>
+                <tr>
+                  <td>Evolved Hybrid Transformer</td>
+                  <td>0.00</td>
+                  <td>0m 40s</td>
+                  <td>0.19GB</td>
+                  <td>0.78GB</td>
+                </tr>
+                <tr>
+                  <td>KoBERT Fusion Transformer</td>
+                  <td>0.00</td>
+                  <td>0m 40s</td>
+                  <td>0.19GB</td>
+                  <td>0.78GB</td>
                 </tr>
 
               </tbody>
@@ -267,7 +302,7 @@ permalink: /multilingual_translation
 
           <div class="spacer"></div>
           <li>Result Analysis</li>
-            <p> &nbsp; RNN은 다양한 정보를 함유하기에 지나치게 단순하고, LSTM은 GATE구조가 복잡하기에, 그만큼 영향을 받은 요소가 많아 학습 수렴이 어렵습니다. 때문에 모든 학습 결과에서는 GATE를 사용하면서도 단순화된 연산으로 학습의 이점이 큰 GRU가 가장 뛰어난 성능을 보임을 알 수 있습니다. 
+            <p> &nbsp; ...
             </p>
         </ul>
       </div>
@@ -280,13 +315,13 @@ permalink: /multilingual_translation
 
       <div class="list-container">
         <ul>
-          <li>RNN, LSTM, GRU 을 활용한 seq2seq 모델링 방식의 이해</li>
-            <p>&nbsp; 토큰의 벡터 변환을 위한 Embedding Layer와 실제 연산을 위한 순환 신경망 레이어만으로 구성된 단순산 Encoder, Decoder 구조로 이루어져 있으며, 
+          <li>000 모델 구조의 Foundation Model로써의 효용성 확인</li>
+            <p>&nbsp; ...
             </p>
 
           <div class="spacer"></div>
-          <li>세 가지 순환 신경망의 성능 비교 검증</li>
-            <p>LSTM은 게이트 메커니즘을 통해 장기 의존성 문제를 해결하는 데 강점을 보입니다. 복잡한 문맥을 학습하고 기억하는 데 탁월하며, 긴 시퀀스 데이터에서 뛰어난 성능을 발휘할 수 있습니다. 하지만 LSTM은 더 많은 파라미터를 가지고 있어서 더 많은 데이터와 계산 리소스가 필요할 수 있습니다.
+          <li>...</li>
+            <p>&nbsp; ...
             </p>
 
         </ul>
@@ -298,7 +333,10 @@ permalink: /multilingual_translation
     <h2 id="7">7. &hairsp; Reference</h2>
     <div class="chapter-box">
       <a class="reference" href="https://arxiv.org/abs/1706.03762">&nbsp; Attention Is All You Need</a> <br> 
-      <a class="reference" href="https://aclanthology.org/D18-1045.pdf">&nbsp; Understanding Back-Translation at Scale</a> 
+      <a class="reference" href="https://arxiv.org/abs/1910.10683">&nbsp; Exploring the Limits of Transfer Learning with a Unified Text-to-Text Transformer</a>
+      <a class="reference" href="">&nbsp; Transformer Balance</a><br>
+      <a class="reference" href="">&nbsp; Transformer Variants</a><br>
+      <a class="reference" href="">&nbsp; Transformer Fusion</a> 
     </div>
 
   </div>

@@ -5,14 +5,14 @@ permalink: /transformer_variants
 
 
 <div id="detail">
-  <h1 class="title">Transformer Variants Comparison Study</h1>  
+  <h1 class="title">Transformer Variants</h1>  
   <div class="post">
 
     <hr>
     <div class="callout">
       <p class="highlighted-text"><span>Project Objective</span></p>
       <div class="small-spacer"></div>
-      <p>&nbsp; 이 프로젝트에서는 Standard Transformer와 이를 개선시킨 Recurrent & Evolved Transformer를 직접 구현하고 그 성능의 변화를 확인해봅니다.
+      <p>&nbsp; 이 프로젝트에서는 트랜스포머 구조 자체에 집중해, 표준 트랜스포머와 이를 개선시킨 Recurrent & Evolved 트랜스포머를 직접 구현하고, 세 가지 자연어 생성과제(기계번역, 대화생성, 문서요약)에서 각 모델 구조의 성능을 검증합니다.
 
       </p>
     </div>
@@ -185,7 +185,7 @@ permalink: /transformer_variants
                 <li><b>Translation Task</b>: &nbsp; WMT'14 En-De</li>
                 <li><b>Dialogue Task</b>: &nbsp; Daily Dialogue</li>
                 <li><b>Summarization Task</b>: &nbsp; CNN Daily</li>
-                <li><b>Tokenizer</b>: &nbsp; Word-Level Tokenizer</li>
+                <li><b>Tokenizer</b>: &nbsp; BPE Tokenizer</li>
               </ul>
               <ul>
                 <li><b>Train Data Volumn</b>: &nbsp; 50,000</li>
@@ -201,16 +201,16 @@ permalink: /transformer_variants
           <li>Training Setup
             <div class="dual-container">
               <ul>
+                <li><b>Hardware</b>: &nbsp; Google Colab A100 GPU</li>
                 <li><b>Num Epochs</b>: &nbsp; 10</li>
                 <li><b>Batch Size</b>: &nbsp; 32</li>
                 <li><b>Learning Rate</b>: &nbsp; 5e-4</li>
-                <li><b>LR Scheduler</b>: &nbsp; ReduceLROnPlateau</li>
               </ul>
               <ul>
                 <li><b>Optimizer</b>: &nbsp; AdamW</li>
-                <li><b>Apply AMD</b>: &nbsp; True</li>
-                <li><b>Gradient Accumulation Steps</b>: &nbsp; 4
-                <li><b>Early Stop Patience</b>: &nbsp; 3</li>                
+                <li><b>LR Scheduler</b>: &nbsp; ReduceLROnPlateau</li>
+                <li><b>Apply Mixed Precision Training</b>: &nbsp; True</li>
+                <li><b>Gradient Accumulation Steps</b>: &nbsp; 4       
               </ul>
             </div>
           </li>
