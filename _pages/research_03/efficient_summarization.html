@@ -83,7 +83,7 @@ permalink: /efficient_summarization
 
       <div class="list-container">
         <ul>
-          <li>Scaled Dot Attention
+          <li>Complexity of Scaled-Dot Attention
             <p>&nbsp; 일반적인 트랜스포머에서 사용하는 어텐션은 Scaled Dot Attention입니다. 이는 간단한 연산으로 뛰어난 성능을 보이지만, 그 연산 복잡도에 있어서는 O2 만큼의 복잡도가 발생합니다. 때문에 입력시퀀스가 길어지는 과제를 해결함에 있어서는 매우 비효율적인 모습이 보입니다.
             </p>
           </li>
@@ -99,28 +99,39 @@ permalink: /efficient_summarization
     </div>
 
 
-<!-- 3. Attention -->    
-    <h2 id="3">&hairsp; 3. &hairsp; Attention</h2>
+<!-- 3. Architecture -->    
+    <h2 id="3">&hairsp; 3. &hairsp; Architecture</h2>
     <div class="chapter-box">
 
       <div class="list-container">
         <ul>
           
-          <li>Concept
-            <img src="{{ 'assets/img/research_02/scheduled_sampling.png' | relative_url }}" style="width: 65%; height: 50%; display: block; margin: 0 auto;">
-            <div class="small-spacer"></div>
-            <p>&nbsp; Scheduled Sampling을 Transformer에서 구현하기 위해, 위 그림과 같이 디코딩 과정을 두번 진행합니다. 원래의 Scheduling Sampling은 Auto Regressive하게 시퀀스를 생성하고, 매 Time Step마다 Scheduling Sampling을 사용할지 말지 선택합니다. 하지만 Transformer 모델의 특성 상, 생성 과정에 효율성이 매우 하락합니다. 효율성 하락이라는 이슈를 해결하고, 가장 Transformer 적인 연산안에서 Scheduled Sampling을 사용하기 위해, 위와 같은 방식을 사용합니다. <br>
-
-            학습 시 디코딩 과정을 자세히 살펴보자면, 우선 첫번째 디코딩에서는 일반적인 Transformer의 방식과 동일하게 Self Attention과 Encoder-Decoder Attention을 거쳐 Logit 값을 반환합니다. 이때 반환된 Logit값은 Token으로 반환되어 Scheduled Sampling이 진행됩니다. 이후 Sampled Input을 다시금 디코더의 입력으로 주어 두번째 디코딩이 진행됩니다. 
-            </p>
+          <li>Standard Transformer
+            <ul>
+              <li style="font-weight: normal;">Attention is all you need에서 소개된, 가장 표준적인 트랜스포머 구조</li>
+              <li style="font-weight: normal;">Scaled Dot Product Attention을, 모든 모델 구조에서 사용</li>
+              <li style="font-weight: normal;">실험의 BaseLine Model</li>
+            </ul>
           </li>
 
 
           <div class="spacer"></div>
-          <li>Code Implementation
-            <p>&nbsp; ...
-            </p>
+          <li>Half-Efficient Transformer
+            <ul>
+              <li style="font-weight: normal;">트랜스포머의 인코더에서만, Efficient Attention을 사용</li>
+              <li style="font-weight: normal;">디코더에서는 Scaled Dot Product Attention을 사용</li>
+              <li style="font-weight: normal;">인코딩과정에서는 효율성을, 디코딩과정에서는 정확성에 집중하기 위해 효율성과 정확성을 모두 가져가기 위한 모델 구조</li>
+            </ul>
           </li>
+
+          <div class="spacer"></div>
+          <li>Efficient Transformer
+            <ul>
+              <li style="font-weight: normal;">트랜스포머의 모든 어텐션 연산에 Efficient Attention을 사용한 모델</li>
+              <li style="font-weight: normal;">모델의 모든 어텐션 연산에서 효율성을 제고시키는 것이, 전체 성능에 어떤 변화를 가져올지 확인하기 위한 모델 구조</li>
+            </ul>
+          </li>
+
 
         </ul>          
       </div>
@@ -136,13 +147,11 @@ permalink: /efficient_summarization
           <li>Data Setup
             <div class="dual-container">
               <ul>
-                <li>Translation Task: &nbsp; WMT'14 En-De</li>
-                <li>Dialogue Task: &nbsp; Daily Dialogue</li>
-                <li>Summarization Task: &nbsp; CNN Daily Mail</li>
+                <li>Dataset: &nbsp; CNN Daily Mail</li>
                 <li>Tokenizer: &nbsp; BPE Tokenizer</li>
+                <li>Vocab Size: &nbsp; 15,000</li>
               </ul>
               <ul>
-                <li>Vocab Size: &nbsp; 15,000</li>
                 <li>Train Data Volumn: &nbsp; 50,000</li>
                 <li>Valid Data Volumn: &nbsp; 5,000</li>
                 <li>Test Data Volumn: &nbsp; 100</li>
@@ -196,12 +205,12 @@ permalink: /efficient_summarization
 
       <div class="list-container">
         <ul>
-          <li>Machine Translation</li>
+          <li>Text Summarization</li>
 
             <table class="result-table">
               <thead>
                 <tr>
-                  <th>Sampling Ratio</th>
+                  <th>Model</th>
                   <th>Score</th>
                   <th>Epoch Time</th>
                   <th>Avg GPU</th>
@@ -210,29 +219,24 @@ permalink: /efficient_summarization
               </thead>
               <tbody>
                 <tr>
-                  <td>0.0</td>
+                  <td>Standard Transformer</td>
                   <td>12.99</td>
                   <td>0m 44s</td>
                   <td>0.20GB</td>
                   <td>0.95GB</td>
                 </tr>
+
                 <tr>
-                  <td>0.1</td>
+                  <td>Half-Efficient Transformer</td>
                   <td>2.11</td>
                   <td>1m 00s</td>
                   <td>0.20GB</td>
                   <td>0.95GB</td>
                 </tr>
+
                 <tr>
-                  <td>0.3</td>
-                  <td>7.34</td>
-                  <td>1m 00s</td>
-                  <td>0.20GB</td>
-                  <td>0.95GB</td>
-                </tr>
-                <tr>
-                  <td>0.5</td>
-                  <td>6.94</td>
+                  <td>Efficient Transformer</td>
+                  <td>2.11</td>
                   <td>1m 00s</td>
                   <td>0.20GB</td>
                   <td>0.95GB</td>
@@ -240,97 +244,7 @@ permalink: /efficient_summarization
 
               </tbody>
             </table>
-          
-          <div class="half-spacer"></div>
-          <li>Dialogue Generation</li>
-            <table class="result-table">
-              <thead>
-                <tr>
-                  <th>Sampling Ratio</th>
-                  <th>Score</th>
-                  <th>Epoch Time</th>
-                  <th>Avg GPU</th>
-                  <th>Max GPU</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>0.0</td>
-                  <td>2.03</td>
-                  <td>0m 43s</td>
-                  <td>0.20GB</td>
-                  <td>0.85GB</td>
-                </tr>
-                <tr>
-                  <td>0.1</td>
-                  <td>2.31</td>
-                  <td>0m 59s</td>
-                  <td>0.20GB</td>
-                  <td>0.85GB</td>
-                </tr>
-                <tr>
-                  <td>0.3</td>
-                  <td>2.34</td>
-                  <td>0m 59s</td>
-                  <td>0.20GB</td>
-                  <td>0.85GB</td>
-                </tr>
-                <tr>
-                  <td>0.5</td>
-                  <td>0.82</td>
-                  <td>0m 59s</td>
-                  <td>0.20GB</td>
-                  <td>0.85GB</td>
-                </tr>
 
-              </tbody>
-            </table>
-
-
-          <div class="half-spacer"></div>
-          <li>Text Summarization</li>
-            <table class="result-table">
-              <thead>
-                <tr>
-                  <th>Sampling Ratio</th>
-                  <th>Score</th>
-                  <th>Epoch Time</th>
-                  <th>Avg GPU</th>
-                  <th>Max GPU</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>0.0</td>
-                  <td>7.60</td>
-                  <td>2m 44s</td>
-                  <td>0.21GB</td>
-                  <td>2.78GB</td>
-                </tr>
-                <tr>
-                  <td>0.1</td>
-                  <td>2.95</td>
-                  <td>3m 8s</td>
-                  <td>0.21GB</td>
-                  <td>2.78GB</td>
-                </tr>
-                <tr>
-                  <td>0.3</td>
-                  <td>4.10</td>
-                  <td>3m 8s</td>
-                  <td>0.21GB</td>
-                  <td>2.78GB</td>
-                </tr>
-                <tr>
-                  <td>0.5</td>
-                  <td>5.39</td>
-                  <td>3m 8s</td>
-                  <td>0.21GB</td>
-                  <td>2.78GB</td>
-                </tr>
-
-              </tbody>
-            </table>
 
 
           <div class="half-spacer"></div>  
@@ -356,7 +270,7 @@ permalink: /efficient_summarization
     <h2 id="7">&hairsp; 7. &hairsp; Reference</h2>
     <div class="chapter-box">
       <a class="reference" href="https://arxiv.org/abs/1706.03762">&nbsp; Attention Is All You Need</a> <br> 
-      <a class="reference" href="https://arxiv.org/abs/1906.07651">&nbsp; Scheduled Sampling for Transformers</a> 
+      <a class="reference" href="https://arxiv.org/abs/1812.01243">&nbsp; Efficient Attention: Attention with Linear Complexities</a> 
 
     </div>
 
