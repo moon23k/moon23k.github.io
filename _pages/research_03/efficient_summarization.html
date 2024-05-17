@@ -12,7 +12,7 @@ permalink: /efficient_summarization
     <div class="callout">
       <p class="highlighted-text"><span>Project Objective</span></p>
       <div class="small-spacer"></div>
-      <p>&nbsp; 이 프로젝트에서는 긴 시퀀스를 다룸에 있어 비 효율적인 기존 어텐션 연산을 개선한 두 가지 어텐션 기법을 적용한 모델의 성능과 효율성 간의 크로스오버를 면밀히 검토하며. 각 방법론의 효용성을 다각적으로 검증합니다. 
+      <p>&nbsp; 이 프로젝트는 트랜스포머 구조를 활용해 문서 요약이라는 긴 시퀀스를 효율적으로 해결하기 위한 방법론을 심층적으로 검증합니다. 총 4개의 방법론을 제시하며, 모든 방법론은 시퀀스 길이에 관한 주요 정보가 Low Rank에 존재한다는 주장에 기반했던 Linformer 연구를 기반으로 합니다. 
       </p>
     </div>
 
@@ -65,9 +65,8 @@ permalink: /efficient_summarization
           <div class="spacer"></div>
           <li>Objective
             <ul>
-              <li style="font-weight: normal;">Scheduled Sampling for Transformers 구현</li>
-              <li style="font-weight: normal;">Sampling Ratio 별 자연어 생성 능력의 변화 확인</li>
-              <li style="font-weight: normal;">Scheduled Sampling의 Exposure Bias 완화 기능 확인</li>
+              <li style="font-weight: normal;">Linformer에서 제시하는 Low Rank Projection Sequence Length 방법론의 효용성 탐색</li>
+              <li style="font-weight: normal;">Linformer의 방법론이 적용되는 모델 구조적 변인에 따른 결과 분석</li>
             </ul>
           </li>
 
@@ -83,14 +82,30 @@ permalink: /efficient_summarization
 
       <div class="list-container">
         <ul>
-          <li>Complexity of Scaled-Dot Attention
+          <li>Quadratic Complexity of Attention Mechanism
             <p>&nbsp; 일반적인 트랜스포머에서 사용하는 어텐션은 Scaled Dot Attention입니다. 이는 간단한 연산으로 뛰어난 성능을 보이지만, 그 연산 복잡도에 있어서는 O2 만큼의 복잡도가 발생합니다. 때문에 입력시퀀스가 길어지는 과제를 해결함에 있어서는 매우 비효율적인 모습이 보입니다.
             </p>
           </li>
 
+
           <div class="spacer"></div>
-          <li>Efficient Attention
-            <p>&nbsp; Scheduled sampling은 sequence-to-sequence 모델에서 사용되는 훈련 기술 중 하나입니다. 주로 기계 번역 및 자연어 처리 작업에서 적용됩니다.
+          <li>Efficient Attention Mechanism
+            <p>&nbsp; 어텐션 연산의 효율성을 향상시키기 위한 다양한 방법이 제시되었습니다. 이 방법들 중 대표적으로는 시퀀스 길이를 특정 길이의 블록으로 분할하여 취합하는 방법과 모든 포인트 참조 연산을 Sparse하게 변환하는 방법이 있습니다. 그러나 어텐션의 강점은 한 번에 모든 포인트에 대한 참조를 수행할 수 있는 능력에 있습니다. 이러한 관점에서 볼 때, 블록 분할 및 Sparse 연산은 어텐션 연산의 강점을 약화시키는 경향이 있습니다. 따라서 이 연구에서는 자르거나 Sparse 연산이 아닌 다른 두 가지 방법론을 채택합니다.
+            전체 어텐션 매트릭스 중 일부 토큰들 간의 관계만 계산하여 계산 복잡도를 줄이는 방법. Sparse Transformer, Longformer, Big Bird 등
+            이 방식은 벡터간 유사도를 측정한 결과를 반영하는 것이 아닌, 고정된 패턴을 기반으로 어텐션을 수행하도록 하는 방식입니다.
+            </p>
+          </li>
+
+
+          <div class="spacer"></div>
+          <li>Sequence Length Projection
+            <div class="small-spacer"></div>
+            <img src="{{ 'assets/img/research_03/efficient_attn.png' | relative_url }}" style="width: 80%; height: 50%; display: block; margin: 0 auto;">
+            <div class="small-spacer"></div>            
+            <p>&nbsp; Efficient Attention: Attention with Linear Complexities 논문에서 제시한 Efficient Attention은 기존 Scaled Dot Product Attention의 연산 순서를 변경한 것 만으로 복잡도를 감소시켜, 입력 길이에 대한 컴퓨팅 자원의 과도한 사용을 감소시킨 기법입니다. 어텐션은 기본적으로 두번의 매트릭스 곱 연산을 수행합니다. S = KQt(유사도), D=SV(어텐션 값).
+            이때 차원의 변환을 살펴보면 ... 이렇게 됩니다. 하지만 Efficient Attention에서는 그 순서를 ~~~하게 변환시켜서 
+            어텐션 계산을 근사화하여 계산 복잡도를 --에서 --로 줄이는 방법. Linformer, Performer, Linear Transformer 등
+
             </p>
           </li>
 
@@ -106,29 +121,32 @@ permalink: /efficient_summarization
       <div class="list-container">
         <ul>
           
-          <li>Standard Transformer
+          <li>Back Bone Model Architecture
             <ul>
-              <li style="font-weight: normal;">Attention is all you need에서 소개된, 가장 표준적인 트랜스포머 구조</li>
-              <li style="font-weight: normal;">Scaled Dot Product Attention을, 모든 모델 구조에서 사용</li>
-              <li style="font-weight: normal;">실험의 BaseLine Model</li>
-            </ul>
-          </li>
-
-
-          <div class="spacer"></div>
-          <li>Half-Efficient Transformer
-            <ul>
-              <li style="font-weight: normal;">트랜스포머의 인코더에서만, Efficient Attention을 사용</li>
-              <li style="font-weight: normal;">디코더에서는 Scaled Dot Product Attention을 사용</li>
-              <li style="font-weight: normal;">인코딩과정에서는 효율성을, 디코딩과정에서는 정확성에 집중하기 위해 효율성과 정확성을 모두 가져가기 위한 모델 구조</li>
+              <li style="font-weight: normal;">전체 실험군 모델의 백본모델 구조는 Standard Transformer와 Evolved Transformer를 사용</li>
+              <li style="font-weight: normal;">Transformer Variants 프로젝트의 실험 결과를 참조해, 인코더에만 Evolved Transformer의 구조를 차용</li>
+              <li style="font-weight: normal;">백본 모델 모두 디코더의 구조는 동이하며, 인코더의 구현 방식에서만 차이를 둠</li>
+              <li style="font-weight: normal;">Scaled Dot Product Attention을 디폴트 연산으로 사용</li>
             </ul>
           </li>
 
           <div class="spacer"></div>
-          <li>Efficient Transformer
+          <li>Sequence Length Projection Type
             <ul>
-              <li style="font-weight: normal;">트랜스포머의 모든 어텐션 연산에 Efficient Attention을 사용한 모델</li>
-              <li style="font-weight: normal;">모델의 모든 어텐션 연산에서 효율성을 제고시키는 것이, 전체 성능에 어떤 변화를 가져올지 확인하기 위한 모델 구조</li>
+              <li style="font-weight: normal;">Sequence Length에 따라 Quadratic하게 증가하는 연산 복잡도의 해소를 위해 Sequence Length의 차원을 저차원으로 사영시킴</li>
+              <li style="font-weight: normal;">사영의 방식을 선형 변환과, 비선형 변화 두 가지로 나누어 모델링에 적용</li>
+              <li style="font-weight: normal;">기존 Sequence Length에서 0.5배 감소한 차원으로 Projection 적용</li>
+              <li style="font-weight: normal;">비선형 변환을 위해 GELU 활성화 함수 활용</li>
+            </ul>
+          </li>
+
+          <div class="spacer"></div>
+          <li>Application of Sequence Length Projection
+            <ul>
+              <li style="font-weight: normal;">SLP는 인코더의 연산 과정서에만 적용</li>
+              <li style="font-weight: normal;">인코더의 SLP 적용 방식을 Half와 Full 두 가지로 나누어 모델 구조에 적용</li>
+              <li style="font-weight: normal;">Full의 경우, 인코더의 모든 레이어에서 동일한 Type의 SLP를 사용. 일관된 구조로 인해 모델 구조가 단순하기에 Type별 특성 파악에 용이</li>
+              <li style="font-weight: normal;">Half의 경우, 인코더의 저층 레이어에서는 Scaled Dot Product Attention을 사용함으로써 모든 토큰간의 관계성을 포착할 수 있도록 유도함. 그리고 인코더의 상위 레이어에서는 Sequence Length Projection을 사용해 Low Rank에서의 의미를 포착 할 수 있도록 유도</li>
             </ul>
           </li>
 
@@ -149,7 +167,7 @@ permalink: /efficient_summarization
               <ul>
                 <li>Dataset: &nbsp; CNN Daily Mail</li>
                 <li>Tokenizer: &nbsp; BPE Tokenizer</li>
-                <li>Vocab Size: &nbsp; 15,000</li>
+                <li>Vocab Size: &nbsp; 30,000</li>
               </ul>
               <ul>
                 <li>Train Data Volumn: &nbsp; 50,000</li>
@@ -164,15 +182,14 @@ permalink: /efficient_summarization
           <li>Model Setup
             <div class="dual-container">
               <ul>
-                <li>Architecture: &nbsp; Transformer</li>
-                <li>Input Dim: &nbsp; 15,000</li>
-                <li>Output Dim: &nbsp; 15,000</li>
+                <li>Architecture: &nbsp; Standard Transformer & Evolved Transformer</li>
+                <li>Input Dim: &nbsp; 30,000</li>
+                <li>Output Dim: &nbsp; 30,000</li>
               </ul>
               <ul>
-                <li>Embedding Dim: &nbsp; 512</li>
-                <li>Hidden Dim: &nbsp; 512</li>
-                <li>Model Params: &nbsp; 15,488,664</li>
-                <li>Model Size: &nbsp; 60.085 MB</li>                
+                <li>Embedding Dim: &nbsp; 256</li>
+                <li>Hidden Dim: &nbsp; 256</li>   
+                <li>PFF Dim: &nbsp; 512</li>                
               </ul>
             </div>
           </li>
@@ -188,7 +205,7 @@ permalink: /efficient_summarization
               </ul>
               <ul>
                 <li>Optimizer: &nbsp; AdamW</li>
-                <li>Apply Gradient Checkpoint: &nbsp; True</li>
+                <li>Apply AMP: &nbsp; True</li>
                 <li>Gradient Accumulation Steps: &nbsp; 4</li>
                 <li>Early Stop Patient: &nbsp; 3</li>
               </ul>
@@ -205,41 +222,57 @@ permalink: /efficient_summarization
 
       <div class="list-container">
         <ul>
-          <li>Text Summarization</li>
+          <li>Standard Transformer Based Models</li>
 
             <table class="result-table">
               <thead>
                 <tr>
-                  <th>Model</th>
-                  <th>Score</th>
-                  <th>Epoch Time</th>
-                  <th>Avg GPU</th>
-                  <th>Max GPU</th>
+                  <th>&nbsp;Model&nbsp;</th>
+                  <th>&nbsp;Score&nbsp;</th>
+                  <th>&nbsp;Epoch Time&nbsp;</th>
+                  <th>&nbsp;Avg GPU&nbsp;</th>
+                  <th>&nbsp;Max GPU&nbsp;</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>Standard Transformer</td>
-                  <td>12.99</td>
-                  <td>0m 44s</td>
-                  <td>0.20GB</td>
-                  <td>0.95GB</td>
+                  <td>Standard Model</td>
+                  <td>2.13</td>
+                  <td>2m 30s</td>
+                  <td><b>0.39GB</b></td>
+                  <td>6.82GB</td>
                 </tr>
 
                 <tr>
-                  <td>Half-Efficient Transformer</td>
-                  <td>2.11</td>
-                  <td>1m 00s</td>
-                  <td>0.20GB</td>
-                  <td>0.95GB</td>
+                  <td>Standard Half Linear Attention Model</td>
+                  <td>2.84</td>
+                  <td>2m 20s</td>
+                  <td>0.40GB</td>
+                  <td>6.62GB</td>
                 </tr>
 
                 <tr>
-                  <td>Efficient Transformer</td>
-                  <td>2.11</td>
-                  <td>1m 00s</td>
-                  <td>0.20GB</td>
-                  <td>0.95GB</td>
+                  <td>Standard Full Linear Attention Model</td>
+                  <td>3.50</td>
+                  <td><b>1m 49s</b></td>
+                  <td>0.41GB</td>
+                  <td><b>6.01GB</b></td>
+                </tr>              
+
+                <tr>
+                  <td>Standard Half Non-Linear Attention Model</td>
+                  <td>2.34</td>
+                  <td>2m 21s</td>
+                  <td>0.40GB</td>
+                  <td>6.63GB</td>
+                </tr>
+
+                <tr>
+                  <td>Standard Full Non-Linear Attention Model</td>
+                  <td><b>3.76</b></td>
+                  <td>1m 51s</td>
+                  <td>0.41GB</td>
+                  <td>6.05GB</td>
                 </tr>
 
               </tbody>
@@ -247,10 +280,80 @@ permalink: /efficient_summarization
 
 
 
-          <div class="half-spacer"></div>  
-          <li>Result Analysis</li>
-            <p> &nbsp; ...
-            </p>
+          <div class="spacer"></div>
+          <li>Evolved Transformer Based Models</li>
+
+            <table class="result-table">
+              <thead>
+                <tr>
+                  <th>&nbsp;Model&nbsp;</th>
+                  <th>&nbsp;Score&nbsp;</th>
+                  <th>&nbsp;Epoch Time&nbsp;</th>
+                  <th>&nbsp;Avg GPU&nbsp;</th>
+                  <th>&nbsp;Max GPU&nbsp;</th>
+                </tr>
+              </thead>
+              <tbody>
+
+                <tr>
+                  <td>Evolved Model</td>
+                  <td>11.47</td>
+                  <td>2m 02s</td>
+                  <td><b>0.39GB</b></td>
+                  <td>5.98GB</td>
+                </tr>                
+
+                <tr>
+                  <td>Evolved Half Linear Attention Model</td>
+                  <td>10.62</td>
+                  <td>1m 51s</td>
+                  <td>0.40GB</td>
+                  <td>5.79GB</td>
+                </tr>
+
+                <tr>
+                  <td>Evolved Full Linear Attention Model</td>
+                  <td>11.74</td>
+                  <td><b>1m 42s</b></td>
+                  <td>0.41GB</td>
+                  <td><b>5.59GB</b></td>
+                </tr>              
+
+                <tr>
+                  <td>Evolved Half Non-Linear Attention Model</td>
+                  <td><b>13.51</b></td>
+                  <td>1m 52s</td>
+                  <td>0.40GB</td>
+                  <td>5.80GB</td>
+                </tr>
+
+                <tr>
+                  <td>Evolved Full Non-Linear Attention Model</td>
+                  <td>12.39</td>
+                  <td><b>1m 42s</b></td>
+                  <td>0.41GB</td>
+                  <td>5.60GB</td>
+                </tr>                  
+
+
+              </tbody>
+            </table>
+
+
+
+          <div class="spacer"></div>  
+          <li>Result Analysis
+            <div class="small-spacer"></div>
+            <ul>
+              <li>SLP 적용 모델들에서 최대 GPU 메모리 사용량과 Epoch Time 모두 감소했습니다. 특히 Full SLP Type 모델에서 이 감소가 더 두드러져, SLP가 메모리 부담을 줄임과 동시에 학습 속도 개선에 효과가 있음을 확인했습니다.</li>
+              <li>평균 GPU 메모리 사용량은 SLP 미적용 모델이 가장 낮다는 결과는 SLP 적용을 위한 부수적 레이어가 모델에 추가됨으로 인해 발생한 결과로 볼 수 있습니다.</li>
+              <li>평균 GPU 메모리 사용량이 소폭 증가한 것에 비해, 최대 메모리 사용량 감소와 시간 단축 측면에서의 개선이 크게 이루어 졌다는 사실에서 긍정적인 Trade-Off가 발생했음을 확인 할 수 있습니다.</li>
+              <li>추가적으로 Epoch 마다의 평균 GPU 메모리 사용량의 증가보다, 최대 메모리 그리고 시간 측면에서의 개선이 훨씬 크게 작용함을 통해 긍정적 방면의 Trade-Off가 발생함을 확인 할 수 있습니다.</li>
+              <li>성능 측면에서는 Evolved Transformer 기반 모델이 Standard Transformer 기반 모델보다 우수했습니다. Standard Transformer 기반 모델들은 SLP Type보다 적용 방식에 더 큰 영향을 받았으며, Evolved Transformer 기반 모델은 SLP Type의 영향을 더 받았습니다.</li>
+              <li>Standard Transformer 기반 모델 중에서는 Standard Full Non-Linear Attention Model이 가장 좋은 성능을 보였습니다. 이는 모델의 복잡성이 부족할 때 Full Non-Linear Attention이 이를 보완해준 것으로 해석됩니다.</li>
+              <li>반면, Evolved Transformer 기반 모델에서는 Evolved Half Non-Linear Attention Model이 가장 좋은 성능을 보였습니다. 이는 Evolved Transformer가 복잡한 구조 내에서 기존 어텐션을 기반으로 최적화되어 있어, SLP를 부분적으로 적용하는 방법이 더 효과적이었기 때문으로 볼 수 있습니다.</li>
+            </ul>
+          </li>
         </ul>
       </div>
     </div>
@@ -260,7 +363,10 @@ permalink: /efficient_summarization
     <h2 id="6">&hairsp; 6. &hairsp; Conclusion</h2>
     <div class="chapter-box">
 
-      <p>&nbsp; 이 프로젝트에서는 ...
+      <p>&nbsp; 이번 프로젝트에서는 긴 시퀀스 처리 능력 향상을 위한 Sequence Length Projection(SLP)의 효과를 검증했습니다. 실험 결과, SLP를 적용한 모델들은 최대 GPU 메모리 사용량과 Epoch Time이 모두 감소했습니다. 특히 Full SLP Type 모델에서 이러한 감소가 더 두드러졌습니다. 이는 SLP가 메모리 사용을 줄이고 학습 속도를 향상시키는 데 효과적임을 보여줍니다. <br><br> 
+        평균 GPU 메모리 사용량은 SLP 미적용 모델이 가장 낮았습니다. 이는 SLP를 적용하면서 추가된 레이어 때문입니다. 그러나 평균 메모리 사용량의 소폭 증가에도 불구하고, 최대 메모리 사용량 감소와 시간 단축 측면에서의 개선이 더 컸습니다. 이는 긍정적인 Trade-Off가 발생했음을 의미합니다. 결과적으로, 평균 GPU 메모리 사용량의 증가보다 최대 메모리 사용량 감소와 시간 단축 측면에서의 개선이 훨씬 크게 작용했습니다.<br><br> 
+        성능 측면에서 Evolved Transformer 기반 모델은 Standard Transformer 기반 모델보다 뛰어났습니다. Standard Transformer 기반 모델은 SLP Type보다 적용 방식에 더 큰 영향을 받았으며, Evolved Transformer 기반 모델은 SLP Type의 영향을 더 받았습니다. Standard Transformer 모델 중에서는 Standard Full Non-Linear Attention Model이 가장 높은 성능을 보였는데, 이는 이 모델이 복잡성을 잘 보완했기 때문입니다. 반면, Evolved Transformer 모델에서는 Evolved Half Non-Linear Attention Model이 가장 우수했습니다. 이는 Evolved Transformer가 본래 복잡한 구조에 최적화되어 있어, SLP를 부분적으로 적용하는 것이 더 효과적이었기 때문입니다.<br><br> 
+        종합적으로, SLP는 긴 시퀀스 처리에서 메모리 효율성과 학습 속도를 향상시키는 데 유용하며, 모델의 유형과 구조에 따라 그 효과가 다르게 나타날 수 있음을 확인했습니다.
       </p>
 
     </div>
@@ -270,7 +376,8 @@ permalink: /efficient_summarization
     <h2 id="7">&hairsp; 7. &hairsp; Reference</h2>
     <div class="chapter-box">
       <a class="reference" href="https://arxiv.org/abs/1706.03762">&nbsp; Attention Is All You Need</a> <br> 
-      <a class="reference" href="https://arxiv.org/abs/1812.01243">&nbsp; Efficient Attention: Attention with Linear Complexities</a> 
+      <a class="reference" href="https://arxiv.org/abs/1901.11117">&nbsp; The Evolved Transformer</a> <br> 
+      <a class="reference" href="https://arxiv.org/abs/2006.04768">&nbsp; Linformer: Self-Attention with Linear Complexity</a> 
 
     </div>
 
