@@ -12,7 +12,8 @@ permalink: /transformer_fusion
     <div class="callout">
       <p class="highlighted-text"><span>Project Objective</span></p>
       <div class="small-spacer"></div>
-      <p>&nbsp; 이 프로젝트에서는 사전 학습된 언어 인코더 모델을 Seq2Seq 아키텍처에서 활용하기 위한 두 가지 방법론을 구현하고, 각 방법론의 성능을 세 가지 자연어 생성 과제에서 비교합니다. 변인이 되는 세 가지 모델구조는 각각 Simple, Fusion Model이라고 명명하며, 모델 구조라는 변인을 제외한 모든 실험 변수들은 동일하게 적용합니다. 자연어 생성 능력 평가를 위해 기계번역, 대화생성, 문서요약이라는 세 가지 과제를 선정했습니다.
+      <p>&nbsp; 이 프로젝트에서는 사전학습된 언어 인코더 모델을 Seq2Seq 아키텍처에서 활용하기 위한 7개의 모델 구조를 제시하고, 각 모델의 자연어 생성 능력을 검증합니다. 변인이 되는 세 가지 모델 구조는 PLE와의 결합 방식에 따라 Simple, Parallel, Sequential 모델이라고 명명하며, Parallel, Sequential 모델은 Encoder, Decoder 그리고 Encoder & Decoder 세가지 방식으로 적용하며 PLE의 결합 시너지를 면밀하게 살펴봅니다.
+
       </p>
     </div>
 
@@ -55,7 +56,7 @@ permalink: /transformer_fusion
       <div class="list-container">
         <ul>
           <li>Description</li>
-            <p> &nbsp; 최근 BERT를 필두로 한, 다양한 사전학습 인코더 모델들이 다양한 자연어 처리 영역에서 좋은 성과를 보이고 있습니다. 사전학습 인코더 모델의 경우, 그 적용 범위가 더 넓은 덕에 더 다양하게 연구되어지고 있는 반면, 상대적으로 사전학습 Seq2Seq 모델의 수는 적습니다. 때문에 이 프로젝트에서는 다양한 사전학습 인코더 모델을 Transformer Seq2Seq 구조안에서 사용하기 위한 두 가지 모델링 방법론을 직접 구현하고, 각 방법론 간의 성능 차이를 직접 확인합니다. <br>
+            <p> &nbsp; 최근 BERT를 필두로 한, 다양한 사전학습 인코더 모델들이 다양한 자연어 처리 영역에서 좋은 성과를 보이고 있습니다. 사전학습 인코더 모델의 경우, 그 적용 범위가 더 넓은 덕에 더 다양하게 연구되어지고 있는 반면, 상대적으로 사전학습 Seq2Seq 모델의 수는 적습니다. 때문에 이 프로젝트에서는 다양한 사전학습 인코더 모델을 Transformer Seq2Seq 구조안에서 사용하기 위한 세 가지 구조 방법론 안에서 적용범위에 차별을 두며 총 7개의 모델을 구현하고, 각 모델의 성능을 직접 확인합니다. <br>
 
             실험 모델의 Backbone 모델은 Transformer이며, 사전학습 인코더 모델로는 하드웨어의 한계를 고려해 비교적 가벼운 AlBERT 사전학습 모델을 선정했습니다. 가장 간단한 방식의 사전학습 인코더의 적용 모델을 Simple Model, 그리고 기본 Transformer 골조 안에서 사전학습 모델의 결과값을 적절히 혼합해서 사용하기 위한 모델구조를 Fusion Model이라고 명명합니다. 그리고 각 모델의 성능은 기계번역, 대화생성, 문서요약이라는 세 가지 자연어 생성 과제에서 진행합니다. 모델 구조를 제외한 모든 실험 변인은 동일하게 적용합니다.
 
@@ -82,8 +83,8 @@ permalink: /transformer_fusion
 
       <div class="list-container">
         <ul>
-
           <li>Pretrained Encoder Model
+            <div class="small-spacer"></div>
             <ul>
               <li>트랜스포머의 인코더는 입력 시퀀스의 단어들을 임베딩하고, 다중 헤드 어텐션과 피드포워드 신경망을 통해 정보를 추상화. 각 인코더 레이어는 잔여 연결과 층 정규화를 활용하여 안정성을 유지하며, 입력 문장의 특징을 계층적으로 추출</li>
               <li>디코더는 인코더의 출력을 기반으로 출력 시퀀스를 생성. 각 디코더 레이어는 다중 헤드 어텐션을 사용하여 인코더의 출력과 현재까지의 디코더 입력에 대한 어텐션을 계산하고, 피드포워드 신경망을 통해 출력을 생성. 잔여 연결과 층 정규화는 안정성을 제공하며 디코딩 과정을 안정화.</li>
@@ -93,12 +94,30 @@ permalink: /transformer_fusion
 
           <div class="spacer"></div>
           <li>Lack of Pretrained Seq2Seq Model
+            <div class="small-spacer"></div>
             <ul>
               <li>트랜스포머의 인코더는 입력 시퀀스의 단어들을 임베딩하고, 다중 헤드 어텐션과 피드포워드 신경망을 통해 정보를 추상화. 각 인코더 레이어는 잔여 연결과 층 정규화를 활용하여 안정성을 유지하며, 입력 문장의 특징을 계층적으로 추출</li>
               <li>디코더는 인코더의 출력을 기반으로 출력 시퀀스를 생성. 각 디코더 레이어는 다중 헤드 어텐션을 사용하여 인코더의 출력과 현재까지의 디코더 입력에 대한 어텐션을 계산하고, 피드포워드 신경망을 통해 출력을 생성. 잔여 연결과 층 정규화는 안정성을 제공하며 디코딩 과정을 안정화.</li>
               <li>인코더와 디코더는 각각의 레이어를 통해 상호작용하며, 어텐션 메커니즘을 활용해 입력 문장의 문맥 정보를 고려하고 출력 문장을 생성. 트랜스포머의 인코더-디코더 구조는 기존의 번역 모델보다 효과적인 학습과 예측을 가능케 함.</li>
             </ul>
           </li>
+
+
+          <div class="spacer"></div>
+          <li>Transformer Fusion
+            <div class="small-spacer"></div>
+            <ul>
+              <div class="dual-container" style="display: flex; justify-content: center; align-items: center;">
+                <img src="{{ 'assets/img/research_01/standard_transformer.png' | relative_url }}" style="width: 21%; height: 50%;">
+                <img src="{{ 'assets/img/research_01/fusion.png' | relative_url }}" style="width: 43%; height: 50%;">              
+              </div>
+              <div class="small-spacer"></div>
+              <li>트랜스포머의 인코더는 입력 시퀀스의 단어들을 임베딩하고, 다중 헤드 어텐션과 피드포워드 신경망을 통해 정보를 추상화. 각 인코더 레이어는 잔여 연결과 층 정규화를 활용하여 안정성을 유지하며, 입력 문장의 특징을 계층적으로 추출</li>
+              <li>디코더는 인코더의 출력을 기반으로 출력 시퀀스를 생성. 각 디코더 레이어는 다중 헤드 어텐션을 사용하여 인코더의 출력과 현재까지의 디코더 입력에 대한 어텐션을 계산하고, 피드포워드 신경망을 통해 출력을 생성. 잔여 연결과 층 정규화는 안정성을 제공하며 디코딩 과정을 안정화.</li>
+              <li>인코더와 디코더는 각각의 레이어를 통해 상호작용하며, 어텐션 메커니즘을 활용해 입력 문장의 문맥 정보를 고려하고 출력 문장을 생성. 트랜스포머의 인코더-디코더 구조는 기존의 번역 모델보다 효과적인 학습과 예측을 가능케 함.</li>
+            </ul>
+          </li>
+
 
         </ul>
       </div>
@@ -112,273 +131,33 @@ permalink: /transformer_fusion
 
       <div class="list-container">
         <ul>
-          <li>Simple&hairsp; Model</li>
-          <div class="dual-container">
-            <img src="{{ 'assets/img/research_01/standard_transformer.png' | relative_url }}" style="width: 21%; height: 50%;">
-
-            <p>Transformer Seq2Seq 모델 구조에서, Encoder를 Pretrained Language Encoder Model로 대체한 모델입니다. 연산은 기존 Transformer Seq2Seq의 연산 과정과 동일하게 적용됩니다. Encoder는 Context Vector를 생성하고, Decoder는 Context Vector와 Teacher Forcing을 활용해 예측값을 생성하는 방식으로 학습이 진행됩니다.
-            </p>
-          </div>
-
-          <div class="code-container">
-            <div class="code-snippet">
-              <pre><code class="python">class Decoder(nn.Module):
-    def __init__(self, config, ple_embeddings):
-        super(Decoder, self).__init__()
-
-        self.embeddings = ple_embeddings
-        self.mapping = Mapping(config.emb_dim, config.hidden_dim)
-
-        layer = nn.TransformerDecoderLayer(
-            d_model=config.hidden_dim,
-            nhead=config.n_heads,
-            dim_feedforward=config.pff_dim,
-            dropout=config.dropout_ratio,
-            activation='gelu',
-            batch_first=True,
-            norm_first=True
-        )
-        self.layers = clones(layer, config.n_layers)
-
-
-    def forward(self, x, memory, e_mask=None, d_mask=None):   
-        x = self.mapping(self.embeddings(x))
-        for layer in self.layers:
-            x = layer(
-                x, memory, 
-                memory_key_padding_mask=e_mask,
-                tgt_mask=d_mask,
-            )
-
-        return x
-
-
-
-class SimpleModel(nn.Module):
-    def __init__(self, config):
-        super(SimpleModel, self).__init__()
-
-        self.pad_id = config.pad_id
-        self.device = config.device
-        self.vocab_size = config.vocab_size
-
-        self.ple = load_ple(config)
-        self.mapping = Mapping(self.ple.config.hidden_size, config.hidden_dim)
-
-        self.decoder = Decoder(config, self.ple.embeddings)
-        self.generator = nn.Linear(config.hidden_dim, self.vocab_size)
-
-        self.criterion = nn.CrossEntropyLoss()
-        self.out = namedtuple('Out', 'logit loss')
-
-
-    @staticmethod    
-    def shift_y(x):
-        return x[:, :-1], x[:, 1:]    
-
-
-    def mask(self, x, y=None):
-        x_mask = x == self.pad_id
-
-        if y is None:
-            return x_mask
-
-        sz = y.size(1)
-        y_mask = torch.triu(torch.full((sz, sz), float('-inf')), diagonal=1).to(self.device)
-
-        return x_mask, y_mask
-
-
-    def encode(self, x, ple_mask):
-        x = self.ple(input_ids=x, attention_mask=ple_mask).last_hidden_state
-        return self.mapping(x)
-        
-
-    def decode(self, x, memory, e_mask, d_mask):
-        return self.decoder(x, memory, e_mask, d_mask)
-
-
-    def forward(self, input_ids, attention_mask, labels):
-        x = input_ids
-        y, label = self.shift_y(labels)
-        e_mask, d_mask = self.mask(x, y)
-
-        memory = self.encode(x, attention_mask)
-        dec_out = self.decode(y, memory, e_mask, d_mask)
-        logit = self.generator(dec_out)
-
-        self.out.logit = logit
-        self.out.loss = self.criterion(
-            logit.contiguous().view(-1, self.vocab_size), 
-            label.contiguous().view(-1)
-        )
-
-        return self.out</code></pre>
-            </div>
-          </div>
+          <li>Simple&hairsp; Fusion&hairsp; Model
+            <ul>
+              <li>표준 트랜스포머의 인코더를 PLE로 대체한 모델 구조</li>
+              <li>가장 직관적이고, 단순한 Fusion방식으로, 구현이 간단하다는 장점이 있음</li>
+              <li>인코더를 제외한 모든 모델 구조는 표준 트랜스포머와 동일</li>
+            </ul>
+          </li>
 
 
           <div class="spacer"></div>
-
-          <li>Fusion&hairsp; Model</li>
-          <div class="dual-container">
-            <img src="{{ 'assets/img/research_01/fusion.png' | relative_url }}" style="width: 43%; height: 50%;">
-
-            <p>PLE Fused Model은 "Incorporating BERT into Neural Machine Translation" 논문에서 제시한 모델 구조를 사용합니다. 사전학습된 인코더 모델을 그대로 인코더로만 사용하는것이 아니라, 인코딩과 디코딩 과정에 추가적인 정보전달을 위한 모델로 활용합니다.
-            </p>
-          </div>
-
-          <div class="code-container">
-            <div class="code-snippet">
-              <pre><code class="python">class EncoderLayer(nn.Module):
-    def __init__(self, config):
-        super(EncoderLayer, self).__init__()
-
-        self.self_attn = MultiHeadAttention(config)
-        self.ple_attn = MultiHeadAttention(config)
-        self.pff = PositionwiseFeedForward(config)
+          <li>Parallel&hairsp; Fusion&hairsp; Model
+            <ul>
+              <li>"Incorporating BERT into Neural Machine Translation" 논문에서 제시한 모델 구조</li>
+              <li>PLE를 인코더로만 사용하는것이 아니라, 인코딩과 디코딩 과정에 추가적인 정보전달을 위한 모델로 활용</li>
+            </ul>
+          </li>
 
 
-    def forward(self, x, ple_out, e_mask):
+          <div class="spacer"></div>
+          <li>Sequential&hairsp; Fusion&hairsp; Model
+            <ul>
+              <li>어텐션이 순차적으로 이어지도록 유도한 모델 구조</li>
+              <li>단순한 덧셈 연산으로는 서로 상이한 기저차원의 값들의 요소들을 제대로 반영하기 어려울것 같다는 가정에서 출발한 모델</li>
+              <li></li>
+            </ul>
+          </li>
 
-        s_out = self.self_attn(x, key_padding_mask=e_mask)
-        p_out = self.ple_attn(x, ple_out, key_padding_mask=e_mask)
-        out = x + s_out * 0.5 + p_out * 0.5
-
-        return out + self.pff(out)
-
-
-
-
-class DecoderLayer(nn.Module):
-    def __init__(self, config):
-        super(DecoderLayer, self).__init__()
-
-        self.self_attn = MultiHeadAttention(config)
-        self.ple_attn = MultiHeadAttention(config)
-        self.enc_attn = MultiHeadAttention(config)
-        self.pff = PositionwiseFeedForward(config)
-
-
-    def forward(self, x, memory, ple_out, e_mask=None, d_mask=None):
-        
-        m, p = memory, ple_out
-
-        s_out = self.self_attn(x, attn_mask=d_mask)
-        x = x + s_out
-
-        p_out = self.ple_attn(x, p, key_padding_mask=e_mask)
-        e_out = self.enc_attn(x, m, key_padding_mask=e_mask)
-        out = x + p_out * 0.5 + e_out * 0.5
-
-        return out + self.pff(out)
-
-
-
-class Encoder(nn.Module):
-    def __init__(self, config, ple_embeddings):
-        super(Encoder, self).__init__()
-
-        self.embeddings = ple_embeddings
-        self.mapping = Mapping(config.emb_dim, config.hidden_dim)
-
-        self.layers = clones(EncoderLayer(config), config.n_layers)
-        self.norm = nn.LayerNorm(config.hidden_dim)
-
-
-    def forward(self, x, ple_out, e_mask):
-        x = self.mapping(self.embeddings(x))
-        for layer in self.layers:
-            x = layer(x, ple_out, e_mask)
-        return self.norm(x)
-
-
-
-class Decoder(nn.Module):
-    def __init__(self, config, ple_embeddings):
-        super(Decoder, self).__init__()
-
-        self.embeddings = ple_embeddings
-        self.mapping = Mapping(config.emb_dim, config.hidden_dim)
-        
-        self.layers = clones(DecoderLayer(config), config.n_layers)
-        self.norm = nn.LayerNorm(config.hidden_dim)
-        
-
-    def forward(self, x, memory, ple_out, e_mask=None, d_mask=None):
-        x = self.mapping(self.embeddings(x))
-        for layer in self.layers:
-            x = layer(x, memory, ple_out, e_mask, d_mask)
-        return self.norm(x)
-
-
-
-class FusionModel(nn.Module):
-    def __init__(self, config):
-        super(FusionModel, self).__init__()
-
-        self.device = config.device
-        self.pad_id = config.pad_id
-        self.vocab_size = config.vocab_size
-
-        self.ple = load_ple(config)
-        self.mapping = Mapping(self.ple.config.hidden_size, config.hidden_dim)
-        
-        self.encoder = Encoder(config, self.ple.embeddings)
-        self.decoder = Decoder(config, self.ple.embeddings)
-        self.generator = nn.Linear(config.hidden_dim, self.vocab_size)
-
-        self.criterion = nn.CrossEntropyLoss()
-        self.out = namedtuple('Out', 'logit loss')
-
-
-    @staticmethod    
-    def shift_y(x):
-        return x[:, :-1], x[:, 1:]    
-
-
-    def mask(self, x, y=None):
-        x_mask = x == self.pad_id
-
-        if y is None:
-            return x_mask
-
-        sz = y.size(1)
-        y_mask = torch.triu(torch.full((sz, sz), float('-inf')), diagonal=1).to(self.device)
-
-        return x_mask, y_mask
-
-
-    def encode(self, x, ple_out, e_mask):        
-        return self.encoder(x, ple_out, e_mask)
-    
-
-    def decode(self, x, m, ple_out, e_mask, d_mask=None):
-        return self.decoder(x, m, ple_out, e_mask, d_mask)
-
-
-    def forward(self, input_ids, attention_mask, labels):        
-        x = input_ids
-        y, label = self.shift_y(labels)
-        e_mask, d_mask = self.mask(x, y)
-
-        ple_out = self.ple(input_ids=x, attention_mask=attention_mask).last_hidden_state
-        ple_out = self.mapping(ple_out)
-
-        memory = self.encode(x, ple_out, e_mask)
-        d_out = self.decode(y, memory, ple_out, e_mask, d_mask)
-        
-        logit = self.generator(d_out)
-        self.out.logit = logit
-        self.out.loss = self.criterion(
-            logit.contiguous().view(-1, self.vocab_size), 
-            label.contiguous().view(-1)
-        )
-
-        return self.out</code></pre>
-            </div>
-          </div>
-          
         </ul>
       </div>
     </div>
@@ -393,6 +172,7 @@ class FusionModel(nn.Module):
       <div class="list-container">
         <ul>
           <li>Data Setup
+            <div class="small-spacer"></div>
             <div class="dual-container">
               <ul>
                 <li><b>Translation Task:</b> &nbsp; WMT'14 En-De</li>
@@ -409,11 +189,12 @@ class FusionModel(nn.Module):
             </div>
           </li>
 
-          <div class="half-spacer"></div>
+          <div class="spacer"></div>
           <li>Training Setup
+            <div class="small-spacer"></div>
             <div class="dual-container">
               <ul>
-                <li><b>Hardware</b>: &nbsp; Google Colab A100 GPU</li>
+                <li><b>Hardware</b>: &nbsp; Google Colab TPU</li>
                 <li><b>Num Epochs:</b> &nbsp; 10</li>
                 <li><b>Batch Size:</b> &nbsp; 32</li>
                 <li><b>Optimizer:</b> &nbsp; AdamW</li>
@@ -428,12 +209,13 @@ class FusionModel(nn.Module):
           </li>
         
 
-          <div class="half-spacer"></div>
+          <div class="spacer"></div>
           <li>Model Setup
+            <div class="small-spacer"></div>
             <div class="dual-container">
               <ul>
                 <li><b>PLE Architecture:</b> &nbsp; AlBERT</li>
-                <li><b>Input & Output Dim:</b> &nbsp; 15,000</li>
+                <li><b>Input & Output Dim:</b> &nbsp; 30,000</li>
                 <li><b>Hidden Dim:</b> &nbsp; 256</li>
               </ul>
               <ul>
@@ -444,28 +226,40 @@ class FusionModel(nn.Module):
             </div>
           </li>
 
+
+          <div class="spacer"></div>
+          <li>Model Size</li>
           <table class="result-table">
             <thead>
               <tr>
-                <th>Model Type</th>
-                <th>Total Params</th>
-                <th>Trainable Params</th>
-                <th>Model Size</th>
+                <th>&nbsp; Model Type&nbsp; </th>
+                <th>&nbsp; Total Params&nbsp; </th>
+                <th>&nbsp; Trainable Params&nbsp; </th>
+                <th>&nbsp; Model Size&nbsp; </th>
               </tr>
             </thead>
+
             <tbody>
               <tr>
                 <td>Simple Model</td>
-                <td>21,995,824</td>
-                <td>10,312,240</td>
-                <td>83.915 MB</td>
+                <td>22,192,688</td>
+                <td>10,509,104</td>
+                <td>84.666 MB</td>
               </tr>
+
               <tr>
-                <td>Fusion Model</td>
+                <td>Parallel Model</td>
                 <td>25,193,264</td>
                 <td>13,509,680</td>
                 <td>96.112 MB</td>
               </tr>
+
+              <tr>
+                <td>Sequential Model</td>
+                <td>25,199,408</td>
+                <td>13,515,824</td>
+                <td>96.136 MB</td>
+              </tr>              
 
             </tbody>
           </table>
@@ -501,19 +295,29 @@ class FusionModel(nn.Module):
                   <td>0.20GB</td>
                   <td>0.95GB</td>
                 </tr>
+                
                 <tr>
-                  <td>Simple</td>
-                  <td>9.62</td>
+                  <td>Simple Fusion</td>
+                  <td>9.58</td>
                   <td>2m 13s</td>
                   <td>0.22GB</td>
-                  <td>1.75GB</td>
+                  <td>1.72GB</td>
                 </tr>
+
                 <tr>
-                  <td>Fusion</td>
-                  <td>9.99</td>
-                  <td>2m 18s</td>
-                  <td>0.22GB</td>
-                  <td>1.64GB</td>
+                  <td>Parallel Fusion</td>
+                  <td>9.58</td>
+                  <td>2m 31s</td>
+                  <td>0.26GB</td>
+                  <td>1.92GB</td>
+                </tr>
+
+                <tr>
+                  <td>Sequential Fusion</td>
+                  <td>9.57</td>
+                  <td>2m 32s</td>
+                  <td>0.26GB</td>
+                  <td>1.94GB</td>
                 </tr>
 
               </tbody>
@@ -539,25 +343,35 @@ class FusionModel(nn.Module):
                   <td>0.20GB</td>
                   <td>0.85GB</td>
                 </tr>                
+                
                 <tr>
-                  <td>Simple</td>
-                  <td>6.56</td>
-                  <td>1m 36s</td>
-                  <td>0.20GB</td>
-                  <td>1.27GB</td>
+                  <td>Simple Fusion</td>
+                  <td>6.55</td>
+                  <td>1m 38s</td>
+                  <td>0.21GB</td>
+                  <td>1.25GB</td>
                 </tr>
+
                 <tr>
-                  <td>Fusion</td>
-                  <td>6.44</td>
-                  <td>1m 40s</td>
-                  <td>0.20GB</td>
-                  <td>1.19GB</td>
+                  <td>Parallel Fusion</td>
+                  <td>6.59</td>
+                  <td>1m 54s</td>
+                  <td>0.24GB</td>
+                  <td>1.42GB</td>
+                </tr>
+
+                <tr>
+                  <td>Sequential Fusion</td>
+                  <td>6.55</td>
+                  <td>1m 53s</td>
+                  <td>0.24GB</td>
+                  <td>1.45GB</td>
                 </tr>
 
               </tbody>
             </table>
 
-                
+
           <div class="spacer"></div>
           <li>Text Summarization</li>
             <table class="result-table">
@@ -573,24 +387,132 @@ class FusionModel(nn.Module):
               <tbody>
                 <tr>
                   <td>Transformer</td>
-                  <td>7.68</td>
-                  <td>2m 41s</td>
-                  <td>0.21GB</td>
-                  <td>2.89GB</td>
+                  <td>1.34</td>
+                  <td>3m 42s</td>
+                  <td>0.20GB</td>
+                  <td>0.85GB</td>
                 </tr>                
+                
                 <tr>
-                  <td>Simple</td>
-                  <td>13.80</td>
-                  <td>16m 29s</td>
+                  <td>Simple Fusion</td>
+                  <td>7.33</td>
+                  <td>18m 47s</td>
                   <td>0.22GB</td>
-                  <td>2.30GB</td>
+                  <td>3.01GB</td>
                 </tr>
+
                 <tr>
-                  <td>Fusion</td>
-                  <td>12.42</td>
-                  <td>18m 23s</td>
-                  <td>0.22GB</td>
-                  <td>2.08GB</td>
+                  <td>Parallel Fusion</td>
+                  <td>7.36</td>
+                  <td>22m 9s</td>
+                  <td>0.25GB</td>
+                  <td>4.01GB</td>
+                </tr>
+
+                <tr>
+                  <td>Sequential Fusion</td>
+                  <td>7.30</td>
+                  <td>22m 30s</td>
+                  <td>0.25GB</td>
+                  <td>4.01GB</td>
+                </tr>
+
+              </tbody>
+            </table>
+
+
+          <div class="spacer"></div>
+          <li>Ablation Study</li>
+
+            <table class="result-table">
+              <thead>
+                <tr>
+                  <th>Model Type</th>
+                  <th>Translation Score</th>
+                  <th>Epoch Time</th>
+                  <th>Avg GPU</th>
+                  <th>Max GPU</th>
+                </tr>
+              </thead>
+              <tbody>
+
+                <tr>
+                  <td>Parallel Encoder Fusion</td>
+                  <td>9.61</td>
+                  <td>2m 27s</td>
+                  <td>0.25GB</td>
+                  <td>1.87GB</td>
+                </tr>
+
+                <tr>
+                  <td>Parallel Decoder Fusion</td>
+                  <td>9.60</td>
+                  <td>2m 29s</td>
+                  <td>0.25GB</td>
+                  <td>1.89GB</td>
+                </tr>
+
+                <tr>
+                  <td>Sequential Encoder Fusion</td>
+                  <td>9.62</td>
+                  <td>2m 26s</td>
+                  <td>0.25GB</td>
+                  <td>1.88GB</td>
+                </tr>
+
+                <tr>
+                  <td>Sequential Decoder Fusion</td>
+                  <td>9.58</td>
+                  <td>2m 27s</td>
+                  <td>0.25GB</td>
+                  <td>1.90GB</td>
+                </tr>
+
+              </tbody>
+            </table>
+
+            <table class="result-table">
+              <thead>
+                <tr>
+                  <th>Model Type</th>
+                  <th>Dialogue Score</th>
+                  <th>Epoch Time</th>
+                  <th>Avg GPU</th>
+                  <th>Max GPU</th>
+                </tr>
+              </thead>
+              <tbody>
+
+                <tr>
+                  <td>Parallel Encoder Fusion</td>
+                  <td>6.50</td>
+                  <td>1m 51s</td>
+                  <td>0.23GB</td>
+                  <td>1.39GB</td>
+                </tr>
+
+                <tr>
+                  <td>Parallel Decoder Fusion</td>
+                  <td>6.57</td>
+                  <td>1m 48s</td>
+                  <td>0.23GB</td>
+                  <td>1.40GB</td>
+                </tr>
+
+                <tr>
+                  <td>Sequential Encoder Fusion</td>
+                  <td>6.56</td>
+                  <td>1m 49s</td>
+                  <td>0.23GB</td>
+                  <td>1.40GB</td>
+                </tr>
+
+                <tr>
+                  <td>Sequential Decoder Fusion</td>
+                  <td>6.54</td>
+                  <td>1m 50s</td>
+                  <td>0.23GB</td>
+                  <td>1.41GB</td>
                 </tr>
 
               </tbody>

@@ -6,8 +6,7 @@ layout: default
 <!-- Information -->
 <div class="info">
   <h2 style="color: #303030; letter-spacing: 2px;">Hi, there!</h2>
-  <p>
-    &ensp; 인공지능 모델을 통한 창의적 가치 실현을 목표로 하는 머신러닝 엔지니어 송문기입니다. 목표 달성을 위해 다양한 연구 주제를 직접 선정&sdot; 구현&sdot; 검증하는 과정을 즐깁니다. 총 12개의 주요 프로젝트를 주제 별로 정리해 그 과정 및 결과를 본문에서 공유합니다. 저에 대한 정보가 궁금하시다면 아래의 링크를 참조해주세요 :) 
+  <p>&hairsp; 안녕하세요, 인공지능 모델을 통해 창의적 가치를 실현하는 머신러닝 엔지니어 송문기입니다. 다양한 연구 주제를 직접 선정&sdot; 구현&sdot; 검증하는 과정을 즐깁니다. 총 12개의 주요 프로젝트를 주제 별로 정리해 그 과정과 결과를 본문에서 공유합니다. 저에 대한 더 많은 정보는 아래 링크에서 확인하실 수 있습니다 :) 
 
   </p>
   <div class="btn-block">
@@ -23,7 +22,7 @@ layout: default
   
   <div class="full-width">
     <h3>&hairsp; Model&hairsp; Architecture</h3>
-    <p>&nbsp; 머신러닝 엔지니어링에서 모델의 구조적 디자인은 성능에 결정적인 영향을 미치는 주요 요소입니다. 특히 인코더와 디코더를 모두 필요로 하는 Sequence to Sequence 구조에서, 모델 디자인은 더더욱 중요합니다. 이 장에서는 데이터 처리 및 학습 방식은 고정하고, 자연어 생성을 위한 모델의 디자인 변화에 따른 성능 변화를 파악하는데 집중합니다.
+    <p>&hairsp; 머신러닝 엔지니어링에서 모델의 구조적 디자인은 성능에 결정적인 영향을 미치는 주요 요소입니다. 특히 인코더와 디코더를 모두 필요로 하는 Sequence to Sequence 구조에서, 모델 디자인은 더더욱 중요합니다. 아래의 프로젝트에서는 데이터 처리 및 학습 방식은 고정하고, 자연어 생성을 위한 모델의 디자인 변화에 따른 성능 변화를 파악하는데 집중합니다.
     </p>
   </div>
 
@@ -33,7 +32,7 @@ layout: default
       <h3>Transformer&hairsp; Balance</h3>
       <ul>
         <li>
-          <p>표준 트랜스포머의 균형잡힌 모델 디자인을 의도적으로 탈피해, <b>깊이 &middot; 너비 &middot; 다양성</b> 측면의 디자인 불균형에 따른 성능 변화를 탐색하고, 과제 특성에 따른 균형 조정 기준 설립 
+          <p>트랜스포머의 균형잡힌 모델 디자인을 의도적으로 탈피해, <b>깊이 &middot; 너비 &middot; 다양성</b> 측면의 디자인 불균형에서 기인한 성능 변화를 탐색하고, 과제 특성에 따른 균형 조정 기준 설립 
           </p>
           <div class="btn-list">
             <a href="{{ '/transformer_balance' | relative_url }}" class="btn-type-1">Detail</a>
@@ -48,7 +47,7 @@ layout: default
       <h3>Transformer&hairsp; Variants</h3>
       <ul>
         <li>
-          <p><b>Recurrent Transformer, Evolved Transformer</b>라는 두 가지 트랜스포머 변형 모델을 직접 구현하고, 표준 트랜스포머와 자연어 생성 능력 비교 검증
+          <p>세 가지 트랜스포머 구조 <b>(Standard, Recurrent, Evolved)</b>를 직접 구현하고, 각 모델 구조가 자연어 생성 능력에서 갖는 특징 및 강점을 비교 검증
           </p>
           <div class="btn-list">
             <a href="{{ '/transformer_variants' | relative_url }}" class="btn-type-1">Detail</a>
@@ -67,7 +66,7 @@ layout: default
       <h3>Transformer&hairsp; Fusion</h3>
       <ul>
         <li>
-          <p>사전 학습 인코더 모델을 트랜스포머 Seq2Seq 모델 구조에서 활용하기 위한 두 가지 모델 설계 방법론을 직접 구현하고, 각 방법론에 따른 자연어 생성 능력 비교 검증
+          <p>사전 학습 인코더 모델을 트랜스포머 Seq2Seq 모델 구조에서 활용하기 위한 다양한 모델 설계 방법론을 직접 구현하고, 각 방법론에 따른 자연어 생성 능력 비교 검증
           </p>
           <div class="btn-list">
             <a href="{{ '/transformer_fusion' | relative_url }}" class="btn-type-1">Detail</a>
@@ -88,8 +87,7 @@ layout: default
   
   <div class="full-width">
     <h3>&hairsp; Training&hairsp; Strategy</h3>
-    <p>
-      &nbsp; 모델 학습은 모델 디자인과 더불어, 머신러닝 엔지니어링의 주요 요소입니다. 동일한 모델이라도, 학습 방식에 따라 성능은 크게 달라질 수 있습니다. 특히나 자연어 생성과 같이 고난이도 과제의 경우, 일반적인 학습 방식만으로 원하는 결과를 얻기 어렵습니다. 아래 프로젝트에서는 자연어 생성 능력 향상을 위한 고도화 된 학습 방법론을 제시하고, 그 효용성을 검증합니다.
+    <p>&hairsp; 모델 학습은 모델 디자인과 더불어, 머신러닝 엔지니어링의 주요 요소입니다. 동일한 모델이라도, 학습 방식에 따라 성능은 크게 달라질 수 있습니다. 특히 자연어 생성과 같은 고난이도 과제의 경우, 일반적인 학습법만으로 원하는 결과를 얻기 어렵습니다. 아래 프로젝트에서는 자연어 생성력 향상을 위한 고도화 된 학습 방법론을 제시하고, 그 효용성을 검증합니다.
     </p>
   </div>
 
@@ -133,7 +131,7 @@ layout: default
       <h3>IntelliGEN</h3>
       <ul>
         <li>
-          <p>자연어 생성 능력 향상을 위해 Standard Training, <b>Generative &sdot; SeqGAN Fine tuning</b>, 총 세 단계에 걸친 똑똑한 생성적 학습 방법론을 제시하고, 그 효용성 검증
+          <p>자연어 생성 능력 향상을 위해 <b>Standard Training, Generative &sdot; SeqGAN Fine tuning</b>, 총 세 단계에 걸친 똑똑한 생성적 학습 방법론을 제시하고, 그 효용성 검증
           </p>
           <div class="btn-list">
             <a href="{{ '/intelligen' | relative_url }}" class="btn-type-1">Detail</a>
@@ -155,8 +153,7 @@ layout: default
   
   <div class="full-width">
     <h3>&hairsp; Task&hairsp; Specific</h3>
-    <p>
-      &nbsp; 위의 <b>Model Architecture</b> 및 <b>Training Strategy</b>에서는 자연어 생성이라는 전역적인 과제 해결을 위한 모델링 및 학습 방법론에 대해 살펴봤습니다. 이번 장에서는 <b>기계 번역, 대화 생성, 문서 요약</b>이라는 자연어 생성의 세부 과제를 효과적으로 해결하기 위한 과제 집중적 연구 프로젝트를 제시합니다. 
+    <p>&hairsp; 위의 <b>Model Architecture</b> 및 <b>Training Strategy</b>에서는 자연어 생성이라는 전역적인 과제 해결을 위한 모델링 및 학습 방법론에 대해 살펴봤습니다. 이번 장에서는 <b>기계 번역, 대화 생성, 문서 요약</b>이라는 자연어 생성의 세부 과제를 효과적으로 해결하기 위한 과제 집중적 연구 프로젝트를 제시합니다. 
     </p>
   </div>
 
@@ -180,7 +177,7 @@ layout: default
       <h3>Multi-Turn Dialogue</h3>
       <ul>
         <li>
-          <p>&nbsp; 대화의 흐름을 이해하며 자연스럽고, 일관된 대화가 가능한 멀티턴 대화 모델 구축을 위한 대화 기록 활용 방법론을 제시하고, 그 효용성을 검증
+          <p>&nbsp; 단발성 대화 생성을 넘어 대화의 흐름을 이해하는 발전된 발화 모델 개발을 위해, 대화 기록을 활용할 수 있는 다양한 모델 설계 방법론을 구현하고, 그 효용성을 검증
           </p>
           <div class="btn-list">
             <a href="{{ '/multiturn_dialogue' | relative_url }}" class="btn-type-1">Detail</a>
@@ -199,7 +196,7 @@ layout: default
       <h3>Efficient&hairsp; Summarization</h3>
       <ul>
         <li>
-          <p>&nbsp; Efficient Attention, Block Sparse Attention을 활용함으로써, 긴 시퀀스를 다루는 문서 요약 과제에서의 효율성을 제고시키고, 성능과의 Cross Over 검토
+          <p>&nbsp; 기존 어텐션 연산의 복잡도가 시퀀스 길이에 따라 Quadratic하게 증가하는 문제를 해결하기 위해 Low Rank Projection 적용 방법론을 다양하게 구상하고, 각 방법론별의 효용성을 검증
           </p>
           <div class="btn-list">
             <a href="{{ '/efficient_summarization' | relative_url }}" class="btn-type-1">Detail</a>
@@ -222,7 +219,7 @@ layout: default
   
   <div class="full-width">
     <h3>&hairsp; LLM&hairsp; Framework</h3>
-    <p>&nbsp; <b>Large Language Model, LLM</b>은 다양한 분야에서 뛰어난 효용성을 보여주고 있습니다. LLM을 있는 그대로 사용하는 것도 충분히 좋은 성능을 보이지만, 이를 더욱 효과적으로 사용할 수 있는 방법론이 존재합니다. 아래의 프로젝트에서는 특정 목적에 맞게 LLM을 효과적으로 사용하기 위한 프레임워크를 제시합니다. 
+    <p>&hairsp; <b>Large Language Model, LLM</b>은 다양한 자연어 처리 분야에서 뛰어난 효용성을 보여주고 있습니다. LLM을 있는 그대로 사용하는 것도 충분히 좋은 성능을 보이지만, 사용자의 목적에 따라 더욱 효과적으로 사용할 수 있는 방법론이 존재합니다. 아래의 프로젝트에서는 특정 목적에 맞게 LLM을 효과적으로 사용하기 위한 프레임워크를 제시합니다. 
     </p>
   </div>
 

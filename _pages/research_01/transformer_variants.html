@@ -5,7 +5,7 @@ permalink: /transformer_variants
 
 
 <div id="detail">
-  <h1 class="title">Transformer Variants</h1>  
+  <h1 class="title">Transformer&hairsp; Variants</h1>  
   <div class="post">
 
     <hr>
@@ -88,15 +88,15 @@ permalink: /transformer_variants
         <ul>
 
           <li>Transformer
-            <ul>
-              <li>트랜스포머는 매우 효율적인 연산과정을 제시하며, 대규모 학습에 특화된 강력한 성능을 자랑함</li>
-              <li>트랜스포머의 도래 이후, 대부분의 연구들은 트랜스포머를 기반으로한 사전학습 방식에 집중하고 있음</li>
-              <li>기존 순환 신경망 대비 훨씬 높은 성능과 학습 효율성을 제공하며, 대규모 데이터셋에서 활용되는 강력한 모델</li>
-            </ul>
+            <p>트랜스포머는 Attention Is All You Need 논문에서 소개된 모델 구조로, 어텐션 메커니즘을 활용해 장거리 종속성을 효과적으로 다루고 병렬 처리 학습이 가능하다는 장점을 지닙니다.
+              인코더와 디코더로 이루어져 텍스트 처리에 적합하며, 특히 셀프 어텐션과 포지션 임베딩을 통해 문장의 의미와 순서 정보를 효과적으로 학습해 자연어 처리에서 혁신적인 성과를 보입니다.
+              트랜스포머 이전의 헤게모니 모델 디자인이었던, 순환 신경망 대비 높은 성능과 학습 효율성을 제공하며, 대규모 데이터셋에서 활용되는 강력한 모델이라고 할 수 있습니다.
+            </p>
           </li>
+
             
           <div class="spacer"></div>
-          <li>Biased Research
+          <li>Biased&hairsp; Research
             <ul>
               <li>트랜스포머의 도래 이후, 대부분의 연구들은 트랜스포머 구조를 기반으로한 사전학습 방법론에 집중하고 있음</li>
               <li>디코더는 인코더의 출력을 기반으로 출력 시퀀스를 생성. 각 디코더 레이어는 다중 헤드 어텐션을 사용하여 인코더의 출력과 현재까지의 디코더 입력에 대한 어텐션을 계산하고, 피드포워드 신경망을 통해 출력을 생성. 잔여 연결과 층 정규화는 안정성을 제공하며 디코딩 과정을 안정화.</li>
@@ -116,17 +116,7 @@ permalink: /transformer_variants
     <div class="chapter-box">
       <div class="list-container">
         <ul>
-          <li>Standard Transformer
-            <ul>
-              <li>트랜스포머는 어텐션 메커니즘을 활용한 신경망 구조로, 장거리 종속성을 효과적으로 다루고 병렬 처리를 가능케 함</li>
-              <li>인코더와 디코더로 이루어져 텍스트 처리에 적합하며, 특히 self-attention과 포지션 임베딩을 통해 문장의 의미와 순서 정보를 효과적으로 학습해 자연어 처리에서 혁신적인 성과를 보임</li>
-              <li>기존 순환 신경망 대비 훨씬 높은 성능과 학습 효율성을 제공하며, 대규모 데이터셋에서 활용되는 강력한 모델</li>
-            </ul>
-          </li>
-
-
-          <div class="spacer"></div>
-          <li>Recurrent Transformer
+          <li>Recurrent&hairsp; Transformer
             <ul>
               <li>트랜스포머의 인코더는 입력 시퀀스의 단어들을 임베딩하고, 다중 헤드 어텐션과 피드포워드 신경망을 통해 정보를 추상화. 각 인코더 레이어는 잔여 연결과 층 정규화를 활용하여 안정성을 유지하며, 입력 문장의 특징을 계층적으로 추출</li>
               <li>디코더는 인코더의 출력을 기반으로 출력 시퀀스를 생성. 각 디코더 레이어는 다중 헤드 어텐션을 사용하여 인코더의 출력과 현재까지의 디코더 입력에 대한 어텐션을 계산하고, 피드포워드 신경망을 통해 출력을 생성. 잔여 연결과 층 정규화는 안정성을 제공하며 디코딩 과정을 안정화.</li>
@@ -136,7 +126,7 @@ permalink: /transformer_variants
 
 
           <div class="spacer"></div>
-          <li>Evolved Transformer
+          <li>Evolved&hairsp; Transformer
             <ul>
               <li>트랜스포머의 핵심 구성 요소로, 여러 어텐션 헤드를 병렬로 활용하여 다양한 어텐션 가중치를 학습</li>
               <li>각 헤드는 서로 다른 관점에서 정보를 추출하며, 그 결과를 결합하여 모델이 다양한 특징을 효과적으로 학습하도록 유도</li>
@@ -147,7 +137,7 @@ permalink: /transformer_variants
           </li>
 
           <div class="spacer"></div>
-          <li>Recurrent Hybrid Transformer
+          <li>Recurrent&hairsp; Hybrid&hairsp; Transformer
             <ul>
               <li>트랜스포머의 인코더는 입력 시퀀스의 단어들을 임베딩하고, 다중 헤드 어텐션과 피드포워드 신경망을 통해 정보를 추상화. 각 인코더 레이어는 잔여 연결과 층 정규화를 활용하여 안정성을 유지하며, 입력 문장의 특징을 계층적으로 추출</li>
               <li>디코더는 인코더의 출력을 기반으로 출력 시퀀스를 생성. 각 디코더 레이어는 다중 헤드 어텐션을 사용하여 인코더의 출력과 현재까지의 디코더 입력에 대한 어텐션을 계산하고, 피드포워드 신경망을 통해 출력을 생성. 잔여 연결과 층 정규화는 안정성을 제공하며 디코딩 과정을 안정화.</li>
@@ -157,7 +147,7 @@ permalink: /transformer_variants
 
 
           <div class="spacer"></div>
-          <li>Evolved Hybrid Transformer
+          <li>Evolved&hairsp; Hybrid&hairsp; Transformer
             <ul>
               <li>트랜스포머의 핵심 구성 요소로, 여러 어텐션 헤드를 병렬로 활용하여 다양한 어텐션 가중치를 학습</li>
               <li>각 헤드는 서로 다른 관점에서 정보를 추출하며, 그 결과를 결합하여 모델이 다양한 특징을 효과적으로 학습하도록 유도</li>
@@ -220,14 +210,14 @@ permalink: /transformer_variants
           <li>Model Setup
             <div class="dual-container">
               <ul>
-                <li><b>Input Dim</b>: &nbsp; 15,000</li>
-                <li><b>Output Dim</b>: &nbsp; 15,000</li>
+                <li><b>Input Dim</b>: &nbsp; 30,000</li>
+                <li><b>Output Dim</b>: &nbsp; 30,000</li>
                 <li><b>Embedding Dim</b>: &nbsp; 256</li>
               </ul>
               <ul>
                 <li><b>Hidden Dim</b>: &nbsp; 256</li>
                 <li><b>PFF Dim</b>: &nbsp; 512</li>
-                <li><b>N Layers</b>: &nbsp; 3</li>
+                <li><b>N Layers</b>: &nbsp; 4</li>
               </ul>
             </div>
           </li>
@@ -241,29 +231,29 @@ permalink: /transformer_variants
               </thead>
               <tbody>
                 <tr>
-                  <td><b>Standard Model</b></td>
-                  <td>7.91</td>
-                  <td>2m 41s</td>
+                  <td>Standard</td>
+                  <td>28,341,552</td>
+                  <td>109.114 MB</td>
                 </tr>
                 <tr>
-                  <td><b>Recurrent Model</b></td>
-                  <td>0.52</td>
-                  <td>2m 40s</td>
+                  <td>Recurrent</td>
+                  <td>24,388,912</td>
+                  <td>94.036 MB</td>
                 </tr>
                 <tr>
-                  <td><b>Evolved Model</b></td>
-                  <td>0.00</td>
-                  <td>1m 51s</td>
+                  <td>Evolved</td>
+                  <td>29,292,080</td>
+                  <td>112.740 MB</td>
                 </tr>
                 <tr>
-                  <td><b>Recurrent Hybrid Model</b></td>
-                  <td>0.52</td>
-                  <td>2m 40s</td>
+                  <td>Recurrent Hybrid</td>
+                  <td>26,760,752</td>
+                  <td>103.084 MB</td>
                 </tr>
                 <tr>
-                  <td><b>Evolved Hybrid Model</b></td>
-                  <td>0.00</td>
-                  <td>1m 51s</td>
+                  <td>Evolved Hybrid</td>
+                  <td>28,680,496</td>
+                  <td>110.407 MB</td>
                 </tr>
             </tbody>
           </table>          
@@ -295,25 +285,39 @@ permalink: /transformer_variants
               </thead>
               <tbody>
                 <tr>
-                  <td>Standard Model</td>
-                  <td>14.30</td>
-                  <td>0m 43s</td>
-                  <td>0.20GB</td>
-                  <td>0.95GB</td>
+                  <td>Standard</td>
+                  <td>12.84</td>
+                  <td>0m 59s</td>
+                  <td>0.36GB</td>
+                  <td>1.56GB</td>
                 </tr>
                 <tr>
-                  <td>Recurrent Model</td>
-                  <td>12.26</td>
-                  <td>0m 42s</td>
-                  <td>0.17GB</td>
-                  <td>0.91GB</td>
+                  <td>Recurrent</td>
+                  <td>14.46</td>
+                  <td>0m 57s</td>
+                  <td>0.31GB</td>
+                  <td>1.50GB</td>
                 </tr>
                 <tr>
-                  <td>Evolved Model</td>
+                  <td>Evolved</td>
                   <td>0.00</td>
-                  <td>0m 41s</td>
-                  <td>0.19GB</td>
-                  <td>0.87GB</td>
+                  <td>1m 07s</td>
+                  <td>0.36GB</td>
+                  <td>1.58GB</td>
+                </tr>
+                <tr>
+                  <td>Recurrent Hybrid</td>
+                  <td>11.59</td>
+                  <td>0m 58s</td>
+                  <td>0.34GB</td>
+                  <td>1.54GB</td>
+                </tr>
+                <tr>
+                  <td>Evolved Hybrid</td>
+                  <td>11.92</td>
+                  <td>1m 04s</td>
+                  <td>0.36GB</td>
+                  <td>1.58GB</td>
                 </tr>
 
               </tbody>
@@ -333,25 +337,39 @@ permalink: /transformer_variants
               </thead>
               <tbody>
                 <tr>
-                  <td>Standard Model</td>
-                  <td>2.86</td>
-                  <td>0m 41s</td>
-                  <td>0.20GB</td>
-                  <td>0.85GB</td>
+                  <td>Standard</td>
+                  <td>3.40</td>
+                  <td>0m 57s</td>
+                  <td>0.36GB</td>
+                  <td>1.48GB</td>
                 </tr>
                 <tr>
-                  <td>Recurrent Model</td>
-                  <td>1.81</td>
-                  <td>0m 41s</td>
-                  <td>0.18GB</td>
-                  <td>0.82GB</td>
+                  <td>Recurrent</td>
+                  <td>4.15</td>
+                  <td>0m 56s</td>
+                  <td>0.32GB</td>
+                  <td>1.40GB</td>
                 </tr>
                 <tr>
-                  <td>Evolved Model</td>
+                  <td>Evolved</td>
                   <td>0.00</td>
-                  <td>0m 40s</td>
-                  <td>0.19GB</td>
-                  <td>0.78GB</td>
+                  <td>1m 07s</td>
+                  <td>0.37GB</td>
+                  <td>1.49GB</td>
+                </tr>
+                <tr>
+                  <td>Recurrent Hybrid</td>
+                  <td>1.62</td>
+                  <td>0m 57s</td>
+                  <td>0.35GB</td>
+                  <td>1.43GB</td>
+                </tr>
+                <tr>
+                  <td>Evolved Hybrid</td>
+                  <td>0.44</td>
+                  <td>1m 00s</td>
+                  <td>0.37GB</td>
+                  <td>1.46GB</td>
                 </tr>
 
               </tbody>
@@ -372,25 +390,39 @@ permalink: /transformer_variants
               </thead>
               <tbody>
                 <tr>
-                  <td>Standard Model</td>
-                  <td>7.91</td>
-                  <td>2m 41s</td>
-                  <td>0.21GB</td>
-                  <td>2.90GB</td>
+                  <td>Standard</td>
+                  <td>6.08</td>
+                  <td>3m 20s</td>
+                  <td>0.38GB</td>
+                  <td>2.89GB</td>
                 </tr>
                 <tr>
-                  <td>Recurrent Model</td>
-                  <td>0.52</td>
-                  <td>2m 40s</td>
-                  <td>0.19GB</td>
-                  <td>2.77GB</td>
+                  <td>Recurrent</td>
+                  <td>5.34</td>
+                  <td>3m 20s</td>
+                  <td>0.34GB</td>
+                  <td>2.88GB</td>
                 </tr>
                 <tr>
-                  <td>Evolved Model</td>
+                  <td>Evolved</td>
                   <td>0.00</td>
-                  <td>1m 51s</td>
-                  <td>0.20GB</td>
-                  <td>1.84GB</td>
+                  <td>3m 10s</td>
+                  <td>0.39GB</td>
+                  <td>2.93GB</td>
+                </tr>
+                <tr>
+                  <td>Recurrent Hybrid</td>
+                  <td>5.57</td>
+                  <td>3m 21s</td>
+                  <td>0.36GB</td>
+                  <td>2.88GB</td>
+                </tr>
+                <tr>
+                  <td>Evolved Hybrid</td>
+                  <td>9.34</td>
+                  <td>3m 13s</td>
+                  <td>0.38GB</td>
+                  <td>3.24GB</td>
                 </tr>
 
               </tbody>
